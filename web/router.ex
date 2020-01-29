@@ -18,7 +18,13 @@ defmodule Bloomchain.Router do
     pipe_through(:browser)
 
     get("/", PageController, :index)
-    get("/:type", PageController, :show)
+    get("/newsfeed", PageController, :newsfeed)
+    get("/detailed", PageController, :detailed)
+    get("/analysis", PageController, :analysis)
+    get("/people", PageController, :people)
+    get("/in-russia", PageController, :in_russia)
+    get("/calendar", PageController, :calendar)
+    get("/research", PageController, :research)
   end
 
   # Other scopes may use custom stacks.
