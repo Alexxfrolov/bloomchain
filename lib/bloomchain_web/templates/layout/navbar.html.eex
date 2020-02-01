@@ -1,0 +1,93 @@
+<nav class="bc-header navbar navbar-expand-md navbar-light">
+    <div class="container py-2 py-md-4">
+        <div>
+            <a href="/"><img class="bc-header__logo" src="/images/logo.svg"></a>
+        </div>
+        <div class="d-none d-md-block">
+            <div class="bc-header__converter">
+                <div class="bc-header__converter__currency">
+                    <input class="bc-header__converter__input form-control" type="number" min="0" max="100" step="0.1" value="1.1">
+                    <div class="dropdown d-flex align-items-start">
+                        <button class="bc-header__converter__select dropdown-toggle ml-3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Источник: coinmarketcap.com">BTC</button>
+                        <div class="dropdown-menu dropdown-menu-right mt-2">
+                            <button class="dropdown-item" type="button">ETH</button>
+                            <button class="dropdown-item" type="button">XRP</button>
+                            <button class="dropdown-item" type="button">LTC</button>
+                            <button class="dropdown-item" type="button">BCH</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bc-header__converter__equal mx-4">=</div>
+                <div class="bc-header__converter__currency"> <span class="bc-header__converter__value">16256,23</span>
+                    <div class="dropdown d-flex align-items-start">
+                        <button class="bc-header__converter__select dropdown-toggle ml-3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Источник: coinmarketcap.com">USD</button>
+                        <div class="dropdown-menu dropdown-menu-right mt-2">
+                            <button class="dropdown-item" type="button">EUR</button>
+                            <button class="dropdown-item" type="button">RUB</button>
+                            <button class="dropdown-item" type="button">JPY</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bc-header__social">
+            <a class="icon-fb" href="#"></a>
+            <a class="icon-vk ml-3" href="#"></a>
+            <a class="icon-tg ml-3" href="#"></a>
+            <a class="icon-tw ml-3" href="#"></a>
+            <a class="icon-yt ml-3 d-none d-md-flex" href="#"></a>
+        </div>
+        <div class="d-inline-flex d-md-none">
+            <button class="bc-header__search__icon bc-header__search__icon_mobile btn-link nav-link px-0"><i class="icon-search"></i></button>
+            <form class="bc-header__search__box bc-header__search__box_mobile d-none">
+                <input class="bc-header__search__input_mobile form-control" type="search" placeholder="Поиск по сайту" aria-label="Search">
+                <a class="bc-header__search__close bc-header__search__close_mobile hamburger hamburger--slider-r is-active">
+                    <div class="hamburger-box">
+                        <div class="hamburger-inner"></div>
+                    </div>
+                </a>
+            </form>
+            <button class="bc-article__z-index-100 navbar-toggler hamburger--slider-r px-0 ml-4" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="hamburger-box"><span class="hamburger-inner"></span></span>
+            </button>
+        </div>
+    </div>
+    <hr class="bc-header__separator m-0 d-none d-md-block">
+    <div class="container navbar-collapse collapse py-2" id="navbarSupportedContent">
+        <ul class="navbar-nav bc-header__nav">
+          <li class="nav-item">
+            <%= link("Главное", to: page_path(@conn, :detailed), class: "nav-link") %>
+          </li>
+          <li class="nav-item">
+            <%= link("Новости", to: page_path(@conn, :newsfeed), class: "nav-link") %>
+          </li>
+          <li class="nav-item">
+            <%= link("Цифры и тренды", to: page_path(@conn, :analysis), class: "nav-link") %>
+          </li>
+          <li class="nav-item">
+            <%= link("Исследования", to: page_path(@conn, :research), class: "nav-link") %>
+          </li>
+          <li class="nav-item">
+            <%= link("Исследования", to: page_path(@conn, :in_russia), class: "nav-link") %>
+          </li>
+          <li class="nav-item">
+            <%= link("Календарь", to: page_path(@conn, :calendar), class: "nav-link") %>
+          </li>
+          <li class="nav-item">
+            <%= link("Мнения", to: page_path(@conn, :people), class: "nav-link") %>
+          </li>
+        </ul>
+        <ul class="navbar-nav d-none d-md-flex bc-header__search">
+            <li class="nav-item d-flex align-items-center w-100">
+                <button class="bc-header__search__icon btn-link nav-link pr-0"><i class="icon-search"></i></button>
+                <form class="bc-header__search__box d-none">
+                    <input class="bc-header__search__input form-control" type="search" placeholder="Поиск по сайту" aria-label="Search">
+                    <a class="bc-header__search__close hamburger hamburger--slider-r is-active">
+                        <div class="hamburger-box">
+                            <div class="hamburger-inner"></div>
+                        </div>
+                    </a>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>

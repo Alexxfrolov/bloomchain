@@ -5,7 +5,20 @@
 # Inside the script, you can read and write to any of your
 # repositories directly:
 #
-#     Bloomchain.Repo.insert!(%Bloomchain.SomeModel{})
+#     Cms.Repo.insert!(%Cms.SomeSchema{})
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+alias Bloomchain.Repo
+
+alias Bloomchain.Auth.User
+
+Repo.insert!(
+  User.create_changeset(%User{}, %{
+    name: "Admin",
+    email: "admin@app.com",
+    password: "admin123",
+    is_admin: true
+  })
+)

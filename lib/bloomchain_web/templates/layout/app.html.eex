@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>BloomChain</title>
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <style>@-webkit-keyframes marqueeAnimation-5355395  { 100%  {transform:translateX(-2188.11px)}}</style>
+  </head>
+  <body class="bg-light">
+    <%= render "sidebar.html", conn: @conn %>
+    <%= render "navbar.html", conn: @conn %>
+
+    <%= render @view_module, @view_template, assigns %>
+
+    <div class="bc-footer">
+        <div class="container">
+            <div class="pt-5 d-block">
+                <p class="text-white mb-3 text-center d-flex justify-content-center"><b>Нет времени следить за цифровым рынком онлайн?</b></p>
+                <h4 class="text-white mb-3 text-center d-flex justify-content-center"><b>Настрой почтовую рассылку на утро понедельника!</b></h4>
+            </div>
+            <div class="bc-footer__subscribe">
+                <input class="bc-footer__input bg-transparent border-0" type="text" placeholder="Ваш Email" aria-label="Email">
+                <button class="bc-footer__button btn btn-primary ml-md-5" type="button">Подписаться</button>
+            </div>
+            <p class="bc-footer__p text-center mt-3">*Нажимая подписаться вы соглашаетесь с политикой конфиденциальности</p>
+        </div>
+        <div class="container mt-4 mt-md-5">
+            <div class="row">
+                <div class="col">
+                    <nav class="bc-footer__nav"><a class="bc-footer__nav-link" href="news.html">Главное </a><a class="bc-footer__nav-link" href="opinions.html">Мнение</a><a class="bc-footer__nav-link" href="analitics.html">Цифры и тренды </a><a class="bc-footer__nav-link" href="learn.html">Обучение</a><a class="bc-footer__nav-link" href="ico.html">ICO</a><a class="bc-footer__nav-link d-md-none d-lg-flex" href="selector.html">Биржи и кошельки</a><a class="bc-footer__nav-link" href="calendar.html">Календарь</a><a class="bc-footer__nav-link" href="books.html">Литература</a></nav>
+                </div>
+            </div>
+        </div>
+        <div class="bc-footer__info container mt-4 pt-2 pb-5">
+            <div class="row">
+                <div class="bc-footer__logo col-xl-3 col-lg-3 col-md-3"><img class="bc-footer__img" src="/images/logo-white.svg"></div>
+                <div class="bc-footer__links col-xl-6 col-lg-5 col-md-6">
+                    <div><a class="bc-footer__link" href="empty.html">Медиа-кит</a><a class="bc-footer__link" href="empty.html">О нас</a><a class="bc-footer__link" href="empty.html">Контакты</a></div>
+                    <div class="mt-3">
+                        <div class="bc-footer__p">Все права защищены © ООО Ворк Майл, 2016-2017</div>
+                        <div class="bc-footer__p mt-2 mb-3">Любое использование материалов допускается только с согласия редакции. Новости, аналитика и другие материалы, представленные на сайте bloomchain.ru, не являются офертой или рекомендацией к покупке или продаже.</div>
+                        <button class="btn bg-transparent border-0 bc-footer__link bc-footer__link_small px-0" type="button" data-toggle="modal" data-target=".request-report-modal">Политика конфиденциальности</button>
+                    </div>
+                </div>
+                <div class="bc-footer__social col-xl-3 col-lg-4 col-md-3">
+                    <a class="icon-vk-round" href="#"></a>
+                    <a class="icon-fb-round" href="#"></a>
+                    <a class="icon-tw-round" href="#"></a>
+                    <a class="icon-tg-round" href="#"></a>
+                    <a class="icon-yt-round" href="#"></a>
+                </div>
+            </div>
+            <div class="modal fade request-report-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-body my-4 px-sm-4">
+                            <div class="d-flex align-items-center">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Политика конфиденциальности</h5>
+                                <button class="hamburger hamburger--slider-r is-active close p-0 ml-auto" type="button" data-dismiss="modal" aria-label="Close">
+                                    <div class="hamburger-box">
+                                        <div class="hamburger-inner"></div>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="bc-article__paragraph mt-4">Скоро...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lightboxOverlay" class="lightboxOverlay" style="display: none;"></div>
+    <div id="lightbox" class="lightbox" style="display: none;">
+        <div class="lb-dataContainer">
+          <div class="lb-data">
+            <div class="lb-details">
+              <span class="lb-caption"></span>
+              <span class="lb-number"></span>
+            </div>
+            <div class="lb-closeContainer">
+              <a class="lb-close"></a>
+            </div>
+          </div>
+        </div>
+        <div class="lb-outerContainer">
+          <div class="lb-container">
+            <img class="lb-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==">
+            <div class="lb-nav">
+              <a class="lb-prev" href=""></a>
+              <a class="lb-next" href=""></a>
+            </div>
+            <div class="lb-loader">
+              <a class="lb-cancel"></a>
+            </div>
+          </div>
+        </div>
+    </div>
+  </body>
+</html>
