@@ -11,19 +11,17 @@ defmodule BloomchainWeb.Router do
     plug(:put_secure_browser_headers)
   end
 
-  pipeline :authenticated do
+  pipeline :admin do
     plug(Plug.Authentication)
     plug(Plug.EnsureAuthentication)
     plug(Plug.ShowSidebar)
+    plug(:put_layout, {BloomchainWeb.LayoutView, :admin})
   end
 
   scope "/admin", BloomchainWeb, as: :admin do
-    pipe_through([:browser, :authenticated])
-    get("/", Admin.HomeController, :index)
+    pipe_through([:browser, :admin])
 
-    resources("/post", Admin.PostController) do
-      get("/publish", Admin.PostController, :publish, as: :publish)
-    end
+    get("/", Admin.HomeController, :index)
   end
 
   scope "/", BloomchainWeb do
