@@ -55,25 +55,25 @@
     <div class="container navbar-collapse collapse py-2" id="navbarSupportedContent">
         <ul class="navbar-nav bc-header__nav">
           <li class="nav-item">
-            <%= link("Главное", to: page_path(@conn, :detailed), class: "nav-link") %>
+            <%= link("Коротко", to: page_path(@conn, :newsfeed), class: active_navlink_class(@conn, page_path(@conn, :detailed))) %>
           </li>
           <li class="nav-item">
-            <%= link("Новости", to: page_path(@conn, :newsfeed), class: "nav-link") %>
+            <%= link("В Деталях", to: page_path(@conn, :detailed), class: active_navlink_class(@conn, page_path(@conn, :newsfeed))) %>
           </li>
           <li class="nav-item">
-            <%= link("Цифры и тренды", to: page_path(@conn, :analysis), class: "nav-link") %>
+            <%= link("Статистика", to: page_path(@conn, :analysis), class: active_navlink_class(@conn, page_path(@conn, :analysis))) %>
           </li>
           <li class="nav-item">
-            <%= link("Исследования", to: page_path(@conn, :research), class: "nav-link") %>
+            <%= link("Персона", to: page_path(@conn, :people), class: active_navlink_class(@conn, page_path(@conn, :research))) %>
           </li>
           <li class="nav-item">
-            <%= link("Исследования", to: page_path(@conn, :in_russia), class: "nav-link") %>
+            <%= link("Что в России", to: page_path(@conn, :in_russia), class: active_navlink_class(@conn, page_path(@conn, :in_russia))) %>
           </li>
           <li class="nav-item">
-            <%= link("Календарь", to: page_path(@conn, :calendar), class: "nav-link") %>
+            <%= link("События", to: page_path(@conn, :calendar), class: active_navlink_class(@conn, page_path(@conn, :calendar))) %>
           </li>
           <li class="nav-item">
-            <%= link("Мнения", to: page_path(@conn, :people), class: "nav-link") %>
+            <%= link("Исследования", to: page_path(@conn, :research), class: active_navlink_class(@conn, page_path(@conn, :people))) %>
           </li>
         </ul>
         <ul class="navbar-nav d-none d-md-flex bc-header__search">

@@ -57,8 +57,8 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :bloomchain, Bloomchain.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "myapp",
-  password: "password1",
+  username: "alexfrolov",
+  password: "",
   database: "bloomchain_dev",
   hostname: "localhost",
   pool_size: 10

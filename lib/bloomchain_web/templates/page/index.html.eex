@@ -1,7 +1,7 @@
 <div class="container py-4">
     <div class="row">
         <div class="col-lg-6">
-            <h1 class="highlight mb-4">Главное<a class="btn btn-title" href="/detailed">Больше</a></h1>
+            <h1 class="highlight mb-4">В Деталях<a class="btn btn-title" href="/detailed">Больше</a></h1>
             <a class="bc-article__overlay-link" href="news-open.html">
                 <div class="bc-article__image"><img src="/images/img-bitcoin.jpg">
                     <h6 class="text-white">Партнерский материал</h6>
@@ -19,7 +19,7 @@
             <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
         </div>
         <div class="bc-news col-lg-6 mt-lg-0 mt-5">
-            <h1 class="highlight">Новости<a class="btn btn-title" href="/newsfeed">Больше</a></h1>
+            <h1 class="highlight">Коротко<a class="btn btn-title" href="/newsfeed">Больше</a></h1>
             <div class="bc-news__item"><span class="bc-news__time">20:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="news-open-type2.html">Путин поговорил с Трампом по телефону</a></div>
             <div class="bc-news__item"><span class="bc-news__time">20:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="news-open-type2.html">Forbes назвал самых высокооплачиваемых моделей мира</a></div>
             <div class="bc-news__item"><span class="bc-news__time">20:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="news-open-type2.html">Кадырова наградили золотой медалью РАН за заслуги в онкологии</a></div>
@@ -34,7 +34,7 @@
     <div class="container py-4">
         <div class="row">
             <div class="col-lg-6">
-                <h1 class="bc-article__z-index highlight mb-4">Цифры и тренды<a class="btn btn-title" href="/analysis">Больше</a></h1>
+                <h1 class="bc-article__z-index highlight mb-4">Статистика<a class="btn btn-title" href="/analysis">Больше</a></h1>
                 <a class="bc-article__overlay-link" href="news-open.html">
                     <div class="bc-article__image"><img src="/images/img-etherium.jpg">
                         <div class="h3">14.01.2018</div>
@@ -49,19 +49,21 @@
                 <p class="bc-article__paragraph">На этот раз никаких накачек, лишь рост нескольких криптовалют после существенного падения. О том, что после пробоя. </p>
                 <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
             </div>
-            <div class="bc-ico col-lg-6 mt-lg-0 mt-5">
-                <h1 class="bc-article__z-index highlight">Исследования<a class="btn btn-title" href="/research">Больше</a></h1>
-                <div class="bc-ico__head"><span class="bc-ico__name-main">Название</span><span class="bc-ico__stage-main">Стадия</span><span class="bc-ico__date-main">Дата окончания</span></div>
-                <div class="bc-ico__tokens"><a class="bc-ico__token" href="ico-open.html"><span class="bc-ico__name-main"><img src="/images/tokens/finom.png">Finom</span><span class="bc-ico__stage-main">ICO</span><span class="bc-ico__date-main">25.05.18<span class="text-gray ml-3">18д</span></span></a></div>
-                <div class="bc-ico__tokens"><a class="bc-ico__token-blue" href="ico-open.html"><span class="bc-ico__name-main"><img src="/images/tokens/finom.png">Finom</span><span class="bc-ico__stage-main">ICO</span><span class="bc-ico__date-main">25.05.18<span class="text-gray ml-3">18д</span></span></a></div>
-                <div class="bc-ico__tokens"><a class="bc-ico__token" href="ico-open.html"><span class="bc-ico__name-main"><img src="/images/tokens/finom.png">Finom</span><span class="bc-ico__stage-main">ICO</span><span class="bc-ico__date-main">25.05.18<span class="text-gray ml-3">18д</span></span></a></div>
-                <div class="bc-ico__tokens"><a class="bc-ico__token" href="ico-open.html"><span class="bc-ico__name-main"><img src="/images/tokens/finom.png">Finom</span><span class="bc-ico__stage-main">ICO</span><span class="bc-ico__date-main">25.05.18<span class="text-gray ml-3">18д</span></span></a></div>
-                <div class="bc-ico__tokens"><a class="bc-ico__token" href="ico-open.html"><span class="bc-ico__name-main"><img src="/images/tokens/finom.png">Finom</span><span class="bc-ico__stage-main">ICO</span><span class="bc-ico__date-main">25.05.18<span class="text-gray ml-3">18д</span></span></a></div>
-                <div class="bc-ico__tokens"><a class="bc-ico__token" href="ico-open.html"><span class="bc-ico__name-main"><img src="/images/tokens/finom.png">Finom</span><span class="bc-ico__stage-main">ICO</span><span class="bc-ico__date-main">25.05.18<span class="text-gray ml-3">18д</span></span></a></div>
-                <div class="bc-ico__tokens"><a class="bc-ico__token" href="ico-open.html"><span class="bc-ico__name-main"><img src="/images/tokens/finom.png">Finom</span><span class="bc-ico__stage-main">ICO</span><span class="bc-ico__date-main">25.05.18<span class="text-gray ml-3">18д</span></span></a></div>
-                <div class="bc-ico__tokens"><a class="bc-ico__token" href="ico-open.html"><span class="bc-ico__name-main"><img src="/images/tokens/finom.png">Finom</span><span class="bc-ico__stage-main">ICO</span><span class="bc-ico__date-main">25.05.18<span class="text-gray ml-3">18д</span></span></a></div>
-                <div class="bc-ico__tokens"><a class="bc-ico__token" href="ico-open.html"><span class="bc-ico__name-main"><img src="/images/tokens/finom.png">Finom</span><span class="bc-ico__stage-main">ICO</span><span class="bc-ico__date-main">25.05.18<span class="text-gray ml-3">18д</span></span></a></div>
-                <div class="bc-ico__tokens"><a class="bc-ico__token" href="ico-open.html"><span class="bc-ico__name-main"><img src="/images/tokens/finom.png">Finom</span><span class="bc-ico__stage-main">ICO</span><span class="bc-ico__date-main">25.05.18<span class="text-gray ml-3">18д</span></span></a></div>
+            <div class="col-lg-6">
+                <h1 class="bc-article__z-index highlight mb-4">Исследования<a class="btn btn-title" href="/research">Больше</a></h1>
+                <a class="bc-article__overlay-link" href="news-open.html">
+                    <div class="bc-article__image"><img src="/images/img-etherium.jpg">
+                        <div class="h3">14.01.2018</div>
+                        <p>Bitcoin, Ethereum, altcoins — Обзор криптовалют</p>
+                        <div class="d-flex align-items-center"><span class="small mr-sm-4 mr-2">2 часа назад</span><i class="mr-1 icon-view-white"></i><span class="small mr-sm-4 mr-2">10 235</span><i class="mr-1 icon-comment-white"></i><span class="small mr-sm-4 mr-2">2</span><i class="mr-1 icon-clock-white"></i><span class="small">17 мин</span></div>
+                    </div>
+                </a>
+                <div class="mt-4"></div><a class="h5" href="analitics-open.html">14.02.2018</a>
+                <p class="bc-article__paragraph">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда. </p>
+                <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
+                <hr class="bc-article__separator mx-0 my-3"><a class="h5 mt-4" href="analitics-open.html">14.02.2018</a>
+                <p class="bc-article__paragraph">На этот раз никаких накачек, лишь рост нескольких криптовалют после существенного падения. О том, что после пробоя. </p>
+                <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
             </div>
         </div>
     </div>
@@ -84,7 +86,7 @@
             <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
         </div>
         <div class="col-lg-6 mt-lg-0 mt-5">
-            <h1 class="bc-article__z-index highlight">Календарь<a class="btn btn-title" href="/calendar">Больше</a></h1>
+            <h1 class="bc-article__z-index highlight">События<a class="btn btn-title" href="/calendar">Больше</a></h1>
             <div class="d-flex mt-4 mb-2 align-items-center"><span class="small mr-4">14-15.01.18</span><i class="mr-1 icon-address"></i><span class="bc-article__calendar_address small mr-4">Сингапур, Малайзия, Таиланд</span><span class="small text-primary ml-auto">завтра</span></div><a class="bc-article__heading__calendar" href="#">Введение в BlockChain и смарт-контракты</a>
             <hr class="bc-article__separator mx-0 my-3">
             <div class="d-flex mt-4 mb-2 align-items-center"><span class="small mr-4">14-15.01.18</span><i class="mr-1 icon-address"></i><span class="bc-article__calendar_address small mr-4">Сингапур, Малайзия, Таиланд</span><span class="small text-primary ml-auto">завтра</span></div><a class="bc-article__heading__calendar" href="#">Премия  «Лучший проект на технологии блокчейн  (ICO) 2017 года».</a>
@@ -101,7 +103,7 @@
     <div class="container py-4">
         <div class="row">
             <div class="col-lg-6">
-                <h1 class="bc-article__z-index highlight">Мнения<a class="btn btn-title" href="/people">Больше</a></h1>
+                <h1 class="bc-article__z-index highlight">Персона<a class="btn btn-title" href="/people">Больше</a></h1>
                 <div class="bc-article__image-quote mt-4 mb-4"><img src="/images/img-person.jpg"></div><a class="bc-article__quote" href="#">Объединения, которое занимается популяризацией технологии в России. В книге «Bitcoin. Больше чем деньги» автор описывает историю развития биткойна и его распространения в мире.</a>
                 <div class="bc-article__quote-author">
                     <h5 class="bc-opinion__author-name d-inline">Алекс Форк</h5>
