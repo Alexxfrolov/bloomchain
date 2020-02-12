@@ -28,3 +28,6 @@ npm-debug.log
 # variables.
 /config/*.secret.exs
 /web/
+
+# frontend
+/lib/bloomchain_admin/frontend/node_modules
