@@ -1,0 +1,31 @@
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="bc-news-open__h2"><%= @article.title %></h2>
+            <div class="d-flex align-items-center">
+              <span class="small mr-sm-4 mr-2"><%= @article.updated_at %></span>
+              <i class="mr-1 icon-user"></i>
+              <span class="small mr-sm-4 mr-2"><%= @article.user.name %></span>
+            </div>
+            <div class="d-inline-block mt-3">
+              <span class="small mr-2">Теги:</span>
+              <a class="span badge badge-primary-inverse" href="#">альткоин</a>
+              <a class="span badge badge-primary-inverse" href="#">криптовалюта</a>
+              <a class="span badge badge-primary-inverse" href="#">законодательство</a>
+              <a class="span badge badge-primary-inverse" href="#">блокчейн</a>
+              <a class="span badge badge-primary-inverse" href="#">альткоин</a>
+              <a class="span badge badge-primary-inverse" href="#">альткоин</a>
+              <a class="span badge badge-primary-inverse" href="#">криптовалюта</a>
+              <a class="span badge badge-primary-inverse" href="#">законодательство</a>
+              <a class="span badge badge-primary-inverse" href="#">блокчейн</a>
+              <a class="span badge badge-primary-inverse" href="#">альткоин</a>
+            </div>
+
+            <%= raw(@article.body) %>
+
+            <div class="d-flex align-items-center mt-4">
+              <a class="btn btn-link font-weight-medium pl-0" href="/">&larr; Назад</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -38,5 +38,7 @@ defmodule BloomchainWeb.Router do
     get("/in-russia", PageController, :in_russia)
     get("/calendar", PageController, :calendar)
     get("/research", PageController, :research)
+
+    resources("/newsfeed", NewsfeedController, only: [:show])
   end
 end
