@@ -6,7 +6,7 @@ defmodule Bloomchain.Repo.Migrations.CreateUsers do
       add(:name, :string)
       add(:password_hash, :string)
       add(:email, :string, unique: true)
-      add(:is_admin, :boolean, default: false, null: false)
+      add(:role, :string, default: "writer", null: false)
 
       timestamps()
     end

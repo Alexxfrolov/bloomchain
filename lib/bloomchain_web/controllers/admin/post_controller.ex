@@ -2,7 +2,7 @@ defmodule BloomchainWeb.Admin.PostController do
   use BloomchainWeb, :controller
 
   alias Bloomchain.Content.Post
-  alias Bloomchain.Content.Blog
+  alias Bloomchain.Content.Article
   alias Bloomchain.Auth.Accounts
 
   # def index(conn, _) do

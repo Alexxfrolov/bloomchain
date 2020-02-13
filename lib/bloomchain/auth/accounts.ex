@@ -1,5 +1,4 @@
 defmodule Bloomchain.Auth.Accounts do
-  
   alias Bloomchain.Repo
   alias Bloomchain.Auth.User
   alias Comeonin.Bcrypt
@@ -16,14 +15,16 @@ defmodule Bloomchain.Auth.Accounts do
 
   def is_current_user_admin?(conn) do
     user = Auth.Guardian.Plug.current_resource(conn)
+
     case user do
       nil -> false
-      user -> user.is_admin
+      user -> user.role == "admin"
     end
   end
 
   def authenticate_user(email, given_password) do
     query = Ecto.Query.from(u in User, where: u.email == ^email)
+
     Repo.one(query)
     |> check_password(given_password)
   end
@@ -38,7 +39,7 @@ defmodule Bloomchain.Auth.Accounts do
     conn
     |> Auth.Guardian.Plug.sign_out()
   end
-  
+
   # Private
 
   defp check_password(nil, _), do: {:error, "Incorrect email or password"}
@@ -49,5 +50,4 @@ defmodule Bloomchain.Auth.Accounts do
       false -> {:error, "Incorrect email or password"}
     end
   end
-
 end

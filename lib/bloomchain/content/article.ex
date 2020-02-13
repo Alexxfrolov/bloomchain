@@ -1,21 +1,27 @@
-defmodule Bloomchain.Content.Blog do
-
+defmodule Bloomchain.Content.Article do
   alias Bloomchain.Content.Post
   alias Bloomchain.Auth.User
   alias Bloomchain.Repo
 
   import Ecto.Query
 
-
   def get_posts_list() do
-    Repo.all(from p in Post,
-    preload: :user)
+    Repo.all(
+      from(
+        p in Post,
+        preload: :user
+      )
+    )
   end
 
   def get_published_posts() do
-    Repo.all(from p in Post,
-    where: p.published == true,
-    preload: :user)
+    Repo.all(
+      from(
+        p in Post,
+        where: p.published == true,
+        preload: :user
+      )
+    )
   end
 
   def get(slug) do
@@ -27,10 +33,15 @@ defmodule Bloomchain.Content.Blog do
     |> Repo.preload([:user])
   end
 
-  def create(post, user) do
-    post = post
-    |> Map.put("user_id", user.id)
+  def create(post, %User{} = user, _tags \\ []) do
+    post =
+      post
+      |> Map.put(:user_id, user.id)
+
     changeset = Post.create_changeset(%Post{}, post)
+    require IEx
+    IEx.pry()
+
     case changeset.valid? do
       true -> Repo.insert(changeset)
       false -> {:error, changeset}
@@ -39,6 +50,7 @@ defmodule Bloomchain.Content.Blog do
 
   def update(post, params) do
     changeset = Post.common_changeset(post, params)
+
     case changeset.valid? do
       true -> Repo.update(changeset)
       false -> {:error, changeset}
@@ -49,5 +61,4 @@ defmodule Bloomchain.Content.Blog do
     Post.common_changeset(post, %{published: not post.published})
     |> Repo.update()
   end
-
 end

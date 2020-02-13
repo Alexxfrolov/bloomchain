@@ -6,19 +6,25 @@ defmodule Bloomchain.Content.Post do
   use Arc.Ecto.Schema
 
   alias Bloomchain.Auth.User
+  alias Bloomchain.Content.Tag
   alias BloomchainWeb.Uploaders.Cover
 
   @derive {Phoenix.Param, key: :slug}
 
-
   schema "posts" do
-    field :body, :string
-    field :published, :boolean, default: false
-    field :slug, :string, unique: true
-    field :title, :string
-    field :cover, Cover.Type
+    field(:slug, :string, unique: true)
+    field(:title, :string)
+    field(:body, :string)
+    field(:lead, :string)
+    field(:type, :string)
+    field(:keywords, {:array, :string})
+    field(:description, :string)
+    field(:status, :string)
 
-    belongs_to :user, User
+    field(:cover, Cover.Type)
+
+    belongs_to(:user, User)
+    many_to_many(:tags, Tag, join_through: "posts_tags")
 
     timestamps()
   end
@@ -26,14 +32,14 @@ defmodule Bloomchain.Content.Post do
   def create_changeset(post, attrs) do
     post
     |> common_changeset(attrs)
-    |> validate_required([:user_id, :cover])
+    |> validate_required([:user_id])
   end
 
   def common_changeset(changeset, attrs) do
     changeset
-    |> cast(attrs, [:title, :body, :published, :user_id])
+    |> cast(attrs, [:title, :body, :lead, :type, :status, :user_id])
     |> cast_attachments(attrs, [:cover])
-    |> validate_required([:title, :body])
+    |> validate_required([:title, :body, :lead, :type, :user_id])
     |> validate_length(:title, min: 3)
     |> process_slug
   end
@@ -48,5 +54,4 @@ defmodule Bloomchain.Content.Post do
   end
 
   defp process_slug(changeset), do: changeset
-
 end

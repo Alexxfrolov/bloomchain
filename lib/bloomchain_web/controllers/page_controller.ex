@@ -1,7 +1,7 @@
 defmodule BloomchainWeb.PageController do
   use BloomchainWeb, :controller
 
-  # alias Bloomchain.Content.Blog
+  # alias Bloomchain.Content.Article
   # alias Bloomchain.Content.Post
 
   # def index(conn, _) do
