@@ -13,7 +13,7 @@ defmodule BloomchainWeb.SessionController do
         conn
         |> Accounts.login(user)
         |> redirect_after_login(user)
-  
+
       {:error, _} ->
         conn
         |> put_flash(:error, "Invalid email or password")
@@ -30,10 +30,9 @@ defmodule BloomchainWeb.SessionController do
   # Private
 
   defp redirect_after_login(conn, user) do
-    case user.is_admin do
+    case user.role == "admin" do
       true -> redirect(conn, to: admin_home_path(conn, :index))
       false -> redirect(conn, to: page_path(conn, :index))
     end
   end
-
 end
