@@ -12,8 +12,9 @@ config :logger, level: :warn
 # Configure your database
 config :bloomchain, Bloomchain.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "myapp",
-  password: "password1",
-  database: "bloomchain_test",
-  hostname: "localhost",
+  username: System.get_env("DB_USER"),
+  password: System.get_env("DB_PASSWORD"),
+  database: System.get_env("DB_NAME") || 'bloomchain_dev',
+  hostname: System.get_env("DB_HOST") || 'localhost',
+  port: System.get_env("DB_PORT") || 5432,
   pool: Ecto.Adapters.SQL.Sandbox

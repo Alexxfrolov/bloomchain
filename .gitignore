@@ -29,5 +29,8 @@ npm-debug.log
 /config/*.secret.exs
 /web/
 
+# environmental variables
+.env 
+
 # frontend
 /lib/bloomchain_admin/frontend/node_modules
