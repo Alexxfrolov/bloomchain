@@ -13,7 +13,6 @@ defmodule BloomchainWeb.Uploaders.Cover do
   end
 
   def storage_dir(version, {file, scope}) do
-    "uploads/posts/cover/#{version}"
+    "uploads/posts/cover/#{scope.type}/#{version}"
   end
-
 end

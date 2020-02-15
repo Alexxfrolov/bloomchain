@@ -29,7 +29,14 @@ defmodule Bloomchain.Content.Post do
     timestamps()
   end
 
-  def create_changeset(post, attrs) do
+  def create_changeset(post, attrs, [_ | _] = tags) do
+    post
+    |> common_changeset(attrs)
+    |> validate_required([:user_id])
+    |> put_assoc(:tags, tags)
+  end
+
+  def create_changeset(post, attrs, _) do
     post
     |> common_changeset(attrs)
     |> validate_required([:user_id])

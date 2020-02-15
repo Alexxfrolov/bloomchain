@@ -24,23 +24,18 @@ defmodule Bloomchain.Content.Article do
     )
   end
 
-  def get(slug) do
-    Repo.get_by(Post, slug: slug)
-  end
-
-  def get(slug, true) do
-    Repo.get_by(Post, slug: slug)
+  def get(slug, type: type) do
+    Repo.get_by(Post, slug: slug, type: type)
     |> Repo.preload([:user])
+    |> Repo.preload([:tags])
   end
 
-  def create(post, %User{} = user, _tags \\ []) do
+  def create(post, %User{} = user, tags) do
     post =
       post
       |> Map.put(:user_id, user.id)
 
-    changeset = Post.create_changeset(%Post{}, post)
-    require IEx
-    IEx.pry()
+    changeset = Post.create_changeset(%Post{}, post, tags)
 
     case changeset.valid? do
       true -> Repo.insert(changeset)

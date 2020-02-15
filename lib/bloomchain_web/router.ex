@@ -22,6 +22,12 @@ defmodule BloomchainWeb.Router do
     pipe_through([:browser, :admin])
 
     get("/", Admin.HomeController, :index)
+    get("/publications", Admin.HomeController, :index)
+    get("/publications/:id", Admin.HomeController, :index)
+    get("/dictionaries", Admin.HomeController, :index)
+    get("/dictionaries/:id", Admin.HomeController, :index)
+    get("/management", Admin.HomeController, :index)
+    get("/management/:id", Admin.HomeController, :index)
   end
 
   scope "/", BloomchainWeb do
@@ -38,5 +44,11 @@ defmodule BloomchainWeb.Router do
     get("/research", PageController, :research)
 
     resources("/newsfeed", NewsfeedController, only: [:show])
+    resources("/detailed", DetailedController, only: [:show])
+    resources("/analysis", AnalysisController, only: [:show])
+    resources("/people", PersonController, only: [:show])
+    resources("/in-russia", InRussiaController, only: [:show])
+    resources("/calendar", CalendarController, only: [:show])
+    resources("/research", ResearchController, only: [:show])
   end
 end

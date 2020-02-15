@@ -1,15 +1,12 @@
 defmodule BloomchainWeb.NewsfeedController do
   use BloomchainWeb, :controller
+  alias Bloomchain.Content.Article
 
-  # def index(conn, _params) do
-  #   render(conn, "index.html")
-  # end
+  def index(conn, _params) do
+    render(conn, "index.html")
+  end
 
-  def show(conn, _params) do
-    article =
-      Bloomchain.Repo.get!(Bloomchain.Content.Post, conn.params["id"])
-      |> Bloomchain.Repo.preload(:user)
-
-    render(conn, "show.html", article: article)
+  def show(conn, params) do
+    render(conn, "show.html", article: Article.get(params["id"], type: "newsfeed"))
   end
 end

@@ -9,16 +9,9 @@
             </div>
             <div class="d-inline-block mt-3">
               <span class="small mr-2">Теги:</span>
-              <a class="span badge badge-primary-inverse" href="#">альткоин</a>
-              <a class="span badge badge-primary-inverse" href="#">криптовалюта</a>
-              <a class="span badge badge-primary-inverse" href="#">законодательство</a>
-              <a class="span badge badge-primary-inverse" href="#">блокчейн</a>
-              <a class="span badge badge-primary-inverse" href="#">альткоин</a>
-              <a class="span badge badge-primary-inverse" href="#">альткоин</a>
-              <a class="span badge badge-primary-inverse" href="#">криптовалюта</a>
-              <a class="span badge badge-primary-inverse" href="#">законодательство</a>
-              <a class="span badge badge-primary-inverse" href="#">блокчейн</a>
-              <a class="span badge badge-primary-inverse" href="#">альткоин</a>
+              <%= for tag <- @article.tags do %>
+                <a class="span badge badge-primary-inverse" href="#"><%= tag.name %></a>
+              <% end %>
             </div>
 
             <%= raw(@article.body) %>
