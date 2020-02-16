@@ -7,6 +7,6 @@ defmodule BloomchainWeb.PersonController do
   end
 
   def show(conn, params) do
-    render(conn, "show.html", article: Article.get(params["id"], type: "people"))
+    render(conn, "show.html", article: Article.get(params["id"], type: "person"))
   end
 end

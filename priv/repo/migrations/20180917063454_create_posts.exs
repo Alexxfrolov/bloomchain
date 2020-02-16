@@ -13,8 +13,9 @@ defmodule Bloomchain.Repo.Migrations.CreatePosts do
       add(:user_id, references(:users, on_delete: :delete_all))
       add(:status, :string, size: 100, default: "draft", null: false)
       add(:cover, :string)
-
+      add(:time, :integer)
       timestamps()
+      add(:published_at, :timestamp, null: true)
     end
   end
 end

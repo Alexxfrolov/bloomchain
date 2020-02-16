@@ -14,12 +14,12 @@ defmodule Bloomchain.Content.Article do
     )
   end
 
-  def get_published_posts() do
+  def get_published_posts(type, limit: limit) do
     Repo.all(
       from(
         p in Post,
-        where: p.published == true,
-        preload: :user
+        where: p.type == ^type and p.status == "published",
+        limit: ^limit
       )
     )
   end

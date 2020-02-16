@@ -1,0 +1,10 @@
+<div class="col-lg-6">
+    <h1 class="bc-article__z-index highlight mb-4">Календарь<%= link("Больше", to: calendar_path(@conn, :index), class: "btn btn-title") %></h1>
+
+    <%= render_main_article(List.first(@articles), conn: @conn, path: calendar_path(@conn, :show, List.first(@articles).slug)) %>
+
+    <%= for article <- @articles |> tl() do %>
+      <hr class="bc-article__separator mx-0 my-3">
+      <%= render_article(article, conn: @conn, path: calendar_path(@conn, :show, article.slug)) %>
+    <% end %>
+</div>

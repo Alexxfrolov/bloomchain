@@ -19,16 +19,19 @@ Repo.insert_all(Tag, [
   %{name: "биткоин", inserted_at: Timex.now(), updated_at: Timex.now()}
 ])
 
-for type <- ~w[newsfeed detailed analysis people in_russia research people] do
+for type <- ~w[newsfeed detailed analysis people in_russia calendar person] do
   for i <- 1..6, i > 0 do
     title = "Тестовое название #{i} для раздела #{type}"
 
     Article.create(
       %{
         title: title,
-        lead: title,
+        lead:
+          "Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда.",
         type: type,
         body: File.read!("#{File.cwd!()}/priv/repo/data_files/newsfeed.html"),
+        status: "published",
+        time: i + 10,
         cover: %Plug.Upload{
           content_type: "image/png",
           filename: "cover_#{type}_#{i}.png",

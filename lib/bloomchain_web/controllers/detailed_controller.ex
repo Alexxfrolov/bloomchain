@@ -7,6 +7,6 @@ defmodule BloomchainWeb.DetailedController do
   end
 
   def show(conn, params) do
-    render(conn, "show.html", article: Article.get(params["id"], type: "calendar"))
+    render(conn, "show.html", article: Article.get(params["id"], type: "detailed"))
   end
 end

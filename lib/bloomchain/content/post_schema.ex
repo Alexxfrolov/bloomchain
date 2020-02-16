@@ -20,6 +20,7 @@ defmodule Bloomchain.Content.Post do
     field(:keywords, {:array, :string})
     field(:description, :string)
     field(:status, :string)
+    field(:time, :integer)
 
     field(:cover, Cover.Type)
 
@@ -27,6 +28,7 @@ defmodule Bloomchain.Content.Post do
     many_to_many(:tags, Tag, join_through: "posts_tags")
 
     timestamps()
+    field(:published_at, :naive_datetime)
   end
 
   def create_changeset(post, attrs, [_ | _] = tags) do
@@ -44,11 +46,12 @@ defmodule Bloomchain.Content.Post do
 
   def common_changeset(changeset, attrs) do
     changeset
-    |> cast(attrs, [:title, :body, :lead, :type, :status, :user_id])
+    |> cast(attrs, [:title, :body, :lead, :type, :status, :user_id, :time])
     |> cast_attachments(attrs, [:cover])
     |> validate_required([:title, :body, :lead, :type, :user_id])
     |> validate_length(:title, min: 3)
     |> process_slug
+    |> process_pushlished
   end
 
   # Private
@@ -61,4 +64,15 @@ defmodule Bloomchain.Content.Post do
   end
 
   defp process_slug(changeset), do: changeset
+
+  defp process_pushlished(
+         %Ecto.Changeset{valid?: validity, changes: %{status: "published"}} = changeset
+       ) do
+    case validity do
+      true -> put_change(changeset, :published_at, Timex.now())
+      false -> changeset
+    end
+  end
+
+  defp process_pushlished(changeset), do: changeset
 end
