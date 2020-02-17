@@ -19,7 +19,7 @@ Repo.insert_all(Tag, [
   %{name: "биткоин", inserted_at: Timex.now(), updated_at: Timex.now()}
 ])
 
-for type <- ~w[newsfeed detailed analysis people in_russia calendar person] do
+for type <- ~w[newsfeed detailed analysis in_russia calendar person] do
   for i <- 1..6, i > 0 do
     title = "Тестовое название #{i} для раздела #{type}"
 
