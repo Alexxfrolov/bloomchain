@@ -1,0 +1,7 @@
+export interface User {
+  email: string
+  password: string
+  passwordConfirmation: string
+  role: "editor" | "writer"
+  status: "active" | "inactive"
+}

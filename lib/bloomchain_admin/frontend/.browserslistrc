@@ -1,0 +1,17 @@
+[production]
+> 0.2%
+ie 11
+edge > 11
+chrome > 49
+firefox > 43
+opera > 39
+not op_mini all
+
+[development]
+> 0.2%
+ie 11
+edge > 11
+chrome > 49
+firefox > 43
+opera > 39
+not op_mini all

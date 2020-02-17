@@ -1,0 +1,33 @@
+{
+    "editor.fontFamily": "Hasklig",
+    "editor.fontSize": 13,
+    "editor.fontLigatures": true,
+    "editor.fontWeight": "400",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "editor.multiCursorModifier": "alt",
+    "editor.wordWrap": "on",
+    "emmet.triggerExpansionOnTab": true,
+    "editor.formatOnPaste": false,
+    "extensions.ignoreRecommendations": true,
+    "editor.formatOnSave": false,
+    "[javascript]": {
+      "editor.formatOnSave": true
+    },
+    "[javascriptreact]": {
+      "editor.formatOnSave": true
+    },
+    "[typescript]": {
+      "editor.formatOnSave": true
+    },
+    "[typescriptreact]": {
+      "editor.formatOnSave": true
+    },
+    "javascript.updateImportsOnFileMove.enabled": "never",
+    "prettier.disableLanguages": ["json"],
+    "files.autoSave": "off",
+    "typescript.referencesCodeLens.enabled": false,
+    "typescript.implementationsCodeLens.enabled": false,
+    "stylelint.enable": false,
+  }
