@@ -1,7 +1,19 @@
 import decamelize from "decamelize"
 import { httpConfig } from "@features/core"
 
-const create = (article: import("./article.types").Article) => {
+function get() {
+  return fetch(`${httpConfig.baseUrl}/article`, {
+    method: "GET",
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "json",
+    },
+  })
+}
+
+function create(article: import("./article.types").Article) {
   const formData = new FormData()
   Object.keys(article).forEach((key) => formData.append(decamelize(key), article[key]))
 
@@ -18,5 +30,6 @@ const create = (article: import("./article.types").Article) => {
 }
 
 export const articleApi = {
+  get,
   create,
 }

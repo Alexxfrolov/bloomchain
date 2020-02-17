@@ -1,4 +1,4 @@
-import React, { useState, useCallback, ChangeEvent } from "react"
+import React, { useState, useEffect, useCallback, ChangeEvent } from "react"
 import DateFnsUtils from "@date-io/date-fns"
 import {
   MuiPickersUtilsProvider,
@@ -24,13 +24,17 @@ import {
 import Pagination from "@material-ui/lab/Pagination"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
-import { Article } from "@api/article"
+import { articleApi, Article } from "@api/article"
 
 export const ArticlesPublishedPage = () => {
   const [tabIndex, setTabIndex] = useState(0)
   const [type, setType] = useState<Article["type"]>("newsfeed")
   const [dateStart, setDateStart] = useState<Date | null>(null)
   const [dateEnd, setDateEnd] = useState<Date | null>(new Date())
+
+  useEffect(() => {
+    articleApi.get()
+  }, [])
 
   const handleDateStartChange = useCallback(
     (date: Date | null) => {

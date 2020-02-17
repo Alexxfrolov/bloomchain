@@ -18,16 +18,15 @@ defmodule BloomchainWeb.Router do
     plug(:put_layout, {BloomchainWeb.LayoutView, :admin})
   end
 
+  pipeline :api do
+    plug(:accepts, ["json", "multipart/form-data"])
+  end
+
   scope "/admin", BloomchainWeb, as: :admin do
     pipe_through([:browser, :admin])
 
     get("/", Admin.HomeController, :index)
-    get("/publications", Admin.HomeController, :index)
-    get("/publications/:id", Admin.HomeController, :index)
-    get("/dictionaries", Admin.HomeController, :index)
-    get("/dictionaries/:id", Admin.HomeController, :index)
-    get("/management", Admin.HomeController, :index)
-    get("/management/:id", Admin.HomeController, :index)
+    get("/*path", Admin.HomeController, :index)
   end
 
   scope "/", BloomchainWeb do
@@ -36,14 +35,6 @@ defmodule BloomchainWeb.Router do
 
     get("/", PageController, :index)
 
-    # get("/newsfeed", PageController, :newsfeed)
-    # get("/detailed", PageController, :detailed)
-    # get("/analysis", PageController, :analysis)
-    # get("/people", PageController, :people)
-    # get("/in-russia", PageController, :in_russia)
-    # get("/calendar", PageController, :calendar)
-    # get("/research", PageController, :research)
-
     resources("/newsfeed", NewsfeedController, only: [:index, :show])
     resources("/detailed", DetailedController, only: [:index, :show])
     resources("/analysis", AnalysisController, only: [:index, :show])
@@ -51,5 +42,11 @@ defmodule BloomchainWeb.Router do
     resources("/in-russia", InRussiaController, only: [:index, :show])
     resources("/calendar", CalendarController, only: [:index, :show])
     resources("/research", ResearchController, only: [:index, :show])
+  end
+
+  scope "/api/v1", BloomchainWeb, as: :api do
+    pipe_through [:api]
+
+    resources("/article", Api.V1.ArticleController)
   end
 end
