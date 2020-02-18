@@ -18,6 +18,10 @@ defmodule BloomchainWeb.Router do
     plug(:put_layout, {BloomchainWeb.LayoutView, :admin})
   end
 
+  pipeline :sign_in do
+    plug(:put_layout, {BloomchainWeb.LayoutView, :sign_in})
+  end
+
   pipeline :api do
     plug(:accepts, ["json", "multipart/form-data"])
   end
@@ -29,9 +33,14 @@ defmodule BloomchainWeb.Router do
     get("/*path", Admin.HomeController, :index)
   end
 
+  scope "/session", BloomchainWeb do
+    pipe_through([:browser, :sign_in])
+
+    resources("/", SessionController, only: [:create, :new, :delete])
+  end
+
   scope "/", BloomchainWeb do
     pipe_through(:browser)
-    resources("/session", SessionController, only: [:create, :new, :delete])
 
     get("/", PageController, :index)
 
