@@ -15,7 +15,9 @@ function get() {
 
 function create(article: import("./article.types").Article) {
   const formData = new FormData()
-  Object.keys(article).forEach((key) => formData.append(decamelize(key), article[key]))
+  Object.keys(article).forEach((key) =>
+    formData.append(decamelize(key), article[key]),
+  )
 
   return fetch(`${httpConfig.baseUrl}/article`, {
     method: "POST",

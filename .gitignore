@@ -34,3 +34,4 @@ npm-debug.log
 
 # frontend
 /lib/bloomchain_admin/frontend/node_modules
+.vscode
