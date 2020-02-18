@@ -24,7 +24,7 @@ import {
 import Pagination from "@material-ui/lab/Pagination"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
-import { Article } from "@api/article"
+import { Article } from "@api/articles"
 
 export const ArticlesReadyPage = () => {
   const [tabIndex, setTabIndex] = useState(0)

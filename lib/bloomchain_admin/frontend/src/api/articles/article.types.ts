@@ -1,4 +1,5 @@
 export interface Article {
+  author: string
   body: string
   cover: File | null
   coverSource: string | null
@@ -8,7 +9,7 @@ export interface Article {
   description: string
   keywords: string
   lead: string
-  readingTime: number | null
+  time: number | null
   status: "published" | "draft" | "archive"
   tags: string[]
   title: string

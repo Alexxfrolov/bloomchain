@@ -48,33 +48,38 @@ import "froala-editor/js/plugins/align.min.js"
 import "froala-editor/js/plugins/code_view.min.js"
 import "froala-editor/js/plugins/colors.min.js"
 import "froala-editor/js/plugins/image.min.js"
+import "froala-editor/js/plugins/image_manager.min.js"
 import "froala-editor/js/froala_editor.pkgd.min.js"
 import "froala-editor/js/languages/ru.js"
 import "froala-editor/css/froala_style.min.css"
 import "froala-editor/css/froala_editor.pkgd.min.css"
 import FroalaEditor from "react-froala-wysiwyg"
-import { articleApi, Article } from "@api/article"
+import { articleApi, Article } from "@api/articles"
 
 const tags = ["биткоин", "криптовалюта", "биржа", "рынок"]
 
 const froalaEditorConfig = {
   height: 385,
-  language: "ru",
+  // language: "ru",
+  paragraphFormat: {
+    N: "Normal",
+    H1: "Heading 1",
+    H2: "Heading 2",
+    H3: "Heading 3",
+    H4: "Heading 4",
+    H5: "Heading 5",
+    H6: "Heading 6",
+  },
   toolbarButtons: {
     moreText: {
       buttons: [
         "bold",
         "italic",
         "underline",
-        "strikeThrough",
-        "subscript",
-        "superscript",
         "fontFamily",
         "fontSize",
         "textColor",
         "backgroundColor",
-        "inlineClass",
-        "inlineStyle",
         "clearFormatting",
       ],
     },
@@ -124,24 +129,30 @@ const froalaEditorConfig = {
       align: "right",
       buttonsVisible: 2,
     },
+    imageUploadURL: "/api/v1/media",
+    imageUploadMethod: "POST",
+    imageUploadParam: "image",
+    imageMaxSize: 15 * 1024 * 1024, // 15MB.
+    imageAllowedTypes: ["*"],
+    fileAllowedTypes: ["*"],
   },
   events: {
-    "froalaEditor.image.beforeUpload": function(e, editor, files) {
+    "image.beforeUpload": function(files: FileList) {
       if (files.length) {
         // Create a File Reader.
         const reader = new FileReader()
 
-        // Set the reader to insert images when they are loaded.
-        reader.onload = function(e) {
-          const result = e.target.result
-          editor.image.insert(result, null, null, editor.image.get())
-        }
-
-        // Read image as base64.
         reader.readAsDataURL(files[0])
+
+        reader.onload = () => {
+          const result = reader.result
+
+          // this.image.upload([result])
+          this.image.insert(result, null, null, this.image.get())
+        }
       }
 
-      editor.popups.hideAll()
+      this.popups.hideAll()
 
       // Stop default upload chain.
       return false
@@ -216,6 +227,7 @@ export const ActicleCreatePage = () => {
   const imageRef: RefObject<HTMLImageElement> | null = useRef(null)
 
   const [article, setArticle] = useState<Article>({
+    author: "",
     body: "",
     cover: null,
     coverSource: null,
@@ -225,7 +237,7 @@ export const ActicleCreatePage = () => {
     description: "",
     keywords: "",
     lead: "",
-    readingTime: null,
+    time: null,
     status: "draft",
     tags: [],
     title: "",
@@ -273,10 +285,8 @@ export const ActicleCreatePage = () => {
       event.preventDefault()
       articleApi.create(article)
     },
-    [articleApi],
+    [article, articleApi],
   )
-
-  console.log(article.body)
 
   return (
     <Container maxWidth="lg" className={classes.root}>
@@ -305,7 +315,7 @@ export const ActicleCreatePage = () => {
                       >
                         <MenuItem value="newsfeed">Коротко</MenuItem>
                         <MenuItem value="detailed">В Деталях</MenuItem>
-                        <MenuItem value="analysis">Статистика</MenuItem>
+                        <MenuItem value="analysis">Биржевая аналитика</MenuItem>
                         <MenuItem value="in_russia">Что в России</MenuItem>
                         <MenuItem value="calendar">События</MenuItem>
                         <MenuItem value="person">Персона</MenuItem>
@@ -330,6 +340,16 @@ export const ActicleCreatePage = () => {
                       value={article.lead}
                       variant="outlined"
                       onChange={handleChangeFormField("lead")}
+                    />
+                  </Grid>
+                  <Grid item={true} xs={12}>
+                    <TextField
+                      id="author"
+                      fullWidth={true}
+                      label="Автор"
+                      value={article.author}
+                      variant="outlined"
+                      onChange={handleChangeFormField("author")}
                     />
                   </Grid>
                   <Grid item={true} xs={12}>
