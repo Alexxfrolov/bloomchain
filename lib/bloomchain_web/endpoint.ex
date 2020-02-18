@@ -10,11 +10,12 @@ defmodule BloomchainWeb.Endpoint do
 
   plug(Plug.Static, at: "/uploads", from: Path.expand('./uploads'), gzip: false)
 
-  plug(Plug.Static,
+  plug(
+    Plug.Static,
     at: "/",
     from: :bloomchain,
     gzip: false,
-    only: ~w(css fonts images js grapejs favicon.ico robots.txt)
+    only: ~w(css fonts images js grapejs admin favicon.ico robots.txt)
   )
 
   # Code reloading can be explicitly enabled under the
@@ -27,7 +28,8 @@ defmodule BloomchainWeb.Endpoint do
 
   plug(Plug.Logger)
 
-  plug(Plug.Parsers,
+  plug(
+    Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
     json_decoder: Poison
@@ -39,7 +41,8 @@ defmodule BloomchainWeb.Endpoint do
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
-  plug(Plug.Session,
+  plug(
+    Plug.Session,
     store: :cookie,
     key: "_bloomchain_key",
     signing_salt: "XzuQY6cr"
