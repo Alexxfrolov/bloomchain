@@ -23,7 +23,7 @@ defmodule BloomchainWeb.Router do
   end
 
   pipeline :api do
-    plug(:accepts, ["json", "multipart/form-data"])
+    # plug(:accepts, ["json", "multipart/form-data"])
   end
 
   scope "/admin", BloomchainWeb, as: :admin do
@@ -56,6 +56,8 @@ defmodule BloomchainWeb.Router do
   scope "/api/v1", BloomchainWeb, as: :api do
     pipe_through [:api]
 
-    resources("/article", Api.V1.ArticleController)
+    resources("/articles", Api.V1.ArticleController)
+    resources("/users", Api.V1.UserController)
+    resources("/tags", Api.V1.TagController)
   end
 end

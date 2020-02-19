@@ -1,4 +1,4 @@
-defmodule BloomchainWeb.Api.V1.ArticleController do
+defmodule BloomchainWeb.Api.V1.UserController do
   use BloomchainWeb, :controller
 
   alias Bloomchain.Content.Article
@@ -7,10 +7,5 @@ defmodule BloomchainWeb.Api.V1.ArticleController do
     articles = Article.get_published_posts("detailed", limit: 3)
 
     render(conn, "index.json", articles: articles)
-  end
-
-  def create(conn, params) do
-    require IEx
-    IEx.pry()
   end
 end
