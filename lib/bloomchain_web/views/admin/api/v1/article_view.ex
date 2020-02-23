@@ -1,4 +1,4 @@
-defmodule BloomchainWeb.Api.V1.UserView do
+defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
   use BloomchainWeb, :view
 
   def render("index.json", %{articles: articles}) do

@@ -7,13 +7,13 @@ defmodule BloomchainWeb.Router do
     plug(:accepts, ["html"])
     plug(:fetch_session)
     plug(:fetch_flash)
-    plug(:protect_from_forgery)
+    # plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
   end
 
   pipeline :admin do
-    plug(Plug.Authentication)
-    plug(Plug.EnsureAuthentication)
+    # plug(Plug.Authentication)
+    # plug(Plug.EnsureAuthentication)
     plug(Plug.ShowSidebar)
     plug(:put_layout, {BloomchainWeb.LayoutView, :admin})
   end
@@ -23,13 +23,22 @@ defmodule BloomchainWeb.Router do
   end
 
   pipeline :api do
-    # plug(:accepts, ["json", "multipart/form-data"])
+    plug(:accepts, ["json", "multipart/form-data"])
   end
 
   scope "/admin", BloomchainWeb, as: :admin do
     pipe_through([:browser, :admin])
 
     get("/", Admin.HomeController, :index)
+
+    scope "/api/v1" do
+      pipe_through [:api]
+
+      resources("/articles", Admin.Api.V1.ArticleController)
+      resources("/users", Admin.Api.V1.UserController)
+      resources("/tags", Admin.Api.V1.TagController, only: [:index, :create, :delete])
+    end
+
     get("/*path", Admin.HomeController, :index)
   end
 
@@ -51,13 +60,5 @@ defmodule BloomchainWeb.Router do
     resources("/in-russia", InRussiaController, only: [:index, :show])
     resources("/calendar", CalendarController, only: [:index, :show])
     resources("/research", ResearchController, only: [:index, :show])
-  end
-
-  scope "/api/v1", BloomchainWeb, as: :api do
-    pipe_through [:api]
-
-    resources("/articles", Api.V1.ArticleController)
-    resources("/users", Api.V1.UserController)
-    resources("/tags", Api.V1.TagController)
   end
 end

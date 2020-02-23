@@ -1,4 +1,4 @@
-defmodule BloomchainWeb.Api.V1.UserController do
+defmodule BloomchainWeb.Admin.Api.V1.UserController do
   use BloomchainWeb, :controller
 
   alias Bloomchain.Content.Article

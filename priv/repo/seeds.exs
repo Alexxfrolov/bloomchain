@@ -14,9 +14,9 @@ user =
   )
 
 Repo.insert_all(Tag, [
-  %{name: "криптовалюта", inserted_at: Timex.now(), updated_at: Timex.now()},
-  %{name: "рынок", inserted_at: Timex.now(), updated_at: Timex.now()},
-  %{name: "биткоин", inserted_at: Timex.now(), updated_at: Timex.now()}
+  %{name: "криптовалюта", slug: "kripto", inserted_at: Timex.now(), updated_at: Timex.now()},
+  %{name: "рынок", slug: "rinok", inserted_at: Timex.now(), updated_at: Timex.now()},
+  %{name: "биткоин", slug: "bitcoin", inserted_at: Timex.now(), updated_at: Timex.now()}
 ])
 
 for type <- ~w[newsfeed detailed analysis in_russia calendar person] do
