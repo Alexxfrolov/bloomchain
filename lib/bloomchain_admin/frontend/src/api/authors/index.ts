@@ -1,1 +1,1 @@
-export * from "./authors.types"
+export * from "./types"

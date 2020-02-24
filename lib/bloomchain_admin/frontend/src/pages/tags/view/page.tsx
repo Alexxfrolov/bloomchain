@@ -1,5 +1,5 @@
-import React from "react"
-import { Link } from "react-router5"
+import nanoid from "nanoid"
+import React, { useEffect, useState, useCallback, SyntheticEvent } from "react"
 import {
   Grid,
   Container,
@@ -16,8 +16,48 @@ import {
 } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
+import { Pagination } from "@material-ui/lab"
+import { ConditionalList } from "@ui"
+import { tagsAPI, Tag } from "@api/tags"
+import { RouterLink } from "@features/core"
 
 export const TagsViewPage = () => {
+  const [loading, setLoading] = useState(false)
+  const [tags, setTags] = useState<Tag[]>([])
+  const [pagination, setPagination] = useState({
+    page: 1,
+    pages: 2,
+    perPage: 20,
+  })
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      setError(false)
+
+      try {
+        const response = await tagsAPI.get(pagination.page)
+        setTags(response.data)
+      } catch {
+        setError(true)
+      }
+
+      setLoading(false)
+    }
+    fetchData()
+  }, [pagination.page])
+
+  const handleChangePagination = useCallback(
+    (event: SyntheticEvent, value: number) => {
+      setPagination({
+        ...pagination,
+        page: value,
+      })
+    },
+    [pagination, setPagination],
+  )
+
   return (
     <Container maxWidth="md">
       <Grid container={true} spacing={3}>
@@ -30,8 +70,11 @@ export const TagsViewPage = () => {
           <Button
             variant="contained"
             color="primary"
-            component={({ ...props }) => (
-              <Link routeName="admin.dictionaries.tags.create" {...props} />
+            component={(props) => (
+              <RouterLink
+                routeName="admin.dictionaries.tags.create"
+                {...props}
+              />
             )}
           >
             Новый тэг
@@ -43,35 +86,54 @@ export const TagsViewPage = () => {
               <TableHead>
                 <TableRow>
                   <TableCell component="th">Наименование</TableCell>
-                  <TableCell component="th">Раздел</TableCell>
+                  <TableCell component="th">Описание</TableCell>
+                  <TableCell component="th">
+                    Дата последнего обновления
+                  </TableCell>
                   <TableCell component="th">Действия</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>Криптовалюта</TableCell>
-                  <TableCell>Статистика</TableCell>
-                  <TableCell>
-                    <IconButton
-                      edge="start"
-                      color="inherit"
-                      component={({ ...props }) => (
-                        <Link
-                          routeName="admin.dictionaries.tags.edit"
-                          {...props}
-                        />
-                      )}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton edge="start" color="inherit">
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
+              <ConditionalList
+                list={tags}
+                renderExists={(list) => (
+                  <TableBody>
+                    {list.map((tag) => (
+                      <TableRow key={nanoid()}>
+                        <TableCell>{tag.name}</TableCell>
+                        <TableCell>{tag.slug}</TableCell>
+                        <TableCell>{tag.updatedAt}</TableCell>
+                        <TableCell>
+                          <IconButton
+                            edge="start"
+                            color="inherit"
+                            component={(props) => (
+                              <RouterLink
+                                routeName="admin.dictionaries.tags.edit"
+                                {...props}
+                              />
+                            )}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                          <IconButton edge="start" color="inherit">
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                )}
+              />
             </Table>
           </TableContainer>
+        </Grid>
+        <Grid item={true} xs={12} container={true} justify="center">
+          <Pagination
+            page={pagination.page}
+            count={pagination.pages}
+            color="primary"
+            onChange={handleChangePagination}
+          />
         </Grid>
       </Grid>
     </Container>

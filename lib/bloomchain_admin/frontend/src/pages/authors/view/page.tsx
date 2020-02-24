@@ -1,5 +1,4 @@
 import React from "react"
-import { Link } from "react-router5"
 import {
   Grid,
   Container,
@@ -16,6 +15,8 @@ import {
 } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
+import Pagination from "@material-ui/lab/Pagination"
+import { RouterLink } from "@features/core"
 
 export const AuthorsViewPage = () => {
   return (
@@ -30,8 +31,11 @@ export const AuthorsViewPage = () => {
           <Button
             variant="contained"
             color="primary"
-            component={({ ...props }) => (
-              <Link routeName="admin.dictionaries.authors.create" {...props} />
+            component={(props) => (
+              <RouterLink
+                routeName="admin.dictionaries.authors.create"
+                {...props}
+              />
             )}
           >
             Новый тэг
@@ -57,8 +61,8 @@ export const AuthorsViewPage = () => {
                     <IconButton
                       edge="start"
                       color="inherit"
-                      component={({ ...props }) => (
-                        <Link
+                      component={(props) => (
+                        <RouterLink
                           routeName="admin.dictionaries.authors.edit"
                           {...props}
                         />
@@ -74,6 +78,9 @@ export const AuthorsViewPage = () => {
               </TableBody>
             </Table>
           </TableContainer>
+        </Grid>
+        <Grid item={true} xs={12} container={true} justify="center">
+          <Pagination count={10} color="primary" />
         </Grid>
       </Grid>
     </Container>

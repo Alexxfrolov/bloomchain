@@ -1,5 +1,4 @@
 import React from "react"
-import { Link } from "react-router5"
 import {
   Grid,
   Container,
@@ -16,6 +15,8 @@ import {
 } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
+import Pagination from "@material-ui/lab/Pagination"
+import { RouterLink } from "@features/core"
 
 export const UsersViewPage = () => {
   return (
@@ -30,8 +31,11 @@ export const UsersViewPage = () => {
           <Button
             variant="contained"
             color="primary"
-            component={({ ...props }) => (
-              <Link routeName="admin.management.users.create" {...props} />
+            component={(props) => (
+              <RouterLink
+                routeName="admin.management.users.create"
+                {...props}
+              />
             )}
           >
             Новый пользователь
@@ -57,8 +61,8 @@ export const UsersViewPage = () => {
                     <IconButton
                       edge="start"
                       color="inherit"
-                      component={({ ...props }) => (
-                        <Link
+                      component={(props) => (
+                        <RouterLink
                           routeName="admin.management.users.edit"
                           {...props}
                         />
@@ -74,6 +78,9 @@ export const UsersViewPage = () => {
               </TableBody>
             </Table>
           </TableContainer>
+        </Grid>
+        <Grid item={true} xs={12} container={true} justify="center">
+          <Pagination count={10} color="primary" />
         </Grid>
       </Grid>
     </Container>

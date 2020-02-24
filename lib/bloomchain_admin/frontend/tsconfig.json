@@ -11,6 +11,8 @@
     "moduleResolution": "node",
     "baseUrl": "src",
     "paths": {
+      "@ui": ["ui/index"],
+      "@ui/*": ["ui/*"],
       "@lib": ["lib/index"],
       "@lib/*": ["lib/*"],
       "@features/*": ["features/*"],

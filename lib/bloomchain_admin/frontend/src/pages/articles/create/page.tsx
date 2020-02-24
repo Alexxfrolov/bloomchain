@@ -7,6 +7,7 @@ import React, {
   RefObject,
   FormEvent,
   SyntheticEvent,
+  ChangeEvent,
 } from "react"
 import {
   Container,
@@ -15,52 +16,54 @@ import {
   TextField,
   InputLabel,
   Typography,
-  Input,
   Select,
   FormControl,
   MenuItem,
-  Chip,
   Button,
   makeStyles,
-  useTheme,
   createStyles,
-  Theme,
 } from "@material-ui/core"
-import "froala-editor/js/third_party/font_awesome.min.js"
-import "froala-editor/js/plugins/font_family.min.js"
-import "froala-editor/js/plugins/font_size.min.js"
-import "froala-editor/js/plugins/help.min.js"
-import "froala-editor/js/plugins/line_breaker.min.js"
-import "froala-editor/js/plugins/line_height.min.js"
-import "froala-editor/js/plugins/link.min.js"
-import "froala-editor/js/plugins/lists.min.js"
+import Autocomplete from "@material-ui/lab/Autocomplete"
 import "froala-editor/js/plugins/paragraph_format.min.js"
-import "froala-editor/js/plugins/paragraph_style.min.js"
-import "froala-editor/js/plugins/quote.min.js"
-import "froala-editor/js/plugins/special_characters.min.js"
-import "froala-editor/js/third_party/spell_checker.min.js"
+import "froala-editor/js/plugins/lists.min.js"
+import "froala-editor/js/plugins/align.min.js"
+import "froala-editor/js/plugins/font_size.min.js"
+import "froala-editor/js/plugins/colors.min.js"
+import "froala-editor/js/plugins/link.min.js"
+import "froala-editor/js/plugins/image.min.js"
 import "froala-editor/js/plugins/table.min.js"
 import "froala-editor/js/plugins/url.min.js"
+import "froala-editor/js/plugins/quote.min.js"
 import "froala-editor/js/plugins/video.min.js"
-import "froala-editor/js/plugins/fullscreen.min.js"
-import "froala-editor/js/plugins/entities.min.js"
-import "froala-editor/js/plugins/align.min.js"
-import "froala-editor/js/plugins/code_view.min.js"
-import "froala-editor/js/plugins/colors.min.js"
-import "froala-editor/js/plugins/image.min.js"
+import "froala-editor/js/plugins/quick_insert.min.js"
+// import "froala-editor/js/plugins/code_view.min.js"
+// import "froala-editor/js/plugins/help.min.js"
+// import "froala-editor/js/plugins/line_height.min.js"
+// import "froala-editor/js/plugins/line_breaker.min.js"
+// import "froala-editor/js/plugins/fullscreen.min.js"
+
+// import "froala-editor/js/third_party/font_awesome.min.js"
+// import "froala-editor/js/plugins/font_family.min.js"
+
+// import "froala-editor/js/plugins/paragraph_style.min.js"
+
+// import "froala-editor/js/plugins/special_characters.min.js"
+// import "froala-editor/js/third_party/spell_checker.min.js"
+// import "froala-editor/js/plugins/entities.min.js"
+
 import "froala-editor/js/plugins/image_manager.min.js"
-import "froala-editor/js/froala_editor.pkgd.min.js"
+// import "froala-editor/css/froala_style.min.css"
 import "froala-editor/js/languages/ru.js"
-import "froala-editor/css/froala_style.min.css"
+import "froala-editor/js/froala_editor.pkgd.min.js"
 import "froala-editor/css/froala_editor.pkgd.min.css"
 import FroalaEditor from "react-froala-wysiwyg"
-import { articleApi, Article } from "@api/articles"
-
-const tags = ["биткоин", "криптовалюта", "биржа", "рынок"]
+import { articlesAPI, Article } from "@api/articles"
+import { tagsAPI, Tag } from "@api/tags"
 
 const froalaEditorConfig = {
   height: 385,
-  // language: "ru",
+  language: "ru",
+  placeholderText: "",
   paragraphFormat: {
     N: "Normal",
     H1: "Heading 1",
@@ -76,108 +79,64 @@ const froalaEditorConfig = {
         "bold",
         "italic",
         "underline",
-        "fontFamily",
+        "insertLink",
         "fontSize",
         "textColor",
-        "backgroundColor",
-        "clearFormatting",
       ],
+      align: "left",
+      buttonsVisible: 2,
     },
     moreParagraph: {
       buttons: [
+        "paragraphFormat",
+        "quote",
         "alignLeft",
         "alignCenter",
-        "formatOLSimple",
         "alignRight",
-        "alignJustify",
-        "formatOL",
         "formatUL",
-        "paragraphFormat",
-        "paragraphStyle",
-        "lineHeight",
-        "outdent",
-        "indent",
-        "quote",
       ],
+      align: "left",
+      buttonsVisible: 2,
     },
     moreRich: {
-      buttons: [
-        "insertLink",
-        "insertImage",
-        "insertVideo",
-        "insertTable",
-        "emoticons",
-        "fontAwesome",
-        "specialCharacters",
-        "embedly",
-        "insertFile",
-        "insertHR",
-      ],
+      buttons: ["alert", "insertTable", "insertImage", "insertVideo"],
+      align: "left",
+      buttonsVisible: 3,
     },
     moreMisc: {
-      buttons: [
-        "undo",
-        "redo",
-        "fullscreen",
-        "print",
-        "getPDF",
-        "spellChecker",
-        "selectAll",
-        "html",
-        "help",
-      ],
+      buttons: ["undo", "redo"],
       align: "right",
       buttonsVisible: 2,
     },
-    imageUploadURL: "/api/v1/media",
-    imageUploadMethod: "POST",
-    imageUploadParam: "image",
-    imageMaxSize: 15 * 1024 * 1024, // 15MB.
-    imageAllowedTypes: ["*"],
-    fileAllowedTypes: ["*"],
   },
-  events: {
-    "image.beforeUpload": function(files: FileList) {
-      if (files.length) {
-        // Create a File Reader.
-        const reader = new FileReader()
+  imageUploadURL: "/admin/api/v1/media",
+  imageUploadMethod: "POST",
+  imageUploadParam: "image",
+  imageMaxSize: 15 * 1024 * 1024, // 15MB.
+  imageAllowedTypes: ["jpeg", "jpg", "png"],
+  quickInsertButtons: ["image", "video", "table", "ul", "qoute"],
+  // events: {
+  //   "image.beforeUpload": function(files: FileList) {
+  //     if (files.length) {
+  //       // Create a File Reader.
+  //       const reader = new FileReader()
 
-        reader.readAsDataURL(files[0])
+  //       reader.readAsDataURL(files[0])
 
-        reader.onload = () => {
-          const result = reader.result
+  //       reader.onload = () => {
+  //         const result = reader.result
 
-          // this.image.upload([result])
-          this.image.insert(result, null, null, this.image.get())
-        }
-      }
+  //         // this.image.upload([result])
+  //         this.image.insert(result, null, null, this.image.get())
+  //       }
+  //     }
 
-      this.popups.hideAll()
+  //     this.popups.hideAll()
 
-      // Stop default upload chain.
-      return false
-    },
-  },
-}
-
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 150,
-    },
-  },
-}
-
-function getStyles(name: string, personName: string[], theme: Theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  }
+  //     // Stop default upload chain.
+  //     return false
+  //   },
+  // },
 }
 
 const useStyles = makeStyles((theme) =>
@@ -202,14 +161,26 @@ const useStyles = makeStyles((theme) =>
 
 export const ActicleCreatePage = () => {
   const classes = useStyles()
-  const theme = useTheme()
+
+  const [error, setError] = useState(false)
+
+  const [tags, setTags] = useState<Tag[]>([])
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const response = await tagsAPI.get()
+        setTags(response.data)
+      } catch {
+        setError(true)
+      }
+    })()
+  }, [])
 
   const inputTypeLabel: RefObject<HTMLLabelElement> | null = useRef(null)
   const inputStatusLabel: RefObject<HTMLLabelElement> | null = useRef(null)
-  const inputTagsLabel: RefObject<HTMLLabelElement> | null = useRef(null)
   const [typeLabelWidth, setTypeLabelWidth] = useState(0)
   const [statusLabelWidth, setStatusLabelWidth] = useState(0)
-  const [tagsLabelWidth, setTagsLabelWidth] = useState(0)
 
   useEffect(() => {
     if (inputTypeLabel.current) {
@@ -218,22 +189,20 @@ export const ActicleCreatePage = () => {
     if (inputStatusLabel.current) {
       setStatusLabelWidth(inputStatusLabel.current.offsetWidth)
     }
-    if (inputTagsLabel.current) {
-      setTagsLabelWidth(inputTagsLabel.current.offsetWidth)
-    }
   }, [])
 
   const fileInputRef: RefObject<HTMLInputElement> | null = useRef(null)
   const imageRef: RefObject<HTMLImageElement> | null = useRef(null)
 
-  const [article, setArticle] = useState<Article>({
+  const [article, setArticle] = useState<
+    Omit<Article, "createdAt" | "updatedAt">
+  >({
     author: "",
     body: "",
     cover: null,
     coverSource: null,
     coverTitle: null,
     coverAlt: null,
-    createdAt: "",
     description: "",
     keywords: "",
     lead: "",
@@ -247,7 +216,7 @@ export const ActicleCreatePage = () => {
 
   const handleChangeFormField = useCallback(
     (field: string) => (event: SyntheticEvent<{ value: string }>) => {
-      setArticle({ ...article, ...{ [field]: event.target.value } })
+      setArticle({ ...article, ...{ [field]: event.currentTarget.value } })
     },
     [article, setArticle],
   )
@@ -259,7 +228,7 @@ export const ActicleCreatePage = () => {
     [article, setArticle],
   )
 
-  const handleImageChange = useCallback(() => {
+  const handleChangeImage = useCallback(() => {
     if (
       fileInputRef.current &&
       fileInputRef.current.files !== null &&
@@ -268,9 +237,9 @@ export const ActicleCreatePage = () => {
       const reader = new FileReader()
 
       reader.onload = function(event: ProgressEvent<FileReader>) {
-        const src = event.target.result
         if (imageRef.current) {
-          src && imageRef.current.setAttribute("src", src)
+          event.target.result &&
+            imageRef.current.setAttribute("src", event.target.result)
         }
       }
 
@@ -280,12 +249,34 @@ export const ActicleCreatePage = () => {
     }
   }, [article, setArticle])
 
+  const handleChangeSelect = useCallback(
+    (name: keyof Pick<Article, "type" | "status">) => (
+      event: ChangeEvent<{ value: unknown }>,
+    ) => {
+      setArticle({
+        ...article,
+        [name]: event.target.value,
+      })
+    },
+    [article, setArticle],
+  )
+
+  const handleChangeTagsSelect = useCallback(
+    (event: SyntheticEvent, options: Tag[] | null) => {
+      setArticle({
+        ...article,
+        tags: options !== null ? options.map((option) => option.name) : [],
+      })
+    },
+    [article, setArticle],
+  )
+
   const handleSubmit = useCallback(
     (event: FormEvent) => {
       event.preventDefault()
-      articleApi.create(article)
+      articlesAPI.create(article)
     },
-    [article, articleApi],
+    [article],
   )
 
   return (
@@ -311,7 +302,7 @@ export const ActicleCreatePage = () => {
                         id="type"
                         labelWidth={typeLabelWidth}
                         value={article.type}
-                        onChange={handleChangeFormField("type")}
+                        onChange={handleChangeSelect("type")}
                       >
                         <MenuItem value="newsfeed">Коротко</MenuItem>
                         <MenuItem value="detailed">В Деталях</MenuItem>
@@ -353,11 +344,58 @@ export const ActicleCreatePage = () => {
                     />
                   </Grid>
                   <Grid item={true} xs={12}>
+                    <Autocomplete
+                      id="tags"
+                      multiple={true}
+                      options={tags}
+                      disableCloseOnSelect={true}
+                      getOptionLabel={(option) => option.name}
+                      onChange={handleChangeTagsSelect}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Тэги"
+                          variant="outlined"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item={true} xs={12}>
                     <FroalaEditor
                       tag="textarea"
                       config={froalaEditorConfig}
                       model={article.body}
                       onModelChange={handleChangeEditor}
+                    />
+                  </Grid>
+                  <Grid item={true} xs={12}>
+                    <Typography
+                      color="textPrimary"
+                      variant="h6"
+                      component="h6"
+                      gutterBottom={false}
+                    >
+                      Мета информация
+                    </Typography>
+                  </Grid>
+                  <Grid item={true} xs={12}>
+                    <TextField
+                      id="keywords"
+                      label="Keywords"
+                      value={article.keywords}
+                      fullWidth={true}
+                      variant="outlined"
+                      onChange={handleChangeFormField("keywords")}
+                    />
+                  </Grid>
+                  <Grid item={true} xs={12}>
+                    <TextField
+                      id="description"
+                      label="Description"
+                      value={article.description}
+                      fullWidth={true}
+                      variant="outlined"
+                      onChange={handleChangeFormField("description")}
                     />
                   </Grid>
                 </Grid>
@@ -385,7 +423,7 @@ export const ActicleCreatePage = () => {
                       ref={fileInputRef}
                       type="file"
                       style={{ display: "none" }}
-                      onChange={handleImageChange}
+                      onChange={handleChangeImage}
                     />
                     <label htmlFor="cover">
                       <Button
@@ -444,7 +482,7 @@ export const ActicleCreatePage = () => {
                         id="status"
                         labelWidth={statusLabelWidth}
                         value={article.status}
-                        onChange={handleChangeFormField("status")}
+                        onChange={handleChangeSelect("status")}
                       >
                         <MenuItem value="draft">Черновик</MenuItem>
                         <MenuItem value="published">Опубликовано</MenuItem>
@@ -453,81 +491,14 @@ export const ActicleCreatePage = () => {
                     </FormControl>
                   </Grid>
                   <Grid item={true} xs={12}>
-                    <FormControl variant="outlined" fullWidth={true}>
-                      <InputLabel ref={inputTagsLabel} id="tags">
-                        Тэги
-                      </InputLabel>
-                      <Select
-                        labelId="tags"
-                        multiple={true}
-                        labelWidth={tagsLabelWidth}
-                        value={article.tags}
-                        onChange={handleChangeFormField("tags")}
-                        input={<Input id="tags" />}
-                        renderValue={(selected) => (
-                          <div className={classes.chips}>
-                            {(selected as string[]).map((value) => (
-                              <Chip
-                                key={value}
-                                label={value}
-                                className={classes.chip}
-                              />
-                            ))}
-                          </div>
-                        )}
-                        MenuProps={MenuProps}
-                      >
-                        {tags.map((tag) => (
-                          <MenuItem
-                            key={nanoid()}
-                            value={tag}
-                            style={getStyles(tag, article.tags, theme)}
-                          >
-                            {tag}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item={true} xs={12}>
                     <TextField
                       id="description"
                       label="Время прочтения"
                       type="number"
-                      value={article.readingTime || ""}
+                      value={article.time || ""}
                       fullWidth={true}
                       variant="outlined"
-                      onChange={handleChangeFormField("readingTime")}
-                    />
-                  </Grid>
-                  <Grid item={true} xs={12}>
-                    <Typography
-                      color="textPrimary"
-                      variant="h6"
-                      component="h6"
-                      gutterBottom={false}
-                    >
-                      Мета информация
-                    </Typography>
-                  </Grid>
-                  <Grid item={true} xs={12}>
-                    <TextField
-                      id="keywords"
-                      label="Keywords"
-                      value={article.keywords}
-                      fullWidth={true}
-                      variant="outlined"
-                      onChange={handleChangeFormField("keywords")}
-                    />
-                  </Grid>
-                  <Grid item={true} xs={12}>
-                    <TextField
-                      id="description"
-                      label="Description"
-                      value={article.description}
-                      fullWidth={true}
-                      variant="outlined"
-                      onChange={handleChangeFormField("description")}
+                      onChange={handleChangeFormField("time")}
                     />
                   </Grid>
                 </Grid>

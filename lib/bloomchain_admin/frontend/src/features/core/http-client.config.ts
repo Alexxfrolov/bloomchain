@@ -1,3 +1,3 @@
 export const httpConfig = {
-  baseUrl: "/api/v1",
+  baseUrl: "/admin/api/v1",
 }
