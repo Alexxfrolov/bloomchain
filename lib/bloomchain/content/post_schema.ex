@@ -5,8 +5,7 @@ defmodule Bloomchain.Content.Post do
   use Ecto.Schema
   use Arc.Ecto.Schema
 
-  alias Bloomchain.Auth.User
-  alias Bloomchain.Content.Tag
+  alias Bloomchain.Content.{User, Tag}
   alias BloomchainWeb.Uploaders.Cover
 
   @derive {Phoenix.Param, key: :slug}

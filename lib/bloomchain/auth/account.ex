@@ -1,6 +1,6 @@
-defmodule Bloomchain.Auth.Accounts do
+defmodule Bloomchain.Auth.Account do
   alias Bloomchain.Repo
-  alias Bloomchain.Auth.User
+  alias Bloomchain.Content.User
   alias Comeonin.Bcrypt
   alias Bloomchain.Auth
 

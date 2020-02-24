@@ -1,6 +1,6 @@
 defmodule Bloomchain.Content.Article do
   alias Bloomchain.Content.Post
-  alias Bloomchain.Auth.User
+  alias Bloomchain.Content.User
   alias Bloomchain.Repo
 
   import Ecto.Query

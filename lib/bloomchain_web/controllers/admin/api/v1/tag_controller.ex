@@ -12,7 +12,7 @@ defmodule BloomchainWeb.Admin.Api.V1.TagController do
   end
 
   def create(conn, params) do
-    changeset = Tag.changeset(%Tag{}, params)
+    changeset = Tag.create_changeset(%Tag{}, params)
 
     with {:ok, tag} <- Repo.insert(changeset) do
       conn

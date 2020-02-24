@@ -1,7 +1,6 @@
 alias Bloomchain.Repo
 
-alias Bloomchain.Auth.User
-alias Bloomchain.Content.{Article, Tag}
+alias Bloomchain.Content.{Article, Tag, User}
 
 user =
   Repo.insert!(

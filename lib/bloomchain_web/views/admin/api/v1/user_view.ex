@@ -1,18 +1,26 @@
 defmodule BloomchainWeb.Admin.Api.V1.UserView do
   use BloomchainWeb, :view
 
-  def render("index.json", %{articles: articles}) do
+  def render("index.json", %{users: users}) do
     %{
-      articles: Enum.map(articles, &article_json/1)
+      users: Enum.map(users, &user_json/1)
     }
   end
 
-  def article_json(article) do
+  def render("show.json", %{user: user}) do
     %{
-      title: article.title,
-      lead: article.lead,
-      inserted_at: article.inserted_at,
-      updated_at: article.updated_at
+      user: user_json(user)
+    }
+  end
+
+  def user_json(user) do
+    %{
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      created_at: user.inserted_at,
+      updated_at: user.updated_at
     }
   end
 end

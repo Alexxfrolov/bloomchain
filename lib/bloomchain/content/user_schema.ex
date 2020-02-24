@@ -1,4 +1,4 @@
-defmodule Bloomchain.Auth.User do
+defmodule Bloomchain.Content.User do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -12,17 +12,17 @@ defmodule Bloomchain.Auth.User do
     timestamps()
   end
 
-  @create_fields ~w(name password email)a
-  @optional_fields ~w(role)a
+  @required_fields ~w(name email)a
+  @optional_fields ~w(role password)a
 
-  def create_changeset(user, attrs) do
+  def changeset(user, params \\ %{}) do
     user
-    |> cast(attrs, @create_fields ++ @optional_fields)
-    |> validate_required(@create_fields)
+    |> cast(params, @required_fields ++ @optional_fields)
+    |> validate_required(@required_fields)
     |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)
     |> validate_length(:name, min: 3)
-    |> validate_length(:password, min: 3)
+    |> validate_length(:password, min: 6)
     |> put_password_hash()
   end
 

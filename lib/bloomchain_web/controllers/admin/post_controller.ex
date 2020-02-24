@@ -3,7 +3,7 @@ defmodule BloomchainWeb.Admin.PostController do
 
   alias Bloomchain.Content.Post
   alias Bloomchain.Content.Article
-  alias Bloomchain.Auth.Accounts
+  alias Bloomchain.Auth.Account
 
   # def index(conn, _) do
   #   posts = Blog.get_posts_list()

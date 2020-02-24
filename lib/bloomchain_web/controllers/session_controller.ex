@@ -1,17 +1,17 @@
 defmodule BloomchainWeb.SessionController do
   use BloomchainWeb, :controller
 
-  alias Bloomchain.Auth.Accounts
+  alias Bloomchain.Auth.Account
 
   def new(conn, _) do
     render(conn, "new.html")
   end
 
   def create(conn, %{"session" => %{"email" => email, "password" => password}}) do
-    case Accounts.authenticate_user(email, password) do
+    case Account.authenticate_user(email, password) do
       {:ok, user} ->
         conn
-        |> Accounts.login(user)
+        |> Account.login(user)
         |> redirect_after_login(user)
 
       {:error, _} ->
@@ -23,7 +23,7 @@ defmodule BloomchainWeb.SessionController do
 
   def delete(conn, _) do
     conn
-    |> Accounts.logout()
+    |> Account.logout()
     |> redirect(to: page_path(conn, :index))
   end
 
