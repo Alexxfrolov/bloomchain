@@ -5,7 +5,7 @@
             <div class="d-flex align-items-center">
               <span class="small mr-sm-4 mr-2"><%= @article.updated_at %></span>
               <i class="mr-1 icon-user"></i>
-              <span class="small mr-sm-4 mr-2"><%= @article.user.name %></span>
+              <span class="small mr-sm-4 mr-2"><%= @article.author %></span>
             </div>
             <div class="d-inline-block mt-3">
               <span class="small mr-2">Теги:</span>

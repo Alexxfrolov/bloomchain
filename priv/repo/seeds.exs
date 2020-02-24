@@ -2,15 +2,14 @@ alias Bloomchain.Repo
 
 alias Bloomchain.Content.{Article, Tag, User}
 
-user =
-  Repo.insert!(
-    User.create_changeset(%User{}, %{
-      name: "Admin",
-      email: "admin@app.com",
-      password: "admin123",
-      role: "admin"
-    })
-  )
+Repo.insert!(
+  User.changeset(%User{}, %{
+    name: "Admin",
+    email: "admin@app.com",
+    password: "admin123",
+    role: "admin"
+  })
+)
 
 Repo.insert_all(Tag, [
   %{name: "криптовалюта", slug: "kripto", inserted_at: Timex.now(), updated_at: Timex.now()},
@@ -28,8 +27,11 @@ for type <- ~w[newsfeed detailed analysis in_russia calendar person] do
         lead:
           "Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда.",
         type: type,
+        description: "Тестовое описание",
+        keywords: ["asdf", "test"],
         body: File.read!("#{File.cwd!()}/priv/repo/data_files/newsfeed.html"),
         status: "published",
+        author: "Frolov Aleksey",
         time: i + 10,
         cover: %Plug.Upload{
           content_type: "image/png",
@@ -37,7 +39,6 @@ for type <- ~w[newsfeed detailed analysis in_russia calendar person] do
           path: "#{File.cwd!()}/priv/repo/data_files/img-bitcoin.jpg"
         }
       },
-      user,
       Repo.all(Tag)
     )
   end

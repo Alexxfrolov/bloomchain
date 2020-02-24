@@ -3,17 +3,15 @@ defmodule BloomchainWeb.Admin.Api.V1.TagView do
 
   def render("index.json", %{tags: tags}) do
     %{
-      tags: Enum.map(tags, &tag_json/1)
+      data: Enum.map(tags, &tag_json/1)
     }
   end
 
   def render("show.json", %{tag: tag}) do
-    %{
-      tag: tag_json(tag)
-    }
+    tag_json(tag)
   end
 
-  defp tag_json(tag) do
+  def tag_json(tag) do
     %{
       id: tag.id,
       name: tag.name,

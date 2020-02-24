@@ -1,15 +1,16 @@
 defmodule Bloomchain.Content.Article do
   alias Bloomchain.Content.Post
-  alias Bloomchain.Content.User
+  alias Bloomchain.Content.Tag
   alias Bloomchain.Repo
 
   import Ecto.Query
 
-  def get_posts_list() do
+  def get_posts_list(type, status) do
     Repo.all(
       from(
         p in Post,
-        preload: :user
+        where: p.type == ^type and p.status == ^status,
+        preload: [:tags]
       )
     )
   end
@@ -24,18 +25,19 @@ defmodule Bloomchain.Content.Article do
     )
   end
 
-  def get(slug, type: type) do
-    Repo.get_by(Post, slug: slug, type: type)
-    |> Repo.preload([:user])
+  def get(id) do
+    Repo.get(Post, id)
     |> Repo.preload([:tags])
   end
 
-  def create(post, %User{} = user, tags) do
-    post =
-      post
-      |> Map.put(:user_id, user.id)
+  def get(slug, type: type) do
+    Repo.get_by(Post, slug: slug, type: type)
+    |> Repo.preload([:tags])
+  end
 
-    changeset = Post.create_changeset(%Post{}, post, tags)
+  def create(%{} = params, tags \\ []) do
+    tags = Repo.all(from(t in Tag, where: t.id in ^tags))
+    changeset = Post.create_changeset(%Post{}, params, tags)
 
     case changeset.valid? do
       true -> Repo.insert(changeset)
