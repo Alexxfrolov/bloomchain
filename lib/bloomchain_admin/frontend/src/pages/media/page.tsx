@@ -116,7 +116,7 @@ export const MediaPage = () => {
         </Grid>
         <Grid item={true} xs={12}>
           <TableContainer component={Paper}>
-            <Table>
+            {/* <Table>
               <TableHead>
                 <TableRow>
                   <StyledTableCell component="th">Миниатюра</StyledTableCell>
@@ -140,7 +140,7 @@ export const MediaPage = () => {
                   </StyledTableCell>
                 </StyledTableRow>
               </TableBody>
-            </Table>
+            </Table> */}
           </TableContainer>
         </Grid>
       </Grid>

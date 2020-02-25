@@ -20,7 +20,7 @@ import {
   MenuItem,
   makeStyles,
 } from "@material-ui/core"
-import { User } from "@api/user"
+import { usersAPI, User } from "@api/user"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -48,11 +48,10 @@ export const UserCreatePage = () => {
   }, [])
 
   const [user, setUser] = useState<User>({
+    name: "",
     email: "",
     password: "",
-    passwordConfirmation: "",
-    role: "editor",
-    status: "active",
+    role: "writer",
   })
 
   const handleChangeField = useCallback(
@@ -62,9 +61,13 @@ export const UserCreatePage = () => {
     [user, setUser],
   )
 
-  const handleSubmit = useCallback((event: FormEvent) => {
-    event.preventDefault()
-  }, [])
+  const handleSubmit = useCallback(
+    (event: FormEvent) => {
+      event.preventDefault()
+      usersAPI.create(user)
+    },
+    [user],
+  )
 
   return (
     <Container maxWidth="md">
@@ -78,6 +81,16 @@ export const UserCreatePage = () => {
           <Paper className={classes.paper} variant="elevation">
             <form onSubmit={handleSubmit}>
               <Grid item={true} xs={12} container={true} spacing={4}>
+                <Grid item={true} xs={12}>
+                  <TextField
+                    id="name"
+                    fullWidth={true}
+                    label="Имя"
+                    value={user.name}
+                    variant="outlined"
+                    onChange={handleChangeField("name")}
+                  />
+                </Grid>
                 <Grid item={true} xs={12}>
                   <TextField
                     id="email"
@@ -100,25 +113,8 @@ export const UserCreatePage = () => {
                       value={user.role}
                       onChange={handleChangeField("role")}
                     >
-                      <MenuItem value="editor">Редактор</MenuItem>
                       <MenuItem value="writer">Автор</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item={true} xs={12}>
-                  <FormControl variant="outlined" fullWidth={true}>
-                    <InputLabel ref={selectStatusLabelRef} id="status">
-                      Статус
-                    </InputLabel>
-                    <Select
-                      labelId="status"
-                      id="status"
-                      labelWidth={selectStatusLabelWidth}
-                      value={user.status}
-                      onChange={handleChangeField("status")}
-                    >
-                      <MenuItem value="active">Активный</MenuItem>
-                      <MenuItem value="inactive">Неактивный</MenuItem>
+                      <MenuItem value="admin">Админ</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -131,17 +127,6 @@ export const UserCreatePage = () => {
                     value={user.password}
                     variant="outlined"
                     onChange={handleChangeField("password")}
-                  />
-                </Grid>
-                <Grid item={true} xs={12}>
-                  <TextField
-                    id="passwordConfirmation"
-                    type="password"
-                    fullWidth={true}
-                    label="Подтверждение пароля"
-                    value={user.passwordConfirmation}
-                    variant="outlined"
-                    onChange={handleChangeField("passwordConfirmation")}
                   />
                 </Grid>
                 <Grid item={true} xs={12} container={true} justify="flex-end">

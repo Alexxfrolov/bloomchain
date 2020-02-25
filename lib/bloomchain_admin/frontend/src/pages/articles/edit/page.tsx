@@ -9,6 +9,7 @@ import React, {
   SyntheticEvent,
   ChangeEvent,
 } from "react"
+import { useRoute } from "react-router5"
 import {
   Container,
   Paper,
@@ -159,12 +160,33 @@ const useStyles = makeStyles((theme) =>
   }),
 )
 
-export const ActicleCreatePage = () => {
+export const ActicleEditPage = () => {
   const classes = useStyles()
+  const { route } = useRoute()
 
   const [error, setError] = useState(false)
 
   const [tags, setTags] = useState<Tag[]>([])
+  const [article, setArticle] = useState<
+    Omit<Article, "createdAt" | "updatedAt">
+  >({
+    id: null,
+    author: "",
+    body: "",
+    cover: null,
+    coverSource: null,
+    coverTitle: null,
+    coverAlt: null,
+    description: "",
+    keywords: "",
+    lead: "",
+    time: null,
+    status: "draft",
+    tags: [],
+    title: "",
+    type: "newsfeed",
+    userId: 1,
+  })
 
   useEffect(() => {
     ;(async () => {
@@ -176,6 +198,17 @@ export const ActicleCreatePage = () => {
       }
     })()
   }, [])
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const response = await articlesAPI.getById(route.params.id)
+        setArticle({ ...response.data })
+      } catch {
+        setError(true)
+      }
+    })()
+  }, [route.params.id])
 
   const inputTypeLabel: RefObject<HTMLLabelElement> | null = useRef(null)
   const inputStatusLabel: RefObject<HTMLLabelElement> | null = useRef(null)
@@ -193,26 +226,6 @@ export const ActicleCreatePage = () => {
 
   const fileInputRef: RefObject<HTMLInputElement> | null = useRef(null)
   const imageRef: RefObject<HTMLImageElement> | null = useRef(null)
-
-  const [article, setArticle] = useState<
-    Omit<Article, "createdAt" | "updatedAt">
-  >({
-    author: "",
-    body: "",
-    cover: null,
-    coverSource: null,
-    coverTitle: null,
-    coverAlt: null,
-    description: "",
-    keywords: "",
-    lead: "",
-    time: null,
-    status: "draft",
-    tags: [],
-    title: "",
-    type: "newsfeed",
-    userId: 1,
-  })
 
   const handleChangeFormField = useCallback(
     (field: string) => (event: SyntheticEvent<{ value: string }>) => {
@@ -274,7 +287,7 @@ export const ActicleCreatePage = () => {
   const handleSubmit = useCallback(
     (event: FormEvent) => {
       event.preventDefault()
-      articlesAPI.create(article)
+      articlesAPI.update(article)
     },
     [article],
   )

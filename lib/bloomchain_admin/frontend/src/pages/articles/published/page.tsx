@@ -1,3 +1,4 @@
+import nanoid from "nanoid"
 import React, { useState, useEffect, useCallback, ChangeEvent } from "react"
 import DateFnsUtils from "@date-io/date-fns"
 import {
@@ -25,16 +26,24 @@ import Pagination from "@material-ui/lab/Pagination"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { articlesAPI, Article } from "@api/articles"
+import { RouterLink } from "@features/core"
 
 export const ArticlesPublishedPage = () => {
+  const [articles, setArticles] = useState<Article[]>([])
   const [tabIndex, setTabIndex] = useState(0)
   const [type, setType] = useState<Article["type"]>("newsfeed")
   const [dateStart, setDateStart] = useState<Date | null>(null)
   const [dateEnd, setDateEnd] = useState<Date | null>(new Date())
 
   useEffect(() => {
-    articlesAPI.get()
-  }, [])
+    const fetchData = async () => {
+      try {
+        const response = await articlesAPI.getLatest(type, "published")
+        setArticles(response.data.data)
+      } catch {}
+    }
+    fetchData()
+  }, [type])
 
   const handleDateStartChange = useCallback(
     (date: Date | null) => {
@@ -56,6 +65,13 @@ export const ArticlesPublishedPage = () => {
       setTabIndex(newValue)
     },
     [setTabIndex, setType],
+  )
+
+  const handleClickDeleteButton = useCallback(
+    (id: number) => async () => {
+      await articlesAPI.remove(id)
+    },
+    [],
   )
 
   return (
@@ -123,7 +139,7 @@ export const ArticlesPublishedPage = () => {
             </Tabs>
           </AppBar>
           <TableContainer component={Paper}>
-            <Table aria-label="published articles table">
+            <Table>
               <TableHead>
                 <TableRow>
                   <TableCell component="th">Автор</TableCell>
@@ -139,33 +155,46 @@ export const ArticlesPublishedPage = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  <TableCell>Admin</TableCell>
-                  <TableCell>06.12.2019 в 12:02</TableCell>
-                  <TableCell>21.01.2020 в 20:05 </TableCell>
-                  <TableCell>
-                    Совет ЕС определил стратегические приоритеты борьбы против
-                    финансирования терроризма
-                  </TableCell>
-                  <TableCell align="right">5</TableCell>
-                  <TableCell>
-                    <Grid container={true} spacing={1}>
-                      <IconButton edge="start" color="inherit">
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton edge="start" color="inherit">
-                        <DeleteIcon />
-                      </IconButton>
-                    </Grid>
-                  </TableCell>
-                </TableRow>
+                {articles.map((article) => (
+                  <TableRow key={nanoid()}>
+                    <TableCell>{article.author}</TableCell>
+                    <TableCell>{article.published_at}</TableCell>
+                    <TableCell>{article.updated_at}</TableCell>
+                    <TableCell>{article.title}</TableCell>
+                    <TableCell align="right">{article.views_count}</TableCell>
+                    <TableCell>
+                      <Grid container={true} spacing={1}>
+                        <IconButton
+                          edge="start"
+                          color="inherit"
+                          component={(props) => (
+                            <RouterLink
+                              routeName="admin.articles.edit"
+                              routeParams={{ id: article.id }}
+                              {...props}
+                            />
+                          )}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          edge="start"
+                          color="inherit"
+                          onClick={handleClickDeleteButton(article.id)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Grid>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
-        <Grid item={true} xs={12} container={true} justify="center">
+        {/* <Grid item={true} xs={12} container={true} justify="center">
           <Pagination count={10} color="primary" />
-        </Grid>
+        </Grid> */}
       </Grid>
     </Container>
   )

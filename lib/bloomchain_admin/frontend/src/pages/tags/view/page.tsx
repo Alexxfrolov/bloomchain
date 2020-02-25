@@ -14,7 +14,6 @@ import {
   Button,
   IconButton,
 } from "@material-ui/core"
-import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { Pagination } from "@material-ui/lab"
 import { ConditionalList } from "@ui"
@@ -26,7 +25,7 @@ export const TagsViewPage = () => {
   const [tags, setTags] = useState<Tag[]>([])
   const [pagination, setPagination] = useState({
     page: 1,
-    pages: 2,
+    pages: 1,
     perPage: 20,
   })
   const [error, setError] = useState(false)
@@ -38,7 +37,7 @@ export const TagsViewPage = () => {
 
       try {
         const response = await tagsAPI.get(pagination.page)
-        setTags(response.data)
+        setTags(response.data.data)
       } catch {
         setError(true)
       }
@@ -56,6 +55,13 @@ export const TagsViewPage = () => {
       })
     },
     [pagination, setPagination],
+  )
+
+  const handleClickDeleteButton = useCallback(
+    (id: number) => async () => {
+      await tagsAPI.remove(id)
+    },
+    [],
   )
 
   return (
@@ -106,16 +112,8 @@ export const TagsViewPage = () => {
                           <IconButton
                             edge="start"
                             color="inherit"
-                            component={(props) => (
-                              <RouterLink
-                                routeName="admin.dictionaries.tags.edit"
-                                {...props}
-                              />
-                            )}
+                            onClick={handleClickDeleteButton(tag.id)}
                           >
-                            <EditIcon />
-                          </IconButton>
-                          <IconButton edge="start" color="inherit">
                             <DeleteIcon />
                           </IconButton>
                         </TableCell>

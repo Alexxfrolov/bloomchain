@@ -1,52 +1,37 @@
+import axios from "axios"
 import decamelize from "decamelize"
 import { httpConfig } from "@features/core"
 
-function get() {
-  return fetch(`${httpConfig.baseUrl}/articles`, {
-    method: "GET",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
+import { Article } from "./types"
+
+function getLatest(type: Article["type"], status: Article["status"]) {
+  return axios(`${httpConfig.baseUrl}/articles?type=${type}&status=${status}`)
 }
 
-function create(
-  article: Omit<import("./types").Article, "createdAt" | "updatedAt">,
-) {
+function getById(id: number) {
+  return axios(`${httpConfig.baseUrl}/articles/${id}`)
+}
+
+function create(article: Omit<Article, "createdAt" | "updatedAt">) {
   const formData = new FormData()
   Object.keys(article).forEach((key) =>
     formData.append(decamelize(key), article[key]),
   )
-
-  return fetch(`${httpConfig.baseUrl}/articles`, {
-    method: "POST",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-    body: formData,
-  })
+  return axios.post(`${httpConfig.baseUrl}/articles`, formData)
 }
 
-function update(id: number) {
-  return fetch(`${httpConfig.baseUrl}/articles/${id}`, {
-    method: "PATCH",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
+function update(article: Article) {
+  return axios.patch(`${httpConfig.baseUrl}/articles/${article.id}`, article)
+}
+
+function remove(id: number) {
+  return axios.delete(`${httpConfig.baseUrl}/articles/${id}`)
 }
 
 export const articlesAPI = {
-  get,
+  getLatest,
+  getById,
   create,
   update,
+  remove,
 }

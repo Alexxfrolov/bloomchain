@@ -31,10 +31,10 @@
             </div>
         </div>
         <div class="bc-header__social">
-            <a class="icon-fb" href="#"></a>
-            <a class="icon-vk ml-3" href="#"></a>
-            <a class="icon-tg ml-3" href="#"></a>
-            <a class="icon-tw ml-3" href="#"></a>
+            <a class="icon-fb" href="https://www.facebook.com/BloomChainNews" target="_blank"></a>
+            <a class="icon-vk ml-3" href="https://vk.com/bloomchain" target="_blank"></a>
+            <a class="icon-tg ml-3" href="tg://resolve?domain=bloomchain" target="_blank"></a>
+            <a class="icon-tw ml-3" href="https://twitter.com/BloomChainNews" target="_blank"></a>
             <a class="icon-yt ml-3 d-none d-md-flex" href="#"></a>
         </div>
         <div class="d-inline-flex d-md-none">

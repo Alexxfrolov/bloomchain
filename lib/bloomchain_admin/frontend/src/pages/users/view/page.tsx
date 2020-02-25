@@ -1,4 +1,5 @@
-import React from "react"
+import nanoid from "nanoid"
+import React, { useState, useEffect } from "react"
 import {
   Grid,
   Container,
@@ -16,9 +17,36 @@ import {
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 import Pagination from "@material-ui/lab/Pagination"
+import { usersAPI, User } from "@api/user"
 import { RouterLink } from "@features/core"
 
 export const UsersViewPage = () => {
+  const [loading, setLoading] = useState(false)
+  const [users, setUsers] = useState<User[]>([])
+  // const [pagination, setPagination] = useState({
+  //   page: 1,
+  //   pages: 1,
+  //   perPage: 20,
+  // })
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      setError(false)
+
+      try {
+        const response = await usersAPI.get()
+        setUsers(response.data.data)
+      } catch {
+        setError(true)
+      }
+
+      setLoading(false)
+    }
+    fetchData()
+  }, [])
+
   return (
     <Container maxWidth="md">
       <Grid container={true} spacing={3}>
@@ -46,42 +74,45 @@ export const UsersViewPage = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell component="th">Имя</TableCell>
                   <TableCell component="th">E-mail</TableCell>
                   <TableCell component="th">Роль</TableCell>
-                  <TableCell component="th">Статус</TableCell>
                   <TableCell component="th">Действия</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  <TableCell>admin@admin.local</TableCell>
-                  <TableCell>admin</TableCell>
-                  <TableCell>Активен</TableCell>
-                  <TableCell>
-                    <IconButton
-                      edge="start"
-                      color="inherit"
-                      component={(props) => (
-                        <RouterLink
-                          routeName="admin.management.users.edit"
-                          {...props}
-                        />
-                      )}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton edge="start" color="inherit">
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
+                {users.map((user) => (
+                  <TableRow key={nanoid()}>
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.role}</TableCell>
+                    <TableCell>
+                      <IconButton
+                        edge="start"
+                        color="inherit"
+                        component={(props) => (
+                          <RouterLink
+                            routeName="admin.management.users.edit"
+                            routeParams={{ id: user.id }}
+                            {...props}
+                          />
+                        )}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton edge="start" color="inherit">
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
-        <Grid item={true} xs={12} container={true} justify="center">
+        {/* <Grid item={true} xs={12} container={true} justify="center">
           <Pagination count={10} color="primary" />
-        </Grid>
+        </Grid> */}
       </Grid>
     </Container>
   )

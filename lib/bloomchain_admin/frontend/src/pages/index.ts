@@ -1,4 +1,5 @@
 export { ActicleCreatePage } from "./articles/create/page"
+export { ActicleEditPage } from "./articles/edit/page"
 export { ActiclesArchivePage } from "./articles/archive/page"
 export { ArticlesDraftPage } from "./articles/draft/page"
 export { ArticlesPublishedPage } from "./articles/published/page"

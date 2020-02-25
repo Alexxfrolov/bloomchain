@@ -1,4 +1,5 @@
 export interface Article {
+  id: number
   author: string
   body: string
   cover: File | null

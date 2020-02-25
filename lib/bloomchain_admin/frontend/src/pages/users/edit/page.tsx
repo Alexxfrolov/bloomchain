@@ -7,6 +7,7 @@ import React, {
   FormEvent,
   RefObject,
 } from "react"
+import { useRoute } from "react-router5"
 import {
   Grid,
   Container,
@@ -20,7 +21,7 @@ import {
   MenuItem,
   makeStyles,
 } from "@material-ui/core"
-import { User } from "@api/user"
+import { usersAPI, User } from "@api/user"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,28 +33,42 @@ const useStyles = makeStyles((theme) => ({
 
 export const UserEditPage = () => {
   const classes = useStyles()
+  const { route } = useRoute()
+
+  const [user, setUser] = useState<User>({
+    id: null,
+    name: "",
+    email: "",
+    password: "",
+    role: "",
+  })
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const {
+          data: { id, role, name, email },
+        } = await usersAPI.getById(route.params.id)
+        setUser({
+          id,
+          name,
+          email,
+          role,
+        })
+        // setUsers(response.data.data)
+      } catch {}
+    }
+    fetchData()
+  }, [route.params.id])
 
   const selectRoleLabelRef: RefObject<HTMLLabelElement> | null = useRef(null)
-  const selectStatusLabelRef: RefObject<HTMLLabelElement> | null = useRef(null)
   const [selectRoleLabelWidth, setSelectRoleLabelWidth] = useState(0)
-  const [selectStatusLabelWidth, setSelectStatusLabelWidth] = useState(0)
 
   useEffect(() => {
     if (selectRoleLabelRef.current) {
       setSelectRoleLabelWidth(selectRoleLabelRef.current.offsetWidth)
     }
-    if (selectStatusLabelRef.current) {
-      setSelectStatusLabelWidth(selectStatusLabelRef.current.offsetWidth)
-    }
   }, [])
-
-  const [user, setUser] = useState<User>({
-    email: "",
-    password: "",
-    passwordConfirmation: "",
-    role: "editor",
-    status: "active",
-  })
 
   const handleChangeField = useCallback(
     (field: keyof User) => (event: SyntheticEvent<{ value: string }>) => {
@@ -62,9 +77,13 @@ export const UserEditPage = () => {
     [user, setUser],
   )
 
-  const handleSubmit = useCallback((event: FormEvent) => {
-    event.preventDefault()
-  }, [])
+  const handleSubmit = useCallback(
+    (event: FormEvent) => {
+      event.preventDefault()
+      usersAPI.update(user)
+    },
+    [user],
+  )
 
   return (
     <Container maxWidth="md">
@@ -78,6 +97,16 @@ export const UserEditPage = () => {
           <Paper className={classes.paper} variant="elevation">
             <form onSubmit={handleSubmit}>
               <Grid item={true} xs={12} container={true} spacing={4}>
+                <Grid item={true} xs={12}>
+                  <TextField
+                    id="name"
+                    fullWidth={true}
+                    label="Имя"
+                    value={user.name}
+                    variant="outlined"
+                    onChange={handleChangeField("name")}
+                  />
+                </Grid>
                 <Grid item={true} xs={12}>
                   <TextField
                     id="email"
@@ -100,25 +129,8 @@ export const UserEditPage = () => {
                       value={user.role}
                       onChange={handleChangeField("role")}
                     >
-                      <MenuItem value="editor">Редактор</MenuItem>
                       <MenuItem value="writer">Автор</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item={true} xs={12}>
-                  <FormControl variant="outlined" fullWidth={true}>
-                    <InputLabel ref={selectStatusLabelRef} id="status">
-                      Статус
-                    </InputLabel>
-                    <Select
-                      labelId="status"
-                      id="status"
-                      labelWidth={selectStatusLabelWidth}
-                      value={user.status}
-                      onChange={handleChangeField("status")}
-                    >
-                      <MenuItem value="active">Активный</MenuItem>
-                      <MenuItem value="inactive">Неактивный</MenuItem>
+                      <MenuItem value="admin">Админ</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -126,22 +138,12 @@ export const UserEditPage = () => {
                   <TextField
                     id="password"
                     type="password"
+                    autoComplete="no"
                     fullWidth={true}
                     label="Пароль"
                     value={user.password}
                     variant="outlined"
                     onChange={handleChangeField("password")}
-                  />
-                </Grid>
-                <Grid item={true} xs={12}>
-                  <TextField
-                    id="passwordConfirmation"
-                    type="password"
-                    fullWidth={true}
-                    label="Подтверждение пароля"
-                    value={user.passwordConfirmation}
-                    variant="outlined"
-                    onChange={handleChangeField("passwordConfirmation")}
                   />
                 </Grid>
                 <Grid item={true} xs={12} container={true} justify="flex-end">

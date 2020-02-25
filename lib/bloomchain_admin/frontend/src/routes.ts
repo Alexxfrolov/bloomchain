@@ -25,6 +25,10 @@ export const routes: Route[] = [
             name: "archive",
             path: "/archive",
           },
+          {
+            name: "edit",
+            path: "/edit/:id",
+          },
         ],
       },
       {
@@ -41,7 +45,7 @@ export const routes: Route[] = [
               },
               {
                 name: "edit",
-                path: "/edit",
+                path: "/edit/:id",
               },
             ],
           },

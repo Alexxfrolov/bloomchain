@@ -1,12 +1,4 @@
-import React, {
-  useState,
-  useCallback,
-  useRef,
-  useEffect,
-  SyntheticEvent,
-  FormEvent,
-  RefObject,
-} from "react"
+import React, { useState, useCallback, SyntheticEvent, FormEvent } from "react"
 import {
   Grid,
   Container,
@@ -14,13 +6,9 @@ import {
   TextField,
   Typography,
   Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   makeStyles,
 } from "@material-ui/core"
-import { Tag } from "@api/tags"
+import { tagsAPI, Tag } from "@api/tags"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -33,18 +21,8 @@ const useStyles = makeStyles((theme) => ({
 export const TagsCreatePage = () => {
   const classes = useStyles()
 
-  const selectLabel: RefObject<HTMLLabelElement> | null = useRef(null)
-  const [selectLabelWidth, setSelectLabelWidth] = useState(0)
-
-  useEffect(() => {
-    if (selectLabel.current) {
-      setSelectLabelWidth(selectLabel.current.offsetWidth)
-    }
-  }, [])
-
   const [tag, setTag] = useState<Tag>({
     name: "",
-    type: "",
   })
 
   const handleChangeField = useCallback(
@@ -54,9 +32,14 @@ export const TagsCreatePage = () => {
     [tag, setTag],
   )
 
-  const handleSubmit = useCallback((event: FormEvent) => {
-    event.preventDefault()
-  }, [])
+  const handleSubmit = useCallback(
+    async (event: FormEvent) => {
+      event.preventDefault()
+
+      await tagsAPI.create(tag.name)
+    },
+    [tag.name],
+  )
 
   return (
     <Container maxWidth="md">
@@ -69,7 +52,7 @@ export const TagsCreatePage = () => {
         <Grid item={true} xs={12}>
           <Paper className={classes.paper} variant="elevation">
             <form onSubmit={handleSubmit}>
-              <Grid container={true} xs={12} spacing={2}>
+              <Grid container={true} spacing={2}>
                 <Grid item={true} xs={12}>
                   <TextField
                     id="name"
@@ -79,26 +62,6 @@ export const TagsCreatePage = () => {
                     variant="outlined"
                     onChange={handleChangeField("name")}
                   />
-                </Grid>
-                <Grid item={true} xs={12}>
-                  <FormControl variant="outlined" fullWidth={true}>
-                    <InputLabel ref={selectLabel} id="type">
-                      Раздел
-                    </InputLabel>
-                    <Select
-                      labelId="type"
-                      id="type"
-                      labelWidth={selectLabelWidth}
-                      value={tag.type}
-                      onChange={handleChangeField("type")}
-                    >
-                      <MenuItem value="newsfeed">Коротко</MenuItem>
-                      <MenuItem value="people">Персона</MenuItem>
-                      <MenuItem value="detailed">В деталях</MenuItem>
-                      <MenuItem value="in-russia">В России</MenuItem>
-                      <MenuItem value="calendar">Календарь</MenuItem>
-                    </Select>
-                  </FormControl>
                 </Grid>
                 <Grid item={true} xs={12} container={true} justify="flex-end">
                   <Button type="submit" variant="contained" color="primary">

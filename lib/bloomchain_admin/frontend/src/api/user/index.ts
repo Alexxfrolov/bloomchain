@@ -1,1 +1,2 @@
-export * from "./user.types"
+export { usersAPI } from "./api"
+export * from "./types"
