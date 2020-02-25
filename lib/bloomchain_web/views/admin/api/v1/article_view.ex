@@ -10,7 +10,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
   end
 
   def render("show.json", %{article: article}) do
-    article_json(article)
+    article_json(article, :full)
   end
 
   def article_json(article) do
@@ -19,8 +19,27 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
       title: article.title,
       slug: article.slug,
       lead: article.lead,
+      type: article.type,
+      status: article.status,
+      author: article.author,
+      description: article.description,
+      keywords: article.keywords,
+      created_at: article.inserted_at,
+      updated_at: article.updated_at,
+      published_at: article.published_at,
+      tags: Enum.map(article.tags, &tag_json/1)
+    }
+  end
+
+  def article_json(article, :full) do
+    %{
+      id: article.id,
+      title: article.title,
+      slug: article.slug,
+      lead: article.lead,
       body: article.body,
       type: article.type,
+      status: article.status,
       author: article.author,
       description: article.description,
       keywords: article.keywords,
