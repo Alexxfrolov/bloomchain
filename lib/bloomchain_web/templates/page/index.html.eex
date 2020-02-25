@@ -9,14 +9,15 @@
     <div class="container py-4">
         <div class="row">
             <%= render "_analysis.html", conn: @conn, articles: @context[:analysis] %>
-            <%= render "_in_russia.html", conn: @conn, articles: @context[:in_russia] %>
+            <%= render "_calendar.html", conn: @conn, articles: @context[:calendar] %>
+
         </div>
     </div>
 </div>
 
 <div class="container py-4">
     <div class="row">
-        <%= render "_calendar.html", conn: @conn, articles: @context[:calendar] %>
-        <%= render "_people.html", conn: @conn, articles: @context[:person] %>
+        <%= render "_in_russia.html", conn: @conn, articles: @context[:in_russia] %>
+        <%= render "_research.html", conn: @conn, articles: @context[:research] %>
     </div>
 </div>

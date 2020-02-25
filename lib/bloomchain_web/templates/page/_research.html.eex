@@ -1,16 +1,10 @@
 <div class="col-lg-6">
     <h1 class="bc-article__z-index highlight mb-4">Исследования<%= link("Больше", to: research_path(@conn, :index), class: "btn btn-title") %></h1>
-    <a class="bc-article__overlay-link" href="news-open.html">
-        <div class="bc-article__image"><img src="/images/img-etherium.jpg">
-            <div class="h3">14.01.2018</div>
-            <p>Bitcoin, Ethereum, altcoins — Обзор криптовалют</p>
-            <div class="d-flex align-items-center"><span class="small mr-sm-4 mr-2">2 часа назад</span><i class="mr-1 icon-view-white"></i><span class="small mr-sm-4 mr-2">10 235</span><i class="mr-1 icon-comment-white"></i><span class="small mr-sm-4 mr-2">2</span><i class="mr-1 icon-clock-white"></i><span class="small">17 мин</span></div>
-        </div>
-    </a>
-    <div class="mt-4"></div><a class="h5" href="analitics-open.html">14.02.2018</a>
-    <p class="bc-article__paragraph">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда. </p>
-    <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
-    <hr class="bc-article__separator mx-0 my-3"><a class="h5 mt-4" href="analitics-open.html">14.02.2018</a>
-    <p class="bc-article__paragraph">На этот раз никаких накачек, лишь рост нескольких криптовалют после существенного падения. О том, что после пробоя. </p>
-    <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
+
+    <%= render_main_article(List.first(@articles), conn: @conn, path: research_path(@conn, :show, List.first(@articles).slug)) %>
+
+    <%= for article <- @articles |> tl() do %>
+      <hr class="bc-article__separator mx-0 my-3">
+      <%= render_article(article, conn: @conn, path: research_path(@conn, :show, article.slug)) %>
+    <% end %>
 </div>

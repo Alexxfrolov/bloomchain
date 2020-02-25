@@ -75,6 +75,9 @@
           <li class="nav-item">
             <%= link("Исследования", to: research_path(@conn, :index), class: active_navlink_class(@conn, research_path(@conn, :index))) %>
           </li>
+          <li class="nav-item">
+            <%= link("Исследования (Архив)", to: research_archive_path(@conn, :index), class: active_navlink_class(@conn, research_archive_path(@conn, :index))) %>
+          </li>
         </ul>
         <ul class="navbar-nav d-none d-md-flex bc-header__search">
             <li class="nav-item d-flex align-items-center w-100">
