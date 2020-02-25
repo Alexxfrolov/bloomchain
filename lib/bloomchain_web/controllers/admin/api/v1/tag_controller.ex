@@ -19,7 +19,7 @@ defmodule BloomchainWeb.Admin.Api.V1.TagController do
       |> Conn.put_status(201)
       |> render("show.json", tag: tag)
     else
-      {:error, %{errors: errors}} ->
+      {:error, changeset} ->
         conn
         |> put_status(422)
         |> render(ErrorView, "422.json", %{changeset: changeset})
