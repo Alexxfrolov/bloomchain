@@ -17,7 +17,7 @@ Repo.insert_all(Tag, [
   %{name: "биткоин", slug: "bitcoin", inserted_at: Timex.now(), updated_at: Timex.now()}
 ])
 
-for type <- ~w[newsfeed detailed analysis in_russia calendar person] do
+for type <- ~w[newsfeed detailed  research analysis in_russia calendar person] do
   for i <- 1..6, i > 0 do
     title = "Тестовое название #{i} для раздела #{type}"
 
@@ -39,7 +39,7 @@ for type <- ~w[newsfeed detailed analysis in_russia calendar person] do
           path: "#{File.cwd!()}/priv/repo/data_files/img-bitcoin.jpg"
         }
       },
-      Repo.all(Tag)
+      [1, 2, 3]
     )
   end
 end
