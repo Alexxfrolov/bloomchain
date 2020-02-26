@@ -1,11 +1,10 @@
 <div class="container pt-4 pb-5">
     <a name="indexes"></a>
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <h1 class="bc-analitics__h1">Индексы</h1>
-            <p class="bc-article__paragraph mt-3">Color is so powerful that it can persuade, motivate, inspire and touch people’s soft spot – the heart. This is the reason why understanding colors is pretty crucial in relating and communicating with other people. Not only that, it is also important to businesses in order for their business to sell.</p>
             <div class="d-flex justify-content-center justify-content-md-start mt-4 mb-5">
-                <button class="bc-article__btn-xs-w-100 btn btn-dark d-flex align-items-center justify-content-center" type="button">Скачать Методику</button>
+                <button onclick="window.open('https://bloomchain.ru/wp-content/plugins/bloomchain-bitcoin-price-index/pdf/%D0%91%D0%B8%D1%80%D0%B6%D0%B5%D0%B2%D1%8B%D0%B5%20%D0%B8%D0%BD%D0%B4%D0%B5%D0%BA%D1%81%D1%8B%20%20bloomchain.ru.pdf')" class="bc-article__btn-xs-w-100 btn btn-dark d-flex align-items-center justify-content-center" type="button">Скачать Методику</button>
             </div>
             <div class="bc-chart" id="bc-chart" data-highcharts-chart="0">
                 <div id="highcharts-vh5zw19-0" dir="ltr" class="highcharts-container " style="position: relative; overflow: hidden; width: 760px; height: 400px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); font-family: Montserrat, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 12px;">
@@ -67,8 +66,8 @@
             </div>
             <small>BloomChain Bitcoin Price Index</small>
             <p class="bc-article__paragraph mt-3 mb-5">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда. </p>
-            <div class="bc-chart" id="bc-chart" data-highcharts-chart="0">
-                <div id="highcharts-vh5zw19-0" dir="ltr" class="highcharts-container " style="position: relative; overflow: hidden; width: 760px; height: 400px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); font-family: Montserrat, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 12px;">
+            <div class="bc-chart" id="bc-chart" data-highcharts-chart="1">
+                <div id="highcharts-vh5zw19-0" dir="ltr" class="highcharts-container " style="position: relative; overflow: hidden; width: 100%; height: 400px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); font-family: Montserrat, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 12px;">
                     <svg version="1.1" class="highcharts-root" style="font-family:Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';font-size:12px;" xmlns="http://www.w3.org/2000/svg" width="760" height="400" viewBox="0 0 760 400">
                         <desc>Created with Highstock 6.1.0</desc>
                         <defs>
@@ -128,119 +127,13 @@
             <small>BloomChain Top 10 Cryptocurrency Index</small>
             <p class="bc-article__paragraph mt-3">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда. </p>
         </div>
-        <div class="col-md-4 mt-5 mt-md-0">
-            <nav class="nav flex-column bc-analitics__page-nav d-md-block d-none"><a class="bc-analitics__text-link nav-link" href="#indexes"><span class="text-primary">—</span><span class="ml-2">Индексы</span></a><a class="bc-analitics__text-link nav-link" href="#statistics"><span class="text-primary">—</span><span class="ml-2">Статистика</span></a><a class="bc-analitics__text-link nav-link" href="#analitics"><span class="text-primary">—</span><span class="ml-2">Биржевая аналитика</span></a></nav>
-            <div class="bc-advertising__image-news mx-auto"><img src="assets/images/img-google-blue.jpg"></div>
-        </div>
-    </div>
-</div>
-<div class="bg-white">
-    <a name="statistics"></a>
-    <div class="container py-5">
-        <h1 class="bc-analitics__h1">Статистика</h1>
-        <div class="row mt-3">
-            <div class="col-lg-8">
-                <div class="bc-analitics__image-bloomchain"><img src="assets/images/img-bloomchain-short.jpg">
-                    <h3>State of Blockchain Q2</h3>
-                </div>
-                <div class="bc-article__small-description mt-2">CoinDesk’s Q2 2017 State of Blockchain summarizes key trends, data and events from 2017's second quarter.</div>
-                <div class="bc-news-open__h4 mt-lg-5 mt-4">Выводы</div>
-                <div class="bc-ico-open__exchanges bc-ico-open__exchanges__exchanges-short">
-                    <ul class="bc-article__ul">
-                        <li class="bc-article__li bc-article__paragraph">The aggregate cryptocurrency market cap rallies 4x, breaks $100bn in value.</li>
-                        <li class="bc-article__li bc-article__paragraph">The composition of the asset class changes dramatically, with bitcoin comprising less than half of the total market cap as assets including ether, xrp, and dash skyrocket in price.</li>
-                        <li class="bc-article__li bc-article__paragraph">The aggregate cryptocurrency market cap rallies 4x, breaks $100bn in value.</li>
-                        <li class="bc-article__li bc-article__paragraph">The composition of the asset class changes dramatically, with bitcoin comprising less than half of the total market cap as assets including ether, xrp, and dash skyrocket in price.</li>
-                        <li class="bc-article__li bc-article__paragraph">The aggregate cryptocurrency market cap rallies 4x, breaks $100bn in value.</li>
-                        <li class="bc-article__li bc-article__paragraph">The composition of the asset class changes dramatically, with bitcoin comprising less than half of the total market cap as assets including ether, xrp, and dash skyrocket in price.</li>
-                    </ul>
-                </div>
-                <button class="bc-ico-open__exchanges-btn-open bc-article__btn-link btn btn-link d-block pl-0" type="button">Развернуть</button>
-                <button class="bc-ico-open__exchanges-btn-close bc-article__btn-link btn btn-link d-none pl-0" type="button">Скрыть</button>
-                <div class="d-sm-flex justify-content-center justify-content-md-start mt-4 mb-5 d-block">
-                    <button class="bc-article__btn-xs-w-100 btn btn-dark px-5" type="button" data-toggle="modal" data-target=".request-report-modal">Запросить отчет</button>
-                    <a class="ml-0 ml-sm-3 mt-3 mt-sm-0" href="assets/images/img-infograf.jpg" data-lightbox="infograf" data-title="Заголовок инфографики">
-                        <button class="bc-article__btn-xs-w-100 btn btn-dark px-5 mt-3 mt-sm-0" type="button">Полистать отчет</button>
-                    </a>
-                    <a href="assets/images/img-infograf.jpg" data-lightbox="infograf" data-title="Заголовок инфографики"></a>
-                    <a href="assets/images/img-infograf.jpg" data-lightbox="infograf" data-title="Заголовок инфографики"></a>
-                    <a href="assets/images/img-infograf.jpg" data-lightbox="infograf" data-title="Заголовок инфографики"></a>
-                </div>
-                <div class="modal fade request-report-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-body my-4 px-sm-4">
-                                <div class="d-flex align-items-center">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Запросить отчет</h5>
-                                    <button class="hamburger hamburger--slider-r is-active close p-0 ml-auto" type="button" data-dismiss="modal" aria-label="Close">
-                                        <div class="hamburger-box">
-                                            <div class="hamburger-inner"></div>
-                                        </div>
-                                    </button>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-lg-6">
-                                        <input class="bc-analitics__input bg-transparent border-0" type="text" placeholder="Имя *" aria-label="FirstName">
-                                    </div>
-                                    <div class="col-lg-6 mt-lg-0 mt-3">
-                                        <input class="bc-analitics__input bg-transparent border-0" type="text" placeholder="Фамилия *" aria-label="LastName">
-                                    </div>
-                                </div>
-                                <input class="bc-analitics__input bg-transparent border-0 mt-3" type="text" placeholder="Компания, должность *" aria-label="CompanyName">
-                                <div class="bc-analitics__modal-collapse collapsed mt-5" data-toggle="collapse" href="#collapse1" role="button" aria-expanded="false" aria-controls="collapseExample">Выбрать отчет</div>
-                                <div class="collapse mb-4" id="collapse1">
-                                    <div class="row mt-3">
-                                        <div class="col-lg-6">
-                                            <input class="bc-analitics__input bg-transparent border-0" type="text" placeholder="Год *" aria-label="Year">
-                                        </div>
-                                        <div class="col-lg-6 mt-lg-0 mt-3">
-                                            <input class="bc-analitics__input bg-transparent border-0" type="text" placeholder="Квартал *" aria-label="Quoter">
-                                        </div>
-                                    </div>
-                                    <div class="row mt-3">
-                                        <div class="col-lg-6">
-                                            <input class="bc-analitics__input bg-transparent border-0" type="text" placeholder="E-mail *" aria-label="Email">
-                                        </div>
-                                        <div class="col-lg-6 mt-lg-0 mt-3">
-                                            <input class="bc-analitics__input bg-transparent border-0" type="text" placeholder="Комментарий" aria-label="Comment">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="d-lg-flex align-items-middle mt-4">
-                                    <div class="d-flex align-items-center mb-3 mb-lg-0">
-                                        <div class="d-flex align-items-center">
-                                            <label class="custom-control custom-checkbox">
-                                                <input class="custom-control-input" type="checkbox"><span class="custom-control-indicator"></span><span class="custom-control-description bc-analitics__p-medium">Я согласен с условиями конфиденциальности</span>
-                                            </label>
-                                        </div>
-                                    </div><small class="ml-auto align-middle">* Поля обязательные для заполнения</small>
-                                </div>
-                                <div class="d-flex justify-content-center mt-4">
-                                    <button class="bc-article__btn-xs-w-100 btn btn-dark d-flex align-items-center justify-content-center px-5" type="button" data-toggle="modal" data-target=".request-report-modal">Отправить отчет</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 mt-4 mt-lg-0">
-                <div>
-                    <h1 class="bc-article__z-index highlight">Календарь<a class="btn btn-title" href="#">Больше</a></h1>
-                    <div class="d-flex mt-4 mb-2 align-items-center"><span class="small mr-4">14-15.01.18</span><i class="mr-1 icon-address"></i><span class="bc-article__calendar_address small mr-4">Сингапур, Малайзия, Таиланд</span><span class="small text-primary ml-auto">завтра</span></div><a class="bc-article__heading__calendar" href="#">Введение в BlockChain и смарт-контракты</a>
-                    <hr class="bc-article__separator mx-0 my-3">
-                    <div class="d-flex mt-4 mb-2 align-items-center"><span class="small mr-4">14-15.01.18</span><i class="mr-1 icon-address"></i><span class="bc-article__calendar_address small mr-4">Сингапур, Малайзия, Таиланд</span><span class="small text-primary ml-auto">завтра</span></div><a class="bc-article__heading__calendar" href="#">Премия  «Лучший проект на технологии блокчейн  (ICO) 2017 года».</a>
-                    <hr class="bc-article__separator mx-0 my-3">
-                    <div class="d-flex mt-4 mb-2 align-items-center"><span class="small mr-4">14-15.01.18</span><i class="mr-1 icon-address"></i><span class="bc-article__calendar_address small mr-4">Москва</span><span class="small text-primary ml-auto">осталось 2 дня</span></div><a class="bc-article__heading__calendar" href="#">Основы криптовалютной экономики</a>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <div class="container py-5">
     <a name="analitics"></a>
     <h1 class="bc-analitics__h1">Биржевая аналитика</h1>
     <div class="row mt-3">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <a class="bc-article__overlay-link" href="news-open.html">
                 <div class="bc-article__image"><img src="assets/images/img-sunset.jpg">
                     <div class="h3">14.01.2018</div>
@@ -277,9 +170,6 @@
                     <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4 mt-5 mt-md-0">
-            <div class="bc-advertising__image-news mx-auto"><img src="assets/images/img-google-green.jpg"></div>
         </div>
     </div>
 </div>
