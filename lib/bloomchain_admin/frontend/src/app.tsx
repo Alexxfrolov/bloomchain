@@ -5,11 +5,8 @@ import { useRoute } from "react-router5"
 import CssBaseline from "@material-ui/core/CssBaseline"
 import {
   ActicleCreatePage,
-  ActiclesArchivePage,
-  ArticlesDraftPage,
   ActicleEditPage,
-  ArticlesPublishedPage,
-  ArticlesReadyPage,
+  ArticlesViewPage,
   AuthorsCreatePage,
   AuthorsEditPage,
   AuthorsViewPage,
@@ -41,13 +38,10 @@ export const App = hot(module)(function App() {
       case "admin.articles":
         return <ActicleCreatePage />
       case "admin.articles.ready":
-        return <ArticlesReadyPage />
       case "admin.articles.draft":
-        return <ArticlesDraftPage />
       case "admin.articles.published":
-        return <ArticlesPublishedPage />
       case "admin.articles.archive":
-        return <ActiclesArchivePage />
+        return <ArticlesViewPage />
       case "admin.articles.edit":
         return <ActicleEditPage />
       case "admin.dictionaries.authors":

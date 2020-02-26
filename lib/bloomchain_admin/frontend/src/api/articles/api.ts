@@ -4,8 +4,8 @@ import { httpConfig } from "@features/core"
 
 import { Article } from "./types"
 
-function getLatest(type: Article["type"], status: Article["status"]) {
-  return axios(`${httpConfig.baseUrl}/articles?type=${type}&status=${status}`)
+function getLatest(status: Article["status"], type: Article["type"]) {
+  return axios(`${httpConfig.baseUrl}/articles?status=${status}&type=${type}`)
 }
 
 function getById(id: number) {

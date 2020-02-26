@@ -5,17 +5,13 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers"
 import {
-  withStyles,
+  makeStyles,
   createStyles,
+  GridList,
+  GridListTile,
   Grid,
   Container,
   Paper,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
   Typography,
   Button,
   IconButton,
@@ -24,29 +20,78 @@ import {
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 
-const StyledTableCell = withStyles((theme: Theme) =>
-  createStyles({
-    head: {
-      backgroundColor: theme.palette.primary.dark,
-      color: theme.palette.common.white,
-    },
-    body: {
-      fontSize: 14,
-    },
-  }),
-)(TableCell)
+import breakfast from "../../images/breakfast.jpg"
+import burgers from "../../images/burgers.jpg"
+import camera from "../../images/camera.jpg"
+import hats from "../../images/hats.jpg"
+import honey from "../../images/honey.jpg"
+import morning from "../../images/morning.jpg"
+import vegetables from "../../images/vegetables.jpg"
 
-const StyledTableRow = withStyles((theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      "&:nth-of-type(odd)": {
-        backgroundColor: theme.palette.background.default,
-      },
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "space-around",
+      overflow: "hidden",
+      backgroundColor: theme.palette.background.paper,
+    },
+    gridList: {
+      width: "100%",
+      height: 500,
     },
   }),
-)(TableRow)
+)
+
+const tileData = [
+  {
+    img: breakfast,
+    title: "Breakfast",
+    author: "author",
+    cols: 2,
+  },
+  {
+    img: burgers,
+    title: "Burgers",
+    author: "author",
+    cols: 1,
+  },
+  {
+    img: camera,
+    title: "Camera",
+    author: "author",
+    cols: 1,
+  },
+  {
+    img: hats,
+    title: "Hats",
+    author: "author",
+    cols: 1,
+  },
+  {
+    img: honey,
+    title: "Honey",
+    author: "author",
+    cols: 1,
+  },
+  {
+    img: morning,
+    title: "Morning",
+    author: "author",
+    cols: 1,
+  },
+  {
+    img: vegetables,
+    title: "Vegetables",
+    author: "author",
+    cols: 2,
+  },
+]
 
 export const MediaPage = () => {
+  const classes = useStyles()
+
   const [dateStart, setDateStart] = useState<Date | null>(null)
   const [dateEnd, setDateEnd] = useState<Date | null>(new Date())
 
@@ -71,9 +116,9 @@ export const MediaPage = () => {
           <Typography component="h1" variant="h4" gutterBottom={false}>
             Медиа
           </Typography>
-          <Button variant="contained" color="primary">
+          {/* <Button variant="contained" color="primary">
             Добавить
-          </Button>
+          </Button> */}
         </Grid>
         <Grid item={true} xs={12}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -115,33 +160,15 @@ export const MediaPage = () => {
           </MuiPickersUtilsProvider>
         </Grid>
         <Grid item={true} xs={12}>
-          <TableContainer component={Paper}>
-            {/* <Table>
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell component="th">Миниатюра</StyledTableCell>
-                  <StyledTableCell component="th">PDF</StyledTableCell>
-                  <StyledTableCell component="th">Действия</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <StyledTableRow>
-                  <StyledTableCell></StyledTableCell>
-                  <StyledTableCell></StyledTableCell>
-                  <StyledTableCell>
-                    <Grid container={true} spacing={1}>
-                      <IconButton edge="start" color="inherit">
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton edge="start" color="inherit">
-                        <DeleteIcon />
-                      </IconButton>
-                    </Grid>
-                  </StyledTableCell>
-                </StyledTableRow>
-              </TableBody>
-            </Table> */}
-          </TableContainer>
+          <div className={classes.root}>
+            <GridList cellHeight={300} className={classes.gridList} cols={3}>
+              {tileData.map((tile) => (
+                <GridListTile key={tile.img} cols={tile.cols || 1}>
+                  <img src={tile.img} alt={tile.title} />
+                </GridListTile>
+              ))}
+            </GridList>
+          </div>
         </Grid>
       </Grid>
     </Container>
