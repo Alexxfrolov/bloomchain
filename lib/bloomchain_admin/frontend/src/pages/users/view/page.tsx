@@ -1,5 +1,5 @@
 import nanoid from "nanoid"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import {
   Grid,
   Container,
@@ -46,6 +46,14 @@ export const UsersViewPage = () => {
     }
     fetchData()
   }, [])
+
+  const handleClickDeleteButton = useCallback((id: number) => async () => {
+    const response = await usersAPI.remove(id)
+
+    if (response.status === 204) {
+      setUsers(users.filter(user => user.id !== id))
+    }
+  }, [users, setUsers])
 
   return (
     <Container maxWidth="md">
@@ -100,7 +108,7 @@ export const UsersViewPage = () => {
                       >
                         <EditIcon />
                       </IconButton>
-                      <IconButton edge="start" color="inherit">
+                      <IconButton edge="start" color="inherit" onClick={handleClickDeleteButton(user.id)}>
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>

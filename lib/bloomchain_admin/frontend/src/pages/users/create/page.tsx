@@ -7,6 +7,7 @@ import React, {
   FormEvent,
   RefObject,
 } from "react"
+import { useRouter } from 'react-router5'
 import {
   Grid,
   Container,
@@ -31,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const UserCreatePage = () => {
+  const router = useRouter()
   const classes = useStyles()
 
   const selectRoleLabelRef: RefObject<HTMLLabelElement> | null = useRef(null)
@@ -62,9 +64,13 @@ export const UserCreatePage = () => {
   )
 
   const handleSubmit = useCallback(
-    (event: FormEvent) => {
+    async (event: FormEvent) => {
       event.preventDefault()
-      usersAPI.create(user)
+      const response = await usersAPI.create(user)
+
+      if (response.status === 201) {
+        router.navigate('admin.management.users')
+      }
     },
     [user],
   )
@@ -94,6 +100,7 @@ export const UserCreatePage = () => {
                 <Grid item={true} xs={12}>
                   <TextField
                     id="email"
+                    type="email"
                     fullWidth={true}
                     label="E-mail"
                     value={user.email}

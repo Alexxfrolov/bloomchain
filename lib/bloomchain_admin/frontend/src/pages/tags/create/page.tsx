@@ -1,4 +1,5 @@
 import React, { useState, useCallback, SyntheticEvent, FormEvent } from "react"
+import { useRouter } from 'react-router5'
 import {
   Grid,
   Container,
@@ -19,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const TagsCreatePage = () => {
+  const router = useRouter()
   const classes = useStyles()
 
   const [tag, setTag] = useState<Tag>({
@@ -36,7 +38,11 @@ export const TagsCreatePage = () => {
     async (event: FormEvent) => {
       event.preventDefault()
 
-      await tagsAPI.create(tag.name)
+      const response = await tagsAPI.create(tag.name)
+
+      if (response.status === 201) {
+        router.navigate('admin.dictionaries.tags')
+      }
     },
     [tag.name],
   )

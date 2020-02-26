@@ -29,11 +29,11 @@ function create(user: any) {
 }
 
 function update(user: any) {
-  return axios.patch(`${httpConfig.baseUrl}/users/${user.id}`, { user })
+  return axios.patch(`${httpConfig.baseUrl}/users/${user.id}`, user)
 }
 
 function remove(id: number) {
-  return axios.delete(`${httpConfig.baseUrl}/tags/${id}`)
+  return axios.delete(`${httpConfig.baseUrl}/users/${id}`)
 }
 
 export const usersAPI = {

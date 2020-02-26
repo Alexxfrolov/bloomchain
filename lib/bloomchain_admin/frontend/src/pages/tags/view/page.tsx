@@ -59,9 +59,13 @@ export const TagsViewPage = () => {
 
   const handleClickDeleteButton = useCallback(
     (id: number) => async () => {
-      await tagsAPI.remove(id)
+      const response = await tagsAPI.remove(id)
+
+      if (response.status === 204) {
+        setTags(tags.filter(tag => tag.id !== id))
+      }
     },
-    [],
+    [tags, setTags],
   )
 
   return (
