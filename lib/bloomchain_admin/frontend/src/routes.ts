@@ -60,20 +60,6 @@ export const routes: Route[] = [
         path: "/dictionaries",
         children: [
           {
-            name: "authors",
-            path: "/authors",
-            children: [
-              {
-                name: "create",
-                path: "/create",
-              },
-              {
-                name: "edit",
-                path: "/edit",
-              },
-            ],
-          },
-          {
             name: "tags",
             path: "/tags",
             children: [

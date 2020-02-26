@@ -7,9 +7,6 @@ import {
   ActicleCreatePage,
   ActicleEditPage,
   ArticlesViewPage,
-  AuthorsCreatePage,
-  AuthorsEditPage,
-  AuthorsViewPage,
   MediaPage,
   ResearchPage,
   SubscribersPage,
@@ -44,12 +41,6 @@ export const App = hot(module)(function App() {
         return <ArticlesViewPage />
       case "admin.articles.edit":
         return <ActicleEditPage />
-      case "admin.dictionaries.authors":
-        return <AuthorsViewPage />
-      case "admin.dictionaries.authors.create":
-        return <AuthorsCreatePage />
-      case "admin.dictionaries.authors.edit":
-        return <AuthorsEditPage />
       case "admin.dictionaries.tags":
         return <TagsViewPage />
       case "admin.dictionaries.tags.create":

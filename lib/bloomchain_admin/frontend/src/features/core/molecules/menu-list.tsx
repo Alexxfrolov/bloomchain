@@ -14,7 +14,6 @@ import DescriptionRoundedIcon from "@material-ui/icons/DescriptionRounded"
 import GroupRoundedIcon from "@material-ui/icons/GroupRounded"
 import ArchiveRoundedIcon from "@material-ui/icons/ArchiveRounded"
 import PermMediaRoundedIcon from "@material-ui/icons/PermMediaRounded"
-import CreateRoundedIcon from "@material-ui/icons/CreateRounded"
 import LabelRoundedIcon from "@material-ui/icons/LabelRounded"
 import DraftsRoundedIcon from "@material-ui/icons/DraftsRounded"
 import InsertDriveFileRoundedIcon from "@material-ui/icons/InsertDriveFileRounded"
@@ -209,22 +208,6 @@ export const MenuList = () => {
               <ImportContactsRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
             <ListItemText primary="Исследования" />
-          </NavLink>
-        </ListItem>
-        <ListItem
-          aria-current={
-            isCurrentMenu("admin.dictionaries.authors") ? "page" : undefined
-          }
-          className={classes.listitem}
-        >
-          <NavLink
-            routeName="admin.dictionaries.authors"
-            className={classes.link}
-          >
-            <ListItemIcon style={{ paddingLeft: "7px" }}>
-              <CreateRoundedIcon style={{ color: indigo[500] }} />
-            </ListItemIcon>
-            <ListItemText primary="Авторы" />
           </NavLink>
         </ListItem>
         <ListItem
