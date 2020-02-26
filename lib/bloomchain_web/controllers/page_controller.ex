@@ -1,7 +1,7 @@
 defmodule BloomchainWeb.PageController do
   use BloomchainWeb, :controller
 
-  alias Bloomchain.Content.Article
+  alias Bloomchain.{Repo, Content.Subscriber, Content.Article}
 
   def index(conn, _params) do
     context = %{
@@ -14,5 +14,16 @@ defmodule BloomchainWeb.PageController do
     }
 
     render(conn, "index.html", context: context)
+  end
+
+  def create(conn, params) do
+    changeset = Subscriber.create_changeset(%Subscriber{}, params)
+
+    with {:ok, _} <- Repo.insert(changeset) do
+      redirect(conn, to: page_path(conn, :index))
+    else
+      {:error, _} ->
+        redirect(conn, to: page_path(conn, :index))
+    end
   end
 end

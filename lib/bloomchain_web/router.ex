@@ -37,6 +37,7 @@ defmodule BloomchainWeb.Router do
       resources("/articles", Admin.Api.V1.ArticleController)
       resources("/users", Admin.Api.V1.UserController)
       resources("/tags", Admin.Api.V1.TagController, only: [:index, :create, :delete])
+      resources("/subscribers", Admin.Api.V1.SubscriberController, only: [:index])
     end
 
     get("/*path", Admin.HomeController, :index)
@@ -52,6 +53,7 @@ defmodule BloomchainWeb.Router do
     pipe_through(:browser)
 
     get("/", PageController, :index)
+    post("/subscribe", PageController, :create)
 
     resources("/newsfeed", NewsfeedController, only: [:index, :show])
     resources("/detailed", DetailedController, only: [:index, :show])
