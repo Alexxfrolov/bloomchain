@@ -203,7 +203,7 @@ export const ActicleEditPage = () => {
     ;(async () => {
       try {
         const response = await articlesAPI.getById(route.params.id)
-        setArticle({ ...response.data })
+        setArticle({ ...article, ...response.data })
       } catch {
         setError(true)
       }
@@ -517,7 +517,7 @@ export const ActicleEditPage = () => {
                 </Grid>
                 <Grid item={true} xs={12} container={true} justify="flex-end">
                   <Button variant="contained" color="primary" type="submit">
-                    Сохранить
+                    Обновить
                   </Button>
                 </Grid>
               </Grid>
