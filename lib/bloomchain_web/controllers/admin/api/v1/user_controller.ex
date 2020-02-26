@@ -54,7 +54,7 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
 
   def update(conn, %{"id" => id} = params) do
     with %User{} = user <- Repo.get(User, id),
-         {:ok, user} <- user |> User.changeset(params) |> Repo.update() do
+         {:ok, user} <- user |> User.create_changeset(params) |> Repo.update() do
       conn
       |> render("show.json", user: user)
     else

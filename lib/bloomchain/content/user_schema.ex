@@ -15,7 +15,7 @@ defmodule Bloomchain.Content.User do
   @required_fields ~w(name email)a
   @optional_fields ~w(role password)a
 
-  def changeset(user, params \\ %{}) do
+  def create_changeset(user, params \\ %{}) do
     user
     |> cast(params, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)

@@ -1,15 +1,21 @@
 alias Bloomchain.Repo
 
-alias Bloomchain.Content.{Article, Tag, User}
+alias Bloomchain.Content.{Article, Tag, User, Subscriber}
 
 Repo.insert!(
-  User.changeset(%User{}, %{
+  User.create_changeset(%User{}, %{
     name: "Admin",
     email: "admin@app.com",
     password: "admin123",
     role: "admin"
   })
 )
+
+Repo.insert_all(Subscriber, [
+  %{email: "app@yandex.ru", inserted_at: Timex.now(), updated_at: Timex.now()},
+  %{email: "new@yandex.ru", inserted_at: Timex.now(), updated_at: Timex.now()},
+  %{email: "superemail@google.com", inserted_at: Timex.now(), updated_at: Timex.now()}
+])
 
 Repo.insert_all(Tag, [
   %{name: "криптовалюта", slug: "kripto", inserted_at: Timex.now(), updated_at: Timex.now()},
