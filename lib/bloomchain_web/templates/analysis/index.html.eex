@@ -1,178 +1,206 @@
-<div class="container pt-4 pb-5">
-    <a name="indexes"></a>
-    <div class="row">
-        <div class="col-md-12">
-            <h1 class="bc-analitics__h1">Индексы</h1>
-            <div class="d-flex justify-content-center justify-content-md-start mt-4 mb-5">
-                <button onclick="window.open('https://bloomchain.ru/wp-content/plugins/bloomchain-bitcoin-price-index/pdf/%D0%91%D0%B8%D1%80%D0%B6%D0%B5%D0%B2%D1%8B%D0%B5%20%D0%B8%D0%BD%D0%B4%D0%B5%D0%BA%D1%81%D1%8B%20%20bloomchain.ru.pdf')" class="bc-article__btn-xs-w-100 btn btn-dark d-flex align-items-center justify-content-center" type="button">Скачать Методику</button>
-            </div>
-            <div class="bc-chart" id="bc-chart" data-highcharts-chart="0">
-                <div id="highcharts-vh5zw19-0" dir="ltr" class="highcharts-container " style="position: relative; overflow: hidden; width: 760px; height: 400px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); font-family: Montserrat, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 12px;">
-                    <svg version="1.1" class="highcharts-root" style="font-family:Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';font-size:12px;" xmlns="http://www.w3.org/2000/svg" width="760" height="400" viewBox="0 0 760 400">
-                        <desc>Created with Highstock 6.1.0</desc>
-                        <defs>
-                            <clipPath id="highcharts-vh5zw19-1">
-                                <rect x="0" y="0" width="750" height="345" fill="none"></rect>
-                            </clipPath>
-                            <clipPath id="highcharts-vh5zw19-3">
-                                <rect x="0" y="0" width="750" height="345" fill="none"></rect>
-                            </clipPath>
-                        </defs>
-                        <rect fill="#FFFFFF" class="highcharts-background" x="0" y="0" width="760" height="400" rx="0" ry="0"></rect>
-                        <rect fill="none" class="highcharts-plot-background" x="0" y="55" width="750" height="345"></rect>
-                        <rect fill="none" class="highcharts-plot-border" x="0" y="55" width="750" height="345"></rect>
-                        <path fill="none" class="highcharts-crosshair highcharts-crosshair-thin undefined" stroke="#cccccc" stroke-width="1" style="pointer-events:none;" visibility="hidden" d="M 535.5 55 L 535.5 400"></path>
-                        <g class="highcharts-series-group">
-                            <g class="highcharts-series highcharts-series-0 highcharts-area-series highcharts-color-0 " transform="translate(0,55) scale(1 1)" clip-path="url(#highcharts-vh5zw19-3)">
-                                <path fill="#EDEFFD" d="M 0 301.4518 L 107.14285714286 281.7431 L 214.28571428571 270.9929 L 321.42857142857 242.28660000000002 L 428.57142857143 179.3287 L 535.71428571429 126.65870000000001 L 642.85714285714 87.09410000000003 L 750 47.89749999999998 L 750 345 L 642.85714285714 345 L 535.71428571429 345 L 428.57142857143 345 L 321.42857142857 345 L 214.28571428571 345 L 107.14285714286 345 L 0 345" class="highcharts-area"></path>
-                                <path fill="none" d="M 0 301.4518 L 107.14285714286 281.7431 L 214.28571428571 270.9929 L 321.42857142857 242.28660000000002 L 428.57142857143 179.3287 L 535.71428571429 126.65870000000001 L 642.85714285714 87.09410000000003 L 750 47.89749999999998" class="highcharts-graph" stroke="#4D67EC" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
-                                <path fill="none" d="M -10 301.4518 L 0 301.4518 L 107.14285714286 281.7431 L 214.28571428571 270.9929 L 321.42857142857 242.28660000000002 L 428.57142857143 179.3287 L 535.71428571429 126.65870000000001 L 642.85714285714 87.09410000000003 L 750 47.89749999999998 L 760 47.89749999999998" stroke-linejoin="round" visibility="visible" stroke="rgba(192,192,192,0.0001)" stroke-width="22" class="highcharts-tracker"></path>
-                            </g>
-                            <g class="highcharts-markers highcharts-series-0 highcharts-area-series highcharts-color-0 highcharts-tracker " transform="translate(0,55) scale(1 1)">
-                                <path fill="#4D67EC" visibility="hidden" d="M 535 126.65870000000001 A 0 0 0 1 1 535 126.65870000000001 Z" class="highcharts-halo highcharts-color-0" fill-opacity="0.25"></path>
-                                <path fill="#4D67EC" d="M 539 127 A 4 4 0 1 1 538.9999980000001 126.99600000066667 Z" stroke="#ffffff" stroke-width="1" visibility="hidden"></path>
-                            </g>
-                        </g>
-                        <text x="375" text-anchor="middle" class="highcharts-title" style="color:#333333;font-size:16px;fill:#333333;" y="32"></text>
-                        <text x="375" text-anchor="middle" class="highcharts-subtitle" style="color:#666666;fill:#666666;" y="34"></text>
-                        <g class="highcharts-range-selector-group" transform="translate(0,0)">
-                            <g class="highcharts-range-selector-buttons" transform="translate(629,20)">
-                                <text x="0" y="15" style="color:#666666;font-size:0;fill:#666666;">Zoom</text>
-                                <g class="highcharts-button highcharts-button-normal" style="cursor:pointer;" transform="translate(5,0)">
-                                    <rect fill="#f7f7f7" class=" highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2"></rect>
-                                    <text x="8.8359375" style="font-weight:normal;color:#333333;fill:#333333;" y="14">1D</text>
-                                </g>
-                                <g class="highcharts-button highcharts-button-normal" style="cursor:pointer;" transform="translate(42,0)">
-                                    <rect fill="#f7f7f7" class=" highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2"></rect>
-                                    <text x="7.390625" style="font-weight:normal;color:#333333;fill:#333333;" y="14">1W</text>
-                                </g>
-                                <g class="highcharts-button highcharts-button-normal" style="cursor:pointer;" transform="translate(79,0)">
-                                    <rect fill="#f7f7f7" class=" highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2"></rect>
-                                    <text x="7.953125" style="font-weight:normal;color:#333333;fill:#333333;" y="14">1M</text>
-                                </g>
-                            </g>
-                        </g>
-                        <g class="highcharts-label highcharts-tooltip highcharts-color-0" style="cursor:default;pointer-events:none;white-space:nowrap;" transform="translate(477,-9999)" opacity="0" visibility="visible">
-                            <path fill="rgba(247,247,247,0.85)" class="highcharts-label-box highcharts-tooltip-box" d="M 0 0 L 119 0 C 119 0 119 0 119 0 L 119 44 C 119 44 119 44 119 44 L 65 44 59 50 53 44 0 44 C 0 44 0 44 0 44 L 0 0 C 0 0 0 0 0 0"></path>
-                            <text x="8" style="font-size:12px;color:#333333;fill:#333333;" y="20">
-                                <tspan style="font-size: 10px">5</tspan>
-                                <tspan style="fill:#4D67EC" x="8" dy="15">●</tspan>
-                                <tspan dx="0"> BTC: </tspan>
-                                <tspan style="font-weight:bold" dx="0">119 931.00</tspan>
-                            </text>
-                        </g>
-                    </svg>
-                </div>
-            </div>
-            <small>BloomChain Bitcoin Price Index</small>
-            <p class="bc-article__paragraph mt-3 mb-5">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда. </p>
-            <div class="bc-chart" id="bc-chart" data-highcharts-chart="1">
-                <div id="highcharts-vh5zw19-0" dir="ltr" class="highcharts-container " style="position: relative; overflow: hidden; width: 100%; height: 400px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); font-family: Montserrat, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 12px;">
-                    <svg version="1.1" class="highcharts-root" style="font-family:Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';font-size:12px;" xmlns="http://www.w3.org/2000/svg" width="760" height="400" viewBox="0 0 760 400">
-                        <desc>Created with Highstock 6.1.0</desc>
-                        <defs>
-                            <clipPath id="highcharts-vh5zw19-1">
-                                <rect x="0" y="0" width="750" height="345" fill="none"></rect>
-                            </clipPath>
-                            <clipPath id="highcharts-vh5zw19-3">
-                                <rect x="0" y="0" width="750" height="345" fill="none"></rect>
-                            </clipPath>
-                        </defs>
-                        <rect fill="#FFFFFF" class="highcharts-background" x="0" y="0" width="760" height="400" rx="0" ry="0"></rect>
-                        <rect fill="none" class="highcharts-plot-background" x="0" y="55" width="750" height="345"></rect>
-                        <rect fill="none" class="highcharts-plot-border" x="0" y="55" width="750" height="345"></rect>
-                        <path fill="none" class="highcharts-crosshair highcharts-crosshair-thin undefined" stroke="#cccccc" stroke-width="1" style="pointer-events:none;" visibility="hidden" d="M 535.5 55 L 535.5 400"></path>
-                        <g class="highcharts-series-group">
-                            <g class="highcharts-series highcharts-series-0 highcharts-area-series highcharts-color-0 " transform="translate(0,55) scale(1 1)" clip-path="url(#highcharts-vh5zw19-3)">
-                                <path fill="#EDEFFD" d="M 0 301.4518 L 107.14285714286 281.7431 L 214.28571428571 270.9929 L 321.42857142857 242.28660000000002 L 428.57142857143 179.3287 L 535.71428571429 126.65870000000001 L 642.85714285714 87.09410000000003 L 750 47.89749999999998 L 750 345 L 642.85714285714 345 L 535.71428571429 345 L 428.57142857143 345 L 321.42857142857 345 L 214.28571428571 345 L 107.14285714286 345 L 0 345" class="highcharts-area"></path>
-                                <path fill="none" d="M 0 301.4518 L 107.14285714286 281.7431 L 214.28571428571 270.9929 L 321.42857142857 242.28660000000002 L 428.57142857143 179.3287 L 535.71428571429 126.65870000000001 L 642.85714285714 87.09410000000003 L 750 47.89749999999998" class="highcharts-graph" stroke="#4D67EC" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
-                                <path fill="none" d="M -10 301.4518 L 0 301.4518 L 107.14285714286 281.7431 L 214.28571428571 270.9929 L 321.42857142857 242.28660000000002 L 428.57142857143 179.3287 L 535.71428571429 126.65870000000001 L 642.85714285714 87.09410000000003 L 750 47.89749999999998 L 760 47.89749999999998" stroke-linejoin="round" visibility="visible" stroke="rgba(192,192,192,0.0001)" stroke-width="22" class="highcharts-tracker"></path>
-                            </g>
-                            <g class="highcharts-markers highcharts-series-0 highcharts-area-series highcharts-color-0 highcharts-tracker " transform="translate(0,55) scale(1 1)">
-                                <path fill="#4D67EC" visibility="hidden" d="M 535 126.65870000000001 A 0 0 0 1 1 535 126.65870000000001 Z" class="highcharts-halo highcharts-color-0" fill-opacity="0.25"></path>
-                                <path fill="#4D67EC" d="M 539 127 A 4 4 0 1 1 538.9999980000001 126.99600000066667 Z" stroke="#ffffff" stroke-width="1" visibility="hidden"></path>
-                            </g>
-                        </g>
-                        <text x="375" text-anchor="middle" class="highcharts-title" style="color:#333333;font-size:16px;fill:#333333;" y="32"></text>
-                        <text x="375" text-anchor="middle" class="highcharts-subtitle" style="color:#666666;fill:#666666;" y="34"></text>
-                        <g class="highcharts-range-selector-group" transform="translate(0,0)">
-                            <g class="highcharts-range-selector-buttons" transform="translate(629,20)">
-                                <text x="0" y="15" style="color:#666666;font-size:0;fill:#666666;">Zoom</text>
-                                <g class="highcharts-button highcharts-button-normal" style="cursor:pointer;" transform="translate(5,0)">
-                                    <rect fill="#f7f7f7" class=" highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2"></rect>
-                                    <text x="8.8359375" style="font-weight:normal;color:#333333;fill:#333333;" y="14">1D</text>
-                                </g>
-                                <g class="highcharts-button highcharts-button-normal" style="cursor:pointer;" transform="translate(42,0)">
-                                    <rect fill="#f7f7f7" class=" highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2"></rect>
-                                    <text x="7.390625" style="font-weight:normal;color:#333333;fill:#333333;" y="14">1W</text>
-                                </g>
-                                <g class="highcharts-button highcharts-button-normal" style="cursor:pointer;" transform="translate(79,0)">
-                                    <rect fill="#f7f7f7" class=" highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2"></rect>
-                                    <text x="7.953125" style="font-weight:normal;color:#333333;fill:#333333;" y="14">1M</text>
-                                </g>
-                            </g>
-                        </g>
-                        <g class="highcharts-label highcharts-tooltip highcharts-color-0" style="cursor:default;pointer-events:none;white-space:nowrap;" transform="translate(477,-9999)" opacity="0" visibility="visible">
-                            <path fill="rgba(247,247,247,0.85)" class="highcharts-label-box highcharts-tooltip-box" d="M 0 0 L 119 0 C 119 0 119 0 119 0 L 119 44 C 119 44 119 44 119 44 L 65 44 59 50 53 44 0 44 C 0 44 0 44 0 44 L 0 0 C 0 0 0 0 0 0"></path>
-                            <text x="8" style="font-size:12px;color:#333333;fill:#333333;" y="20">
-                                <tspan style="font-size: 10px">5</tspan>
-                                <tspan style="fill:#4D67EC" x="8" dy="15">●</tspan>
-                                <tspan dx="0"> BTC: </tspan>
-                                <tspan style="font-weight:bold" dx="0">119 931.00</tspan>
-                            </text>
-                        </g>
-                    </svg>
-                </div>
-            </div>
-            <small>BloomChain Top 10 Cryptocurrency Index</small>
-            <p class="bc-article__paragraph mt-3">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда. </p>
-        </div>
-    </div>
-</div>
 <div class="container py-5">
-    <a name="analitics"></a>
-    <h1 class="bc-analitics__h1">Биржевая аналитика</h1>
-    <div class="row mt-3">
-        <div class="col-md-12">
-            <a class="bc-article__overlay-link" href="news-open.html">
-                <div class="bc-article__image"><img src="assets/images/img-sunset.jpg">
-                    <div class="h3">14.01.2018</div>
-                    <p>Where To Look For Cheap Brochure </p>
-                    <div class="d-flex align-items-center"><span class="small mr-sm-4 mr-2">2 часа назад</span><i class="mr-1 icon-view-white"></i><span class="small mr-sm-4 mr-2">10 235</span><i class="mr-1 icon-comment-white"></i><span class="small mr-sm-4 mr-2">2</span><i class="mr-1 icon-clock-white"></i><span class="small">17 мин</span></div>
-                </div>
-            </a>
-            <div class="row mt-3">
-                <div class="col-xl-6"><a class="h5" href="#">14.02.2018</a>
-                    <p class="bc-article__paragraph">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда. </p>
-                    <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
-                    <hr class="bc-article__separator mx-0 my-3"><a class="h5 mt-4" href="#">14.02.2018</a>
-                    <p class="bc-article__paragraph">На этот раз никаких накачек, лишь рост нескольких криптовалют после существенного падения. О том, что после пробоя. </p>
-                    <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
-                    <hr class="bc-article__separator mx-0 my-3"><a class="h5" href="#">14.02.2018</a>
-                    <p class="bc-article__paragraph">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда. </p>
-                    <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
-                    <hr class="bc-article__separator mx-0 my-3"><a class="h5 mt-4" href="#">14.02.2018</a>
-                    <p class="bc-article__paragraph">На этот раз никаких накачек, лишь рост нескольких криптовалют после существенного падения. О том, что после пробоя. </p>
-                    <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
-                    <hr class="bc-article__separator mx-0 my-3 d-xl-none">
-                </div>
-                <div class="col-xl-6"><a class="h5" href="#">14.02.2018</a>
-                    <p class="bc-article__paragraph">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда. </p>
-                    <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
-                    <hr class="bc-article__separator mx-0 my-3"><a class="h5 mt-4" href="#">14.02.2018</a>
-                    <p class="bc-article__paragraph">На этот раз никаких накачек, лишь рост нескольких криптовалют после существенного падения. О том, что после пробоя. </p>
-                    <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
-                    <hr class="bc-article__separator mx-0 my-3"><a class="h5" href="#">14.02.2018</a>
-                    <p class="bc-article__paragraph">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда. </p>
-                    <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
-                    <hr class="bc-article__separator mx-0 my-3"><a class="h5 mt-4" href="#">14.02.2018</a>
-                    <p class="bc-article__paragraph">На этот раз никаких накачек, лишь рост нескольких криптовалют после существенного падения. О том, что после пробоя. </p>
-                    <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
-                </div>
-            </div>
+  <a name="analitics"></a>
+  <h1 class="bc-analitics__h1">Биржевая аналитика</h1>
+  <div class="row mt-3 align-items-start">
+    <div class="col-md-8">
+      <a class="bc-article__overlay-link" href="news-open.html">
+        <div class="bc-article__image"><img src="assets/images/img-sunset.jpg">
+          <div class="h3">14.01.2018</div>
+          <p>Where To Look For Cheap Brochure </p>
+          <div class="d-flex align-items-center"><span class="small mr-sm-4 mr-2">2 часа назад</span><i class="mr-1 icon-view-white"></i><span class="small mr-sm-4 mr-2">10 235</span><i class="mr-1 icon-comment-white"></i><span class="small mr-sm-4 mr-2">2</span><i class="mr-1 icon-clock-white"></i><span class="small">17 мин</span></div>
         </div>
+      </a>
+      <div class="row mt-3">
+        <div class="col-xl-6">
+          <a class="h5" href="#">14.02.2018</a>
+          <p class="bc-article__paragraph">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда.</p>
+          <div class="d-flex align-items-center mt-3">
+            <span class="small mr-4">2 часа назад</span>
+            <i class="mr-1 icon-view"></i>
+            <span class="small mr-4">10 235</span>
+            <i class="mr-1 icon-comment"></i>
+            <span class="small mr-4">2</span>
+            <i class="mr-1 icon-clock"></i>
+            <span class="small">17 мин</span>
+          </div>
+          <hr class="bc-article__separator mx-0 my-3">
+          <a class="h5 mt-4" href="#">14.02.2018</a>
+          <p class="bc-article__paragraph">На этот раз никаких накачек, лишь рост нескольких криптовалют после существенного падения. О том, что после пробоя.</p>
+          <div class="d-flex align-items-center mt-3">
+            <span class="small mr-4">2 часа назад</span>
+            <i class="mr-1 icon-view"></i>
+            <span class="small mr-4">10 235</span>
+            <i class="mr-1 icon-comment"></i>
+            <span class="small mr-4">2</span>
+            <i class="mr-1 icon-clock"></i>
+            <span class="small">17 мин</span>
+          </div>
+          <hr class="bc-article__separator mx-0 my-3">
+          <a class="h5" href="#">14.02.2018</a>
+          <p class="bc-article__paragraph">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда.</p>
+          <div class="d-flex align-items-center mt-3">
+            <span class="small mr-4">2 часа назад</span>
+            <i class="mr-1 icon-view"></i>
+            <span class="small mr-4">10 235</span>
+            <i class="mr-1 icon-comment"></i>
+            <span class="small mr-4">2</span>
+            <i class="mr-1 icon-clock"></i>
+            <span class="small">17 мин</span>
+          </div>
+          <hr class="bc-article__separator mx-0 my-3">
+          <a class="h5 mt-4" href="#">14.02.2018</a>
+          <p class="bc-article__paragraph">На этот раз никаких накачек, лишь рост нескольких криптовалют после существенного падения. О том, что после пробоя. </p>
+          <div class="d-flex align-items-center mt-3">
+            <span class="small mr-4">2 часа назад</span>
+            <i class="mr-1 icon-view"></i>
+            <span class="small mr-4">10 235</span>
+            <i class="mr-1 icon-comment"></i>
+            <span class="small mr-4">2</span>
+            <i class="mr-1 icon-clock"></i>
+            <span class="small">17 мин</span>
+          </div>
+          <hr class="bc-article__separator mx-0 my-3 d-xl-none">
+        </div>
+        <div class="col-xl-6">
+          <a class="h5" href="#">14.02.2018</a>
+          <p class="bc-article__paragraph">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда.</p>
+          <div class="d-flex align-items-center mt-3">
+            <span class="small mr-4">2 часа назад</span>
+            <i class="mr-1 icon-view"></i>
+            <span class="small mr-4">10 235</span>
+            <i class="mr-1 icon-comment"></i>
+            <span class="small mr-4">2</span>
+            <i class="mr-1 icon-clock"></i>
+            <span class="small">17 мин</span>
+          </div>
+          <hr class="bc-article__separator mx-0 my-3">
+          <a class="h5 mt-4" href="#">14.02.2018</a>
+          <p class="bc-article__paragraph">На этот раз никаких накачек, лишь рост нескольких криптовалют после существенного падения. О том, что после пробоя.</p>
+          <div class="d-flex align-items-center mt-3">
+            <span class="small mr-4">2 часа назад</span>
+            <i class="mr-1 icon-view"></i>
+            <span class="small mr-4">10 235</span>
+            <i class="mr-1 icon-comment"></i>
+            <span class="small mr-4">2</span>
+            <i class="mr-1 icon-clock"></i>
+            <span class="small">17 мин</span>
+          </div>
+          <hr class="bc-article__separator mx-0 my-3">
+          <a class="h5" href="#">14.02.2018</a>
+          <p class="bc-article__paragraph">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда.</p>
+          <div class="d-flex align-items-center mt-3">
+            <span class="small mr-4">2 часа назад</span>
+            <i class="mr-1 icon-view"></i>
+            <span class="small mr-4">10 235</span>
+            <i class="mr-1 icon-comment"></i>
+            <span class="small mr-4">2</span>
+            <i class="mr-1 icon-clock"></i>
+            <span class="small">17 мин</span>
+          </div>
+          <hr class="bc-article__separator mx-0 my-3">
+          <a class="h5 mt-4" href="#">14.02.2018</a>
+          <p class="bc-article__paragraph">На этот раз никаких накачек, лишь рост нескольких криптовалют после существенного падения. О том, что после пробоя.</p>
+          <div class="d-flex align-items-center mt-3">
+            <span class="small mr-4">2 часа назад</span>
+            <i class="mr-1 icon-view"></i>
+            <span class="small mr-4">10 235</span>
+            <i class="mr-1 icon-comment"></i>
+            <span class="small mr-4">2</span>
+            <i class="mr-1 icon-clock"></i>
+            <span class="small">17 мин</span>
+          </div>
+        </div>
+      </div>
+      <div class="row pt-5">
+        <button class="bc-article__btn-link btn btn-link" type="button">Загрузить еще</button>
+      </div>
+      <a name="indexes"></a>
+      <div class="row pt-5">
+        <div class="col-xs-12">
+          <h1 class="bc-analitics__h1">Индексы</h1>
+          <div class="d-flex justify-content-center justify-content-md-start mt-4 mb-5">
+            <button onclick="window.open('https://bloomchain.ru/wp-content/plugins/bloomchain-bitcoin-price-index/pdf/%D0%91%D0%B8%D1%80%D0%B6%D0%B5%D0%B2%D1%8B%D0%B5%20%D0%B8%D0%BD%D0%B4%D0%B5%D0%BA%D1%81%D1%8B%20%20bloomchain.ru.pdf')" class="bc-article__btn-xs-w-100 btn btn-dark d-flex align-items-center justify-content-center" type="button">Скачать Методику</button>
+          </div>
+          <div class="bc-chart" id="bc-chart" data-highcharts-chart="0">
+            <div id="highcharts-vh5zw19-0" dir="ltr" class="highcharts-container " style="position: relative; overflow: hidden; width: 760px; height: 400px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); font-family: Montserrat, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 12px;">
+              <svg version="1.1" class="highcharts-root" style="font-family:Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';font-size:12px;" xmlns="http://www.w3.org/2000/svg" width="760" height="400" viewBox="0 0 760 400">
+                <desc>Created with Highstock 6.1.0</desc>
+                  <defs>
+                    <clipPath id="highcharts-vh5zw19-1">
+                      <rect x="0" y="0" width="750" height="345" fill="none"></rect>
+                    </clipPath>
+                    <clipPath id="highcharts-vh5zw19-3">
+                      <rect x="0" y="0" width="750" height="345" fill="none"></rect>
+                    </clipPath>
+                  </defs>
+                  <rect fill="#FFFFFF" class="highcharts-background" x="0" y="0" width="760" height="400" rx="0" ry="0"></rect>
+                  <rect fill="none" class="highcharts-plot-background" x="0" y="55" width="750" height="345"></rect>
+                  <rect fill="none" class="highcharts-plot-border" x="0" y="55" width="750" height="345"></rect>
+                  <path fill="none" class="highcharts-crosshair highcharts-crosshair-thin undefined" stroke="#cccccc" stroke-width="1" style="pointer-events:none;" visibility="hidden" d="M 535.5 55 L 535.5 400"></path>
+                  <g class="highcharts-series-group">
+                    <g class="highcharts-series highcharts-series-0 highcharts-area-series highcharts-color-0 " transform="translate(0,55)  scale(1 1)" clip-path="url(#highcharts-vh5zw19-3)">
+                      <path fill="#EDEFFD" d="M 0 301.4518 L 107.14285714286 281.7431 L 214.28571428571 270.9929 L 321.42857142857 242.28660000000002 L 428.57142857143 179.3287 L 535.71428571429 126.65870000000001 L 642.85714285714 87.09410000000003 L 750 47.89749999999998 L 750 345 L 642.85714285714 345 L 535.71428571429 345 L 428.57142857143 345 L 321.42857142857 345 L 214.28571428571 345 L 107.14285714286 345 L 0 345" class="highcharts-area"></path>
+                      <path fill="none" d="M 0 301.4518 L 107.14285714286 281.7431 L 214.28571428571 270.9929 L 321.42857142857 242.28660000000002 L 428.57142857143 179.3287 L 535.71428571429 126.65870000000001 L 642.85714285714 87.09410000000003 L 750 47.89749999999998" class="highcharts-graph" stroke="#4D67EC" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
+                      <path fill="none" d="M -10 301.4518 L 0 301.4518 L 107.14285714286 281.7431 L 214.28571428571 270.9929 L 321.42857142857 242.28660000000002 L 428.57142857143 179.3287 L 535.71428571429 126.65870000000001 L 642.85714285714 87.09410000000003 L 750 47.89749999999998 L 760 47.89749999999998" stroke-linejoin="round" visibility="visible" stroke="rgba(192,192,192,0.0001)" stroke-width="22" class="highcharts-tracker"></path>
+                    </g>
+                    <g class="highcharts-markers highcharts-series-0 highcharts-area-series highcharts-color-0 highcharts-tracker " transform="translate(0,55) scale(1 1)">
+                      <path fill="#4D67EC" visibility="hidden" d="M 535 126.65870000000001 A 0 0 0 1 1 535 126.65870000000001 Z" class="highcharts-halo highcharts-color-0" fill-opacity="0.25"></path>
+                      <path fill="#4D67EC" d="M 539 127 A 4 4 0 1 1 538.9999980000001 126.99600000066667 Z" stroke="#ffffff" stroke-width="1" visibility="hidden"></path>
+                    </g>
+                  </g>
+                  <text x="375" text-anchor="middle" class="highcharts-title" style="color:#333333;font-size:16px;fill:#333333;" y="32"></text>
+                  <text x="375" text-anchor="middle" class="highcharts-subtitle" style="color:#666666;fill:#666666;" y="34"></text>
+                  <g class="highcharts-range-selector-group" transform="translate(0,0)">
+                    <g class="highcharts-range-selector-buttons" transform="translate(629,20)">
+                      <text x="0" y="15" style="color:#666666;font-size:0;fill:#666666;">Zoom</text>
+                      <g class="highcharts-button highcharts-button-normal" style="cursor:pointer;" transform="translate(5,0)">
+                        <rect fill="#f7f7f7" class=" highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2"></rect>
+                        <text x="8.8359375" style="font-weight:normal;color:#333333;fill:#333333;" y="14">1D</text>
+                      </g>
+                      <g class="highcharts-button highcharts-button-normal" style="cursor:pointer;" transform="translate(42,0)">
+                        <rect fill="#f7f7f7" class=" highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2"></rect>
+                        <text x="7.390625" style="font-weight:normal;color:#333333;fill:#333333;" y="14">1W</text>
+                      </g>
+                      <g class="highcharts-button highcharts-button-normal" style="cursor:pointer;" transform="translate(79,0)">
+                        <rect fill="#f7f7f7" class=" highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2"></rect>
+                        <text x="7.953125" style="font-weight:normal;color:#333333;fill:#333333;" y="14">1M</text>
+                      </g>
+                    </g>
+                  </g>
+                  <g class="highcharts-label highcharts-tooltip highcharts-color-0" style="cursor:default;pointer-events:none;white-space:nowrap;" transform="translate(477,-9999)" opacity="0" visibility="visible">
+                    <path fill="rgba(247,247,247,0.85)" class="highcharts-label-box highcharts-tooltip-box" d="M 0 0 L 119 0 C 119 0 119 0 119 0 L 119 44 C 119 44 119 44 119 44 L 65 44 59 50 53 44 0 44 C 0 44 0 44 0 44 L 0 0 C 0 0 0 0 0 0"></path>
+                    <text x="8" style="font-size:12px;color:#333333;fill:#333333;" y="20">
+                      <tspan style="font-size: 10px">5</tspan>
+                      <tspan style="fill:#4D67EC" x="8" dy="15">●</tspan>
+                      <tspan dx="0"> BTC: </tspan>
+                      <tspan style="font-weight:bold" dx="0">119 931.00</tspan>
+                    </text>
+                  </g>
+              </svg>
+            </div>
+          </div>
+          <small>BloomChain Bitcoin Price Index</small>
+          <p class="bc-article__paragraph mt-3 mb-5">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда. </p>
+          <small>BloomChain Top 10 Cryptocurrency Index</small>
+          <p class="bc-article__paragraph mt-3">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении  падающего тренда. </p>
+        </div>
+      </div>
     </div>
+
+    <div class="col-md-4 mt-5 mt-md-0 sticky">
+      <nav class="nav flex-column bc-analitics__page-nav d-md-block d-none">
+        <a class="bc-analitics__text-link nav-link" href="#indexes">
+          <span class="text-primary">—</span><span class="ml-2">Индексы</span>
+        </a>
+        <%# <a class="bc-analitics__text-link nav-link" href="#statistics">
+          <span class="text-primary">—</span><span class="ml-2">Статистика</span>
+        </a> %>
+        <a class="bc-analitics__text-link nav-link" href="#analitics">
+          <span class="text-primary">—</span><span class="ml-2">Биржевая аналитика</span>
+        </a>
+      </nav>
+    </div>
+
+  </div>
 </div>
-<div class="container px-0 pb-5">
-    <button class="bc-article__btn-link btn btn-link" type="button">Загрузить еще</button>
-</div>
+

@@ -1,24 +1,79 @@
 <div class="container py-4">
   <div class="row">
-    <div class="col-md-12 mt-md-0"><a class="bc-article__overlay-link" href="#">
+    <div class="col-md-12 mt-md-0">
+      <a class="bc-article__overlay-link" href="#">
         <div class="bc-article__image"><img src="assets/images/img-bitcoin.jpg">
-          <p>Курс криптовалюты Ethereum превысил $400</p><span class="bc-article__image__published small">2 часа назад</span>
-          <div class="d-flex align-items-center"><i class="mr-1 icon-user-white"></i><span class="small mr-sm-4 mr-3">Stanley Wade</span><i class="mr-1 icon-view-white"></i><span class="small mr-sm-4 mr-3">23</span><i class="mr-1 icon-clock-white"></i><span class="small">17 мин</span></div>
-        </div></a>
-      <div class="mt-4"></div><a class="bc-article__heading bc-article__heading__h2" href="http://">Криптобиржа Coincheck вернет средства своим клиентам после взлома</a>
-      <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
+          <p>Курс криптовалюты Ethereum превысил $400</p>
+          <span class="bc-article__image__published small">2 часа назад</span>
+          <div class="d-flex align-items-center">
+            <i class="mr-1 icon-user-white"></i>
+            <span class="small mr-sm-4 mr-3">Stanley Wade</span>
+            <i class="mr-1 icon-view-white"></i>
+            <span class="small mr-sm-4 mr-3">23</span>
+            <i class="mr-1 icon-clock-white"></i>
+            <span class="small">17 мин</span>
+          </div>
+        </div>
+      </a>
+      <div class="mt-4"></div>
+      <a class="bc-article__heading bc-article__heading__h2" href="#">Криптобиржа Coincheck вернет средства своим клиентам после взлома</a>
+      <div class="d-flex align-items-center mt-3">
+        <span class="small mr-4">2 часа назад</span>
+        <i class="mr-1 icon-view"></i>
+        <span class="small mr-4">10 235</span>
+        <i class="mr-1 icon-comment"></i>
+        <span class="small mr-4">2</span>
+        <i class="mr-1 icon-clock"></i>
+        <span class="small">17 мин</span>
+      </div>
       <hr class="bc-article__separator mx-0 my-3">
       <div class="row">
-        <div class="col-xl-6"><a class="bc-article__heading" href="http://">Земан призвал Москву и Запад отказаться от санкций</a>
-          <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
-          <hr class="bc-article__separator mx-0 my-3"><a class="bc-article__heading" href="http://">МГУ потратил 500 000 рублей на билеты на концерты Лепса, L'One и IOWA</a>
-          <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
+        <div class="col-xl-6">
+          <a class="bc-article__heading" href="#">Земан призвал Москву и Запад отказаться от санкций</a>
+          <div class="d-flex align-items-center mt-3">
+            <span class="small mr-4">2 часа назад</span>
+            <i class="mr-1 icon-view"></i>
+            <span class="small mr-4">10 235</span>
+            <i class="mr-1 icon-comment"></i>
+            <span class="small mr-4">2</span>
+            <i class="mr-1 icon-clock"></i>
+            <span class="small">17 мин</span>
+          </div>
+          <hr class="bc-article__separator mx-0 my-3">
+          <a class="bc-article__heading" href="#">МГУ потратил 500 000 рублей на билеты на концерты Лепса, L'One и IOWA</a>
+          <div class="d-flex align-items-center mt-3">
+            <span class="small mr-4">2 часа назад</span>
+            <i class="mr-1 icon-view"></i>
+            <span class="small mr-4">10 235</span>
+            <i class="mr-1 icon-comment"></i>
+            <span class="small mr-4">2</span>
+            <i class="mr-1 icon-clock"></i>
+            <span class="small">17 мин</span>
+          </div>
           <hr class="bc-article__separator mx-0 my-3 d-xl-none">
         </div>
-        <div class="col-xl-6"><a class="bc-article__heading" href="http://">Земан призвал Москву и Запад отказаться от санкций</a>
-          <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
-          <hr class="bc-article__separator mx-0 my-3"><a class="bc-article__heading" href="http://">МГУ потратил 500 000 рублей на билеты на концерты Лепса, L'One и IOWA</a>
-          <div class="d-flex align-items-center mt-3"><span class="small mr-4">2 часа назад</span><i class="mr-1 icon-view"></i><span class="small mr-4">10 235</span><i class="mr-1 icon-comment"></i><span class="small mr-4">2</span><i class="mr-1 icon-clock"></i><span class="small">17 мин</span></div>
+        <div class="col-xl-6">
+          <a class="bc-article__heading" href="#">Земан призвал Москву и Запад отказаться от санкций</a>
+          <div class="d-flex align-items-center mt-3">
+            <span class="small mr-4">2 часа назад</span>
+            <i class="mr-1 icon-view"></i>
+            <span class="small mr-4">10 235</span>
+            <i class="mr-1 icon-comment"></i>
+            <span class="small mr-4">2</span>
+            <i class="mr-1 icon-clock"></i>
+            <span class="small">17 мин</span>
+          </div>
+          <hr class="bc-article__separator mx-0 my-3">
+          <a class="bc-article__heading" href="#">МГУ потратил 500 000 рублей на билеты на концерты Лепса, L'One и IOWA</a>
+          <div class="d-flex align-items-center mt-3">
+            <span class="small mr-4">2 часа назад</span>
+            <i class="mr-1 icon-view"></i>
+            <span class="small mr-4">10 235</span>
+            <i class="mr-1 icon-comment"></i>
+            <span class="small mr-4">2</span>
+            <i class="mr-1 icon-clock"></i>
+            <span class="small">17 мин</span>
+          </div>
         </div>
       </div>
     </div>

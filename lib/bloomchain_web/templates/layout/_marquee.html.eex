@@ -1,4 +1,4 @@
-<div class="marquee bc-header-marquee">
+<section class="marquee bc-header-marquee">
     <div class="ml-4 d-inline">
         <div class="d-inline ml-2">AVT</div>
         <div class="d-inline font-weight-bold ml-2">849.47</div>
@@ -59,4 +59,4 @@
         <div class="d-inline font-weight-bold ml-2">1899.47</div>
         <div class="d-inline text-success ml-2">+0.34%</div>
     </div>
-</div>
+</section>

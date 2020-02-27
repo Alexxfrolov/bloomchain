@@ -310,6 +310,7 @@ export const ActicleCreatePage = () => {
                         <MenuItem value="in_russia">Что в России</MenuItem>
                         <MenuItem value="calendar">События</MenuItem>
                         <MenuItem value="person">Персона</MenuItem>
+                        <MenuItem value="research">Исследования</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>

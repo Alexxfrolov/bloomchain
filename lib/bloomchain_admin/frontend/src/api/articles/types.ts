@@ -22,5 +22,6 @@ export interface Article {
     | "in_russia"
     | "calendar"
     | "person"
+    | "research"
   userId: number
 }
