@@ -1,6 +1,19 @@
 alias Bloomchain.Repo
 
-alias Bloomchain.Content.{Article, Tag, User, Subscriber}
+alias Bloomchain.Content.{Article, Tag, User, Subscriber, Media}
+
+Repo.insert!(
+  Media.create_changeset(%Media{}, %{
+    alt: "test image",
+    mime_type: "image/png",
+    type: "image",
+    file: %Plug.Upload{
+      content_type: "image/png",
+      filename: "cover.png",
+      path: "#{File.cwd!()}/priv/repo/data_files/img-bitcoin.jpg"
+    }
+  })
+)
 
 Repo.insert!(
   User.create_changeset(%User{}, %{

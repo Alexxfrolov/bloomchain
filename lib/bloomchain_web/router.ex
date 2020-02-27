@@ -37,6 +37,7 @@ defmodule BloomchainWeb.Router do
       resources("/articles", Admin.Api.V1.ArticleController)
       resources("/users", Admin.Api.V1.UserController)
       resources("/tags", Admin.Api.V1.TagController, only: [:index, :create, :delete])
+      resources("/media", Admin.Api.V1.MediaController)
       resources("/subscribers", Admin.Api.V1.SubscriberController, only: [:index])
     end
 
