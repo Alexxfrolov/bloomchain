@@ -928,7 +928,7 @@
           appendArrows: s()(".bc-slick__arrows-location")
         })
       }),
-      s()(".marquee").marquee({
+      s()(".js-marquee").marquee({
         duration: 4e4,
         gap: 0,
         delayBeforeStart: 0,

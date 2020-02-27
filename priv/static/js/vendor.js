@@ -305,13 +305,12 @@
           } catch (t) {
             I = {
               apply: D.length ? function (t, e) {
-                  P.apply(t, _.call(e))
-                } :
-                function (t, e) {
-                  for (var i = t.length, n = 0; t[i++] = e[n++];)
-                  ;
-                  t.length = i - 1
-                }
+                P.apply(t, _.call(e))
+              } : function (t, e) {
+                for (var i = t.length, n = 0; t[i++] = e[n++];)
+                ;
+                t.length = i - 1
+              }
             }
           }
 
@@ -2121,13 +2120,12 @@
               enumerable: !0,
               configurable: !0,
               get: y(e) ? function () {
-                  if (this.originalEvent)
-                    return e(this.originalEvent)
-                } :
-                function () {
-                  if (this.originalEvent)
-                    return this.originalEvent[t]
-                },
+                if (this.originalEvent)
+                  return e(this.originalEvent)
+              } : function () {
+                if (this.originalEvent)
+                  return this.originalEvent[t]
+              },
               set: function (e) {
                 Object.defineProperty(this, t, {
                   enumerable: !0,
@@ -10659,8 +10657,7 @@
                     if (i >= x(t[e].options.index, t[e]._i)) {
                       t.splice(e + 1, 0, this);
                       break
-                    } -
-                  1 === e && t.unshift(this),
+                    } - 1 === e && t.unshift(this),
                     e += 1
                 } else
                   t.push(this);

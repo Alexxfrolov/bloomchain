@@ -1,4 +1,4 @@
-<section class="marquee bc-header-marquee">
+<section class="marquee bc-header-marquee js-marquee">
     <div class="ml-4 d-inline">
         <div class="d-inline ml-2">AVT</div>
         <div class="d-inline font-weight-bold ml-2">849.47</div>
