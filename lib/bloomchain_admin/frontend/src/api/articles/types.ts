@@ -12,7 +12,7 @@ export interface Article {
   keywords: string
   lead: string
   status: "published" | "draft" | "archive"
-  tags: string[]
+  tags: import("../tags").Tag[]
   time: number | null
   title: string
   type:

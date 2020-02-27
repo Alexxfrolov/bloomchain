@@ -1,4 +1,3 @@
-import nanoid from "nanoid"
 import React, {
   useState,
   useEffect,
@@ -37,22 +36,6 @@ import "froala-editor/js/plugins/quote.min.js"
 import "froala-editor/js/plugins/video.min.js"
 import "froala-editor/js/plugins/quick_insert.min.js"
 import "froala-editor/js/plugins/image_manager.min.js"
-// import "froala-editor/js/plugins/code_view.min.js"
-// import "froala-editor/js/plugins/help.min.js"
-// import "froala-editor/js/plugins/line_height.min.js"
-// import "froala-editor/js/plugins/line_breaker.min.js"
-// import "froala-editor/js/plugins/fullscreen.min.js"
-
-// import "froala-editor/js/third_party/font_awesome.min.js"
-// import "froala-editor/js/plugins/font_family.min.js"
-
-// import "froala-editor/js/plugins/paragraph_style.min.js"
-
-// import "froala-editor/js/plugins/special_characters.min.js"
-// import "froala-editor/js/third_party/spell_checker.min.js"
-// import "froala-editor/js/plugins/entities.min.js"
-
-// import "froala-editor/css/froala_style.min.css"
 import "froala-editor/js/languages/ru.js"
 import "froala-editor/js/froala_editor.pkgd.min.js"
 import "froala-editor/css/froala_editor.pkgd.min.css"
@@ -159,6 +142,24 @@ const useStyles = makeStyles((theme) =>
   }),
 )
 
+const INITIAL_ARTICLE = {
+  author: "",
+  body: "",
+  cover: null,
+  coverSource: null,
+  coverTitle: null,
+  coverAlt: null,
+  description: "",
+  keywords: "",
+  lead: "",
+  time: null,
+  status: "draft",
+  tags: [],
+  title: "",
+  type: "newsfeed",
+  userId: 1,
+}
+
 export const ActicleCreatePage = () => {
   const classes = useStyles()
 
@@ -195,24 +196,8 @@ export const ActicleCreatePage = () => {
   const imageRef: RefObject<HTMLImageElement> | null = useRef(null)
 
   const [article, setArticle] = useState<
-    Omit<Article, "createdAt" | "updatedAt">
-  >({
-    author: "",
-    body: "",
-    cover: null,
-    coverSource: null,
-    coverTitle: null,
-    coverAlt: null,
-    description: "",
-    keywords: "",
-    lead: "",
-    time: null,
-    status: "draft",
-    tags: [],
-    title: "",
-    type: "newsfeed",
-    userId: 1,
-  })
+    Omit<Article, "createdAt" | "updatedAt" | "id">
+  >({ ...INITIAL_ARTICLE })
 
   const handleChangeFormField = useCallback(
     (field: string) => (event: SyntheticEvent<{ value: string }>) => {
@@ -265,16 +250,26 @@ export const ActicleCreatePage = () => {
     (event: SyntheticEvent, options: Tag[] | null) => {
       setArticle({
         ...article,
-        tags: options !== null ? options.map((option) => option.id) : [],
+        tags: options !== null ? options : [],
       })
     },
     [article, setArticle],
   )
 
+  const handleClearButtonClick = useCallback(() => {
+    setArticle({
+      ...INITIAL_ARTICLE,
+    })
+  }, [setArticle])
+
   const handleSubmit = useCallback(
-    (event: FormEvent) => {
+    async (event: FormEvent) => {
       event.preventDefault()
-      articlesAPI.create(article)
+      const response = await articlesAPI.create(article)
+
+      if (response.status === 201) {
+        window.alert("Ваша статья успешно сохранена!")
+      }
     },
     [article],
   )
@@ -504,6 +499,14 @@ export const ActicleCreatePage = () => {
                   </Grid>
                 </Grid>
                 <Grid item={true} xs={12} container={true} justify="flex-end">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="button"
+                    onClick={handleClearButtonClick}
+                  >
+                    Очистить поля
+                  </Button>
                   <Button variant="contained" color="primary" type="submit">
                     Сохранить
                   </Button>

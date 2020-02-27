@@ -1,4 +1,3 @@
-import nanoid from "nanoid"
 import React, {
   useState,
   useEffect,
@@ -285,9 +284,12 @@ export const ActicleEditPage = () => {
   )
 
   const handleSubmit = useCallback(
-    (event: FormEvent) => {
+    async (event: FormEvent) => {
       event.preventDefault()
-      articlesAPI.update(article)
+      const response = await articlesAPI.update(article)
+      if (response.status === 201) {
+        window.alert("Ваша статья успешно обновлена!")
+      }
     },
     [article],
   )

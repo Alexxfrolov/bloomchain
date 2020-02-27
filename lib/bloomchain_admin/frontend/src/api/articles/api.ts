@@ -12,7 +12,7 @@ function getById(id: number) {
   return axios(`${httpConfig.baseUrl}/articles/${id}`)
 }
 
-function create(article: Omit<Article, "createdAt" | "updatedAt">) {
+function create(article: Omit<Article, "createdAt" | "updatedAt" | "id">) {
   const formData = new FormData()
   Object.keys(article).forEach((key) =>
     formData.append(decamelize(key), article[key]),

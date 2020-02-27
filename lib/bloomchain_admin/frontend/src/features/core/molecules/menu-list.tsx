@@ -80,8 +80,8 @@ export const MenuList = () => {
 
   const isCurrentMenu = useCallback(
     (routeName, routeParams = {}) =>
-      router.isActive(routeName, routeParams, false, false),
-    [router.isActive],
+      router.isActive(routeName, routeParams, true, true),
+    [router],
   )
 
   return (
@@ -91,7 +91,10 @@ export const MenuList = () => {
         <ListSubheader inset={true}>Публикации</ListSubheader>
         <ListItem
           aria-current={
-            isCurrentMenu("admin.articles.create") ? "page" : undefined
+            isCurrentMenu("admin.articles.create") ||
+            isCurrentMenu("admin.articles")
+              ? "page"
+              : undefined
           }
           className={classes.listitem}
         >
