@@ -27,9 +27,5 @@ import_config "#{Mix.env()}.exs"
 
 # Guardian
 config :bloomchain, Bloomchain.Auth.Guardian,
-  issuer: "CMS",
+  issuer: "Bloomchain",
   secret_key: "HNinpKh9NE3tr8BPJCpAEh0xzCqTIG3PWsfkR2AtzvUaRIpbs6oIQ9RcmjmGPekJ"
-
-# Arc Image Upload
-config :arc,
-  storage: Arc.Storage.Local

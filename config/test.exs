@@ -18,3 +18,7 @@ config :bloomchain, Bloomchain.Repo,
   hostname: System.get_env("DB_HOST") || 'localhost',
   port: System.get_env("DB_PORT") || 5432,
   pool: Ecto.Adapters.SQL.Sandbox
+
+# Arc Image Upload
+config :arc,
+  storage: Arc.Storage.Local

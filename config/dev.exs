@@ -56,3 +56,7 @@ config :bloomchain, Bloomchain.Repo,
   hostname: System.get_env("DB_HOST") || 'localhost',
   port: System.get_env("DB_PORT") || 5432,
   pool_size: 10
+
+# Arc Image Upload
+config :arc,
+  storage: Arc.Storage.Local
