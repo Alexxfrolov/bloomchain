@@ -17,6 +17,7 @@ function create(article: Omit<Article, "createdAt" | "updatedAt" | "id">) {
   Object.keys(article).forEach((key) =>
     formData.append(decamelize(key), article[key]),
   )
+  formData.set("tags", JSON.stringify(article.tags.map((tag) => tag.id)))
   return axios.post(`${httpConfig.baseUrl}/articles`, formData)
 }
 

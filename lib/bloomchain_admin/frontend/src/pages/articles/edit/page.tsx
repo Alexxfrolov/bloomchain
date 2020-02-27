@@ -287,7 +287,7 @@ export const ActicleEditPage = () => {
     async (event: FormEvent) => {
       event.preventDefault()
       const response = await articlesAPI.update(article)
-      if (response.status === 201) {
+      if (response.status === 200) {
         window.alert("Ваша статья успешно обновлена!")
       }
     },

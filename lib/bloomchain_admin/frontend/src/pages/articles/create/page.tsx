@@ -498,18 +498,28 @@ export const ActicleCreatePage = () => {
                     />
                   </Grid>
                 </Grid>
-                <Grid item={true} xs={12} container={true} justify="flex-end">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    type="button"
-                    onClick={handleClearButtonClick}
-                  >
-                    Очистить поля
-                  </Button>
-                  <Button variant="contained" color="primary" type="submit">
-                    Сохранить
-                  </Button>
+                <Grid
+                  item={true}
+                  xs={12}
+                  container={true}
+                  justify="flex-end"
+                  spacing={2}
+                >
+                  <Grid item={true}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      type="button"
+                      onClick={handleClearButtonClick}
+                    >
+                      Очистить поля
+                    </Button>
+                  </Grid>
+                  <Grid item={true}>
+                    <Button variant="contained" color="primary" type="submit">
+                      Сохранить
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
             </form>
