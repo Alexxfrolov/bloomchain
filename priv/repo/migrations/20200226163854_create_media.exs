@@ -4,15 +4,16 @@ defmodule Bloomchain.Repo.Migrations.CreateMedia do
   def change do
     create table(:media) do
       add(:file, :string, null: false)
+      add(:uuid, :string, null: false)
       add(:title, :string)
-      add(:alt, :string, null: false)
+      add(:alt, :string)
       add(:source, :string)
-      add(:mime_type, :string, null: false)
+      add(:content_type, :string, null: false)
       add(:type, :string, null: false)
 
       timestamps()
     end
 
-    create(unique_index(:media, [:file]))
+    create(unique_index(:media, [:uuid]))
   end
 end

@@ -4,20 +4,15 @@ defmodule BloomchainWeb.Uploaders.File do
 
   # @versions [:original]
 
-  def validate({file, _}) do
+  def validate({file, %{type: "image"}}) do
     ~w(.jpg .jpeg .png) |> Enum.member?(Path.extname(file.file_name))
   end
 
-  # def filename(version, {file, _scope}) do
-  #   file_name = String.replace(file.file_name, ~r/\..../, "")
-  #   "#{file_name}_#{:os.system_time()}"
-  # end
+  def validate({file, %{type: "pdf"}}) do
+    ~w(.pdf) |> Enum.member?(Path.extname(file.file_name))
+  end
 
-  # def filename(version, _) do
-  #   version
-  # end
-
-  def storage_dir(version, {file, scope}) do
-    "uploads/#{scope.type}/#{file.file_name}/#{version}"
+  def storage_dir(_, {_, scope}) do
+    "uploads/#{scope.type}/#{scope.uuid}"
   end
 end

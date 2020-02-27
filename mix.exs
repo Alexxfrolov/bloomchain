@@ -52,7 +52,8 @@ defmodule Bloomchain.Mixfile do
       {:earmark, "~> 1.2.6"},
       {:timex, "~> 3.3.0"},
       {:arc, "~> 0.10.0"},
-      {:arc_ecto, "~> 0.10.0"}
+      {:arc_ecto, "~> 0.10.0"},
+      {:elixir_uuid, "~> 1.2"}
     ]
   end
 
