@@ -20,6 +20,7 @@ defmodule Bloomchain.Content.Article do
       from(
         p in Post,
         where: p.type == ^type and p.status == "published",
+        preload: [:cover],
         limit: ^limit
       )
     )
@@ -32,7 +33,7 @@ defmodule Bloomchain.Content.Article do
 
   def get(slug, type: type) do
     Repo.get_by(Post, slug: slug, type: type)
-    |> Repo.preload([:tags])
+    |> Repo.preload([:tags, :cover])
   end
 
   def create(%{} = params, tags \\ []) do

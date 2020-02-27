@@ -5,8 +5,7 @@ defmodule Bloomchain.Content.Post do
   use Ecto.Schema
   use Arc.Ecto.Schema
 
-  alias Bloomchain.Content.Tag
-  alias BloomchainWeb.Uploaders.Cover
+  alias Bloomchain.Content.{Tag, Media}
 
   @derive {Phoenix.Param, key: :slug}
 
@@ -22,9 +21,8 @@ defmodule Bloomchain.Content.Post do
     field(:author, :string)
     field(:time, :integer)
 
-    field(:cover, Cover.Type)
-
     # belongs_to(:user, User)
+    belongs_to(:cover, Media, foreign_key: :cover_id)
     many_to_many(:tags, Tag, join_through: "posts_tags")
 
     timestamps()
@@ -32,7 +30,7 @@ defmodule Bloomchain.Content.Post do
   end
 
   @required_fields ~w(title type)a
-  @optional_fields ~w( body lead type status author time description keywords)a
+  @optional_fields ~w( body lead type status author time description keywords cover_id)a
 
   def create_changeset(post, attrs, [_ | _] = tags) do
     post
@@ -53,7 +51,7 @@ defmodule Bloomchain.Content.Post do
     |> cast(attrs, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
     |> validate_length(:title, min: 3)
-    |> cast_attachments(attrs, [:cover])
+    # |> cast_attachments(attrs, [:cover])
     |> process_slug
     |> process_published
   end

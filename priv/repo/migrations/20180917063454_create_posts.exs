@@ -10,11 +10,11 @@ defmodule Bloomchain.Repo.Migrations.CreatePosts do
       add(:type, :string)
       add(:keywords, {:array, :string})
       add(:description, :string, size: 512)
-      # add(:user_id, references(:users))
       add(:status, :string, size: 100, default: "draft", null: false)
       add(:author, :string)
-      add(:cover, :string)
+      add(:cover_id, references(:media))
       add(:time, :integer)
+      add(:total_views, :integer, default: 0)
       timestamps()
       add(:published_at, :timestamp, null: true)
     end

@@ -2,17 +2,18 @@ alias Bloomchain.Repo
 
 alias Bloomchain.Content.{Article, Tag, User, Subscriber, Media}
 
-Repo.insert!(
-  Media.create_changeset(%Media{}, %{
-    alt: "test image",
-    type: "image",
-    file: %Plug.Upload{
-      content_type: "image/jpeg",
-      filename: "cover.png",
-      path: "#{File.cwd!()}/priv/repo/data_files/img-bitcoin.jpg"
-    }
-  })
-)
+media =
+  Repo.insert!(
+    Media.create_changeset(%Media{}, %{
+      alt: "test image",
+      type: "image",
+      file: %Plug.Upload{
+        content_type: "image/jpeg",
+        filename: "cover.png",
+        path: "#{File.cwd!()}/priv/repo/data_files/img-bitcoin.jpg"
+      }
+    })
+  )
 
 Repo.insert!(
   User.create_changeset(%User{}, %{
@@ -51,11 +52,7 @@ for type <- ~w[newsfeed detailed research analysis in_russia calendar person] do
         status: "published",
         author: "Frolov Aleksey",
         time: i + 10,
-        cover: %Plug.Upload{
-          content_type: "image/png",
-          filename: "cover_#{type}_#{i}.png",
-          path: "#{File.cwd!()}/priv/repo/data_files/img-bitcoin.jpg"
-        }
+        cover_id: media.id
       },
       [1, 2, 3]
     )
