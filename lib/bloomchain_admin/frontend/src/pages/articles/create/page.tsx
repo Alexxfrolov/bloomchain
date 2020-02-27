@@ -36,6 +36,7 @@ import "froala-editor/js/plugins/url.min.js"
 import "froala-editor/js/plugins/quote.min.js"
 import "froala-editor/js/plugins/video.min.js"
 import "froala-editor/js/plugins/quick_insert.min.js"
+import "froala-editor/js/plugins/image_manager.min.js"
 // import "froala-editor/js/plugins/code_view.min.js"
 // import "froala-editor/js/plugins/help.min.js"
 // import "froala-editor/js/plugins/line_height.min.js"
@@ -51,7 +52,6 @@ import "froala-editor/js/plugins/quick_insert.min.js"
 // import "froala-editor/js/third_party/spell_checker.min.js"
 // import "froala-editor/js/plugins/entities.min.js"
 
-import "froala-editor/js/plugins/image_manager.min.js"
 // import "froala-editor/css/froala_style.min.css"
 import "froala-editor/js/languages/ru.js"
 import "froala-editor/js/froala_editor.pkgd.min.js"
@@ -112,7 +112,7 @@ const froalaEditorConfig = {
   imageUploadURL: "/admin/api/v1/media",
   imageUploadMethod: "POST",
   imageUploadParam: "image",
-  imageMaxSize: 15 * 1024 * 1024, // 15MB.
+  imageMaxSize: 10 * 1024 * 1024, // 15MB.
   imageAllowedTypes: ["jpeg", "jpg", "png"],
   quickInsertButtons: ["image", "video", "table", "ul", "qoute"],
   // events: {

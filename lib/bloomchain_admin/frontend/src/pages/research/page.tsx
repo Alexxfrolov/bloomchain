@@ -84,9 +84,9 @@ export const ResearchPage = () => {
             </Table>
           </TableContainer>
         </Grid>
-        <Grid item={true} xs={12} container={true} justify="center">
+        {/* <Grid item={true} xs={12} container={true} justify="center">
           <Pagination count={1} color="primary" />
-        </Grid>
+        </Grid> */}
       </Grid>
     </Container>
   )

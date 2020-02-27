@@ -1,3 +1,4 @@
+import nanoid from "nanoid"
 import React, { useState, useCallback } from "react"
 import DateFnsUtils from "@date-io/date-fns"
 import {
@@ -9,10 +10,11 @@ import {
   createStyles,
   GridList,
   GridListTile,
+  GridListTileBar,
   Grid,
   Container,
-  Paper,
   Typography,
+  ListSubheader,
   Button,
   IconButton,
   Theme,
@@ -41,6 +43,9 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "100%",
       height: 500,
     },
+    icon: {
+      color: "rgba(255, 255, 255, 0.54)",
+    },
   }),
 )
 
@@ -49,43 +54,36 @@ const tileData = [
     img: breakfast,
     title: "Breakfast",
     author: "author",
-    cols: 2,
   },
   {
     img: burgers,
     title: "Burgers",
     author: "author",
-    cols: 1,
   },
   {
     img: camera,
     title: "Camera",
     author: "author",
-    cols: 1,
   },
   {
     img: hats,
     title: "Hats",
     author: "author",
-    cols: 1,
   },
   {
     img: honey,
     title: "Honey",
     author: "author",
-    cols: 1,
   },
   {
     img: morning,
     title: "Morning",
     author: "author",
-    cols: 1,
   },
   {
     img: vegetables,
     title: "Vegetables",
     author: "author",
-    cols: 2,
   },
 ]
 
@@ -162,9 +160,24 @@ export const MediaPage = () => {
         <Grid item={true} xs={12}>
           <div className={classes.root}>
             <GridList cellHeight={300} className={classes.gridList} cols={3}>
+              <GridListTile key="Subheader" cols={2} style={{ height: "auto" }}>
+                <ListSubheader component="div">December</ListSubheader>
+              </GridListTile>
               {tileData.map((tile) => (
-                <GridListTile key={tile.img} cols={tile.cols || 1}>
+                <GridListTile key={nanoid()}>
                   <img src={tile.img} alt={tile.title} />
+                  <GridListTileBar
+                    title={tile.title}
+                    subtitle={<span>by: {tile.author}</span>}
+                    actionIcon={
+                      <IconButton
+                        aria-label={`info about ${tile.title}`}
+                        className={classes.icon}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    }
+                  />
                 </GridListTile>
               ))}
             </GridList>
