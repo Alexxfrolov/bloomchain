@@ -3,7 +3,9 @@ defmodule Bloomchain.Content.Media do
   use Arc.Ecto.Schema
 
   import Ecto.Changeset
-
+  import Ecto.Query
+  alias Bloomchain.Repo
+  alias Bloomchain.Content.{Media}
   alias BloomchainWeb.Uploaders.File
 
   schema "media" do
@@ -20,6 +22,15 @@ defmodule Bloomchain.Content.Media do
 
   @required_fields ~w(type)a
   @optional_fields ~w(title source uuid content_type alt)a
+
+  def list_all(type) do
+    Repo.all(
+      from(
+        m in Media,
+        where: m.type == ^type
+      )
+    )
+  end
 
   @doc """
   Builds a changeset based on the `struct` and `params`.

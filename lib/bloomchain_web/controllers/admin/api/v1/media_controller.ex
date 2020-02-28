@@ -5,6 +5,12 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaController do
   alias Bloomchain.{Repo, Content.Media}
   alias BloomchainWeb.ErrorView
 
+  def index(conn, %{"type" => type}) do
+    media = Media.list_all(type)
+
+    render(conn, "index.json", media: media)
+  end
+
   def index(conn, _params) do
     media = Repo.all(Media)
 

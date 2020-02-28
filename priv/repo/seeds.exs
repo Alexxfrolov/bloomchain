@@ -15,6 +15,28 @@ media =
     })
   )
 
+for path <- Path.wildcard("#{File.cwd!()}/priv/repo/data_files/banners/*") do
+  Repo.insert!(
+    Media.create_changeset(%Media{}, %{
+      type: "image",
+      file: %Plug.Upload{content_type: "image/jpeg", filename: Path.basename(path), path: path}
+    })
+  )
+end
+
+for path <- Path.wildcard("#{File.cwd!()}/priv/repo/data_files/pdfs/*") do
+  Repo.insert!(
+    Media.create_changeset(%Media{}, %{
+      type: "pdf",
+      file: %Plug.Upload{
+        content_type: "application/pdf",
+        filename: Path.basename(path),
+        path: path
+      }
+    })
+  )
+end
+
 Repo.insert!(
   User.create_changeset(%User{}, %{
     name: "Admin",
