@@ -12,12 +12,18 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaController do
   end
 
   def create(conn, %{"image" => %Plug.Upload{content_type: _, filename: _, path: _}} = params) do
-    Media.create_changeset(%Media{}, %{file: params["image"], type: "image"})
+    Media.create_changeset(
+      %Media{},
+      Map.merge(params, %{"file" => params["image"], "type" => "image"})
+    )
     |> do_create(conn)
   end
 
   def create(conn, %{"pdf" => %Plug.Upload{content_type: _, filename: _, path: _}} = params) do
-    Media.create_changeset(%Media{}, %{file: params["pdf"], type: "pdf"})
+    Media.create_changeset(
+      %Media{},
+      Map.merge(params, %{"file" => params["pdf"], "type" => "pdf"})
+    )
     |> do_create(conn)
   end
 
