@@ -1,18 +1,23 @@
-import axios from "axios"
+import axios, { AxiosPromise } from "axios"
 import decamelize from "decamelize"
 import { httpConfig } from "@features/core"
 
 import { Article } from "./types"
 
-function getLatest(status: Article["status"], type: Article["type"]) {
+function getLatest(
+  status: Article["status"],
+  type: Article["type"],
+): AxiosPromise<{ data: Article[] }> {
   return axios(`${httpConfig.baseUrl}/articles?status=${status}&type=${type}`)
 }
 
-function getById(id: number) {
+function getById(id: number): AxiosPromise<Article> {
   return axios(`${httpConfig.baseUrl}/articles/${id}`)
 }
 
-function create(article: Omit<Article, "createdAt" | "updatedAt" | "id">) {
+function create(
+  article: Omit<Article, "createdAt" | "updatedAt" | "id">,
+): AxiosPromise<Article> {
   const formData = new FormData()
   Object.keys(article).forEach((key) =>
     formData.append(decamelize(key), article[key]),
@@ -21,11 +26,11 @@ function create(article: Omit<Article, "createdAt" | "updatedAt" | "id">) {
   return axios.post(`${httpConfig.baseUrl}/articles`, formData)
 }
 
-function update(article: Article) {
+function update(article: Article): AxiosPromise<Article> {
   return axios.patch(`${httpConfig.baseUrl}/articles/${article.id}`, article)
 }
 
-function remove(id: number) {
+function remove(id: number): AxiosPromise {
   return axios.delete(`${httpConfig.baseUrl}/articles/${id}`)
 }
 

@@ -1,5 +1,5 @@
 import nanoid from "nanoid"
-import React, { useEffect, useState, useCallback, SyntheticEvent } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import {
   Grid,
   Container,
@@ -15,7 +15,6 @@ import {
   IconButton,
 } from "@material-ui/core"
 import DeleteIcon from "@material-ui/icons/Delete"
-import { Pagination } from "@material-ui/lab"
 import { ConditionalList } from "@ui"
 import { tagsAPI, Tag } from "@api/tags"
 import { RouterLink } from "@features/core"
@@ -23,11 +22,6 @@ import { RouterLink } from "@features/core"
 export const TagsViewPage = () => {
   const [loading, setLoading] = useState(false)
   const [tags, setTags] = useState<Tag[]>([])
-  const [pagination, setPagination] = useState({
-    page: 1,
-    pages: 1,
-    perPage: 20,
-  })
   const [error, setError] = useState(false)
 
   useEffect(() => {
@@ -36,7 +30,7 @@ export const TagsViewPage = () => {
       setError(false)
 
       try {
-        const response = await tagsAPI.get(pagination.page)
+        const response = await tagsAPI.get()
         setTags(response.data.data)
       } catch {
         setError(true)
@@ -45,24 +39,24 @@ export const TagsViewPage = () => {
       setLoading(false)
     }
     fetchData()
-  }, [pagination.page])
+  }, [])
 
-  const handleChangePagination = useCallback(
-    (event: SyntheticEvent, value: number) => {
-      setPagination({
-        ...pagination,
-        page: value,
-      })
-    },
-    [pagination, setPagination],
-  )
+  // const handleChangePagination = useCallback(
+  //   (event: SyntheticEvent, value: number) => {
+  //     setPagination({
+  //       ...pagination,
+  //       page: value,
+  //     })
+  //   },
+  //   [pagination, setPagination],
+  // )
 
   const handleClickDeleteButton = useCallback(
     (id: number) => async () => {
       const response = await tagsAPI.remove(id)
 
       if (response.status === 204) {
-        setTags(tags.filter(tag => tag.id !== id))
+        setTags(tags.filter((tag) => tag.id !== id))
       }
     },
     [tags, setTags],
@@ -128,14 +122,6 @@ export const TagsViewPage = () => {
               />
             </Table>
           </TableContainer>
-        </Grid>
-        <Grid item={true} xs={12} container={true} justify="center">
-          <Pagination
-            page={pagination.page}
-            count={pagination.pages}
-            color="primary"
-            onChange={handleChangePagination}
-          />
         </Grid>
       </Grid>
     </Container>

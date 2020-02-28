@@ -22,13 +22,8 @@ import { RouterLink } from "@features/core"
 
 export const UsersViewPage = () => {
   const [loading, setLoading] = useState(false)
-  const [users, setUsers] = useState<User[]>([])
-  // const [pagination, setPagination] = useState({
-  //   page: 1,
-  //   pages: 1,
-  //   perPage: 20,
-  // })
   const [error, setError] = useState(false)
+  const [users, setUsers] = useState<User[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,13 +42,16 @@ export const UsersViewPage = () => {
     fetchData()
   }, [])
 
-  const handleClickDeleteButton = useCallback((id: number) => async () => {
-    const response = await usersAPI.remove(id)
+  const handleClickDeleteButton = useCallback(
+    (id: number) => async () => {
+      const response = await usersAPI.remove(id)
 
-    if (response.status === 204) {
-      setUsers(users.filter(user => user.id !== id))
-    }
-  }, [users, setUsers])
+      if (response.status === 204) {
+        setUsers(users.filter((user) => user.id !== id))
+      }
+    },
+    [users, setUsers],
+  )
 
   return (
     <Container maxWidth="md">
@@ -108,7 +106,11 @@ export const UsersViewPage = () => {
                       >
                         <EditIcon />
                       </IconButton>
-                      <IconButton edge="start" color="inherit" onClick={handleClickDeleteButton(user.id)}>
+                      <IconButton
+                        edge="start"
+                        color="inherit"
+                        onClick={handleClickDeleteButton(user.id)}
+                      >
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>

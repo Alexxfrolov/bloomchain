@@ -129,7 +129,12 @@ export const MediaPage = () => {
   )
 
   const handleImageTitleChange = useCallback(
-    (id: number) => (event: ChangeEvent<{ value: string }>) => {},
+    (id: number) => async (event: ChangeEvent<{ value: string }>) => {
+      const response = await mediaAPI.update({
+        id,
+        title: event.currentTarget.value,
+      })
+    },
     [],
   )
 

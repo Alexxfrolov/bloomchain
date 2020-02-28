@@ -1,8 +1,8 @@
-import React, { MouseEventHandler } from "react"
+import React, { MouseEventHandler, ReactNode, ReactNodeArray } from "react"
 import { useRouter, BaseLink } from "react-router5"
 
 type NavLinkProps = {
-  children: any
+  children: ReactNode | ReactNodeArray
   routeName: string
   routeParams?: {
     [key: string]: unknown

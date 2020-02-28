@@ -1,42 +1,22 @@
-import axios from "axios"
-import decamelize from "decamelize"
+import axios, { AxiosPromise } from "axios"
+// import decamelize from "decamelize"
 import { httpConfig } from "@features/core"
 
-function get(page?: number) {
+import { Tag } from "./types"
+
+function get(): AxiosPromise<{ data: Tag[] }> {
   return axios.get(`${httpConfig.baseUrl}/tags`)
 }
 
-function create(name: string) {
-  // const formData = new FormData()
-  // Object.keys(tag).forEach((key) => formData.append(decamelize(key), tag[key]))
-
-  // return fetch(`${httpConfig.baseUrl}/tags`, {
-  //   method: "POST",
-  //   mode: "no-cors",
-  //   cache: "no-cache",
-  //   credentials: "same-origin",
-  //   headers: {
-  //     "Content-Type": "multipart/form-data",
-  //   },
-  //   body: formData,
-  // })
-
+function create(name: string): AxiosPromise<Tag> {
   return axios.post(`${httpConfig.baseUrl}/tags`, { name })
 }
 
-function update(id: number) {
-  return fetch(`${httpConfig.baseUrl}/tags/${id}`, {
-    method: "PATCH",
-    mode: "no-cors",
-    cache: "no-cache",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
+function update(tag: Tag): AxiosPromise<Tag> {
+  return axios.patch(`${httpConfig.baseUrl}/tags/${tag.id}`, tag)
 }
 
-function remove(id: number) {
+function remove(id: number): AxiosPromise {
   return axios.delete(`${httpConfig.baseUrl}/tags/${id}`)
 }
 

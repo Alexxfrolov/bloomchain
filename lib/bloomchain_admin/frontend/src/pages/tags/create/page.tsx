@@ -1,5 +1,5 @@
 import React, { useState, useCallback, SyntheticEvent, FormEvent } from "react"
-import { useRouter } from 'react-router5'
+import { useRouter } from "react-router5"
 import {
   Grid,
   Container,
@@ -41,10 +41,10 @@ export const TagsCreatePage = () => {
       const response = await tagsAPI.create(tag.name)
 
       if (response.status === 201) {
-        router.navigate('admin.dictionaries.tags')
+        router.navigate("admin.dictionaries.tags")
       }
     },
-    [tag.name],
+    [tag.name, router],
   )
 
   return (

@@ -44,7 +44,6 @@ export const TagsEditPage = () => {
 
   const [tag, setTag] = useState<Tag>({
     name: "",
-    type: "",
   })
 
   const handleChangeField = useCallback(

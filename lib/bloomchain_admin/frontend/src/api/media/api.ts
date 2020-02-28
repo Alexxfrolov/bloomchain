@@ -2,37 +2,30 @@ import axios, { AxiosPromise } from "axios"
 import decamelize from "decamelize"
 import { httpConfig } from "@features/core"
 
-function get() {
+import { Media } from "./types"
+
+function get(): AxiosPromise<{ data: Media[] }> {
   return axios.get(`${httpConfig.baseUrl}/media`)
 }
 
-function create(file: {
-  image: File
-  title: string
-  alt: string
-  source: string
-}): AxiosPromise<import("./types").Media> {
+type UploadMediaFile = Omit<
+  Media,
+  "created_at" | "link" | "id" | "type" | "updated_at"
+> & { image: File }
+
+function create(file: UploadMediaFile): AxiosPromise<Media> {
   const formData = new FormData()
   Object.keys(file).forEach((key) =>
     formData.append(decamelize(key), file[key]),
   )
-
   return axios.post(`${httpConfig.baseUrl}/media`, formData)
 }
 
-function update(id: number) {
-  return fetch(`${httpConfig.baseUrl}/media/${id}`, {
-    method: "PATCH",
-    mode: "no-cors",
-    cache: "no-cache",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
+function update(media: Media): AxiosPromise<Media> {
+  return axios.patch(`${httpConfig.baseUrl}/articles/${media.id}`, media)
 }
 
-function remove(id: number) {
+function remove(id: number): AxiosPromise {
   return axios.delete(`${httpConfig.baseUrl}/media/${id}`)
 }
 
