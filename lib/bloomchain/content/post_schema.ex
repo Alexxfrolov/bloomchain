@@ -20,6 +20,7 @@ defmodule Bloomchain.Content.Post do
     field(:status, :string)
     field(:author, :string)
     field(:time, :integer)
+    field(:total_views, :integer)
 
     # belongs_to(:user, User)
     belongs_to(:cover, Media, foreign_key: :cover_id)
@@ -51,7 +52,6 @@ defmodule Bloomchain.Content.Post do
     |> cast(attrs, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
     |> validate_length(:title, min: 3)
-    # |> cast_attachments(attrs, [:cover])
     |> process_slug
     |> process_published
   end

@@ -2,10 +2,6 @@ export interface Article {
   id: number
   author: string
   body: string
-  cover: File | null
-  coverAlt: string | null
-  coverSource: string | null
-  coverTitle: string | null
   createdAt: string
   description: string
   updatedAt: string
@@ -13,7 +9,7 @@ export interface Article {
   lead: string
   status: "published" | "draft" | "archive"
   tags: import("../tags").Tag[]
-  time: number | null
+  time: string
   title: string
   type:
     | "newsfeed"

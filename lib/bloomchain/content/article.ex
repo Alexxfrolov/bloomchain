@@ -28,7 +28,7 @@ defmodule Bloomchain.Content.Article do
 
   def get(id) do
     Repo.get(Post, id)
-    |> Repo.preload([:tags])
+    |> Repo.preload([:tags, :cover])
   end
 
   def get(slug, type: type) do

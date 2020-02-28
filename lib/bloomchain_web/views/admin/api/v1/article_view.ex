@@ -2,6 +2,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
   use BloomchainWeb, :view
 
   import BloomchainWeb.Admin.Api.V1.TagView, only: [tag_json: 1]
+  import BloomchainWeb.Admin.Api.V1.MediaView, only: [media_json: 1]
 
   def render("index.json", %{articles: articles}) do
     %{
@@ -24,6 +25,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
       author: article.author,
       description: article.description,
       keywords: article.keywords,
+      total_views: article.total_views,
       created_at: article.inserted_at,
       updated_at: article.updated_at,
       published_at: article.published_at,
@@ -46,7 +48,8 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
       created_at: article.inserted_at,
       updated_at: article.updated_at,
       published_at: article.published_at,
-      tags: Enum.map(article.tags, &tag_json/1)
+      tags: Enum.map(article.tags, &tag_json/1),
+      cover: media_json(article.cover)
     }
   end
 end

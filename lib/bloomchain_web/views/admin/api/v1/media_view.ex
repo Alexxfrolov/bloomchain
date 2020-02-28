@@ -12,10 +12,16 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
     media_json(media)
   end
 
+  def media_json(nil) do
+    nil
+  end
+
   def media_json(media) do
     %{
       id: media.id,
       type: media.type,
+      alt: media.alt,
+      title: media.title,
       link: File.url({media.file, media}, :original),
       created_at: media.inserted_at,
       updated_at: media.updated_at
