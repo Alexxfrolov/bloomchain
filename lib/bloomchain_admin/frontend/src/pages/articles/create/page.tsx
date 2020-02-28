@@ -427,7 +427,7 @@ export const ActicleCreatePage = () => {
                         color="primary"
                         component="span"
                       >
-                        Upload
+                        Загрузить
                       </Button>
                     </label>
                   </Grid>

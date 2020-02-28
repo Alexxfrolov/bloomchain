@@ -425,12 +425,7 @@ export const ActicleEditPage = () => {
                       Титульное изображение
                     </Typography>
                     {article.cover !== null && (
-                      <img
-                        width="100%"
-                        ref={imageRef}
-                        alt="ALT"
-                        title="Contemplative Reptile"
-                      />
+                      <img width="100%" ref={imageRef} />
                     )}
                     <input
                       accept="image/*"
@@ -446,7 +441,7 @@ export const ActicleEditPage = () => {
                         color="primary"
                         component="span"
                       >
-                        Upload
+                        Загрузить
                       </Button>
                     </label>
                   </Grid>
