@@ -36,8 +36,10 @@ import "froala-editor/js/plugins/quote.min.js"
 import "froala-editor/js/plugins/video.min.js"
 import "froala-editor/js/plugins/quick_insert.min.js"
 import "froala-editor/js/plugins/image_manager.min.js"
+import "froala-editor/js/third_party/embedly.min.js"
+import "froala-editor/js/third_party/embedly.min.js"
 import "froala-editor/js/languages/ru.js"
-import "froala-editor/js/froala_editor.pkgd.min.js"
+// import "froala-editor/js/plugins.pkgd.min.js"
 import "froala-editor/css/froala_editor.pkgd.min.css"
 import FroalaEditor from "react-froala-wysiwyg"
 import { articlesAPI, Article } from "@api/articles"
@@ -65,6 +67,7 @@ const froalaEditorConfig = {
         "insertLink",
         "fontSize",
         "textColor",
+        "clearFormatting",
       ],
       align: "left",
       buttonsVisible: 2,
@@ -392,7 +395,7 @@ export const ActicleCreatePage = () => {
                   </Grid>
                 </Grid>
                 <Grid item={true} sm container={true} spacing={4}>
-                  <Grid item={true} xs={12}>
+                  {/*  <Grid item={true} xs={12}>
                     <Typography
                       color="textPrimary"
                       variant="h6"
@@ -426,8 +429,8 @@ export const ActicleCreatePage = () => {
                         Загрузить
                       </Button>
                     </label>
-                  </Grid>
-                  {article.cover !== null && (
+                  </Grid> */}
+                  {/* {article.cover !== null && (
                     <Grid item={true} xs={12} container={true} spacing={1}>
                       <Grid item={true} xs={12}>
                         <TextField
@@ -463,7 +466,7 @@ export const ActicleCreatePage = () => {
                         />
                       </Grid>
                     </Grid>
-                  )}
+                  )} */}
                   <Grid item={true} xs={12}>
                     <FormControl variant="outlined" fullWidth={true}>
                       <InputLabel ref={inputStatusLabel} id="type">
@@ -490,6 +493,7 @@ export const ActicleCreatePage = () => {
                       value={article.time || ""}
                       fullWidth={true}
                       variant="outlined"
+                      autoComplete="off"
                       onChange={handleChangeFormField("time")}
                     />
                   </Grid>
