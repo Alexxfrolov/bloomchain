@@ -34,6 +34,7 @@ import {
 } from "@material-ui/core"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { mediaAPI, Media } from "@api/media"
+import { DeleteDialog } from "@features/core"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -223,7 +224,16 @@ export const MediaPage = () => {
             <GridList cellHeight={300} className={classes.gridList} cols={3}>
               {media.map((item) => (
                 <GridListTile key={nanoid()}>
-                  <img src={item.link} alt={item.title} />
+                  {item.type === "image" ? (
+                    <img src={item.link} alt={item.title} />
+                  ) : (
+                    <embed
+                      src={item.link}
+                      type="application/pdf"
+                      width="100%"
+                      height="300px"
+                    />
+                  )}
                   <GridListTileBar
                     titlePosition="bottom"
                     title={
@@ -270,32 +280,6 @@ export const MediaPage = () => {
     </Container>
   )
 }
-
-type DeleteDialogProps = {
-  opened: boolean
-  onCancel: () => void
-  onConfirm: () => void
-}
-
-const DeleteDialog = ({ opened, onCancel, onConfirm }: DeleteDialogProps) => (
-  <Dialog
-    open={opened}
-    onClose={onCancel}
-    aria-labelledby="delete-dialog-title"
-  >
-    <DialogTitle id="delete-dialog-title">
-      Вы действительно хотите удалить файл?
-    </DialogTitle>
-    <DialogActions>
-      <Button onClick={onCancel} color="primary">
-        Отменить
-      </Button>
-      <Button onClick={onConfirm} color="primary" autoFocus>
-        Удалить
-      </Button>
-    </DialogActions>
-  </Dialog>
-)
 
 type UploadFormDialogProps = {
   opened: boolean

@@ -363,6 +363,7 @@ export const ActicleEditPage = () => {
                       id="tags"
                       multiple={true}
                       options={tags}
+                      value={article.tags}
                       disableCloseOnSelect={true}
                       getOptionLabel={(option) => option.name}
                       onChange={handleChangeTagsSelect}

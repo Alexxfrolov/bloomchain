@@ -3,7 +3,7 @@
     <div class="pt-5 d-block">
       <h4 class="text-white mb-3 text-center d-flex justify-content-center">Только&nbsp;<b>DIGITAL</b>&nbsp;финансы</h4>
       <div class="row mb-5">
-        <div class="col-sm-12 col-md-4 d-flex align-items-center justify-content-md-end justify-content-sm-center">
+        <div class="col-sm-12 col-md-4 d-flex align-items-center justify-content-center justify-content-md-end">
           <i class="icon icon--check mr-2"></i>
           <p class="text-white mb-0 text-center d-flex justify-content-center">в одном письме</p>
         </div>
@@ -11,7 +11,7 @@
           <i class="icon icon--check mr-2"></i>
           <p class="text-white mb-0 text-center d-flex justify-content-center">под рукой</p>
         </div>
-        <div class="col-sm-12 col-md-4 d-flex align-items-center justify-content-md-start justify-content-sm-center">
+        <div class="col-sm-12 col-md-4 d-flex align-items-center justify-content-center justify-content-md-start">
           <i class="icon icon--check mr-2"></i>
           <p class="text-white mb-0 text-center d-flex justify-content-center">2 раза в месяц</p>
         </div>

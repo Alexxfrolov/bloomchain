@@ -928,13 +928,6 @@
           appendArrows: s()(".bc-slick__arrows-location")
         })
       }),
-      s()(".js-marquee").marquee({
-        duration: 4e4,
-        gap: 0,
-        delayBeforeStart: 0,
-        direction: "left",
-        duplicated: !0
-      }),
       a.a.option({
         albumLabel: "%1/%2",
         alwaysShowNavOnTouchDevices: !1,
@@ -1297,4 +1290,12 @@
         })
       })
   }
+});
+
+$('.js-marquee').marquee({
+  duration: 4e4,
+  gap: 0,
+  delayBeforeStart: 0,
+  direction: "left",
+  duplicated: !0
 });

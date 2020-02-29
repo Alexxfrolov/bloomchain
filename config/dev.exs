@@ -9,7 +9,7 @@ use Mix.Config
 config :bloomchain, BloomchainWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
-  code_reloader: false,
+  code_reloader: true,
   check_origin: false,
   watchers: [yarn: ["start", cd: Path.expand("../lib/bloomchain_admin/frontend", __DIR__)]]
 

@@ -1,4 +1,4 @@
-<div class="col-lg-6 mt-5 my-5">
+<div class="col-lg-6 mt-lg-0 mt-5">
     <h1 class="bc-article__z-index highlight mb-4">Исследования<%= link("Больше", to: research_path(@conn, :index), class: "btn btn-title") %></h1>
 
     <%= render_main_article(List.first(@articles), conn: @conn, path: research_path(@conn, :show, List.first(@articles).slug)) %>

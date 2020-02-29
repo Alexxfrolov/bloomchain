@@ -77,11 +77,11 @@ export const routes: Route[] = [
             name: "media",
             path: "/media",
           },
-          {
-            name: "research",
-            path: "/research",
-          },
         ],
+      },
+      {
+        name: "archives",
+        path: "/archives",
       },
       {
         name: "account",

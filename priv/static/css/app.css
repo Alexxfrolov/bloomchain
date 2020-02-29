@@ -3650,8 +3650,8 @@ input[type="button"].btn-block {
   .navbar-expand-md .navbar-nav .dropdown-menu {
     position: absolute; }
   .navbar-expand-md .navbar-nav .nav-link {
-    padding-right: 1.25rem;
-    padding-left: 1.25rem; } }
+    padding-right: 0.9375rem;
+    padding-left: 0.9375rem; } }
 
 @media (min-width: 768px) and (max-width: 991.98px) {
   .navbar-expand-md .navbar-nav .nav-link {

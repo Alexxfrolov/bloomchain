@@ -1,5 +1,6 @@
 import nanoid from "nanoid"
 import React, { useEffect, useState, useCallback } from "react"
+import format from "date-fns/format"
 import {
   Grid,
   Container,
@@ -105,7 +106,16 @@ export const TagsViewPage = () => {
                       <TableRow key={nanoid()}>
                         <TableCell>{tag.name}</TableCell>
                         <TableCell>{tag.slug}</TableCell>
-                        <TableCell>{tag.updatedAt}</TableCell>
+                        <TableCell>
+                          {
+                            tag.updatedAt?.[
+                              format(
+                                new Date(tag.tag.updatedAt),
+                                "dd.mm.yyyy hh:mm",
+                              )
+                            ]
+                          }
+                        </TableCell>
                         <TableCell>
                           <IconButton
                             edge="start"

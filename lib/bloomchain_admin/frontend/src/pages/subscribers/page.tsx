@@ -1,5 +1,6 @@
 import nanoid from "nanoid"
 import React, { useState, useEffect, Fragment } from "react"
+import format from "date-fns/format"
 import {
   Grid,
   Container,
@@ -11,10 +12,35 @@ import {
   TableCell,
   TableBody,
   Typography,
+  withStyles,
+  createStyles,
+  Theme,
 } from "@material-ui/core"
 import { Alert, Skeleton } from "@material-ui/lab"
-import { subscribersAPI, Subscriber } from "@api/subscribers"
 import { ConditionalList } from "@ui"
+import { subscribersAPI, Subscriber } from "@api/subscribers"
+
+const StyledTableCell = withStyles((theme: Theme) =>
+  createStyles({
+    head: {
+      backgroundColor: theme.palette.primary.dark,
+      color: theme.palette.common.white,
+    },
+    body: {
+      fontSize: 14,
+    },
+  }),
+)(TableCell)
+
+const StyledTableRow = withStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      "&:nth-of-type(odd)": {
+        backgroundColor: theme.palette.background.default,
+      },
+    },
+  }),
+)(TableRow)
 
 export const SubscribersPage = () => {
   const [loading, setLoading] = useState(false)
@@ -51,12 +77,12 @@ export const SubscribersPage = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell width="50%" component="th">
+                    <StyledTableCell width="50%" component="th">
                       Email
-                    </TableCell>
-                    <TableCell width="50%" component="th">
+                    </StyledTableCell>
+                    <StyledTableCell width="50%" component="th">
                       Дата подписки
-                    </TableCell>
+                    </StyledTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -65,25 +91,32 @@ export const SubscribersPage = () => {
                       list={subscribers}
                       renderExists={(list) =>
                         list.map((subscriber) => (
-                          <TableRow key={nanoid()}>
-                            <TableCell>{subscriber.email}</TableCell>
-                            <TableCell>{subscriber.created_at}</TableCell>
-                          </TableRow>
+                          <StyledTableRow key={nanoid()}>
+                            <StyledTableCell>
+                              {subscriber.email}
+                            </StyledTableCell>
+                            <StyledTableCell>
+                              {format(
+                                new Date(subscriber.created_at),
+                                "dd.mm.yyyy hh:mm",
+                              )}
+                            </StyledTableCell>
+                          </StyledTableRow>
                         ))
                       }
                     />
                   ) : (
                     <Fragment>
                       {Array.from({ length: 20 }).map(() => (
-                        <TableRow key={nanoid()}>
-                          <TableCell colSpan={2} padding="none">
+                        <StyledTableRow key={nanoid()}>
+                          <StyledTableCell colSpan={2} padding="none">
                             <Skeleton
                               variant="rect"
                               width="100%"
                               height="53px"
                             />
-                          </TableCell>
-                        </TableRow>
+                          </StyledTableCell>
+                        </StyledTableRow>
                       ))}
                     </Fragment>
                   )}

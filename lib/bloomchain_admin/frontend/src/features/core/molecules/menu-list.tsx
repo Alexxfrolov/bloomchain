@@ -162,6 +162,21 @@ export const MenuList = () => {
         </ListItem>
       </List>
       <Divider />
+      <Divider />
+      <List>
+        <ListSubheader inset={true}>Страницы</ListSubheader>
+        <ListItem
+          aria-current={isCurrentMenu("admin.archives") ? "page" : undefined}
+          className={classes.listitem}
+        >
+          <NavLink routeName="admin.archives" className={classes.link}>
+            <ListItemIcon style={{ paddingLeft: "7px" }}>
+              <ImportContactsRoundedIcon style={{ color: indigo[500] }} />
+            </ListItemIcon>
+            <ListItemText primary="Исследования" />
+          </NavLink>
+        </ListItem>
+      </List>
       <List>
         <ListSubheader inset={true}>Управление</ListSubheader>
         <ListItem
@@ -197,22 +212,6 @@ export const MenuList = () => {
       <Divider />
       <List>
         <ListSubheader inset={true}>Словари</ListSubheader>
-        <ListItem
-          aria-current={
-            isCurrentMenu("admin.dictionaries.research") ? "page" : undefined
-          }
-          className={classes.listitem}
-        >
-          <NavLink
-            routeName="admin.dictionaries.research"
-            className={classes.link}
-          >
-            <ListItemIcon style={{ paddingLeft: "7px" }}>
-              <ImportContactsRoundedIcon style={{ color: indigo[500] }} />
-            </ListItemIcon>
-            <ListItemText primary="Исследования" />
-          </NavLink>
-        </ListItem>
         <ListItem
           aria-current={
             isCurrentMenu("admin.dictionaries.tags") ? "page" : undefined

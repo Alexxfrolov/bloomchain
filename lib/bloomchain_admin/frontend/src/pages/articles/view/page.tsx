@@ -1,11 +1,18 @@
 import nanoid from "nanoid"
-import React, { useState, useEffect, useCallback, useMemo, ChangeEvent } from "react"
-import { useRoute } from 'react-router5'
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  ChangeEvent,
+} from "react"
+import { useRoute } from "react-router5"
 import DateFnsUtils from "@date-io/date-fns"
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers"
+import format from "date-fns/format"
 import {
   Grid,
   Container,
@@ -32,7 +39,7 @@ import { RouterLink } from "@features/core"
 export const ArticlesViewPage = () => {
   const { route } = useRoute()
 
-  const status = useMemo(() => route.name.split('.')[2],[route.name])
+  const status = useMemo(() => route.name.split(".")[2], [route.name])
 
   const [articles, setArticles] = useState<Article[]>([])
   const [tabIndex, setTabIndex] = useState(0)
@@ -163,8 +170,20 @@ export const ArticlesViewPage = () => {
                 {articles.map((article) => (
                   <TableRow key={nanoid()}>
                     <TableCell>{article.author}</TableCell>
-                    <TableCell>{article.published_at}</TableCell>
-                    <TableCell>{article.updated_at}</TableCell>
+                    <TableCell>
+                      {article.published_at &&
+                        format(
+                          new Date(article.published_at),
+                          "dd.mm.yyyy hh:mm",
+                        )}
+                    </TableCell>
+                    <TableCell>
+                      {article.updated_at &&
+                        format(
+                          new Date(article.updated_at),
+                          "dd.mm.yyyy hh:mm",
+                        )}
+                    </TableCell>
                     <TableCell>{article.title}</TableCell>
                     <TableCell align="right">{article.views_count}</TableCell>
                     <TableCell>
