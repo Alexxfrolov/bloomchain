@@ -18,12 +18,11 @@ function getById(id: number): AxiosPromise<Article> {
 function create(
   article: Omit<Article, "createdAt" | "updatedAt" | "id">,
 ): AxiosPromise<Article> {
-  const formData = new FormData()
-  Object.keys(article).forEach((key) =>
-    formData.append(decamelize(key), article[key]),
-  )
-  formData.set("tags", JSON.stringify(article.tags.map((tag) => tag.id)))
-  return axios.post(`${httpConfig.baseUrl}/articles`, formData)
+  const data = {
+    ...article,
+    tags: article.tags.map((tag) => tag.id),
+  }
+  return axios.post(`${httpConfig.baseUrl}/articles`, data)
 }
 
 function update(article: Article): AxiosPromise<Article> {
