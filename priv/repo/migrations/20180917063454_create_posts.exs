@@ -19,6 +19,6 @@ defmodule Bloomchain.Repo.Migrations.CreatePosts do
       add(:published_at, :timestamp, null: true)
     end
 
-    create(unique_index(:posts, [:slug]))
+    create(unique_index(:posts, [:slug, :type], name: :uniq_slug_with_type))
   end
 end

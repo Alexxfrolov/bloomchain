@@ -36,15 +36,12 @@ defmodule Bloomchain.Content.Post do
   def create_changeset(post, attrs, [_ | _] = tags) do
     post
     |> common_changeset(attrs)
-    # |> validate_required([:user_id])
     |> put_assoc(:tags, tags)
   end
 
   def create_changeset(post, attrs, _) do
     post
     |> common_changeset(attrs)
-
-    # |> validate_required([:user_id])
   end
 
   def common_changeset(changeset, attrs) do
@@ -53,6 +50,7 @@ defmodule Bloomchain.Content.Post do
     |> validate_required(@required_fields)
     |> validate_length(:title, min: 3)
     |> process_slug
+    |> unique_constraint(:uniq_slug_with_type, name: :uniq_slug_with_type)
     |> process_published
   end
 
