@@ -1,7 +1,6 @@
 defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
   use BloomchainWeb, :controller
 
-  alias Plug.Conn
   alias Bloomchain.Repo
   alias Bloomchain.Content.{Article, Post}
   alias BloomchainWeb.ErrorView

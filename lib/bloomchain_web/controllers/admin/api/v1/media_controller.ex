@@ -1,7 +1,6 @@
 defmodule BloomchainWeb.Admin.Api.V1.MediaController do
   use BloomchainWeb, :controller
 
-  alias Plug.Conn
   alias Bloomchain.{Repo, Content.Media}
   alias BloomchainWeb.ErrorView
 

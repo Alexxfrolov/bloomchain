@@ -2,7 +2,7 @@ defmodule BloomchainWeb.PageView do
   use BloomchainWeb, :view
   alias BloomchainWeb.Uploaders.File
 
-  def render_main_article(item, conn: conn, path: path) do
+  def render_main_article(item, conn: _conn, path: path) do
     content_tag(:a, class: "bc-article__overlay-link", href: path) do
       content_tag(:div, class: "bc-article__image") do
         [
@@ -16,7 +16,7 @@ defmodule BloomchainWeb.PageView do
     end
   end
 
-  def render_article(item, conn: conn, path: path) do
+  def render_article(item, conn: _conn, path: path) do
     content_tag(:div) do
       [
         link(item.title, to: path, class: "bc-article__heading"),

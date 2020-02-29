@@ -1,8 +1,6 @@
 defmodule BloomchainWeb.Router do
   use BloomchainWeb, :router
 
-  alias Bloomchain.Plug
-
   pipeline :browser do
     plug(:accepts, ["html"])
     plug(:fetch_session)
@@ -14,7 +12,6 @@ defmodule BloomchainWeb.Router do
   pipeline :admin do
     # plug(Plug.Authentication)
     # plug(Plug.EnsureAuthentication)
-    plug(Plug.ShowSidebar)
     plug(:put_layout, {BloomchainWeb.LayoutView, :admin})
   end
 
