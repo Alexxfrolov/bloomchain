@@ -36,6 +36,7 @@ defmodule BloomchainWeb.Router do
       resources("/tags", Admin.Api.V1.TagController, only: [:index, :create, :delete])
       resources("/media", Admin.Api.V1.MediaController)
       resources("/subscribers", Admin.Api.V1.SubscriberController, only: [:index])
+      resources("/archives", Admin.Api.V1.ArchiveController)
     end
 
     get("/*path", Admin.HomeController, :index)

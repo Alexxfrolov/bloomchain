@@ -1,8 +1,8 @@
 alias Bloomchain.Repo
 
-alias Bloomchain.Content.{Article, Tag, User, Subscriber, Media}
+alias Bloomchain.Content.{Article, Tag, User, Subscriber, Media, Archive}
 
-media =
+cover =
   Repo.insert!(
     Media.create_changeset(%Media{}, %{
       alt: "test image",
@@ -15,26 +15,34 @@ media =
     })
   )
 
-for path <- Path.wildcard("#{File.cwd!()}/priv/repo/data_files/banners/*") do
-  Repo.insert!(
-    Media.create_changeset(%Media{}, %{
-      type: "image",
-      file: %Plug.Upload{content_type: "image/jpeg", filename: Path.basename(path), path: path}
-    })
-  )
-end
+for i <- 1..5, i > 0 do
+  path = "#{File.cwd!()}/priv/repo/data_files/archive/"
 
-for path <- Path.wildcard("#{File.cwd!()}/priv/repo/data_files/pdfs/*") do
-  Repo.insert!(
-    Media.create_changeset(%Media{}, %{
-      type: "pdf",
-      file: %Plug.Upload{
-        content_type: "application/pdf",
-        filename: Path.basename(path),
-        path: path
-      }
-    })
-  )
+  cover =
+    Repo.insert!(
+      Media.create_changeset(%Media{}, %{
+        type: "image",
+        file: %Plug.Upload{
+          content_type: "image/jpeg",
+          filename: "#{i}.png",
+          path: "#{path}/#{i}.png"
+        }
+      })
+    )
+
+  pdf =
+    Repo.insert!(
+      Media.create_changeset(%Media{}, %{
+        type: "pdf",
+        file: %Plug.Upload{
+          content_type: "application/pdf",
+          filename: "#{i}.pdf",
+          path: "#{path}/#{i}.pdf"
+        }
+      })
+    )
+
+  Repo.insert!(Archive.create_changeset(%Archive{}, %{cover_id: cover.id, pdf_id: pdf.id}))
 end
 
 Repo.insert!(
@@ -74,7 +82,7 @@ for type <- ~w[newsfeed detailed research analysis in_russia calendar person] do
         status: "published",
         author: "Frolov Aleksey",
         time: i + 10,
-        cover_id: media.id
+        cover_id: cover.id
       },
       [1, 2, 3]
     )
