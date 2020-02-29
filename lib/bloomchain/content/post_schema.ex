@@ -80,7 +80,12 @@ defmodule Bloomchain.Content.Post do
 
   defp process_tags(%Ecto.Changeset{valid?: true} = changeset, [%Tag{} | _] = tags) do
     changeset
-    |> put_assoc(changeset, :tags, tags)
+    |> put_assoc(:tags, Enum.map(tags, tags))
+  end
+
+  defp process_tags(%Ecto.Changeset{valid?: true} = changeset, [%{"id" => _} | _] = tags) do
+    changeset
+    |> put_assoc(:tags, Enum.map(tags, &%Tag{id: &1["id"]}))
   end
 
   defp process_tags(%Ecto.Changeset{valid?: true} = changeset, [_ | _] = tags) do
