@@ -24,12 +24,7 @@ defmodule Bloomchain.Content.Media do
   @optional_fields ~w(title source uuid content_type alt)a
 
   def list_all(type) do
-    Repo.all(
-      from(
-        m in Media,
-        where: m.type == ^type
-      )
-    )
+    Repo.all(from(m in Media, where: m.type == ^type))
   end
 
   @doc """

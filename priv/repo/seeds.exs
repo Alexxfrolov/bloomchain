@@ -70,21 +70,19 @@ for type <- ~w[newsfeed detailed research analysis in_russia calendar person] do
   for i <- 1..6, i > 0 do
     title = "Тестовое название #{i} для раздела #{type}"
 
-    Article.create(
-      %{
-        title: title,
-        lead:
-          "Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда.",
-        type: type,
-        description: "Тестовое описание",
-        keywords: ["asdf", "test"],
-        body: File.read!("#{File.cwd!()}/priv/repo/data_files/newsfeed.html"),
-        status: "published",
-        author: "Frolov Aleksey",
-        time: i + 10,
-        cover_id: cover.id
-      },
-      [1, 2, 3]
-    )
+    Article.create(%{
+      title: title,
+      lead:
+        "Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда.",
+      type: type,
+      description: "Тестовое описание",
+      keywords: ["asdf", "test"],
+      body: File.read!("#{File.cwd!()}/priv/repo/data_files/newsfeed.html"),
+      status: "published",
+      author: "Frolov Aleksey",
+      time: i + 10,
+      cover_id: cover.id,
+      tags: [1, 2, 3]
+    })
   end
 end

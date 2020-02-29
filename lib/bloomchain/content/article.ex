@@ -1,6 +1,5 @@
 defmodule Bloomchain.Content.Article do
   alias Bloomchain.Content.Post
-  alias Bloomchain.Content.Tag
   alias Bloomchain.Repo
 
   import Ecto.Query
@@ -36,9 +35,8 @@ defmodule Bloomchain.Content.Article do
     |> Repo.preload([:tags, :cover])
   end
 
-  def create(%{} = params, tags \\ []) do
-    tags = Repo.all(from(t in Tag, where: t.id in ^tags))
-    changeset = Post.create_changeset(%Post{}, params, tags)
+  def create(%{} = params) do
+    changeset = Post.create_changeset(%Post{}, params)
 
     case changeset.valid? do
       true -> Repo.insert(changeset)
@@ -46,17 +44,12 @@ defmodule Bloomchain.Content.Article do
     end
   end
 
-  def update(post, params) do
+  def update(%Post{} = post, %{} = params) do
     changeset = Post.common_changeset(post, params)
 
     case changeset.valid? do
       true -> Repo.update(changeset)
       false -> {:error, changeset}
     end
-  end
-
-  def publish(post) do
-    Post.common_changeset(post, %{published: not post.published})
-    |> Repo.update()
   end
 end

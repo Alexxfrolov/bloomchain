@@ -23,7 +23,7 @@ defmodule Bloomchain.Auth.Account do
   end
 
   def authenticate_user(email, given_password) do
-    query = Ecto.Query.from(u in User, where: u.email == ^email)
+    query = from(u in User, where: u.email == ^email)
 
     Repo.one(query)
     |> check_password(given_password)
