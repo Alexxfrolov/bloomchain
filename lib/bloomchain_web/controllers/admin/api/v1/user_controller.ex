@@ -1,7 +1,7 @@
 defmodule BloomchainWeb.Admin.Api.V1.UserController do
   use BloomchainWeb, :controller
 
-  alias Plug.Conn
+  # alias Plug.Conn
   alias Bloomchain.{Repo, Content.User}
   alias BloomchainWeb.ErrorView
 
@@ -38,13 +38,16 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
   end
 
   def delete(conn, %{"id" => id}) do
-    with user = %User{} <- Repo.get(User, id) do
-      Repo.delete!(user)
-
+    with %User{role: "admin"} <- Repo.get(User, id) do
       conn
-      |> put_status(204)
-      |> send_resp(:no_content, "")
+      |> send_resp(:forbidden, "")
     else
+      %User{} = user ->
+        Repo.delete!(user)
+
+        conn
+        |> send_resp(:no_content, "")
+
       nil ->
         conn
         |> put_status(404)

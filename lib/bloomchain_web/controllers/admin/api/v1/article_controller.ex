@@ -59,7 +59,6 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
       Repo.delete!(article)
 
       conn
-      |> put_status(204)
       |> send_resp(:no_content, "")
     else
       nil ->

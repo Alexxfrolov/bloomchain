@@ -38,7 +38,6 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaController do
       Repo.delete!(media)
 
       conn
-      |> put_status(204)
       |> send_resp(:no_content, "")
     else
       nil ->
