@@ -78,7 +78,7 @@
           <%= link("События", to: calendar_path(@conn, :index), class: active_navlink_class(@conn, calendar_path(@conn, :index))) %>
         </li>
         <li class="nav-item">
-          <%= link("Исследования (Архив)", to: research_archive_path(@conn, :index), class: active_navlink_class(@conn, research_archive_path(@conn, :index))) %>
+          <%= link("Исследования (Архив)", to: archive_path(@conn, :index), class: active_navlink_class(@conn, archive_path(@conn, :index))) %>
         </li>
       </ul>
     </nav>

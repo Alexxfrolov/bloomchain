@@ -1,1 +1,0 @@
-<%= render BloomchainWeb.SharedView, "_header.html", assigns %>
