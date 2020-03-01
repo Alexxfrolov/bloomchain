@@ -63,7 +63,7 @@
           <%= link("Коротко", to: newsfeed_path(@conn, :index), class: active_navlink_class(@conn, newsfeed_path(@conn, :index))) %>
         </li>
         <li class="nav-item">
-          <%= link("В Деталях", to: detailed_path(@conn, :index), class: active_navlink_class(@conn, newsfeed_path(@conn, :index))) %>
+          <%= link("В Деталях", to: detailed_path(@conn, :index), class: active_navlink_class(@conn, detailed_path(@conn, :index))) %>
         </li>
         <li class="nav-item">
           <%= link("Статистика", to: analysis_path(@conn, :index), class: active_navlink_class(@conn, analysis_path(@conn, :index))) %>

@@ -2,16 +2,27 @@
     <div class="row">
         <div class="col-lg-12">
             <h2 class="bc-news-open__h2"><%= @article.title %></h2>
+
             <div class="d-flex align-items-center">
               <span class="small mr-sm-4 mr-2"><%= @article.updated_at %></span>
+
               <i class="mr-1 icon-user"></i>
               <span class="small mr-sm-4 mr-2"><%= @article.author %></span>
+
+              <i class="mr-1 icon-view"></i>
+              <span class="small mr-sm-4 mr-2"><%= @article.total_views %></span>
+
+              <i class="mr-1 icon-clock"></i>
+              <span class="small mr-sm-4 mr-2"><%= "#{@article.time} мин" %></span>
             </div>
+
             <div class="d-inline-block mt-3">
               <span class="small mr-2">Теги:</span>
+
               <%= for tag <- @article.tags do %>
                 <a class="span badge badge-primary-inverse" href="#"><%= tag.name %></a>
               <% end %>
+
             </div>
 
             <%= raw(@article.body) %>

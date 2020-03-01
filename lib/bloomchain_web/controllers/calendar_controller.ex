@@ -3,7 +3,9 @@ defmodule BloomchainWeb.CalendarController do
   alias Bloomchain.Content.Article
 
   def index(conn, _params) do
-    render(conn, "index.html")
+    articles = Article.get_published_posts("calendar", limit: 6)
+
+    render(conn, "index.html", articles: articles)
   end
 
   def show(conn, params) do

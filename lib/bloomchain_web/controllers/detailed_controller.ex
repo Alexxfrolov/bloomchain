@@ -3,7 +3,9 @@ defmodule BloomchainWeb.DetailedController do
   alias Bloomchain.Content.Article
 
   def index(conn, _params) do
-    render(conn, "index.html")
+    articles = Article.get_published_posts("detailed", limit: 6)
+
+    render(conn, "index.html", articles: articles)
   end
 
   def show(conn, params) do

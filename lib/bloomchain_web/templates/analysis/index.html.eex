@@ -1,119 +1,11 @@
 <div class="container py-5">
   <a name="analitics"></a>
   <h1 class="bc-analitics__h1">Биржевая аналитика</h1>
+
   <div class="row mt-3 align-items-start">
     <div class="col-md-8">
-      <a class="bc-article__overlay-link" href="news-open.html">
-        <div class="bc-article__image"><img src="assets/images/img-sunset.jpg">
-          <div class="h3">14.01.2018</div>
-          <p>Where To Look For Cheap Brochure </p>
-          <div class="d-flex align-items-center"><span class="small mr-sm-4 mr-2">2 часа назад</span><i class="mr-1 icon-view-white"></i><span class="small mr-sm-4 mr-2">10 235</span><i class="mr-1 icon-comment-white"></i><span class="small mr-sm-4 mr-2">2</span><i class="mr-1 icon-clock-white"></i><span class="small">17 мин</span></div>
-        </div>
-      </a>
-      <div class="row mt-3">
-        <div class="col-xl-6">
-          <a class="h5" href="#">14.02.2018</a>
-          <p class="bc-article__paragraph">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда.</p>
-          <div class="d-flex align-items-center mt-3">
-            <span class="small mr-4">2 часа назад</span>
-            <i class="mr-1 icon-view"></i>
-            <span class="small mr-4">10 235</span>
-            <i class="mr-1 icon-comment"></i>
-            <span class="small mr-4">2</span>
-            <i class="mr-1 icon-clock"></i>
-            <span class="small">17 мин</span>
-          </div>
-          <hr class="bc-article__separator mx-0 my-3">
-          <a class="h5 mt-4" href="#">14.02.2018</a>
-          <p class="bc-article__paragraph">На этот раз никаких накачек, лишь рост нескольких криптовалют после существенного падения. О том, что после пробоя.</p>
-          <div class="d-flex align-items-center mt-3">
-            <span class="small mr-4">2 часа назад</span>
-            <i class="mr-1 icon-view"></i>
-            <span class="small mr-4">10 235</span>
-            <i class="mr-1 icon-comment"></i>
-            <span class="small mr-4">2</span>
-            <i class="mr-1 icon-clock"></i>
-            <span class="small">17 мин</span>
-          </div>
-          <hr class="bc-article__separator mx-0 my-3">
-          <a class="h5" href="#">14.02.2018</a>
-          <p class="bc-article__paragraph">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда.</p>
-          <div class="d-flex align-items-center mt-3">
-            <span class="small mr-4">2 часа назад</span>
-            <i class="mr-1 icon-view"></i>
-            <span class="small mr-4">10 235</span>
-            <i class="mr-1 icon-comment"></i>
-            <span class="small mr-4">2</span>
-            <i class="mr-1 icon-clock"></i>
-            <span class="small">17 мин</span>
-          </div>
-          <hr class="bc-article__separator mx-0 my-3">
-          <a class="h5 mt-4" href="#">14.02.2018</a>
-          <p class="bc-article__paragraph">На этот раз никаких накачек, лишь рост нескольких криптовалют после существенного падения. О том, что после пробоя. </p>
-          <div class="d-flex align-items-center mt-3">
-            <span class="small mr-4">2 часа назад</span>
-            <i class="mr-1 icon-view"></i>
-            <span class="small mr-4">10 235</span>
-            <i class="mr-1 icon-comment"></i>
-            <span class="small mr-4">2</span>
-            <i class="mr-1 icon-clock"></i>
-            <span class="small">17 мин</span>
-          </div>
-          <hr class="bc-article__separator mx-0 my-3 d-xl-none">
-        </div>
-        <div class="col-xl-6">
-          <a class="h5" href="#">14.02.2018</a>
-          <p class="bc-article__paragraph">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда.</p>
-          <div class="d-flex align-items-center mt-3">
-            <span class="small mr-4">2 часа назад</span>
-            <i class="mr-1 icon-view"></i>
-            <span class="small mr-4">10 235</span>
-            <i class="mr-1 icon-comment"></i>
-            <span class="small mr-4">2</span>
-            <i class="mr-1 icon-clock"></i>
-            <span class="small">17 мин</span>
-          </div>
-          <hr class="bc-article__separator mx-0 my-3">
-          <a class="h5 mt-4" href="#">14.02.2018</a>
-          <p class="bc-article__paragraph">На этот раз никаких накачек, лишь рост нескольких криптовалют после существенного падения. О том, что после пробоя.</p>
-          <div class="d-flex align-items-center mt-3">
-            <span class="small mr-4">2 часа назад</span>
-            <i class="mr-1 icon-view"></i>
-            <span class="small mr-4">10 235</span>
-            <i class="mr-1 icon-comment"></i>
-            <span class="small mr-4">2</span>
-            <i class="mr-1 icon-clock"></i>
-            <span class="small">17 мин</span>
-          </div>
-          <hr class="bc-article__separator mx-0 my-3">
-          <a class="h5" href="#">14.02.2018</a>
-          <p class="bc-article__paragraph">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда.</p>
-          <div class="d-flex align-items-center mt-3">
-            <span class="small mr-4">2 часа назад</span>
-            <i class="mr-1 icon-view"></i>
-            <span class="small mr-4">10 235</span>
-            <i class="mr-1 icon-comment"></i>
-            <span class="small mr-4">2</span>
-            <i class="mr-1 icon-clock"></i>
-            <span class="small">17 мин</span>
-          </div>
-          <hr class="bc-article__separator mx-0 my-3">
-          <a class="h5 mt-4" href="#">14.02.2018</a>
-          <p class="bc-article__paragraph">На этот раз никаких накачек, лишь рост нескольких криптовалют после существенного падения. О том, что после пробоя.</p>
-          <div class="d-flex align-items-center mt-3">
-            <span class="small mr-4">2 часа назад</span>
-            <i class="mr-1 icon-view"></i>
-            <span class="small mr-4">10 235</span>
-            <i class="mr-1 icon-comment"></i>
-            <span class="small mr-4">2</span>
-            <i class="mr-1 icon-clock"></i>
-            <span class="small">17 мин</span>
-          </div>
-        </div>
-      </div>
-      <div class="row pt-5">
-        <button class="bc-article__btn-link btn btn-link" type="button">Загрузить еще</button>
-      </div>
+      <%= render SharedView, "_article_block.html", assigns %>
+
       <a name="indexes"></a>
       <div class="row pt-5">
         <div class="col-xs-12">
@@ -121,7 +13,7 @@
           <div class="d-flex justify-content-center justify-content-md-start mt-4 mb-5">
             <button onclick="window.open("https://bloomchain.ru/wp-content/plugins/bloomchain-bitcoin-price-index/pdf/%D0%91%D0%B8%D1%80%D0%B6%D0%B5%D0%B2%D1%8B%D0%B5%20%D0%B8%D0%BD%D0%B4%D0%B5%D0%BA%D1%81%D1%8B%20%20bloomchain.ru.pdf")" class="bc-article__btn-xs-w-100 btn btn-dark d-flex align-items-center justify-content-center" type="button">Скачать Методику</button>
           </div>
-          
+
           <div class="js-chart" id="js-chart-1" style="min-width: 300px; max-width: 800px"></div>
           <small>BloomChain Bitcoin Price Index</small>
           <p class="bc-article__paragraph mt-3 mb-5">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда. </p>
