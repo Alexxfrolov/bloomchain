@@ -10,8 +10,8 @@ defmodule BloomchainWeb.Router do
   end
 
   pipeline :admin do
-    # plug(Plug.Authentication)
-    # plug(Plug.EnsureAuthentication)
+    plug(Bloomchain.Plug.Authentication)
+    plug(Bloomchain.Plug.EnsureAuthentication)
     plug(:put_layout, {BloomchainWeb.LayoutView, :admin})
   end
 
@@ -32,7 +32,10 @@ defmodule BloomchainWeb.Router do
       pipe_through [:api]
 
       resources("/articles", Admin.Api.V1.ArticleController)
+
+      get "/users/current", Admin.Api.V1.UserController, :current
       resources("/users", Admin.Api.V1.UserController)
+
       resources("/tags", Admin.Api.V1.TagController, only: [:index, :create, :delete])
       resources("/media", Admin.Api.V1.MediaController)
       resources("/subscribers", Admin.Api.V1.SubscriberController, only: [:index])

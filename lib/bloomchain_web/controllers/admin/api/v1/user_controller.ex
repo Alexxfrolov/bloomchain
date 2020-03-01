@@ -4,6 +4,7 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
   # alias Plug.Conn
   alias Bloomchain.{Repo, Content.User}
   alias BloomchainWeb.ErrorView
+  alias Bloomchain.Auth.Account
 
   def index(conn, _params) do
     users = Repo.all(User)
@@ -71,5 +72,10 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
         |> put_status(422)
         |> render(ErrorView, "422.json", %{changeset: changeset})
     end
+  end
+
+  def current(conn, _params) do
+    user = Account.get_current_user(conn)
+    render(conn, "show.json", user: user)
   end
 end
