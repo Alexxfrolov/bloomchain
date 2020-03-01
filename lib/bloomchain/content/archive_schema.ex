@@ -19,7 +19,17 @@ defmodule Bloomchain.Content.Archive do
   """
   def create_changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, @required_fields)
+    |> cast(prepared_params(params), @required_fields)
     |> validate_required(@required_fields)
   end
+
+  defp prepared_params(%{"pdf" => pdf, "cover" => cover}) do
+    %{cover_id: cover["id"], pdf_id: pdf["id"]}
+  end
+
+  defp prepared_params(%{"pdf" => pdf}), do: %{pdf_id: pdf["id"]}
+
+  defp prepared_params(%{"cover" => cover}), do: %{cover_id: cover["id"]}
+
+  defp prepared_params(params), do: params
 end
