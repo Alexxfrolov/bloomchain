@@ -1,56 +1,12 @@
 <div class="container pt-4 pb-5">
   <div class="row">
     <div class="col-lg-12">
-      <h1 class="highlight highlight-date"><span class="mr-1 d-inline-flex">Четверг</span><span class="d-inline-flex font-weight-semibold">14.05.2018</span></h1>
+      <%= header_tag(12) %>
+
       <div class="bc-news mt-3">
-        <div class="bc-news__item"><span class="bc-news__time">07:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Путин поговорил с Трампом по телефону</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">08:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Forbes назвал самых высокооплачиваемых моделей мира</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">09:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Кадырова наградили золотой медалью РАН за заслуги в онкологии</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">10:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Топилин рассказал об отношении работодателей к электронным трудовым книжкам</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">11:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Земан призвал Москву и Запад отказаться от взаимных санкций</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">12:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Доступ на Красную площадь 23 ноября закроют из-за учений ФСО</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">13:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">МГУ потратил 500 000 рублей на билеты на концерты Лепса, L'One и IOWA</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">14:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Путин поговорил с Трампом по телефону</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">15:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Forbes назвал самых высокооплачиваемых моделей мира</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">16:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Кадырова наградили золотой медалью РАН за заслуги в онкологии</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">17:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Топилин рассказал об отношении работодателей к электронным трудовым книжкам</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">18:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Земан призвал Москву и Запад отказаться от взаимных санкций</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">19:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Доступ на Красную площадь 23 ноября закроют из-за учений ФСО</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">20:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">МГУ потратил 500 000 рублей на билеты на концерты Лепса, L'One и IOWA</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">21:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">МГУ потратил 500 000 рублей на билеты на концерты Лепса, L'One и IOWA</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">22:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">МГУ потратил 500 000 рублей на билеты на концерты Лепса, L'One и IOWA</a></div>
-        <div class="bc-news__item"><span class="bc-news__time">23:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">МГУ потратил 500 000 рублей на билеты на концерты Лепса, L'One и IOWA</a></div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="bg-white">
-  <div class="container py-4">
-    <div class="row mt-3">
-      <div class="col-lg-12">
-        <h1 class="bc-article__z-index highlight highlight-date"><span class="mr-1 d-inline-flex">Среда</span><span class="d-inline-flex font-weight-semibold">13.05.2018</span></h1>
-        <div class="bc-news mt-3">
-          <div class="bc-news__item"><span class="bc-news__time">07:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Путин поговорил с Трампом по телефону</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">08:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Forbes назвал самых высокооплачиваемых моделей мира</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">09:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Кадырова наградили золотой медалью РАН за заслуги в онкологии</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">10:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Топилин рассказал об отношении работодателей к электронным трудовым книжкам</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">11:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Земан призвал Москву и Запад отказаться от взаимных санкций</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">12:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Доступ на Красную площадь 23 ноября закроют из-за учений ФСО</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">13:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">МГУ потратил 500 000 рублей на билеты на концерты Лепса, L'One и IOWA</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">14:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Путин поговорил с Трампом по телефону</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">15:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Forbes назвал самых высокооплачиваемых моделей мира</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">16:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Кадырова наградили золотой медалью РАН за заслуги в онкологии</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">17:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Топилин рассказал об отношении работодателей к электронным трудовым книжкам</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">18:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Земан призвал Москву и Запад отказаться от взаимных санкций</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">19:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">Доступ на Красную площадь 23 ноября закроют из-за учений ФСО</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">20:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">МГУ потратил 500 000 рублей на билеты на концерты Лепса, L'One и IOWA</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">21:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">МГУ потратил 500 000 рублей на билеты на концерты Лепса, L'One и IOWA</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">22:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">МГУ потратил 500 000 рублей на билеты на концерты Лепса, L'One и IOWA</a></div>
-          <div class="bc-news__item"><span class="bc-news__time">23:30</span><a class="bc-news__title bc-article__heading font-weight-medium" href="http://">МГУ потратил 500 000 рублей на билеты на концерты Лепса, L'One и IOWA</a></div>
-        </div>
-      </div>
-      <div class="container pl-0">
-        <button class="bc-article__btn-link btn btn-link" type="button">Загрузить еще</button>
+        <%= for article <- @articles do %>
+          <%= item_tag(article) %>
+        <% end %>
       </div>
     </div>
   </div>

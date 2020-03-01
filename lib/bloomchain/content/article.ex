@@ -9,7 +9,8 @@ defmodule Bloomchain.Content.Article do
       from(
         p in Post,
         where: p.type == ^type and p.status == ^status,
-        preload: [:tags]
+        preload: [:tags],
+        order_by: [desc: :created_at]
       )
     )
   end
@@ -20,6 +21,7 @@ defmodule Bloomchain.Content.Article do
         p in Post,
         where: p.type == ^type and p.status == "published",
         preload: [:cover],
+        order_by: [desc: :published_at],
         limit: ^limit
       )
     )
