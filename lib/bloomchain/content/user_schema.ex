@@ -6,6 +6,8 @@ defmodule Bloomchain.Content.User do
     field(:role, :string, default: "writer")
     field(:email, :string, unique: true)
     field(:name, :string)
+    field(:job, :string)
+    field(:phone, :string)
     field(:password_hash, :string)
 
     field(:password, :string, virtual: true)
@@ -13,7 +15,7 @@ defmodule Bloomchain.Content.User do
   end
 
   @required_fields ~w(name email)a
-  @optional_fields ~w(role password)a
+  @optional_fields ~w(role password phone job)a
 
   def create_changeset(user, params \\ %{}) do
     user

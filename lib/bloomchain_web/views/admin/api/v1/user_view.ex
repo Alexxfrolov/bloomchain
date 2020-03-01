@@ -17,6 +17,8 @@ defmodule BloomchainWeb.Admin.Api.V1.UserView do
       name: user.name,
       email: user.email,
       role: user.role,
+      job: user.job,
+      phone: user.phone,
       created_at: user.inserted_at,
       updated_at: user.updated_at
     }
