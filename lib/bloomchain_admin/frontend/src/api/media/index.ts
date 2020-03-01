@@ -1,2 +1,2 @@
-export { mediaAPI } from "./api"
+export { mediaApi } from "./api"
 export * from "./types"

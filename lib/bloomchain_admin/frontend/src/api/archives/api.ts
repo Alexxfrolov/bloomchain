@@ -20,7 +20,7 @@ function remove(id: number): AxiosPromise {
   return axios.delete(`${httpConfig.baseUrl}/archives/${id}`)
 }
 
-export const archivesAPI = {
+export const archivesApi = {
   getLatest,
   create,
   update,

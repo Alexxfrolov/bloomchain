@@ -1,5 +1,4 @@
 import axios, { AxiosPromise } from "axios"
-// import decamelize from "decamelize"
 import { httpConfig } from "@features/core"
 
 import { Tag } from "./types"
@@ -12,17 +11,12 @@ function create(name: string): AxiosPromise<Tag> {
   return axios.post(`${httpConfig.baseUrl}/tags`, { name })
 }
 
-function update(tag: Tag): AxiosPromise<Tag> {
-  return axios.patch(`${httpConfig.baseUrl}/tags/${tag.id}`, tag)
-}
-
 function remove(id: number): AxiosPromise {
   return axios.delete(`${httpConfig.baseUrl}/tags/${id}`)
 }
 
-export const tagsAPI = {
+export const tagsApi = {
   get,
   create,
-  update,
   remove,
 }

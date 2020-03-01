@@ -32,52 +32,30 @@ export const routes: Route[] = [
         ],
       },
       {
-        name: "management",
-        path: "/management",
+        name: "users",
+        path: "/users",
+      },
+      {
+        name: "subscribers",
+        path: "/subscribers",
+      },
+      {
+        name: "tags",
+        path: "/tags",
         children: [
           {
-            name: "users",
-            path: "/users",
-            children: [
-              {
-                name: "create",
-                path: "/create",
-              },
-              {
-                name: "edit",
-                path: "/edit/:id",
-              },
-            ],
+            name: "create",
+            path: "/create",
           },
           {
-            name: "subscribers",
-            path: "/subscribers",
+            name: "edit",
+            path: "/edit",
           },
         ],
       },
       {
-        name: "dictionaries",
-        path: "/dictionaries",
-        children: [
-          {
-            name: "tags",
-            path: "/tags",
-            children: [
-              {
-                name: "create",
-                path: "/create",
-              },
-              {
-                name: "edit",
-                path: "/edit",
-              },
-            ],
-          },
-          {
-            name: "media",
-            path: "/media",
-          },
-        ],
+        name: "media",
+        path: "/media",
       },
       {
         name: "archives",
