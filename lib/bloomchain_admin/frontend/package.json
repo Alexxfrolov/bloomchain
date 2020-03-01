@@ -116,6 +116,7 @@
     "decamelize": "^4.0.0",
     "history": "^4.10.1",
     "humps": "^2.0.1",
+    "material-table": "^1.57.2",
     "nanoid": "^2.1.8",
     "react": "^16.10.1",
     "react-app-polyfill": "^1.0.6",

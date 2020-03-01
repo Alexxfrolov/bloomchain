@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback } from "react"
+import React, { Fragment, useContext, useCallback } from "react"
 import { useRoute } from "react-router5"
 import {
   List,
@@ -20,6 +20,7 @@ import InsertDriveFileRoundedIcon from "@material-ui/icons/InsertDriveFileRounde
 import ImportContactsRoundedIcon from "@material-ui/icons/ImportContactsRounded"
 import AlternateEmailIcon from "@material-ui/icons/AlternateEmail"
 import { NavLink } from "@lib/navlink"
+import { AccountContext } from "@features/core"
 
 const useStyles = makeStyles((theme) => ({
   listitem: {
@@ -75,6 +76,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const MenuList = () => {
+  const account = useContext(AccountContext)
   const { router } = useRoute()
   const classes = useStyles()
 
@@ -177,38 +179,43 @@ export const MenuList = () => {
           </NavLink>
         </ListItem>
       </List>
-      <List>
-        <ListSubheader inset={true}>Управление</ListSubheader>
-        <ListItem
-          aria-current={
-            isCurrentMenu("admin.management.users") ? "page" : undefined
-          }
-          className={classes.listitem}
-        >
-          <NavLink routeName="admin.management.users" className={classes.link}>
-            <ListItemIcon style={{ paddingLeft: "7px" }}>
-              <GroupRoundedIcon style={{ color: indigo[500] }} />
-            </ListItemIcon>
-            <ListItemText primary="Пользователи" />
-          </NavLink>
-        </ListItem>
-        <ListItem
-          aria-current={
-            isCurrentMenu("admin.management.subscribers") ? "page" : undefined
-          }
-          className={classes.listitem}
-        >
-          <NavLink
-            routeName="admin.management.subscribers"
-            className={classes.link}
+      {account.role === "admin" && (
+        <List>
+          <ListSubheader inset={true}>Управление</ListSubheader>
+          <ListItem
+            aria-current={
+              isCurrentMenu("admin.management.users") ? "page" : undefined
+            }
+            className={classes.listitem}
           >
-            <ListItemIcon style={{ paddingLeft: "7px" }}>
-              <AlternateEmailIcon style={{ color: indigo[500] }} />
-            </ListItemIcon>
-            <ListItemText primary="Подписчики" />
-          </NavLink>
-        </ListItem>
-      </List>
+            <NavLink
+              routeName="admin.management.users"
+              className={classes.link}
+            >
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <GroupRoundedIcon style={{ color: indigo[500] }} />
+              </ListItemIcon>
+              <ListItemText primary="Пользователи" />
+            </NavLink>
+          </ListItem>
+          <ListItem
+            aria-current={
+              isCurrentMenu("admin.management.subscribers") ? "page" : undefined
+            }
+            className={classes.listitem}
+          >
+            <NavLink
+              routeName="admin.management.subscribers"
+              className={classes.link}
+            >
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <AlternateEmailIcon style={{ color: indigo[500] }} />
+              </ListItemIcon>
+              <ListItemText primary="Подписчики" />
+            </NavLink>
+          </ListItem>
+        </List>
+      )}
       <Divider />
       <List>
         <ListSubheader inset={true}>Словари</ListSubheader>

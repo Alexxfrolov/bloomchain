@@ -19,6 +19,7 @@ import {
   UsersViewPage,
 } from "@pages"
 import { CommonTemplate, MenuList } from "@features/core"
+import { AccountLoader } from "@features/account"
 
 export const App = hot(module)(function App() {
   const { route } = useRoute()
@@ -67,9 +68,11 @@ export const App = hot(module)(function App() {
   return (
     <Fragment>
       <CssBaseline />
-      <CommonTemplate menu={<MenuList />}>
-        {setPageByRoute(route)}
-      </CommonTemplate>
+      <AccountLoader>
+        <CommonTemplate menu={<MenuList />}>
+          {setPageByRoute(route)}
+        </CommonTemplate>
+      </AccountLoader>
     </Fragment>
   )
 })
