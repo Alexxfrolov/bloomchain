@@ -94,34 +94,25 @@ const froalaEditorConfig = {
       buttonsVisible: 2,
     },
   },
-  imageUploadURL: "/admin/api/v1/media",
-  imageUploadMethod: "POST",
-  imageUploadParam: "image",
-  imageMaxSize: 10 * 1024 * 1024, // 15MB.
-  imageAllowedTypes: ["jpeg", "jpg", "png"],
   quickInsertButtons: ["image", "video", "table", "ul", "qoute"],
-  // events: {
-  //   "image.beforeUpload": function(files: FileList) {
-  //     if (files.length) {
-  //       // Create a File Reader.
-  //       const reader = new FileReader()
+  events: {
+    "image.beforeUpload": function(images: FileList) {
+      const uploadImage = async () => {
+        const image = {
+          file: images[0],
+          type: "image",
+        }
+        const { data } = await mediaApi.create(image)
 
-  //       reader.readAsDataURL(files[0])
+        this.image.insert(data.link, null, null, this.image.get())
+        this.popups.hideAll()
+      }
 
-  //       reader.onload = () => {
-  //         const result = reader.result
+      uploadImage()
 
-  //         // this.image.upload([result])
-  //         this.image.insert(result, null, null, this.image.get())
-  //       }
-  //     }
-
-  //     this.popups.hideAll()
-
-  //     // Stop default upload chain.
-  //     return false
-  //   },
-  // },
+      return false
+    },
+  },
 }
 
 const useStyles = makeStyles((theme) =>
