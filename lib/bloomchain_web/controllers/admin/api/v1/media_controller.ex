@@ -24,9 +24,30 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaController do
     |> do_create(conn)
   end
 
-  def create(conn, %{"file" => %Plug.Upload{content_type: _, filename: _, path: _}} = params) do
+  def create(
+        conn,
+        %{"file" => %Plug.Upload{content_type: _, filename: _, path: _}, "type" => _} = params
+      ) do
     Media.create_changeset(%Media{}, params)
     |> do_create(conn)
+  end
+
+  def update(conn, %{"id" => id} = params) do
+    with %Media{} = media <- Repo.get(Media, id),
+         {:ok, media} <- media |> Media.create_changeset(params) |> Repo.update() do
+      conn
+      |> render("show.json", media: media)
+    else
+      nil ->
+        conn
+        |> put_status(404)
+        |> render(ErrorView, "404.json", error: "Not found")
+
+      {:error, changeset} ->
+        conn
+        |> put_status(422)
+        |> render(ErrorView, "422.json", %{changeset: changeset})
+    end
   end
 
   def delete(conn, %{"id" => id}) do
