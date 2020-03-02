@@ -67,7 +67,7 @@ Repo.insert_all(Tag, [
 ])
 
 for type <- ~w[newsfeed detailed research analysis in_russia calendar person] do
-  for i <- 1..6, i > 0 do
+  for i <- 1..15, i > 0 do
     title = "Тестовое название #{i} для раздела #{type}"
 
     Article.create(%{
