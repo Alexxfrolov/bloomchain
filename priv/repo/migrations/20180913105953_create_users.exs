@@ -3,7 +3,8 @@ defmodule Bloomchain.Repo.Migrations.CreateUsers do
 
   def change do
     create table(:users) do
-      add(:name, :string, null: false)
+      add(:first_name, :string, null: false)
+      add(:last_name, :string, null: false)
       add(:password_hash, :string)
       add(:email, :string, null: false)
       add(:phone, :string, limit: 20)

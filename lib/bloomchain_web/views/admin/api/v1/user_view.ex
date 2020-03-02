@@ -14,7 +14,8 @@ defmodule BloomchainWeb.Admin.Api.V1.UserView do
   def user_json(user) do
     %{
       id: user.id,
-      name: user.name,
+      first_name: user.first_name,
+      last_name: user.last_name,
       email: user.email,
       role: user.role,
       job: user.job,

@@ -47,7 +47,8 @@ end
 
 Repo.insert!(
   User.create_changeset(%User{}, %{
-    name: "Admin",
+    first_name: "Admin",
+    last_name: "Admin",
     email: "admin@app.com",
     password: "admin123",
     role: "admin"

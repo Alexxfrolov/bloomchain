@@ -5,7 +5,8 @@ defmodule Bloomchain.Content.User do
   schema "users" do
     field(:role, :string, default: "writer")
     field(:email, :string, unique: true)
-    field(:name, :string)
+    field(:first_name, :string)
+    field(:last_name, :string)
     field(:job, :string)
     field(:phone, :string)
     field(:password_hash, :string)
@@ -14,7 +15,7 @@ defmodule Bloomchain.Content.User do
     timestamps()
   end
 
-  @required_fields ~w(name email)a
+  @required_fields ~w(first_name last_name email)a
   @optional_fields ~w(role password phone job)a
 
   def create_changeset(user, params \\ %{}) do
@@ -23,7 +24,6 @@ defmodule Bloomchain.Content.User do
     |> validate_required(@required_fields)
     |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)
-    |> validate_length(:name, min: 3)
     |> validate_length(:password, min: 6)
     |> put_password_hash()
   end
