@@ -1,7 +1,7 @@
 export interface Archive {
-  cover: import("../media").Media
+  cover: import("../media").MediaFile
   created_at: string
   id: number
-  pdf: import("../media").Media
+  pdf: import("../media").MediaFile
   update_at: string | null
 }

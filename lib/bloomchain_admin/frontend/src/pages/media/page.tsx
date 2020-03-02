@@ -1,5 +1,6 @@
 import nanoid from "nanoid"
 import React, {
+  Fragment,
   useState,
   useEffect,
   useCallback,
@@ -20,6 +21,9 @@ import {
   GridListTile,
   GridListTileBar,
   Grid,
+  AppBar,
+  Tabs,
+  Tab,
   Container,
   Dialog,
   DialogContent,
@@ -27,16 +31,16 @@ import {
   DialogTitle,
   TextField,
   Typography,
-  Input,
   Button,
   IconButton,
   Theme,
 } from "@material-ui/core"
-import { Skeleton } from "@material-ui/lab"
+import { Alert, Skeleton } from "@material-ui/lab"
 import DeleteIcon from "@material-ui/icons/Delete"
 import AddBoxIcon from "@material-ui/icons/AddBox"
+import EditIcon from "@material-ui/icons/Edit"
 import { ConditionalList } from "@ui"
-import { mediaApi, Media } from "@api/media"
+import { mediaApi, MediaFile, UploadableMediaFile } from "@api/media"
 import { DeleteDialog } from "@features/core"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -50,7 +54,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     gridList: {
       width: "100%",
-      height: 900,
     },
     editInput: {
       color: "rgba(255, 255, 255, 0.8)",
@@ -84,12 +87,11 @@ const useStyles = makeStyles((theme: Theme) =>
 export const MediaPage = () => {
   const classes = useStyles()
 
+  const [type, setType] = useState<MediaFile["type"]>("image")
+  const [tabIndex, setTabIndex] = useState(0)
   const [loading, setLoading] = useState(false)
-  const [media, setMedia] = useState<Media[]>([])
+  const [media, setMedia] = useState<MediaFile[]>([])
   const [error, setError] = useState(false)
-  const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
-  const [openedAddFormDialog, setOpenedAddFormDialog] = useState(false)
-  const [currentMediaFile, setCurrentMediaFile] = useState<Media | null>(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -97,7 +99,7 @@ export const MediaPage = () => {
       setError(false)
 
       try {
-        const response = await mediaApi.get()
+        const response = await mediaApi.get(type)
         setMedia(response.data.data)
       } catch {
         setError(true)
@@ -106,11 +108,33 @@ export const MediaPage = () => {
       setLoading(false)
     }
     fetchData()
-  }, [])
+  }, [type])
+
+  const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
+  const [openedAddFormDialog, setOpenedAddFormDialog] = useState(false)
+  const [openedEditFormDialog, setOpenedEditFormDialog] = useState(false)
+  const [editableMediaFile, setEditableMediaFile] = useState<MediaFile | null>(
+    null,
+  )
 
   const handleAddMedia = useCallback(
-    (file: Media) => {
+    (file: MediaFile) => {
       setMedia([file, ...media])
+    },
+    [media, setMedia],
+  )
+
+  const editMediaFile = useCallback(
+    (editedMediaFile: MediaFile) => {
+      setMedia(
+        media.reduce(
+          (media: MediaFile[], user) => [
+            ...media,
+            user.id !== editedMediaFile.id ? user : editedMediaFile,
+          ],
+          [],
+        ),
+      )
     },
     [media, setMedia],
   )
@@ -132,31 +156,39 @@ export const MediaPage = () => {
     [setDateEnd],
   )
 
-  const handleImageTitleChange = useCallback(
-    (id: number) => async (event: ChangeEvent<{ value: string }>) => {
-      const response = await mediaApi.update({
-        id,
-        title: event.currentTarget.value,
-      })
+  const handleChangeTab = useCallback(
+    (event: ChangeEvent<{ id: MediaFile["type"] }>, newValue: number) => {
+      setType(event.currentTarget.id)
+      setTabIndex(newValue)
     },
-    [],
+    [setTabIndex, setType],
   )
 
   const handleDeleteButtonClick = useCallback(
-    (media: Media) => () => {
+    (media: MediaFile) => () => {
       setOpenedDeleteDialog(true)
-      setCurrentMediaFile(media)
+      setEditableMediaFile(media)
     },
-    [setCurrentMediaFile, setOpenedDeleteDialog],
+    [setEditableMediaFile, setOpenedDeleteDialog],
+  )
+
+  const handleEditButtonClick = useCallback(
+    (media: MediaFile) => () => {
+      setOpenedEditFormDialog(true)
+      setEditableMediaFile(media)
+    },
+    [setOpenedEditFormDialog, setEditableMediaFile],
   )
 
   const handleConfirmDelete = useCallback(async () => {
-    const response = await mediaApi.remove(currentMediaFile.id)
-    setOpenedDeleteDialog(false)
-    if (response.status === 204) {
-      setMedia(media.filter((item) => item.id !== currentMediaFile.id))
+    if (editableMediaFile) {
+      const response = await mediaApi.remove(editableMediaFile.id)
+      setOpenedDeleteDialog(false)
+      if (response.status === 204) {
+        setMedia(media.filter((item) => item.id !== editableMediaFile.id))
+      }
     }
-  }, [media, currentMediaFile, setMedia, setOpenedDeleteDialog])
+  }, [media, editableMediaFile, setMedia, setOpenedDeleteDialog])
 
   return (
     <Container maxWidth="lg">
@@ -173,105 +205,135 @@ export const MediaPage = () => {
             </IconButton>
           </Grid>
         </Grid>
-        <Grid item={true} xs={12}>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container={true} spacing={4} alignItems="center">
-              <Grid item={true}>
-                <KeyboardDatePicker
-                  variant="dialog"
-                  margin="normal"
-                  id="date-start"
-                  label="Дата начал"
-                  format="dd/MM/yyyy"
-                  value={dateStart}
-                  onChange={handleDateStartChange}
-                  KeyboardButtonProps={{
-                    "aria-label": "Выберите дату",
-                  }}
-                />
-              </Grid>
-              <Grid item={true}>
-                <KeyboardDatePicker
-                  variant="dialog"
-                  margin="normal"
-                  id="date-end"
-                  label="Дата окончания"
-                  format="dd/MM/yyyy"
-                  value={dateEnd}
-                  onChange={handleDateEndChange}
-                  KeyboardButtonProps={{
-                    "aria-label": "Выберите дату",
-                  }}
-                />
-              </Grid>
-              <Grid item={true}>
-                <Button variant="contained" color="primary" component="span">
-                  Фильтровать
-                </Button>
-              </Grid>
+        {error ? (
+          <Alert color="error">Произошла ошибка</Alert>
+        ) : (
+          <Fragment>
+            <Grid item={true} xs={12}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <Grid container={true} spacing={4} alignItems="center">
+                  <Grid item={true}>
+                    <KeyboardDatePicker
+                      variant="dialog"
+                      margin="normal"
+                      id="date-start"
+                      label="Дата начал"
+                      format="dd/MM/yyyy"
+                      value={dateStart}
+                      onChange={handleDateStartChange}
+                      KeyboardButtonProps={{
+                        "aria-label": "Выберите дату",
+                      }}
+                    />
+                  </Grid>
+                  <Grid item={true}>
+                    <KeyboardDatePicker
+                      variant="dialog"
+                      margin="normal"
+                      id="date-end"
+                      label="Дата окончания"
+                      format="dd/MM/yyyy"
+                      value={dateEnd}
+                      onChange={handleDateEndChange}
+                      KeyboardButtonProps={{
+                        "aria-label": "Выберите дату",
+                      }}
+                    />
+                  </Grid>
+                  <Grid item={true}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      component="span"
+                    >
+                      Фильтровать
+                    </Button>
+                  </Grid>
+                </Grid>
+              </MuiPickersUtilsProvider>
             </Grid>
-          </MuiPickersUtilsProvider>
-        </Grid>
-        <Grid item={true} xs={12}>
-          <div className={classes.root}>
-            {loading ? (
-              <Skeleton width="100%" height="900px" />
-            ) : (
-              <ConditionalList
-                list={media}
-                renderExists={(list) => (
-                  <GridList
-                    cellHeight={300}
-                    className={classes.gridList}
-                    cols={3}
-                  >
-                    {list.map((item) => (
-                      <GridListTile key={nanoid()}>
-                        {item.type === "image" ? (
-                          <img src={item.link} alt={item.title} />
-                        ) : (
-                          <embed
-                            src={item.link}
-                            type="application/pdf"
-                            width="100%"
-                            height="300px"
-                          />
-                        )}
-                        <GridListTileBar
-                          titlePosition="bottom"
-                          title={
-                            <Input
-                              type="text"
-                              name="title"
-                              value={item.title || ""}
-                              fullWidth={true}
-                              disableUnderline={true}
-                              inputProps={{ "aria-label": item.title }}
-                              onChange={handleImageTitleChange(item.id)}
-                              className={classes.editInput}
-                              classes={{ focused: classes.editInputFocused }}
+            <Grid item={true} xs={12}>
+              <AppBar position="static" color="default">
+                <Tabs
+                  value={tabIndex}
+                  onChange={handleChangeTab}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  variant="fullWidth"
+                >
+                  <Tab label="Изображения" id="image" />
+                  <Tab label="PDF" id="pdf" />
+                  {/* <Tab label="Видео" id="video" /> */}
+                </Tabs>
+              </AppBar>
+            </Grid>
+            <Grid item={true} xs={12}>
+              <div className={classes.root}>
+                {loading ? (
+                  <Skeleton width="100%" height="900px" />
+                ) : (
+                  <ConditionalList
+                    list={media}
+                    renderExists={(list) => (
+                      <GridList
+                        cellHeight={300}
+                        className={classes.gridList}
+                        style={{
+                          height: media.length > 10 ? "900px" : "600px",
+                        }}
+                        cols={3}
+                      >
+                        {list.map((item) => (
+                          <GridListTile key={nanoid()}>
+                            {item.type === "image" ? (
+                              <img src={item.link} alt={item.title} />
+                            ) : (
+                              <embed
+                                src={item.link}
+                                type="application/pdf"
+                                width="100%"
+                                height="100%"
+                              />
+                            )}
+                            <GridListTileBar
+                              titlePosition="bottom"
+                              title={item.title}
+                              subtitle={<span>{item.source}</span>}
+                              actionPosition="right"
+                              actionIcon={
+                                <Grid container={true}>
+                                  {item.type !== "pdf" && (
+                                    <Grid item={true}>
+                                      <IconButton
+                                        className={classes.icon}
+                                        onClick={handleEditButtonClick(item)}
+                                      >
+                                        <EditIcon />
+                                      </IconButton>
+                                    </Grid>
+                                  )}
+                                  <Grid item={true}>
+                                    <IconButton
+                                      className={classes.icon}
+                                      onClick={handleDeleteButtonClick(item)}
+                                    >
+                                      <DeleteIcon />
+                                    </IconButton>
+                                  </Grid>
+                                </Grid>
+                              }
+                              className={classes.titleBar}
                             />
-                          }
-                          subtitle={<span>{item.source}</span>}
-                          actionPosition="right"
-                          actionIcon={
-                            <IconButton
-                              className={classes.icon}
-                              onClick={handleDeleteButtonClick(item)}
-                            >
-                              <DeleteIcon color="error" />
-                            </IconButton>
-                          }
-                          className={classes.titleBar}
-                        />
-                      </GridListTile>
-                    ))}
-                  </GridList>
+                          </GridListTile>
+                        ))}
+                      </GridList>
+                    )}
+                  />
                 )}
-              />
-            )}
-          </div>
-        </Grid>
+              </div>
+            </Grid>
+          </Fragment>
+        )}
       </Grid>
       {openedDeleteDialog && (
         <DeleteDialog
@@ -283,8 +345,17 @@ export const MediaPage = () => {
       {openedAddFormDialog && (
         <AddFormDialog
           opened={openedAddFormDialog}
+          type={type}
           onClose={() => setOpenedAddFormDialog(false)}
           onAddMedia={handleAddMedia}
+        />
+      )}
+      {editableMediaFile && openedEditFormDialog && (
+        <EditFormDialog
+          editableMediaFile={editableMediaFile}
+          opened={openedEditFormDialog}
+          onClose={() => setOpenedEditFormDialog(false)}
+          onUpdateMedia={editMediaFile}
         />
       )}
     </Container>
@@ -293,37 +364,38 @@ export const MediaPage = () => {
 
 type AddFormDialogProps = {
   opened: boolean
+  type: MediaFile["type"]
   onClose: () => void
-  onAddMedia: (file: Media) => void
+  onAddMedia: (file: MediaFile) => void
 }
 
-const AddFormDialog = ({ opened, onClose, onAddMedia }: AddFormDialogProps) => {
+const AddFormDialog = ({
+  opened,
+  type,
+  onClose,
+  onAddMedia,
+}: AddFormDialogProps) => {
   const imageRef: RefObject<HTMLImageElement | null> = useRef(null)
   const fileInputRef: RefObject<HTMLInputElement | null> = useRef(null)
-  const [file, setFile] = useState<File | null>(null)
-  const [title, setTitle] = useState("")
-  const [alt, setAlt] = useState("")
-  const [source, setSource] = useState("")
+  const [media, setMedia] = useState<
+    Pick<UploadableMediaFile, "title" | "alt" | "source" | "type"> & {
+      file: File | null
+    }
+  >({
+    file: null,
+    title: "",
+    alt: "",
+    source: "",
+    type,
+  })
 
-  const handleChangeTitleField = useCallback(
-    (event: ChangeEvent<{ value: string }>) => {
-      setTitle(event.currentTarget.value)
+  const handleChangeTextField = useCallback(
+    (field: keyof UploadableMediaFile) => (
+      event: ChangeEvent<{ value: string }>,
+    ) => {
+      setMedia({ ...media, [field]: event.currentTarget.value })
     },
-    [setTitle],
-  )
-
-  const handleChangeAltField = useCallback(
-    (event: ChangeEvent<{ value: string }>) => {
-      setAlt(event.currentTarget.value)
-    },
-    [setAlt],
-  )
-
-  const handleChangeSourceField = useCallback(
-    (event: ChangeEvent<{ value: string }>) => {
-      setSource(event.currentTarget.value)
-    },
-    [setSource],
+    [media, setMedia],
   )
 
   const handleFileInputChange = useCallback(() => {
@@ -336,35 +408,30 @@ const AddFormDialog = ({ opened, onClose, onAddMedia }: AddFormDialogProps) => {
 
       reader.onload = function(event: ProgressEvent<FileReader>) {
         if (imageRef.current) {
-          event.target.result &&
+          event?.target?.result?.[
             imageRef.current.setAttribute("src", event.target.result)
+          ]
         }
       }
 
       reader.readAsDataURL(fileInputRef.current.files[0])
 
-      setFile(fileInputRef.current.files[0])
+      setMedia({ ...media, file: fileInputRef.current.files[0] })
     }
-  }, [fileInputRef, imageRef, setFile])
+  }, [fileInputRef, imageRef, media, setMedia])
 
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault()
-      if (file) {
-        const image = {
-          image: file,
-          title,
-          alt,
-          source,
-        }
-        const response = await mediaApi.create(image)
+      if (media.file !== null) {
+        const response = await mediaApi.create(media)
         if (response.status === 201) {
           onClose()
           onAddMedia(response.data)
         }
       }
     },
-    [file, title, alt, source, onAddMedia, onClose],
+    [media, onAddMedia, onClose],
   )
 
   return (
@@ -378,7 +445,7 @@ const AddFormDialog = ({ opened, onClose, onAddMedia }: AddFormDialogProps) => {
         <DialogContent>
           <Grid container={true} spacing={4}>
             <Grid item={true} xs={12} container={true} spacing={2}>
-              {file && (
+              {media.file && (
                 <Grid item={true} xs={12}>
                   <img width="100%" ref={imageRef} />
                 </Grid>
@@ -404,9 +471,10 @@ const AddFormDialog = ({ opened, onClose, onAddMedia }: AddFormDialogProps) => {
                 id="alt"
                 label="Alt"
                 required={true}
+                value={media.alt}
                 type="text"
                 fullWidth
-                onChange={handleChangeAltField}
+                onChange={handleChangeTextField("alt")}
               />
             </Grid>
             <Grid item={true} xs={12}>
@@ -414,8 +482,9 @@ const AddFormDialog = ({ opened, onClose, onAddMedia }: AddFormDialogProps) => {
                 id="title"
                 label="Title"
                 type="text"
+                value={media.title}
                 fullWidth
-                onChange={handleChangeTitleField}
+                onChange={handleChangeTextField("title")}
               />
             </Grid>
             <Grid item={true} xs={12}>
@@ -423,8 +492,9 @@ const AddFormDialog = ({ opened, onClose, onAddMedia }: AddFormDialogProps) => {
                 id="source"
                 label="Source"
                 type="text"
+                value={media.source}
                 fullWidth
-                onChange={handleChangeSourceField}
+                onChange={handleChangeTextField("source")}
               />
             </Grid>
           </Grid>
@@ -435,6 +505,105 @@ const AddFormDialog = ({ opened, onClose, onAddMedia }: AddFormDialogProps) => {
           </Button>
           <Button type="submit" color="primary">
             Загрузить
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
+  )
+}
+
+type EditFormDialogProps = {
+  editableMediaFile: MediaFile
+  opened: boolean
+  onClose: () => void
+  onUpdateMedia: (file: MediaFile) => void
+}
+
+const EditFormDialog = ({
+  editableMediaFile,
+  opened,
+  onClose,
+  onUpdateMedia,
+}: EditFormDialogProps) => {
+  const [media, setMedia] = useState<MediaFile>({ ...editableMediaFile })
+
+  const handleChangeTextField = useCallback(
+    (field: keyof UploadableMediaFile) => (
+      event: ChangeEvent<{ value: string }>,
+    ) => {
+      setMedia({ ...media, [field]: event.currentTarget.value })
+    },
+    [media, setMedia],
+  )
+
+  const handleSubmit = useCallback(
+    async (event: FormEvent) => {
+      event.preventDefault()
+      const response = await mediaApi.update(media)
+      if (response.status === 200) {
+        onClose()
+        onUpdateMedia(response.data)
+      }
+    },
+    [media, onUpdateMedia, onClose],
+  )
+
+  return (
+    <Dialog
+      open={opened}
+      onClose={onClose}
+      aria-labelledby="edit-media-file-form-dialog"
+    >
+      <form onSubmit={handleSubmit}>
+        <DialogTitle id="edit-media-file-form-dialog">
+          Обновление файла
+        </DialogTitle>
+        <DialogContent>
+          <Grid container={true} spacing={4}>
+            <Grid item={true} xs={12} container={true} spacing={2}>
+              <Grid item={true} xs={12}>
+                <img width="100%" src={media.link} />
+              </Grid>
+            </Grid>
+            <Grid item={true} xs={12}>
+              <TextField
+                id="alt"
+                label="Alt"
+                required={true}
+                value={media.alt}
+                type="text"
+                fullWidth
+                onChange={handleChangeTextField("alt")}
+              />
+            </Grid>
+            <Grid item={true} xs={12}>
+              <TextField
+                id="title"
+                label="Title"
+                type="text"
+                value={media.title}
+                fullWidth
+                onChange={handleChangeTextField("title")}
+              />
+            </Grid>
+            <Grid item={true} xs={12}>
+              <TextField
+                id="source"
+                label="Source"
+                type="text"
+                value={media.source}
+                fullWidth
+                onChange={handleChangeTextField("source")}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose} color="primary">
+            Отменить
+          </Button>
+          <Button type="submit" color="primary">
+            Обновить
           </Button>
         </DialogActions>
       </form>

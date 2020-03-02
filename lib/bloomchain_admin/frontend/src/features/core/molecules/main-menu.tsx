@@ -24,6 +24,7 @@ import { AccountContext } from "@features/core"
 
 const useStyles = makeStyles((theme) => ({
   listitem: {
+    padding: 0,
     transition: theme.transitions.create("background-color", {
       easing: theme.transitions.easing.easeIn,
       duration: theme.transitions.duration.standard,
@@ -44,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   link: {
+    padding: "8px 16px",
     display: "flex",
     width: "100%",
     color: "rgba(0, 0, 0, 0.87)",
