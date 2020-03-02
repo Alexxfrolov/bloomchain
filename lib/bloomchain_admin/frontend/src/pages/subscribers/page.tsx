@@ -1,5 +1,5 @@
 import nanoid from "nanoid"
-import React, { useState, useEffect, Fragment } from "react"
+import React, { useState, useEffect, ReactElement, Fragment } from "react"
 import format from "date-fns/format"
 import {
   Grid,
@@ -8,39 +8,13 @@ import {
   TableContainer,
   Table,
   TableHead,
-  TableRow,
-  TableCell,
   TableBody,
   Typography,
-  withStyles,
-  createStyles,
-  Theme,
 } from "@material-ui/core"
-import { Alert, Skeleton } from "@material-ui/lab"
+import { Alert } from "@material-ui/lab"
 import { ConditionalList } from "@ui"
 import { subscribersAPI, Subscriber } from "@api/subscribers"
-
-const StyledTableCell = withStyles((theme: Theme) =>
-  createStyles({
-    head: {
-      backgroundColor: theme.palette.primary.dark,
-      color: theme.palette.common.white,
-    },
-    body: {
-      fontSize: 14,
-    },
-  }),
-)(TableCell)
-
-const StyledTableRow = withStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      "&:nth-of-type(odd)": {
-        backgroundColor: theme.palette.background.default,
-      },
-    },
-  }),
-)(TableRow)
+import { TableRow, TableCell, TableSkeleton } from "@features/core"
 
 export const SubscribersPage = () => {
   const [loading, setLoading] = useState(false)
@@ -73,56 +47,13 @@ export const SubscribersPage = () => {
         </Grid>
         <Grid item={true} xs={12}>
           {!error ? (
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell width="50%" component="th">
-                      Email
-                    </StyledTableCell>
-                    <StyledTableCell width="50%" component="th">
-                      Дата подписки
-                    </StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {!loading ? (
-                    <ConditionalList
-                      list={subscribers}
-                      renderExists={(list) =>
-                        list.map((subscriber) => (
-                          <StyledTableRow key={nanoid()}>
-                            <StyledTableCell>
-                              {subscriber.email}
-                            </StyledTableCell>
-                            <StyledTableCell>
-                              {format(
-                                new Date(subscriber.created_at),
-                                "dd.mm.yyyy hh:mm",
-                              )}
-                            </StyledTableCell>
-                          </StyledTableRow>
-                        ))
-                      }
-                    />
-                  ) : (
-                    <Fragment>
-                      {Array.from({ length: 20 }).map(() => (
-                        <StyledTableRow key={nanoid()}>
-                          <StyledTableCell colSpan={2} padding="none">
-                            <Skeleton
-                              variant="rect"
-                              width="100%"
-                              height="53px"
-                            />
-                          </StyledTableCell>
-                        </StyledTableRow>
-                      ))}
-                    </Fragment>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <SubscribersTable
+              data={subscribers}
+              loading={loading}
+              renderRow={(subscriber) => (
+                <SubscribersTableRow key={nanoid()} subscriber={subscriber} />
+              )}
+            />
           ) : (
             <Alert color="error">Произошла ошибка</Alert>
           )}
@@ -131,3 +62,58 @@ export const SubscribersPage = () => {
     </Container>
   )
 }
+
+type SubscribersTableProps = {
+  data: Subscriber[]
+  loading: boolean
+  renderRow: (subscriber: Subscriber) => ReactElement<SubscribersTableRowProps>
+}
+
+const SubscribersTable = ({
+  data,
+  loading,
+  renderRow,
+}: SubscribersTableProps) => (
+  <TableContainer component={Paper}>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell width="50%" component="th">
+            Email
+          </TableCell>
+          <TableCell width="50%" component="th">
+            Дата подписки
+          </TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {!loading ? (
+          <ConditionalList
+            list={data}
+            renderExists={(list) => (
+              <Fragment>
+                {list.map((subscriber) => renderRow(subscriber))}
+              </Fragment>
+            )}
+          />
+        ) : (
+          <TableSkeleton colSpan={2} />
+        )}
+      </TableBody>
+    </Table>
+  </TableContainer>
+)
+
+type SubscribersTableRowProps = {
+  subscriber: Subscriber
+}
+
+const SubscribersTableRow = ({ subscriber }: SubscribersTableRowProps) => (
+  <TableRow key={nanoid()}>
+    <TableCell>{subscriber.email}</TableCell>
+    <TableCell>
+      {subscriber.created_at &&
+        format(new Date(subscriber.created_at), "dd.mm.yyyy hh:mm")}
+    </TableCell>
+  </TableRow>
+)

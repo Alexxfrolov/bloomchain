@@ -32,8 +32,11 @@ import {
   IconButton,
   Theme,
 } from "@material-ui/core"
+import { Skeleton } from "@material-ui/lab"
 import DeleteIcon from "@material-ui/icons/Delete"
-import { mediaAPI, Media } from "@api/media"
+import AddBoxIcon from "@material-ui/icons/AddBox"
+import { ConditionalList } from "@ui"
+import { mediaApi, Media } from "@api/media"
 import { DeleteDialog } from "@features/core"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -85,7 +88,7 @@ export const MediaPage = () => {
   const [media, setMedia] = useState<Media[]>([])
   const [error, setError] = useState(false)
   const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
-  const [openedUploadFormDialog, setOpenedUploadFormDialog] = useState(false)
+  const [openedAddFormDialog, setOpenedAddFormDialog] = useState(false)
   const [currentMediaFile, setCurrentMediaFile] = useState<Media | null>(null)
 
   useEffect(() => {
@@ -94,7 +97,7 @@ export const MediaPage = () => {
       setError(false)
 
       try {
-        const response = await mediaAPI.get()
+        const response = await mediaApi.get()
         setMedia(response.data.data)
       } catch {
         setError(true)
@@ -131,7 +134,7 @@ export const MediaPage = () => {
 
   const handleImageTitleChange = useCallback(
     (id: number) => async (event: ChangeEvent<{ value: string }>) => {
-      const response = await mediaAPI.update({
+      const response = await mediaApi.update({
         id,
         title: event.currentTarget.value,
       })
@@ -140,7 +143,7 @@ export const MediaPage = () => {
   )
 
   const handleDeleteButtonClick = useCallback(
-    (media: Media) => async () => {
+    (media: Media) => () => {
       setOpenedDeleteDialog(true)
       setCurrentMediaFile(media)
     },
@@ -148,7 +151,7 @@ export const MediaPage = () => {
   )
 
   const handleConfirmDelete = useCallback(async () => {
-    const response = await mediaAPI.remove(currentMediaFile.id)
+    const response = await mediaApi.remove(currentMediaFile.id)
     setOpenedDeleteDialog(false)
     if (response.status === 204) {
       setMedia(media.filter((item) => item.id !== currentMediaFile.id))
@@ -158,26 +161,16 @@ export const MediaPage = () => {
   return (
     <Container maxWidth="lg">
       <Grid container={true} spacing={3}>
-        <Grid
-          item={true}
-          xs={12}
-          container={true}
-          spacing={3}
-          alignItems="center"
-        >
+        <Grid item={true} xs={12} container={true} spacing={3}>
           <Grid item={true}>
             <Typography component="h1" variant="h4" gutterBottom={false}>
               Медиа
             </Typography>
           </Grid>
           <Grid item={true}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setOpenedUploadFormDialog(true)}
-            >
-              Добавить
-            </Button>
+            <IconButton onClick={() => setOpenedAddFormDialog(true)}>
+              <AddBoxIcon color="primary" />
+            </IconButton>
           </Grid>
         </Grid>
         <Grid item={true} xs={12}>
@@ -221,77 +214,90 @@ export const MediaPage = () => {
         </Grid>
         <Grid item={true} xs={12}>
           <div className={classes.root}>
-            <GridList cellHeight={300} className={classes.gridList} cols={3}>
-              {media.map((item) => (
-                <GridListTile key={nanoid()}>
-                  {item.type === "image" ? (
-                    <img src={item.link} alt={item.title} />
-                  ) : (
-                    <embed
-                      src={item.link}
-                      type="application/pdf"
-                      width="100%"
-                      height="300px"
-                    />
-                  )}
-                  <GridListTileBar
-                    titlePosition="bottom"
-                    title={
-                      <Input
-                        type="text"
-                        name="title"
-                        value={item.title || ""}
-                        fullWidth={true}
-                        disableUnderline={true}
-                        inputProps={{ "aria-label": item.title }}
-                        onChange={handleImageTitleChange(item.id)}
-                        className={classes.editInput}
-                        classes={{ focused: classes.editInputFocused }}
-                      />
-                    }
-                    subtitle={<span>{item.source}</span>}
-                    actionPosition="right"
-                    actionIcon={
-                      <IconButton
-                        className={classes.icon}
-                        onClick={handleDeleteButtonClick(item)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    }
-                    className={classes.titleBar}
-                  />
-                </GridListTile>
-              ))}
-            </GridList>
+            {loading ? (
+              <Skeleton width="100%" height="900px" />
+            ) : (
+              <ConditionalList
+                list={media}
+                renderExists={(list) => (
+                  <GridList
+                    cellHeight={300}
+                    className={classes.gridList}
+                    cols={3}
+                  >
+                    {list.map((item) => (
+                      <GridListTile key={nanoid()}>
+                        {item.type === "image" ? (
+                          <img src={item.link} alt={item.title} />
+                        ) : (
+                          <embed
+                            src={item.link}
+                            type="application/pdf"
+                            width="100%"
+                            height="300px"
+                          />
+                        )}
+                        <GridListTileBar
+                          titlePosition="bottom"
+                          title={
+                            <Input
+                              type="text"
+                              name="title"
+                              value={item.title || ""}
+                              fullWidth={true}
+                              disableUnderline={true}
+                              inputProps={{ "aria-label": item.title }}
+                              onChange={handleImageTitleChange(item.id)}
+                              className={classes.editInput}
+                              classes={{ focused: classes.editInputFocused }}
+                            />
+                          }
+                          subtitle={<span>{item.source}</span>}
+                          actionPosition="right"
+                          actionIcon={
+                            <IconButton
+                              className={classes.icon}
+                              onClick={handleDeleteButtonClick(item)}
+                            >
+                              <DeleteIcon color="error" />
+                            </IconButton>
+                          }
+                          className={classes.titleBar}
+                        />
+                      </GridListTile>
+                    ))}
+                  </GridList>
+                )}
+              />
+            )}
           </div>
         </Grid>
       </Grid>
-      <DeleteDialog
-        opened={openedDeleteDialog}
-        onCancel={() => setOpenedDeleteDialog(false)}
-        onConfirm={handleConfirmDelete}
-      />
-      <UploadFormDialog
-        opened={openedUploadFormDialog}
-        onClose={() => setOpenedUploadFormDialog(false)}
-        onAddMedia={handleAddMedia}
-      />
+      {openedDeleteDialog && (
+        <DeleteDialog
+          opened={openedDeleteDialog}
+          onCancel={() => setOpenedDeleteDialog(false)}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
+      {openedAddFormDialog && (
+        <AddFormDialog
+          opened={openedAddFormDialog}
+          onClose={() => setOpenedAddFormDialog(false)}
+          onAddMedia={handleAddMedia}
+        />
+      )}
     </Container>
   )
 }
 
-type UploadFormDialogProps = {
+type AddFormDialogProps = {
   opened: boolean
   onClose: () => void
   onAddMedia: (file: Media) => void
 }
 
-const UploadFormDialog = ({
-  opened,
-  onClose,
-  onAddMedia,
-}: UploadFormDialogProps) => {
+const AddFormDialog = ({ opened, onClose, onAddMedia }: AddFormDialogProps) => {
   const imageRef: RefObject<HTMLImageElement | null> = useRef(null)
   const fileInputRef: RefObject<HTMLInputElement | null> = useRef(null)
   const [file, setFile] = useState<File | null>(null)
@@ -351,7 +357,7 @@ const UploadFormDialog = ({
           alt,
           source,
         }
-        const response = await mediaAPI.create(image)
+        const response = await mediaApi.create(image)
         if (response.status === 201) {
           onClose()
           onAddMedia(response.data)
@@ -369,7 +375,7 @@ const UploadFormDialog = ({
     >
       <form onSubmit={handleSubmit}>
         <DialogTitle id="upload-form-dialog">Загрузка файла</DialogTitle>
-        <DialogContent dividers={true}>
+        <DialogContent>
           <Grid container={true} spacing={4}>
             <Grid item={true} xs={12} container={true} spacing={2}>
               {file && (
@@ -388,7 +394,7 @@ const UploadFormDialog = ({
                 />
                 <label htmlFor="media">
                   <Button variant="contained" color="primary" component="span">
-                    Загрузить
+                    Добавить файл
                   </Button>
                 </label>
               </Grid>

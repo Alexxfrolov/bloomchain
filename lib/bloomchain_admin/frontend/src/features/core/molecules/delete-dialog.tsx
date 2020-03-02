@@ -18,7 +18,7 @@ export const DeleteDialog = ({
     aria-labelledby="delete-dialog-title"
   >
     <DialogTitle id="delete-dialog-title">
-      Вы действительно хотите удалить файл?
+      Вы действительно хотите удалить?
     </DialogTitle>
     <DialogActions>
       <Button onClick={onCancel} color="primary">

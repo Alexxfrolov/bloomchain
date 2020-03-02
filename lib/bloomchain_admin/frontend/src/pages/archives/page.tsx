@@ -4,13 +4,13 @@ import React, {
   useState,
   useCallback,
   useEffect,
+  useRef,
   FormEvent,
   ReactElement,
+  RefObject,
 } from "react"
 import format from "date-fns/format"
 import {
-  withStyles,
-  createStyles,
   Grid,
   Container,
   Paper,
@@ -21,47 +21,26 @@ import {
   TableContainer,
   Table,
   TableHead,
-  TableRow,
-  TableCell,
   TableBody,
   Typography,
   Button,
   IconButton,
-  Theme,
 } from "@material-ui/core"
-import { Alert, Skeleton } from "@material-ui/lab"
+import { Alert } from "@material-ui/lab"
+import AddBoxIcon from "@material-ui/icons/AddBox"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { ConditionalList } from "@ui"
-import { archivesAPI, Archive } from "@api/archives"
-import { DeleteDialog } from "@features/core"
-
-const StyledTableCell = withStyles((theme: Theme) =>
-  createStyles({
-    head: {
-      backgroundColor: theme.palette.primary.dark,
-      color: theme.palette.common.white,
-    },
-    body: {
-      fontSize: 14,
-    },
-  }),
-)(TableCell)
-
-const StyledTableRow = withStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      "&:nth-of-type(odd)": {
-        backgroundColor: theme.palette.background.default,
-      },
-    },
-  }),
-)(TableRow)
+import { archivesApi, Archive } from "@api/archives"
+import { mediaApi } from "@api/media"
+import {
+  DeleteDialog,
+  TableSkeleton,
+  TableRow,
+  TableCell,
+} from "@features/core"
 
 export const ArchivesPage = () => {
-  const [currentArchive, setCurrentArchive] = useState<Archive | null>(null)
-  const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
-  const [openedEditDialog, setOpenedEditDialog] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [archives, setArchives] = useState<Archive[]>([])
@@ -72,7 +51,7 @@ export const ArchivesPage = () => {
       setError(false)
 
       try {
-        const response = await archivesAPI.getLatest()
+        const response = await archivesApi.getLatest()
         setArchives(response.data.data)
       } catch {
         setError(true)
@@ -81,6 +60,11 @@ export const ArchivesPage = () => {
     }
     fetchData()
   }, [])
+
+  const [currentArchive, setCurrentArchive] = useState<Archive | null>(null)
+  const [openedAddFormDialog, seOpenedAddFormDialog] = useState(false)
+  const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
+  const [openedEditDialog, setOpenedEditDialog] = useState(false)
 
   const closeDeleteDialog = useCallback(() => {
     setOpenedDeleteDialog(false)
@@ -91,33 +75,44 @@ export const ArchivesPage = () => {
   }, [setOpenedEditDialog])
 
   const handleDeleteButtonClick = useCallback(
-    (archive: Archive) => async () => {
+    (archive: Archive) => () => {
       setCurrentArchive(archive)
       setOpenedDeleteDialog(true)
     },
     [setCurrentArchive, setOpenedDeleteDialog],
   )
 
+  const handleEditButtonClick = useCallback(
+    (archive: Archive) => () => {
+      setCurrentArchive(archive)
+      setOpenedEditDialog(true)
+    },
+    [setCurrentArchive, setOpenedEditDialog],
+  )
+
   const handleConfirmDelete = useCallback(async () => {
-    const response = await archivesAPI.remove(currentArchive.id)
+    const response = await archivesApi.remove(currentArchive.id)
     setOpenedDeleteDialog(false)
     if (response.status === 204) {
       setArchives(archives.filter((item) => item.id !== currentArchive.id))
     }
   }, [archives, currentArchive, setArchives, setOpenedDeleteDialog])
 
-  const handleSubmit = useCallback((event: FormEvent) => {
-    event.preventDefault()
-  }, [])
-
   return (
     <Fragment>
       <Container maxWidth="lg">
         <Grid container={true} spacing={3}>
-          <Grid item={true} xs={12}>
-            <Typography component="h1" variant="h4" gutterBottom={false}>
-              Исследования
-            </Typography>
+          <Grid item={true} xs={12} container={true} spacing={3}>
+            <Grid item={true}>
+              <Typography component="h1" variant="h4" gutterBottom={false}>
+                Архив
+              </Typography>
+            </Grid>
+            <Grid item={true}>
+              <IconButton onClick={() => seOpenedAddFormDialog(true)}>
+                <AddBoxIcon color="primary" />
+              </IconButton>
+            </Grid>
           </Grid>
           <Grid item={true} xs={12}>
             {!error ? (
@@ -125,10 +120,11 @@ export const ArchivesPage = () => {
                 loading={loading}
                 data={archives}
                 renderRow={(archive) => (
-                  <ArchiveTableRow
+                  <ArchivesTableRow
                     key={nanoid()}
                     archive={archive}
                     onDelete={handleDeleteButtonClick(archive)}
+                    onEdit={handleEditButtonClick(archive)}
                   />
                 )}
               />
@@ -138,16 +134,24 @@ export const ArchivesPage = () => {
           </Grid>
         </Grid>
       </Container>
-      <DeleteDialog
-        opened={openedDeleteDialog}
-        onCancel={closeDeleteDialog}
-        onConfirm={handleConfirmDelete}
-      />
-      {currentArchive && (
+      {openedAddFormDialog && (
+        <AddFormDialog
+          opened={openedAddFormDialog}
+          onClose={() => seOpenedAddFormDialog(false)}
+        />
+      )}
+      {openedDeleteDialog && (
+        <DeleteDialog
+          opened={openedDeleteDialog}
+          onCancel={closeDeleteDialog}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
+      {currentArchive && openedEditDialog && (
         <EditFormDialog
           opened={openedEditDialog}
           onClose={closeEditDialog}
-          archive={currentArchive}
+          editableArchive={currentArchive}
         />
       )}
     </Fragment>
@@ -165,36 +169,30 @@ const ArchivesTable = ({ loading, data, renderRow }: ArchivesTableProps) => (
     <Table>
       <TableHead>
         <TableRow>
-          <StyledTableCell width="45%" component="th">
+          <TableCell width="45%" component="th">
             Баннер
-          </StyledTableCell>
-          <StyledTableCell width="25%" component="th">
+          </TableCell>
+          <TableCell width="25%" component="th">
             PDF
-          </StyledTableCell>
-          <StyledTableCell width="15%" component="th">
-            Дата публикации
-          </StyledTableCell>
-          <StyledTableCell width="15%" component="th">
+          </TableCell>
+          <TableCell width="15%" component="th">
+            Опубликовано
+          </TableCell>
+          <TableCell width="15%" component="th">
             Действия
-          </StyledTableCell>
+          </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {!loading ? (
           <ConditionalList
             list={data}
-            renderExists={(list) => list.map((archive) => renderRow(archive))}
+            renderExists={(list) => (
+              <Fragment>{list.map((archive) => renderRow(archive))}</Fragment>
+            )}
           />
         ) : (
-          <Fragment>
-            {Array.from({ length: 20 }).map(() => (
-              <StyledTableRow key={nanoid()}>
-                <StyledTableCell colSpan={2} padding="none">
-                  <Skeleton variant="rect" width="100%" height="53px" />
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </Fragment>
+          <TableSkeleton colSpan={4} />
         )}
       </TableBody>
     </Table>
@@ -204,96 +202,225 @@ const ArchivesTable = ({ loading, data, renderRow }: ArchivesTableProps) => (
 type ArchiveTableRowProps = {
   archive: Archive
   onDelete: () => void
+  onEdit: () => void
 }
 
-const ArchiveTableRow = ({ archive, onDelete }: ArchiveTableRowProps) => (
-  <StyledTableRow>
-    <StyledTableCell>
+const ArchivesTableRow = ({
+  archive,
+  onDelete,
+  onEdit,
+}: ArchiveTableRowProps) => (
+  <TableRow>
+    <TableCell>
       <img
         width="100%"
         src={archive.cover.link}
         alt={archive.cover.alt}
         title={archive.cover.title}
       />
-    </StyledTableCell>
-    <StyledTableCell>
+    </TableCell>
+    <TableCell>
       <embed
         src={archive.pdf.link}
         type="application/pdf"
         width="160px"
         height="300px"
       />
-    </StyledTableCell>
-    <StyledTableCell nowrap={true}>
-      {format(new Date(archive.created_at), "dd.mm.yyyy hh:mm")}
-    </StyledTableCell>
-    <StyledTableCell>
+    </TableCell>
+    <TableCell nowrap="true">
+      {archive.created_at &&
+        format(new Date(archive.created_at), "dd.mm.yyyy hh:mm")}
+    </TableCell>
+    <TableCell>
       <Grid container={true} spacing={2}>
         <Grid item={true}>
-          <IconButton edge="start" color="inherit">
-            <EditIcon />
+          <IconButton edge="start" onClick={onEdit}>
+            <EditIcon color="action" />
           </IconButton>
         </Grid>
         <Grid item={true}>
-          <IconButton edge="start" color="inherit" onClick={onDelete}>
-            <DeleteIcon />
+          <IconButton edge="start" onClick={onDelete}>
+            <DeleteIcon color="error" />
           </IconButton>
         </Grid>
       </Grid>
-    </StyledTableCell>
-  </StyledTableRow>
+    </TableCell>
+  </TableRow>
 )
 
 type EditFormDialogProps = {
-  archive: Archive
+  editableArchive: Archive
   opened: boolean
   onClose: () => void
 }
 
-const EditFormDialog = ({ archive, opened, onClose }: EditFormDialogProps) => {
-  // const imageRef: RefObject<HTMLImageElement | null> = useRef(null)
-  // const fileInputRef: RefObject<HTMLInputElement | null> = useRef(null)
-  // const [file, setFile] = useState<File | null>(null)
-  // const [title, setTitle] = useState("")
-  // const [alt, setAlt] = useState("")
-  // const [source, setSource] = useState("")
+const EditFormDialog = ({
+  editableArchive,
+  opened,
+  onClose,
+}: EditFormDialogProps) => {
+  const imageRef: RefObject<HTMLImageElement | null> = useRef(null)
+  const pdfEmbedRef: RefObject<HTMLInputElement | null> = useRef(null)
 
-  // const handleFileInputChange = useCallback(() => {
-  //   if (
-  //     fileInputRef.current &&
-  //     fileInputRef.current.files !== null &&
-  //     fileInputRef.current.files.length === 1
-  //   ) {
-  //     const reader = new FileReader()
+  const imageFileInputRef: RefObject<HTMLInputElement | null> = useRef(null)
 
-  //     reader.onload = function(event: ProgressEvent<FileReader>) {
-  //       if (imageRef.current) {
-  //         event.target.result &&
-  //           imageRef.current.setAttribute("src", event.target.result)
-  //       }
-  //     }
+  const handleImageFileInputChange = useCallback(async () => {
+    if (
+      imageFileInputRef.current &&
+      imageFileInputRef.current.files !== null &&
+      imageFileInputRef.current.files.length === 1
+    ) {
+      // const reader = new FileReader()
 
-  //     reader.readAsDataURL(fileInputRef.current.files[0])
+      // reader.onload = function(event: ProgressEvent<FileReader>) {
+      //   if (imageRef.current) {
+      //     event.target.result &&
+      //       imageRef.current.setAttribute("src", event.target.result)
+      //   }
+      // }
 
-  //     setFile(fileInputRef.current.files[0])
-  //   }
-  // }, [fileInputRef, imageRef, setFile])
+      // reader.readAsDataURL(imageFileInputRef.current.files[0])
+
+      const image = {
+        image: imageFileInputRef.current.files[0],
+      }
+
+      const response = await mediaApi.create(image)
+    }
+  }, [])
 
   const handleSubmit = useCallback(async (event: FormEvent) => {
     event.preventDefault()
-    // if (file) {
-    //   const image = {
-    //     image: file,
-    //     title,
-    //     alt,
-    //     source,
-    //   }
-    //   const response = await mediaAPI.create(image)
-    //   if (response.status === 201) {
-    //     onClose()
-    //     onAddMedia(response.data)
-    //   }
-    // }
+  }, [])
+
+  return (
+    <Dialog
+      open={opened}
+      onClose={onClose}
+      aria-labelledby="add-archive-form-dialog"
+    >
+      <form onSubmit={handleSubmit}>
+        <DialogTitle id="add-archive-form-dialog">
+          Добавить новое в архив
+        </DialogTitle>
+        <DialogContent dividers={true}>
+          <Grid container={true} spacing={4}>
+            <Grid item={true} xs={12}>
+              <a
+                href={editableArchive.cover.link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  ref={imageRef}
+                  width="100%"
+                  src={editableArchive.cover.link}
+                  alt={editableArchive.cover.alt}
+                />
+              </a>
+            </Grid>
+            <Grid item={true} xs={12}>
+              <input
+                accept="image/*"
+                id="media"
+                ref={imageFileInputRef}
+                type="file"
+                style={{ display: "none" }}
+                onChange={handleImageFileInputChange}
+              />
+              <label htmlFor="media">
+                <Button variant="contained" color="primary" component="span">
+                  Изменить обложку
+                </Button>
+              </label>
+            </Grid>
+            <Grid item={true} xs={12}>
+              <embed
+                ref={pdfEmbedRef}
+                src={editableArchive.pdf.link}
+                type="application/pdf"
+                width="100%"
+                height="300px"
+              />
+            </Grid>
+            <Grid item={true}>
+              <Button color="primary" variant="contained">
+                Изменить PDF
+              </Button>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose} color="primary">
+            Отменить
+          </Button>
+          <Button type="submit" color="primary">
+            Загрузить
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
+  )
+}
+
+type AddFormDialogProps = {
+  opened: boolean
+  onClose: () => void
+}
+
+const AddFormDialog = ({ opened, onClose }: AddFormDialogProps) => {
+  const imageRef: RefObject<HTMLImageElement | null> = useRef(null)
+  const pdfEmbedRef: RefObject<HTMLInputElement | null> = useRef(null)
+
+  const [archive, setArchive] = useState({
+    cover: {
+      id: null,
+      link: null,
+      type: "image",
+    },
+    pdf: {
+      id: null,
+      link: null,
+      type: "pdf",
+    },
+  })
+
+  const imageFileInputRef: RefObject<HTMLInputElement | null> = useRef(null)
+
+  const handleImageFileInputChange = useCallback(async () => {
+    if (
+      imageFileInputRef.current &&
+      imageFileInputRef.current.files !== null &&
+      imageFileInputRef.current.files.length === 1
+    ) {
+      const reader = new FileReader()
+
+      reader.onload = function(event: ProgressEvent<FileReader>) {
+        event?.target?.result?.[
+          imageRef?.current?.[setAttribute("src", event.target.result)]
+        ]
+      }
+
+      reader.readAsDataURL(imageFileInputRef.current.files[0])
+
+      // const image = {
+      //   image: imageFileInputRef.current.files[0],
+      // }
+
+      // const response = await mediaApi.create(image)
+      // setArchive({
+      //   ...archive,
+      //   cover: {
+      //     ...archive.cover,
+      //     id: response.data.id,
+      //     link: response.data.id,
+      //   },
+      // })
+    }
+  }, [archive, setArchive])
+
+  const handleSubmit = useCallback(async (event: FormEvent) => {
+    event.preventDefault()
   }, [])
 
   return (
@@ -302,63 +429,49 @@ const EditFormDialog = ({ archive, opened, onClose }: EditFormDialogProps) => {
         <DialogTitle id="edit-form-dialog">Редактирование архива</DialogTitle>
         <DialogContent dividers={true}>
           <Grid container={true} spacing={4}>
-            {/* <Grid item={true} xs={12} container={true} spacing={2}>
-              {file && (
-                <Grid item={true} xs={12}>
-                  <img width="100%" ref={imageRef} />
-                </Grid>
-              )}
+            {imageFileInputRef?.current?.files?.length === 1 && (
               <Grid item={true} xs={12}>
-                <input
-                  accept="image/*"
-                  id="media"
-                  ref={fileInputRef}
-                  type="file"
-                  style={{ display: "none" }}
-                  onChange={handleFileInputChange}
-                />
-                <label htmlFor="media">
-                  <Button variant="contained" color="primary" component="span">
-                    Загрузить
-                  </Button>
-                </label>
+                <img ref={imageRef} width="100%" />
               </Grid>
-            </Grid> */}
-            {/* <Grid item={true} xs={12}>
-              <TextField
-                id="alt"
-                label="Alt"
-                required={true}
-                type="text"
-                fullWidth
-                onChange={handleChangeAltField}
-              />
-            </Grid>
+            )}
             <Grid item={true} xs={12}>
-              <TextField
-                id="title"
-                label="Title"
-                type="text"
-                fullWidth
-                onChange={handleChangeTitleField}
+              <input
+                accept="image/*"
+                id="media"
+                ref={imageFileInputRef}
+                type="file"
+                style={{ display: "none" }}
+                onChange={handleImageFileInputChange}
               />
+              <label htmlFor="media">
+                <Button variant="contained" color="primary" component="span">
+                  Добавить обложку
+                </Button>
+              </label>
             </Grid>
+            {archive.pdf.id && (
+              <Grid item={true} xs={12}>
+                <embed
+                  ref={pdfEmbedRef}
+                  src={archive.pdf.link}
+                  type="application/pdf"
+                  width="100%"
+                  height="300px"
+                />
+              </Grid>
+            )}
             <Grid item={true} xs={12}>
-              <TextField
-                id="source"
-                label="Source"
-                type="text"
-                fullWidth
-                onChange={handleChangeSourceField}
-              />
-            </Grid> */}
+              <Button color="primary" variant="contained">
+                Добавить PDF
+              </Button>
+            </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose} variant="contained" color="primary">
+          <Button onClick={onClose} color="primary">
             Отменить
           </Button>
-          <Button type="submit" variant="contained" color="primary">
+          <Button type="submit" color="primary">
             Загрузить
           </Button>
         </DialogActions>

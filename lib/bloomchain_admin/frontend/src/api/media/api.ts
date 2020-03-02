@@ -29,7 +29,7 @@ function remove(id: number): AxiosPromise {
   return axios.delete(`${httpConfig.baseUrl}/media/${id}`)
 }
 
-export const mediaAPI = {
+export const mediaApi = {
   get,
   create,
   update,

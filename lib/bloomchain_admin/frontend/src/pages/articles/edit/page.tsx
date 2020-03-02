@@ -57,8 +57,8 @@ import "froala-editor/js/languages/ru.js"
 import "froala-editor/js/froala_editor.pkgd.min.js"
 import "froala-editor/css/froala_editor.pkgd.min.css"
 import FroalaEditor from "react-froala-wysiwyg"
-import { articlesAPI, Article } from "@api/articles"
-import { tagsAPI, Tag } from "@api/tags"
+import { articlesApi, Article } from "@api/articles"
+import { tagsApi, Tag } from "@api/tags"
 
 const froalaEditorConfig = {
   height: 385,
@@ -190,7 +190,7 @@ export const ActicleEditPage = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        const response = await tagsAPI.get()
+        const response = await tagsApi.get()
         setTags(response.data.data)
       } catch {
         setError(true)
@@ -201,7 +201,7 @@ export const ActicleEditPage = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        const response = await articlesAPI.getById(route.params.id)
+        const response = await articlesApi.getById(route.params.id)
         setArticle({ ...article, ...response.data })
       } catch {
         setError(true)
@@ -286,7 +286,7 @@ export const ActicleEditPage = () => {
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault()
-      const response = await articlesAPI.update(article)
+      const response = await articlesApi.update(article)
       if (response.status === 200) {
         window.alert("Ваша статья успешно обновлена!")
       }

@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const MenuList = () => {
+export const MainMenu = () => {
   const account = useContext(AccountContext)
   const { router } = useRoute()
   const classes = useStyles()
@@ -175,7 +175,7 @@ export const MenuList = () => {
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <ImportContactsRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
-            <ListItemText primary="Исследования" />
+            <ListItemText primary="Архив" />
           </NavLink>
         </ListItem>
       </List>
@@ -183,15 +183,10 @@ export const MenuList = () => {
         <List>
           <ListSubheader inset={true}>Управление</ListSubheader>
           <ListItem
-            aria-current={
-              isCurrentMenu("admin.management.users") ? "page" : undefined
-            }
+            aria-current={isCurrentMenu("admin.users") ? "page" : undefined}
             className={classes.listitem}
           >
-            <NavLink
-              routeName="admin.management.users"
-              className={classes.link}
-            >
+            <NavLink routeName="admin.users" className={classes.link}>
               <ListItemIcon style={{ paddingLeft: "7px" }}>
                 <GroupRoundedIcon style={{ color: indigo[500] }} />
               </ListItemIcon>
@@ -200,14 +195,11 @@ export const MenuList = () => {
           </ListItem>
           <ListItem
             aria-current={
-              isCurrentMenu("admin.management.subscribers") ? "page" : undefined
+              isCurrentMenu("admin.subscribers") ? "page" : undefined
             }
             className={classes.listitem}
           >
-            <NavLink
-              routeName="admin.management.subscribers"
-              className={classes.link}
-            >
+            <NavLink routeName="admin.subscribers" className={classes.link}>
               <ListItemIcon style={{ paddingLeft: "7px" }}>
                 <AlternateEmailIcon style={{ color: indigo[500] }} />
               </ListItemIcon>
@@ -220,12 +212,10 @@ export const MenuList = () => {
       <List>
         <ListSubheader inset={true}>Словари</ListSubheader>
         <ListItem
-          aria-current={
-            isCurrentMenu("admin.dictionaries.tags") ? "page" : undefined
-          }
+          aria-current={isCurrentMenu("admin.tags") ? "page" : undefined}
           className={classes.listitem}
         >
-          <NavLink routeName="admin.dictionaries.tags" className={classes.link}>
+          <NavLink routeName="admin.tags" className={classes.link}>
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <LabelRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
@@ -233,15 +223,10 @@ export const MenuList = () => {
           </NavLink>
         </ListItem>
         <ListItem
-          aria-current={
-            isCurrentMenu("admin.dictionaries.media") ? "page" : undefined
-          }
+          aria-current={isCurrentMenu("admin.media") ? "page" : undefined}
           className={classes.listitem}
         >
-          <NavLink
-            routeName="admin.dictionaries.media"
-            className={classes.link}
-          >
+          <NavLink routeName="admin.media" className={classes.link}>
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <PermMediaRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>

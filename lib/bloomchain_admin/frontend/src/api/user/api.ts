@@ -29,7 +29,7 @@ function remove(id: number): AxiosPromise {
   return axios.delete(`${httpConfig.baseUrl}/users/${id}`)
 }
 
-export const usersAPI = {
+export const usersApi = {
   get,
   getById,
   create,

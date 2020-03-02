@@ -10,15 +10,11 @@ import {
   MediaPage,
   ArchivesPage,
   SubscribersPage,
-  TagsCreatePage,
-  TagsEditPage,
-  TagsViewPage,
+  TagsPage,
   UserAccountPage,
-  UserCreatePage,
-  UserEditPage,
-  UsersViewPage,
+  UsersPage,
 } from "@pages"
-import { CommonTemplate, MenuList } from "@features/core"
+import { CommonTemplate, MainMenu } from "@features/core"
 import { AccountLoader } from "@features/account"
 
 export const App = hot(module)(function App() {
@@ -42,23 +38,15 @@ export const App = hot(module)(function App() {
         return <ArticlesViewPage />
       case "admin.articles.edit":
         return <ActicleEditPage />
-      case "admin.dictionaries.tags":
-        return <TagsViewPage />
-      case "admin.dictionaries.tags.create":
-        return <TagsCreatePage />
-      case "admin.dictionaries.tags.edit":
-        return <TagsEditPage />
-      case "admin.dictionaries.media":
+      case "admin.tags":
+        return <TagsPage />
+      case "admin.media":
         return <MediaPage />
       case "admin.archives":
         return <ArchivesPage />
-      case "admin.management.users":
-        return <UsersViewPage />
-      case "admin.management.users.create":
-        return <UserCreatePage />
-      case "admin.management.users.edit":
-        return <UserEditPage />
-      case "admin.management.subscribers":
+      case "admin.users":
+        return <UsersPage />
+      case "admin.subscribers":
         return <SubscribersPage />
       default:
         return null
@@ -69,7 +57,7 @@ export const App = hot(module)(function App() {
     <Fragment>
       <CssBaseline />
       <AccountLoader>
-        <CommonTemplate menu={<MenuList />}>
+        <CommonTemplate menu={<MainMenu />}>
           {setPageByRoute(route)}
         </CommonTemplate>
       </AccountLoader>
