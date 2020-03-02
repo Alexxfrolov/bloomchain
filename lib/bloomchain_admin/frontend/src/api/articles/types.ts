@@ -1,16 +1,17 @@
 export interface Article {
-  id: number
   author: string
   body: string
-  createdAt: string
+  cover?: import("../media").MediaFile[]
+  created_at: string
   description: string
-  updatedAt: string
-  keywords: string
+  id: number
+  keywords: string[]
   lead: string
-  status: "published" | "draft" | "archive"
+  status: "published" | "draft" | "archive" | "ready"
   tags: import("../tags").Tag[]
   time: string | null
   title: string
+  updated_at: string
   type:
     | "newsfeed"
     | "detailed"
@@ -19,5 +20,4 @@ export interface Article {
     | "calendar"
     | "person"
     | "research"
-  userId: number
 }

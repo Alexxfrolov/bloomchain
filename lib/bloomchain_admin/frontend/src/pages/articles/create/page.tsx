@@ -37,13 +37,12 @@ import "froala-editor/js/plugins/video.min.js"
 import "froala-editor/js/plugins/quick_insert.min.js"
 import "froala-editor/js/plugins/image_manager.min.js"
 import "froala-editor/js/third_party/embedly.min.js"
-import "froala-editor/js/third_party/embedly.min.js"
 import "froala-editor/js/languages/ru.js"
-// import "froala-editor/js/plugins.pkgd.min.js"
 import "froala-editor/css/froala_editor.pkgd.min.css"
 import FroalaEditor from "react-froala-wysiwyg"
 import { articlesApi, Article } from "@api/articles"
 import { tagsApi, Tag } from "@api/tags"
+import { mediaApi, MediaFile } from "@api/media"
 
 const froalaEditorConfig = {
   height: 385,
@@ -148,39 +147,54 @@ const useStyles = makeStyles((theme) =>
 const INITIAL_ARTICLE = {
   author: "",
   body: "",
+  cover_id: null,
   description: "",
   keywords: "",
   lead: "",
-  time: "",
   status: "draft",
   tags: [],
+  time: "",
   title: "",
   type: "newsfeed",
-  userId: 1,
 }
 
 export const ActicleCreatePage = () => {
   const classes = useStyles()
 
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-
   const [tags, setTags] = useState<Tag[]>([])
 
   useEffect(() => {
-    ;(async () => {
+    const fetchData = async () => {
+      setLoading(true)
+      setError(false)
+
       try {
         const response = await tagsApi.get()
         setTags(response.data.data)
       } catch {
         setError(true)
       }
-    })()
+
+      setLoading(false)
+    }
+    fetchData()
   }, [])
 
   const inputTypeLabel: RefObject<HTMLLabelElement> | null = useRef(null)
   const inputStatusLabel: RefObject<HTMLLabelElement> | null = useRef(null)
+
   const [typeLabelWidth, setTypeLabelWidth] = useState(0)
   const [statusLabelWidth, setStatusLabelWidth] = useState(0)
+
+  const [cover, setCover] = useState<MediaFile>({
+    file: null,
+    alt: "",
+    title: "",
+    source: "",
+    type: "image",
+  })
 
   useEffect(() => {
     if (inputTypeLabel.current) {
@@ -195,7 +209,9 @@ export const ActicleCreatePage = () => {
   const imageRef: RefObject<HTMLImageElement> | null = useRef(null)
 
   const [article, setArticle] = useState<
-    Omit<Article, "createdAt" | "updatedAt" | "id">
+    Omit<Article, "created_at" | "updated_at" | "id"> & {
+      cover_id: number | null
+    }
   >({ ...INITIAL_ARTICLE })
 
   const handleChangeFormField = useCallback(
@@ -205,6 +221,13 @@ export const ActicleCreatePage = () => {
     [article, setArticle],
   )
 
+  const handleChangeCoverField = useCallback(
+    (field: string) => (event: SyntheticEvent<{ value: string }>) => {
+      setCover({ ...cover, [field]: event.currentTarget.value })
+    },
+    [cover, setCover],
+  )
+
   const handleChangeEditor = useCallback(
     (value: string) => {
       setArticle({ ...article, ...{ body: value } })
@@ -212,7 +235,7 @@ export const ActicleCreatePage = () => {
     [article, setArticle],
   )
 
-  const handleChangeImage = useCallback(() => {
+  const handleChangeImageFileInput = useCallback(() => {
     if (
       fileInputRef.current &&
       fileInputRef.current.files !== null &&
@@ -229,9 +252,9 @@ export const ActicleCreatePage = () => {
 
       reader.readAsDataURL(fileInputRef.current.files[0])
 
-      setArticle({ ...article, ...{ cover: fileInputRef.current.files[0] } })
+      setCover({ ...cover, ...{ file: fileInputRef.current.files[0] } })
     }
-  }, [article, setArticle])
+  }, [cover, setCover])
 
   const handleChangeSelect = useCallback(
     (name: keyof Pick<Article, "type" | "status">) => (
@@ -264,13 +287,20 @@ export const ActicleCreatePage = () => {
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault()
-      const response = await articlesApi.create(article)
+      const mediaResponse = await mediaApi.create(cover)
 
-      if (response.status === 201) {
-        window.alert("Ваша статья успешно сохранена!")
+      if (mediaResponse.status === 201) {
+        const articleResponse = await articlesApi.create({
+          ...article,
+          cover_id: mediaResponse.data.id,
+        })
+
+        if (articleResponse.status === 201) {
+          window.alert("Ваша статья успешно сохранена!")
+        }
       }
     },
-    [article],
+    [cover, article],
   )
 
   return (
@@ -395,7 +425,7 @@ export const ActicleCreatePage = () => {
                   </Grid>
                 </Grid>
                 <Grid item={true} sm container={true} spacing={4}>
-                  {/*  <Grid item={true} xs={12}>
+                  <Grid item={true} xs={12}>
                     <Typography
                       color="textPrimary"
                       variant="h6"
@@ -404,21 +434,14 @@ export const ActicleCreatePage = () => {
                     >
                       Титульное изображение
                     </Typography>
-                    {article.cover !== null && (
-                      <img
-                        width="100%"
-                        ref={imageRef}
-                        alt="ALT"
-                        title="Contemplative Reptile"
-                      />
-                    )}
+                    {cover.file !== null && <img width="100%" ref={imageRef} />}
                     <input
                       accept="image/*"
                       id="cover"
                       ref={fileInputRef}
                       type="file"
                       style={{ display: "none" }}
-                      onChange={handleChangeImage}
+                      onChange={handleChangeImageFileInput}
                     />
                     <label htmlFor="cover">
                       <Button
@@ -429,44 +452,44 @@ export const ActicleCreatePage = () => {
                         Загрузить
                       </Button>
                     </label>
-                  </Grid> */}
-                  {/* {article.cover !== null && (
+                  </Grid>
+                  {cover.file !== null && (
                     <Grid item={true} xs={12} container={true} spacing={1}>
                       <Grid item={true} xs={12}>
                         <TextField
-                          id="source"
-                          label="Image source"
-                          value={article.coverSource ?? ""}
-                          fullWidth={true}
-                          variant="outlined"
-                          size="small"
-                          onChange={handleChangeFormField("coverSource")}
-                        />
-                      </Grid>
-                      <Grid item={true} xs={12}>
-                        <TextField
                           id="title"
-                          label="Image title"
-                          value={article.coverTitle ?? ""}
+                          label="Title"
+                          value={cover.title ?? ""}
                           fullWidth={true}
                           variant="outlined"
                           size="small"
-                          onChange={handleChangeFormField("coverTitle")}
+                          onChange={handleChangeCoverField("title")}
                         />
                       </Grid>
                       <Grid item={true} xs={12}>
                         <TextField
                           id="alt"
-                          label="Image alt"
-                          value={article.coverAlt ?? ""}
+                          label="Alt"
+                          value={cover.alt ?? ""}
                           fullWidth={true}
                           variant="outlined"
                           size="small"
-                          onChange={handleChangeFormField("coverAlt")}
+                          onChange={handleChangeCoverField("alt")}
+                        />
+                      </Grid>
+                      <Grid item={true} xs={12}>
+                        <TextField
+                          id="source"
+                          label="Источник"
+                          value={cover.source ?? ""}
+                          fullWidth={true}
+                          variant="outlined"
+                          size="small"
+                          onChange={handleChangeCoverField("source")}
                         />
                       </Grid>
                     </Grid>
-                  )} */}
+                  )}
                   <Grid item={true} xs={12}>
                     <FormControl variant="outlined" fullWidth={true}>
                       <InputLabel ref={inputStatusLabel} id="type">
@@ -480,6 +503,7 @@ export const ActicleCreatePage = () => {
                         onChange={handleChangeSelect("status")}
                       >
                         <MenuItem value="draft">Черновик</MenuItem>
+                        <MenuItem value="archive">Готово к публикации</MenuItem>
                         <MenuItem value="published">Опубликовано</MenuItem>
                         <MenuItem value="archive">Архив</MenuItem>
                       </Select>
@@ -491,6 +515,7 @@ export const ActicleCreatePage = () => {
                       label="Время прочтения"
                       type="number"
                       value={article.time ?? ""}
+                      min="0"
                       fullWidth={true}
                       variant="outlined"
                       autoComplete="off"

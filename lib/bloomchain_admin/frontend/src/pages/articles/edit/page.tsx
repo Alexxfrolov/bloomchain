@@ -36,29 +36,14 @@ import "froala-editor/js/plugins/url.min.js"
 import "froala-editor/js/plugins/quote.min.js"
 import "froala-editor/js/plugins/video.min.js"
 import "froala-editor/js/plugins/quick_insert.min.js"
-// import "froala-editor/js/plugins/code_view.min.js"
-// import "froala-editor/js/plugins/help.min.js"
-// import "froala-editor/js/plugins/line_height.min.js"
-// import "froala-editor/js/plugins/line_breaker.min.js"
-// import "froala-editor/js/plugins/fullscreen.min.js"
-
-// import "froala-editor/js/third_party/font_awesome.min.js"
-// import "froala-editor/js/plugins/font_family.min.js"
-
-// import "froala-editor/js/plugins/paragraph_style.min.js"
-
-// import "froala-editor/js/plugins/special_characters.min.js"
-// import "froala-editor/js/third_party/spell_checker.min.js"
-// import "froala-editor/js/plugins/entities.min.js"
-
 import "froala-editor/js/plugins/image_manager.min.js"
-// import "froala-editor/css/froala_style.min.css"
+import "froala-editor/js/third_party/embedly.min.js"
 import "froala-editor/js/languages/ru.js"
-import "froala-editor/js/froala_editor.pkgd.min.js"
 import "froala-editor/css/froala_editor.pkgd.min.css"
 import FroalaEditor from "react-froala-wysiwyg"
 import { articlesApi, Article } from "@api/articles"
 import { tagsApi, Tag } from "@api/tags"
+import { mediaApi, MediaFile } from "@api/media"
 
 const froalaEditorConfig = {
   height: 385,
@@ -82,6 +67,7 @@ const froalaEditorConfig = {
         "insertLink",
         "fontSize",
         "textColor",
+        "clearFormatting",
       ],
       align: "left",
       buttonsVisible: 2,
@@ -112,7 +98,7 @@ const froalaEditorConfig = {
   imageUploadURL: "/admin/api/v1/media",
   imageUploadMethod: "POST",
   imageUploadParam: "image",
-  imageMaxSize: 15 * 1024 * 1024, // 15MB.
+  imageMaxSize: 10 * 1024 * 1024, // 15MB.
   imageAllowedTypes: ["jpeg", "jpg", "png"],
   quickInsertButtons: ["image", "video", "table", "ul", "qoute"],
   // events: {
@@ -173,9 +159,6 @@ export const ActicleEditPage = () => {
     author: "",
     body: "",
     cover: null,
-    coverSource: null,
-    coverTitle: null,
-    coverAlt: null,
     description: "",
     keywords: "",
     lead: "",
@@ -184,7 +167,6 @@ export const ActicleEditPage = () => {
     tags: [],
     title: "",
     type: "newsfeed",
-    userId: 1,
   })
 
   useEffect(() => {
@@ -224,7 +206,6 @@ export const ActicleEditPage = () => {
   }, [])
 
   const fileInputRef: RefObject<HTMLInputElement> | null = useRef(null)
-  const imageRef: RefObject<HTMLImageElement> | null = useRef(null)
 
   const handleChangeFormField = useCallback(
     (field: string) => (event: SyntheticEvent<{ value: string }>) => {
@@ -286,6 +267,7 @@ export const ActicleEditPage = () => {
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault()
+
       const response = await articlesApi.update(article)
       if (response.status === 200) {
         window.alert("Ваша статья успешно обновлена!")
@@ -425,8 +407,8 @@ export const ActicleEditPage = () => {
                     >
                       Титульное изображение
                     </Typography>
-                    {article.cover !== null && (
-                      <img width="100%" ref={imageRef} />
+                    {article.cover && (
+                      <img width="100%" src={article.cover.link} />
                     )}
                     <input
                       accept="image/*"
@@ -442,47 +424,45 @@ export const ActicleEditPage = () => {
                         color="primary"
                         component="span"
                       >
-                        Загрузить
+                        Изменить
                       </Button>
                     </label>
                   </Grid>
-                  {article.cover !== null && (
-                    <Grid item={true} xs={12} container={true} spacing={1}>
-                      <Grid item={true} xs={12}>
-                        <TextField
-                          id="source"
-                          label="Image source"
-                          value={article.coverSource ?? ""}
-                          fullWidth={true}
-                          variant="outlined"
-                          size="small"
-                          onChange={handleChangeFormField("coverSource")}
-                        />
-                      </Grid>
-                      <Grid item={true} xs={12}>
-                        <TextField
-                          id="title"
-                          label="Image title"
-                          value={article.coverTitle ?? ""}
-                          fullWidth={true}
-                          variant="outlined"
-                          size="small"
-                          onChange={handleChangeFormField("coverTitle")}
-                        />
-                      </Grid>
-                      <Grid item={true} xs={12}>
-                        <TextField
-                          id="alt"
-                          label="Image alt"
-                          value={article.coverAlt ?? ""}
-                          fullWidth={true}
-                          variant="outlined"
-                          size="small"
-                          onChange={handleChangeFormField("coverAlt")}
-                        />
-                      </Grid>
+                  <Grid item={true} xs={12} container={true} spacing={1}>
+                    <Grid item={true} xs={12}>
+                      <TextField
+                        id="title"
+                        label="Title"
+                        value={article.cover?.title ?? ""}
+                        fullWidth={true}
+                        variant="outlined"
+                        size="small"
+                        // onChange={handleChangeCoverField("title")}
+                      />
                     </Grid>
-                  )}
+                    <Grid item={true} xs={12}>
+                      <TextField
+                        id="alt"
+                        label="Alt"
+                        value={article.cover?.alt ?? ""}
+                        fullWidth={true}
+                        variant="outlined"
+                        size="small"
+                        // onChange={handleChangeCoverField("alt")}
+                      />
+                    </Grid>
+                    <Grid item={true} xs={12}>
+                      <TextField
+                        id="source"
+                        label="Источник"
+                        value={article.cover?.source ?? ""}
+                        fullWidth={true}
+                        variant="outlined"
+                        size="small"
+                        // onChange={handleChangeCoverField("source")}
+                      />
+                    </Grid>
+                  </Grid>
                   <Grid item={true} xs={12}>
                     <FormControl variant="outlined" fullWidth={true}>
                       <InputLabel ref={inputStatusLabel} id="type">

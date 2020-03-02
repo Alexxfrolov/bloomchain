@@ -20,6 +20,7 @@ function create(
 ): AxiosPromise<Article> {
   const data = {
     ...article,
+    keywords: article.keywords.split(", "),
     tags: article.tags.map((tag) => tag.id),
   }
   return axios.post(`${httpConfig.baseUrl}/articles`, data)
