@@ -1,10 +1,10 @@
 export interface MediaFile {
-  alt: string
+  alt: string | null
   created_at: string
   id: number
   link: string
   source: string | null
-  title: string
+  title: string | null
   type: "image" | "pdf" | "video"
   updated_at: string
 }

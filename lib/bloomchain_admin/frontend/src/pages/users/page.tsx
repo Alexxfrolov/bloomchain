@@ -207,6 +207,9 @@ const UserTable = ({ data, loading, renderRow }: UserTableProps) => (
       <TableHead>
         <TableRow>
           <TableCell width="1%" component="th">
+            Фамилияы
+          </TableCell>
+          <TableCell width="1%" component="th">
             Имя
           </TableCell>
           <TableCell width="1%" component="th">
@@ -250,7 +253,8 @@ type UserTableRowProps = {
 
 const UserTableRow = ({ user, onDetete, onEdit }: UserTableRowProps) => (
   <TableRow key={nanoid()}>
-    <TableCell>{user.name}</TableCell>
+    <TableCell>{user.last_name}</TableCell>
+    <TableCell>{user.first_name}</TableCell>
     <TableCell>{user.role}</TableCell>
     <TableCell>{user.job}</TableCell>
     <TableCell>{user.phone}</TableCell>

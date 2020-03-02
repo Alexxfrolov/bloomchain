@@ -1,10 +1,11 @@
 export interface User {
-  createdAt: string
+  created_at: string
   email: string
   id: number
-  job: string
-  name: ""
+  job: string | null
+  first_name: ""
+  last_name: ""
   phone: string | null
   role: "admin" | "writer"
-  updatedAt: string
+  updated_at: string
 }

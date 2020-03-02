@@ -452,7 +452,7 @@ export const ActicleEditPage = () => {
                         <TextField
                           id="source"
                           label="Image source"
-                          value={article.coverSource || ""}
+                          value={article.coverSource ?? ""}
                           fullWidth={true}
                           variant="outlined"
                           size="small"
@@ -463,7 +463,7 @@ export const ActicleEditPage = () => {
                         <TextField
                           id="title"
                           label="Image title"
-                          value={article.coverTitle || ""}
+                          value={article.coverTitle ?? ""}
                           fullWidth={true}
                           variant="outlined"
                           size="small"
@@ -474,7 +474,7 @@ export const ActicleEditPage = () => {
                         <TextField
                           id="alt"
                           label="Image alt"
-                          value={article.coverAlt || ""}
+                          value={article.coverAlt ?? ""}
                           fullWidth={true}
                           variant="outlined"
                           size="small"
@@ -506,7 +506,7 @@ export const ActicleEditPage = () => {
                       id="description"
                       label="Время прочтения"
                       type="number"
-                      value={article.time || ""}
+                      value={article.time ?? ""}
                       fullWidth={true}
                       variant="outlined"
                       onChange={handleChangeFormField("time")}

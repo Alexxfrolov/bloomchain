@@ -9,7 +9,7 @@ export interface Article {
   lead: string
   status: "published" | "draft" | "archive"
   tags: import("../tags").Tag[]
-  time: string
+  time: string | null
   title: string
   type:
     | "newsfeed"

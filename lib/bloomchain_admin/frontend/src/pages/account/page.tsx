@@ -71,17 +71,27 @@ export const UserAccountPage = () => {
                 <TextField
                   label="Имя"
                   id="name"
-                  value={settings.name}
+                  value={settings.first_name}
                   fullWidth={true}
                   variant="outlined"
-                  onChange={handleChangeField("name")}
+                  onChange={handleChangeField("first_name")}
+                />
+              </Grid>
+              <Grid item={true} xs={12}>
+                <TextField
+                  label="Фамилия"
+                  id="name"
+                  value={settings.last_name}
+                  fullWidth={true}
+                  variant="outlined"
+                  onChange={handleChangeField("last_name")}
                 />
               </Grid>
               <Grid item={true} xs={12}>
                 <TextField
                   label="Должность"
                   id="job"
-                  value={settings.job || ""}
+                  value={settings.job ?? ""}
                   fullWidth={true}
                   variant="outlined"
                   onChange={handleChangeField("job")}
@@ -93,7 +103,7 @@ export const UserAccountPage = () => {
                   id="phone"
                   type="tel"
                   fullWidth={true}
-                  value={settings.phone || ""}
+                  value={settings.phone ?? ""}
                   variant="outlined"
                   onChange={handleChangeField("phone")}
                 />
@@ -104,7 +114,7 @@ export const UserAccountPage = () => {
                   id="email"
                   type="email"
                   fullWidth={true}
-                  value={settings.email || ""}
+                  value={settings.email ?? ""}
                   variant="outlined"
                   onChange={handleChangeField("email")}
                 />

@@ -297,7 +297,7 @@ export const MediaPage = () => {
                             )}
                             <GridListTileBar
                               titlePosition="bottom"
-                              title={item.title}
+                              title={item.title ?? ""}
                               subtitle={<span>{item.source}</span>}
                               actionPosition="right"
                               actionIcon={
@@ -471,7 +471,7 @@ const AddFormDialog = ({
                 id="alt"
                 label="Alt"
                 required={true}
-                value={media.alt}
+                value={media.alt ?? ""}
                 type="text"
                 fullWidth
                 onChange={handleChangeTextField("alt")}
@@ -482,7 +482,7 @@ const AddFormDialog = ({
                 id="title"
                 label="Title"
                 type="text"
-                value={media.title}
+                value={media.title ?? ""}
                 fullWidth
                 onChange={handleChangeTextField("title")}
               />
@@ -492,7 +492,7 @@ const AddFormDialog = ({
                 id="source"
                 label="Source"
                 type="text"
-                value={media.source}
+                value={media.source ?? ""}
                 fullWidth
                 onChange={handleChangeTextField("source")}
               />
@@ -570,7 +570,7 @@ const EditFormDialog = ({
                 id="alt"
                 label="Alt"
                 required={true}
-                value={media.alt}
+                value={media.alt ?? ""}
                 type="text"
                 fullWidth
                 onChange={handleChangeTextField("alt")}
@@ -581,7 +581,7 @@ const EditFormDialog = ({
                 id="title"
                 label="Title"
                 type="text"
-                value={media.title}
+                value={media.title ?? ""}
                 fullWidth
                 onChange={handleChangeTextField("title")}
               />
@@ -591,7 +591,7 @@ const EditFormDialog = ({
                 id="source"
                 label="Source"
                 type="text"
-                value={media.source}
+                value={media.source ?? ""}
                 fullWidth
                 onChange={handleChangeTextField("source")}
               />
