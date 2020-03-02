@@ -1,2 +1,2 @@
 release: MIX_ENV=prod mix run priv/repo/seeds.exs
-web: MIX_ENV=prod mix phoenix.server
+web: cd lib/bloomchain_admin/frontend && yarn build && cd ../../../ && MIX_ENV=prod mix phoenix.server

@@ -10,7 +10,7 @@ defmodule Bloomchain.Content.Article do
         p in Post,
         where: p.type == ^type and p.status == ^status,
         preload: [:tags],
-        order_by: [desc: :created_at]
+        order_by: [desc: :inserted_at]
       )
     )
   end
