@@ -46,6 +46,8 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
       author: article.author,
       description: article.description,
       keywords: article.keywords,
+      total_views: article.total_views,
+      time: article.time,
       created_at: article.inserted_at,
       updated_at: article.updated_at,
       published_at: article.published_at,
