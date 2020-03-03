@@ -1,5 +1,6 @@
 import React, {
   Fragment,
+  useMemo,
   useState,
   useEffect,
   useCallback,
@@ -309,10 +310,10 @@ export const ActicleCreatePage = () => {
   )
 
   const handleChangeTagsSelect = useCallback(
-    (event: SyntheticEvent, options: Tag[] | null) => {
+    (event: React.ChangeEvent<{}>, tags: Tag[]) => {
       setArticle({
         ...article,
-        tags: options !== null ? options : [],
+        tags,
       })
     },
     [article, setArticle],
@@ -322,28 +323,75 @@ export const ActicleCreatePage = () => {
     setArticle({
       ...INITIAL_ARTICLE,
     })
-  }, [setArticle])
+    setCover({
+      file: null,
+      alt: "",
+      title: "",
+      source: "",
+      type: "image",
+    })
+  }, [setCover, setArticle])
 
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault()
-      const mediaResponse = await mediaApi.create(cover)
 
-      if (mediaResponse.status === 201) {
-        const articleResponse = await articlesApi.create({
-          ...article,
-          cover_id: mediaResponse.data.id,
-        })
-
-        if (articleResponse.status === 201) {
-          setArticle({
-            ...INITIAL_ARTICLE,
+      if (cover.file) {
+        const mediaResponse = await mediaApi.create(cover)
+        if (mediaResponse.status === 201) {
+          const articleResponse = await articlesApi.create({
+            ...article,
+            cover_id: mediaResponse.data.id,
           })
-          setOpenedDialog(true)
+
+          if (articleResponse.status === 201) {
+            setArticle({
+              ...INITIAL_ARTICLE,
+            })
+            setCover({
+              file: null,
+              alt: "",
+              title: "",
+              source: "",
+              type: "image",
+            })
+            setOpenedDialog(true)
+          }
         }
+      }
+
+      const articleResponse = await articlesApi.create(article)
+
+      if (articleResponse.status === 201) {
+        setArticle({
+          ...INITIAL_ARTICLE,
+        })
+        setCover({
+          file: null,
+          alt: "",
+          title: "",
+          source: "",
+          type: "image",
+        })
+        setOpenedDialog(true)
       }
     },
     [cover, article, setOpenedDialog],
+  )
+
+  const tagsOptions = useMemo(
+    () =>
+      tags.reduce((acc: Tag[], tag) => {
+        const selected = article.tags.some(
+          (articleTag) => articleTag.id === tag.id,
+        )
+        if (!selected) {
+          return [...acc, tag]
+        }
+
+        return [...acc]
+      }, []),
+    [article.tags, tags],
   )
 
   return (
@@ -415,10 +463,12 @@ export const ActicleCreatePage = () => {
                       />
                     </Grid>
                     <Grid item={true} xs={12}>
-                      <Autocomplete
+                      <Autocomplete<Tag>
                         id="tags"
                         multiple={true}
-                        options={tags}
+                        options={tagsOptions}
+                        noOptionsText="Пусто"
+                        value={article.tags}
                         disableCloseOnSelect={true}
                         getOptionLabel={(option) => option.name}
                         onChange={handleChangeTagsSelect}

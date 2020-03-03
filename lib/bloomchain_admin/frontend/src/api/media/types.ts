@@ -9,9 +9,10 @@ export interface MediaFile {
   updated_at: string
 }
 
-export type UploadableMediaFile = Pick<
-  MediaFile,
-  "type" | "title" | "alt" | "source"
-> & {
+export type UploadableMediaFile = {
+  type: "image" | "pdf" | "video"
+  title?: string
+  alt?: string
+  source?: string
   file: File
 }

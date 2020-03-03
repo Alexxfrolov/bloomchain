@@ -1,5 +1,5 @@
 import React, { Fragment } from "react"
-import { hot } from "react-hot-loader"
+// import { hot } from "react-hot-loader"
 import { State } from "router5"
 import { useRoute } from "react-router5"
 import CssBaseline from "@material-ui/core/CssBaseline"
@@ -17,7 +17,7 @@ import {
 import { CommonTemplate, MainMenu } from "@features/core"
 import { AccountLoader } from "@features/account"
 
-export const App = hot(module)(function App() {
+export const App = () => {
   const { route } = useRoute()
 
   const setPageByRoute = (route: State) => {
@@ -63,4 +63,4 @@ export const App = hot(module)(function App() {
       </AccountLoader>
     </Fragment>
   )
-})
+}

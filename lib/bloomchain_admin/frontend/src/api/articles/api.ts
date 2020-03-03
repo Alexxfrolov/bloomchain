@@ -1,5 +1,4 @@
 import axios, { AxiosPromise } from "axios"
-import decamelize from "decamelize"
 import { httpConfig } from "@features/core"
 
 import { Article } from "./types"
@@ -23,17 +22,23 @@ function create(
 ): AxiosPromise<Article> {
   const data = {
     ...article,
-    keywords: article.keywords.split(/[ ,]+/),
-    tags: article.tags.map((tag) => tag.id),
+    tags: article.tags.reduce((acc: number[], tag) => [...acc, tag.id], []),
+    keywords: Boolean(article.keywords) ? article.keywords.split(/[ ,]+/) : [],
   }
   return axios.post(`${httpConfig.baseUrl}/articles`, data)
 }
 
-function update(article: Article): AxiosPromise<Article> {
+function update(
+  article: Omit<Article, "keywords"> & {
+    keywords: string
+  },
+): AxiosPromise<Article> {
+  const { cover, tags, keywords, ...rest } = article
   const data = {
-    ...article,
-    keywords: article.keywords.split(/[ ,]+/),
-    tags: article.tags.map((tag) => tag.id),
+    ...rest,
+    tags: tags.reduce((acc: number[], tag) => [...acc, tag.id], []),
+    keywords: Boolean(keywords) ? keywords.split(/[ ,]+/) : [],
+    cover_id: cover?.id ?? null,
   }
   return axios.patch(`${httpConfig.baseUrl}/articles/${article.id}`, data)
 }
