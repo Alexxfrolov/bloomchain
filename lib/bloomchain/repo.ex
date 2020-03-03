@@ -1,5 +1,9 @@
 defmodule Bloomchain.Repo do
-  use Ecto.Repo, otp_app: :bloomchain
+  use Ecto.Repo,
+    otp_app: :bloomchain,
+    adapter: Ecto.Adapters.Postgres
+
+  use Paginator
 
   @doc """
   Dynamically loads the repository url from the

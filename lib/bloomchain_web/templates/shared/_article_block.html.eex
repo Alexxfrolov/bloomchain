@@ -1,13 +1,31 @@
-<%= main_article_tag(List.first(@articles)) %>
-
-<div class="mt-4"></div>
-
-<%= main_article_tag(List.first(@articles |> tl()), :without_img) %>
-
-<%= for [first | [second | _]] <- @articles |> tl() |> tl() |> Enum.chunk_every(2) do %>
-  <hr class="bc-article__separator mx-0 my-3">
+<div class="container py-4">
   <div class="row">
-    <%= article_tag(first) %>
-    <%= article_tag(second) %>
+    <div class="col-md-12 mt-md-0">
+      <%= main_article_tag(List.first(@articles)) %>
+
+      <div class="mt-4"></div>
+
+      <%= if length(@articles) > 3 do %>
+        <%= main_article_tag(List.first(@articles |> tl()), :without_img) %>
+
+        <%= for [first | second] <- @articles |> tl() |> tl() |> Enum.chunk_every(2) do %>
+          <hr class="bc-article__separator mx-0 my-3">
+          <div class="row">
+            <%= article_tag(first) %>
+            <%= article_tag(List.first(second)) %>
+          </div>
+        <% end %>
+        <%= else %>
+          <%= for [first | second] <- @articles |> tl()  |> Enum.chunk_every(2) do %>
+            <hr class="bc-article__separator mx-0 my-3">
+            <div class="row">
+              <%= article_tag(first) %>
+              <%= article_tag(List.first(second)) %>
+            </div>
+          <% end %>
+      <% end %>
+    </div>
   </div>
-<% end %>
+</div>
+
+<%= load_more_button(@meta, conn: @conn) %>

@@ -53,7 +53,8 @@ defmodule Bloomchain.Mixfile do
       {:timex, "~> 3.3.0"},
       {:arc, "~> 0.10.0"},
       {:arc_ecto, "~> 0.10.0"},
-      {:elixir_uuid, "~> 1.2"}
+      {:elixir_uuid, "~> 1.2"},
+      {:paginator, "~> 0.4.1"}
     ]
   end
 

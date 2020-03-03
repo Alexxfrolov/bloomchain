@@ -2,10 +2,16 @@ defmodule BloomchainWeb.CalendarController do
   use BloomchainWeb, :controller
   alias Bloomchain.Content.Article
 
-  def index(conn, _params) do
-    articles = Article.get_published_posts("calendar", limit: 6)
+  def index(conn, %{"scroll" => scroll}) do
+    %{entries: articles, metadata: meta} = Article.paginate("calendar", scroll)
 
-    render(conn, "index.html", articles: articles)
+    render(conn, "index.html", articles: articles, meta: meta)
+  end
+
+  def index(conn, _params) do
+    %{entries: articles, metadata: meta} = Article.paginate("calendar")
+
+    render(conn, "index.html", articles: articles, meta: meta)
   end
 
   def show(conn, params) do

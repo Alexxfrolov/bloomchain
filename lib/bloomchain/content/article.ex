@@ -4,6 +4,31 @@ defmodule Bloomchain.Content.Article do
 
   import Ecto.Query
 
+  def paginate(type) do
+    from(
+      p in Post,
+      where: p.type == ^type and p.status == "published",
+      preload: [:cover],
+      order_by: [desc: p.inserted_at, desc: p.id]
+    )
+    |> Repo.paginate(cursor_fields: [:inserted_at, :id], sort_direction: :desc, limit: 6)
+  end
+
+  def paginate(type, scroll) do
+    from(
+      p in Post,
+      where: p.type == ^type and p.status == "published",
+      preload: [:cover],
+      order_by: [desc: p.inserted_at, desc: p.id]
+    )
+    |> Repo.paginate(
+      after: scroll,
+      cursor_fields: [:inserted_at, :id],
+      sort_direction: :desc,
+      limit: 6
+    )
+  end
+
   def get_posts_list(type, status) do
     Repo.all(
       from(

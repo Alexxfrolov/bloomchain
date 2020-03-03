@@ -41,6 +41,27 @@ defmodule BloomchainWeb.SharedView do
     end
   end
 
+  def load_more_button(%Paginator.Page.Metadata{after: nil}, conn: _) do
+  end
+
+  def load_more_button(%Paginator.Page.Metadata{after: after_cursor}, conn: conn) do
+    content_tag(:div, class: "container px-0 pb-5") do
+      # content_tag(
+      #   :button,
+      #   "Загрузить еще",
+      #   class: "bc-article__btn-link btn btn-link",
+      #   type: "button",
+      #   data_scroll: after_cursor
+      # )
+
+      link(
+        "Загрузить еще",
+        to: "#{conn.request_path}?scroll=#{after_cursor}",
+        class: "bc-article__heading"
+      )
+    end
+  end
+
   defp do_article_attrs(item) do
     [
       content_tag(
