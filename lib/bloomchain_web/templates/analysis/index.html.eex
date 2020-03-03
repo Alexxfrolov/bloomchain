@@ -1,11 +1,6 @@
 <div class="container py-5">
-  <a name="analitics"></a>
-  <h1 class="bc-analitics__h1">Биржевая аналитика</h1>
-
   <div class="row mt-3 align-items-start">
     <div class="col-md-8">
-      <%= render SharedView, "_article_block.html", assigns %>
-
       <a name="indexes"></a>
       <div class="row pt-5">
         <div class="col-xs-12">
@@ -40,6 +35,10 @@
     </div>
 
   </div>
+
+  <a name="analitics"></a>
+  <h1 class="bc-analitics__h1">Биржевая аналитика</h1>
+  <%= render SharedView, "_article_block.html", assigns %>
 </div>
 
 <script src="https://code.highcharts.com/stock/highstock.js"></script>

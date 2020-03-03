@@ -1299,3 +1299,19 @@ $('.js-marquee').marquee({
   direction: "left",
   duplicated: !0
 });
+
+$('body').delegate('.js-scroll-button', 'click', function(event) {
+  const { scroll } = event.currentTarget.dataset
+
+  if (!!scroll) {
+    const path = `${location.pathname}?scroll=${scroll}`
+
+    $.get(path, function(response) {
+      const $main = $('.js-main')
+      const $button = $('.container.px-0.pb-5')
+      html = $.parseHTML(response)
+      $button.remove()
+      $main.append(html)
+    })
+  }
+})

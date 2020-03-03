@@ -45,11 +45,11 @@ defmodule BloomchainWeb.SharedView do
   end
 
   def load_more_button(%Paginator.Page.Metadata{after: after_cursor}, conn: conn) do
-    content_tag(:div, class: "container px-0 pb-5") do
+    content_tag(:div, class: "container px-0 pb-5 js-scroll-button-container") do
       content_tag(
         :button,
         "Загрузить еще",
-        class: "bc-article__btn-link btn btn-link",
+        class: "bc-article__btn-link btn btn-link js-scroll-button",
         type: "button",
         data_scroll: after_cursor
       )
@@ -64,11 +64,7 @@ defmodule BloomchainWeb.SharedView do
 
   defp do_article_attrs(item) do
     [
-      content_tag(
-        :span,
-        Timex.format!(item.published_at, "{relative}", :relative),
-        class: "small mr-sm-4 mr-2"
-      ),
+      content_tag(:span, time_from(item.published_at), class: "small mr-sm-4 mr-2"),
       content_tag(:i, nil, class: "mr-1 icon-user-white"),
       content_tag(:span, item.author, class: "small mr-sm-4 mr-3"),
       content_tag(:i, nil, class: "mr-1 icon-view"),
@@ -80,5 +76,9 @@ defmodule BloomchainWeb.SharedView do
 
   defp href_path(item) do
     "/#{item.type}/#{item.slug}"
+  end
+
+  defp time_from(datetime) do
+    Timex.format!(datetime, "{relative}", :relative)
   end
 end

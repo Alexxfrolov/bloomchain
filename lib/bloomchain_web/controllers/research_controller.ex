@@ -5,7 +5,10 @@ defmodule BloomchainWeb.ResearchController do
   def index(conn, %{"scroll" => scroll}) do
     %{entries: articles, metadata: meta} = Article.paginate("research", scroll)
 
-    render(conn, "index.html", articles: articles, meta: meta)
+    conn
+    |> put_layout(false)
+    |> put_view(BloomchainWeb.SharedView)
+    |> render("_article_block.html", articles: articles, meta: meta)
   end
 
   def index(conn, _params) do
