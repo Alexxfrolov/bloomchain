@@ -8,6 +8,10 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
     }
   end
 
+  def render("editor.json", %{media: media}) do
+    Enum.map(media, &editor_media_json/1)
+  end
+
   def render("show.json", %{media: media}) do
     media_json(media)
   end
@@ -26,6 +30,12 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
       link: File.url({media.file, media}, :original),
       created_at: media.inserted_at,
       updated_at: media.updated_at
+    }
+  end
+
+  def editor_media_json(media) do
+    %{
+      url: File.url({media.file, media}, :original)
     }
   end
 end
