@@ -9,9 +9,9 @@ defmodule Bloomchain.Content.Article do
       p in Post,
       where: p.type == ^type and p.status == "published",
       preload: [:cover],
-      order_by: [desc: p.inserted_at, desc: p.id]
+      order_by: [desc: p.published_at, desc: p.id]
     )
-    |> Repo.paginate(cursor_fields: [:inserted_at, :id], sort_direction: :desc, limit: 6)
+    |> Repo.paginate(cursor_fields: [:published_at, :id], sort_direction: :desc, limit: 6)
   end
 
   def paginate(type, scroll) do
@@ -19,11 +19,11 @@ defmodule Bloomchain.Content.Article do
       p in Post,
       where: p.type == ^type and p.status == "published",
       preload: [:cover],
-      order_by: [desc: p.inserted_at, desc: p.id]
+      order_by: [desc: p.published_at, desc: p.id]
     )
     |> Repo.paginate(
       after: scroll,
-      cursor_fields: [:inserted_at, :id],
+      cursor_fields: [:published_at, :id],
       sort_direction: :desc,
       limit: 6
     )

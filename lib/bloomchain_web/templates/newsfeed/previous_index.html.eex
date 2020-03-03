@@ -1,4 +1,14 @@
-<%= for date <- @articles |> Map.keys() |> Enum.sort(&(&1 >= &2)) do %>
+<div class="container pt-4 pb-5">
+  <div class="row">
+    <div class="col-lg-12">
+      <%= for item <- Map.fetch!(@articles, @articles |> Map.keys() |> Enum.max()) do %>
+        <%= item_tag(item) %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%= for date <- @articles |> Map.keys() |> Enum.sort(&(&1 >= &2)) |> tl() do %>
   <div class="container pt-4 pb-5">
     <div class="row">
       <div class="col-lg-12">

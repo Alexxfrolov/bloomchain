@@ -24,6 +24,22 @@ defmodule BloomchainWeb.NewsfeedView do
     end
   end
 
+  def load_more_button(%Paginator.Page.Metadata{after: nil}, last_date: _) do
+  end
+
+  def load_more_button(%Paginator.Page.Metadata{after: after_cursor}, last_date: date) do
+    content_tag(:div, class: "container px-0 pb-5 js-scroll-button-container") do
+      content_tag(
+        :button,
+        "Загрузить еще",
+        class: "bc-article__btn-link btn btn-link js-scroll-button",
+        type: "button",
+        data_scroll: after_cursor,
+        data_date: date
+      )
+    end
+  end
+
   defp formatted_weekday(date) do
     case Date.day_of_week(date) do
       1 -> "Понедельник"

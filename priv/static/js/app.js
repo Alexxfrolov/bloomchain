@@ -1301,10 +1301,10 @@ $('.js-marquee').marquee({
 });
 
 $('body').delegate('.js-scroll-button', 'click', function(event) {
-  const { scroll } = event.currentTarget.dataset
+  const { scroll, date } = event.currentTarget.dataset
 
   if (!!scroll) {
-    const path = `${location.pathname}?scroll=${scroll}`
+    const path = `${location.pathname}?scroll=${scroll}&last_date=${date}`
 
     $.get(path, function(response) {
       const $main = $('.js-main')
