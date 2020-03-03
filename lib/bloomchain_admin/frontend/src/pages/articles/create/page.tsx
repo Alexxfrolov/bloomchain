@@ -1,4 +1,5 @@
 import React, {
+  Fragment,
   useState,
   useEffect,
   useCallback,
@@ -21,6 +22,9 @@ import {
   Button,
   makeStyles,
   createStyles,
+  Dialog,
+  DialogActions,
+  DialogTitle,
 } from "@material-ui/core"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import "froala-editor/js/plugins/paragraph_format.min.js"
@@ -175,7 +179,13 @@ const useStyles = makeStyles((theme) =>
   }),
 )
 
-const INITIAL_ARTICLE = {
+const INITIAL_ARTICLE: Omit<
+  Article,
+  "created_at" | "updated_at" | "id" | "keywords"
+> & {
+  cover_id: number | null
+  keywords: string
+} = {
   author: "",
   body: "",
   cover_id: null,
@@ -213,6 +223,8 @@ export const ActicleCreatePage = () => {
     fetchData()
   }, [])
 
+  const [openedDialog, setOpenedDialog] = useState(false)
+
   const inputTypeLabel: RefObject<HTMLLabelElement> | null = useRef(null)
   const inputStatusLabel: RefObject<HTMLLabelElement> | null = useRef(null)
 
@@ -239,11 +251,7 @@ export const ActicleCreatePage = () => {
   const fileInputRef: RefObject<HTMLInputElement> | null = useRef(null)
   const imageRef: RefObject<HTMLImageElement> | null = useRef(null)
 
-  const [article, setArticle] = useState<
-    Omit<Article, "created_at" | "updated_at" | "id"> & {
-      cover_id: number | null
-    }
-  >({ ...INITIAL_ARTICLE })
+  const [article, setArticle] = useState({ ...INITIAL_ARTICLE })
 
   const handleChangeFormField = useCallback(
     (field: string) => (event: SyntheticEvent<{ value: string }>) => {
@@ -276,8 +284,9 @@ export const ActicleCreatePage = () => {
 
       reader.onload = function(event: ProgressEvent<FileReader>) {
         if (imageRef.current) {
-          event.target.result &&
+          event?.target?.result?.[
             imageRef.current.setAttribute("src", event.target.result)
+          ]
         }
       }
 
@@ -327,261 +336,291 @@ export const ActicleCreatePage = () => {
         })
 
         if (articleResponse.status === 201) {
-          window.alert("Ваша статья успешно сохранена!")
+          setArticle({
+            ...INITIAL_ARTICLE,
+          })
+          setOpenedDialog(true)
         }
       }
     },
-    [cover, article],
+    [cover, article, setOpenedDialog],
   )
 
   return (
-    <Container maxWidth="lg" className={classes.root}>
-      <Grid container={true} spacing={3}>
-        <Grid item={true} xs={12}>
-          <Typography component="h1" variant="h4" gutterBottom={false}>
-            Создать
-          </Typography>
-        </Grid>
-        <Grid item={true} xs={12}>
-          <Paper className={classes.paper}>
-            <form onSubmit={handleSubmit}>
-              <Grid container={true} spacing={6} alignItems="flex-start">
-                <Grid item={true} xs={9} container={true} spacing={4}>
-                  <Grid item={true} xs={12}>
-                    <FormControl variant="outlined" fullWidth={true}>
-                      <InputLabel ref={inputTypeLabel} id="type">
-                        Раздел
-                      </InputLabel>
-                      <Select
-                        labelId="type"
-                        id="type"
-                        labelWidth={typeLabelWidth}
-                        value={article.type}
-                        onChange={handleChangeSelect("type")}
+    <Fragment>
+      <Container maxWidth="lg" className={classes.root}>
+        <Grid container={true} spacing={3}>
+          <Grid item={true} xs={12}>
+            <Typography component="h1" variant="h4" gutterBottom={false}>
+              Создать
+            </Typography>
+          </Grid>
+          <Grid item={true} xs={12}>
+            <Paper className={classes.paper}>
+              <form onSubmit={handleSubmit}>
+                <Grid container={true} spacing={6} alignItems="flex-start">
+                  <Grid item={true} xs={9} container={true} spacing={4}>
+                    <Grid item={true} xs={12}>
+                      <FormControl variant="outlined" fullWidth={true}>
+                        <InputLabel ref={inputTypeLabel} id="type">
+                          Раздел
+                        </InputLabel>
+                        <Select
+                          labelId="type"
+                          id="type"
+                          labelWidth={typeLabelWidth}
+                          value={article.type}
+                          onChange={handleChangeSelect("type")}
+                        >
+                          <MenuItem value="newsfeed">Коротко</MenuItem>
+                          <MenuItem value="detailed">В Деталях</MenuItem>
+                          <MenuItem value="analysis">
+                            Биржевая аналитика
+                          </MenuItem>
+                          <MenuItem value="in_russia">Что в России</MenuItem>
+                          <MenuItem value="calendar">События</MenuItem>
+                          <MenuItem value="person">Персона</MenuItem>
+                          <MenuItem value="research">Исследования</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item={true} xs={12}>
+                      <TextField
+                        id="title"
+                        fullWidth={true}
+                        label="Заголовок"
+                        value={article.title ?? ""}
+                        variant="outlined"
+                        onChange={handleChangeFormField("title")}
+                      />
+                    </Grid>
+                    <Grid item={true} xs={12}>
+                      <TextField
+                        id="lead"
+                        fullWidth={true}
+                        label="Лид"
+                        value={article.lead ?? ""}
+                        variant="outlined"
+                        onChange={handleChangeFormField("lead")}
+                      />
+                    </Grid>
+                    <Grid item={true} xs={12}>
+                      <TextField
+                        id="author"
+                        fullWidth={true}
+                        label="Автор"
+                        value={article.author ?? ""}
+                        variant="outlined"
+                        onChange={handleChangeFormField("author")}
+                      />
+                    </Grid>
+                    <Grid item={true} xs={12}>
+                      <Autocomplete
+                        id="tags"
+                        multiple={true}
+                        options={tags}
+                        disableCloseOnSelect={true}
+                        getOptionLabel={(option) => option.name}
+                        onChange={handleChangeTagsSelect}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Тэги"
+                            variant="outlined"
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item={true} xs={12}>
+                      <FroalaEditor
+                        tag="textarea"
+                        config={froalaEditorConfig}
+                        model={article.body ?? ""}
+                        onModelChange={handleChangeEditor}
+                      />
+                    </Grid>
+                    <Grid item={true} xs={12}>
+                      <Typography
+                        color="textPrimary"
+                        variant="h6"
+                        component="h6"
+                        gutterBottom={false}
                       >
-                        <MenuItem value="newsfeed">Коротко</MenuItem>
-                        <MenuItem value="detailed">В Деталях</MenuItem>
-                        <MenuItem value="analysis">Биржевая аналитика</MenuItem>
-                        <MenuItem value="in_russia">Что в России</MenuItem>
-                        <MenuItem value="calendar">События</MenuItem>
-                        <MenuItem value="person">Персона</MenuItem>
-                        <MenuItem value="research">Исследования</MenuItem>
-                      </Select>
-                    </FormControl>
+                        Мета информация
+                      </Typography>
+                    </Grid>
+                    <Grid item={true} xs={12}>
+                      <TextField
+                        id="keywords"
+                        label="Keywords"
+                        value={article.keywords ?? ""}
+                        fullWidth={true}
+                        variant="outlined"
+                        onChange={handleChangeFormField("keywords")}
+                      />
+                    </Grid>
+                    <Grid item={true} xs={12}>
+                      <TextField
+                        id="description"
+                        label="Description"
+                        value={article.description ?? ""}
+                        fullWidth={true}
+                        variant="outlined"
+                        onChange={handleChangeFormField("description")}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item={true} xs={12}>
-                    <TextField
-                      id="title"
-                      fullWidth={true}
-                      label="Заголовок"
-                      value={article.title}
-                      variant="outlined"
-                      onChange={handleChangeFormField("title")}
-                    />
-                  </Grid>
-                  <Grid item={true} xs={12}>
-                    <TextField
-                      id="lead"
-                      fullWidth={true}
-                      label="Лид"
-                      value={article.lead}
-                      variant="outlined"
-                      onChange={handleChangeFormField("lead")}
-                    />
-                  </Grid>
-                  <Grid item={true} xs={12}>
-                    <TextField
-                      id="author"
-                      fullWidth={true}
-                      label="Автор"
-                      value={article.author}
-                      variant="outlined"
-                      onChange={handleChangeFormField("author")}
-                    />
-                  </Grid>
-                  <Grid item={true} xs={12}>
-                    <Autocomplete
-                      id="tags"
-                      multiple={true}
-                      options={tags}
-                      disableCloseOnSelect={true}
-                      getOptionLabel={(option) => option.name}
-                      onChange={handleChangeTagsSelect}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Тэги"
-                          variant="outlined"
-                        />
+                  <Grid item={true} sm container={true} spacing={4}>
+                    <Grid item={true} xs={12}>
+                      <Typography
+                        color="textPrimary"
+                        variant="h6"
+                        component="h6"
+                        gutterBottom={true}
+                      >
+                        Титульное изображение
+                      </Typography>
+                      {cover.file !== null && (
+                        <img width="100%" ref={imageRef} />
                       )}
-                    />
+                      <input
+                        accept="image/*"
+                        id="cover"
+                        ref={fileInputRef}
+                        type="file"
+                        style={{ display: "none" }}
+                        onChange={handleChangeImageFileInput}
+                      />
+                      <label htmlFor="cover">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          component="span"
+                        >
+                          Загрузить
+                        </Button>
+                      </label>
+                    </Grid>
+                    {cover.file !== null && (
+                      <Grid item={true} xs={12} container={true} spacing={1}>
+                        <Grid item={true} xs={12}>
+                          <TextField
+                            id="title"
+                            label="Title"
+                            value={cover.title ?? ""}
+                            fullWidth={true}
+                            variant="outlined"
+                            size="small"
+                            onChange={handleChangeCoverField("title")}
+                          />
+                        </Grid>
+                        <Grid item={true} xs={12}>
+                          <TextField
+                            id="alt"
+                            label="Alt"
+                            value={cover.alt ?? ""}
+                            fullWidth={true}
+                            variant="outlined"
+                            size="small"
+                            onChange={handleChangeCoverField("alt")}
+                          />
+                        </Grid>
+                        <Grid item={true} xs={12}>
+                          <TextField
+                            id="source"
+                            label="Источник"
+                            value={cover.source ?? ""}
+                            fullWidth={true}
+                            variant="outlined"
+                            size="small"
+                            onChange={handleChangeCoverField("source")}
+                          />
+                        </Grid>
+                      </Grid>
+                    )}
+                    <Grid item={true} xs={12}>
+                      <FormControl variant="outlined" fullWidth={true}>
+                        <InputLabel ref={inputStatusLabel} id="type">
+                          Статус
+                        </InputLabel>
+                        <Select
+                          labelId="status"
+                          id="status"
+                          labelWidth={statusLabelWidth}
+                          value={article.status}
+                          onChange={handleChangeSelect("status")}
+                        >
+                          <MenuItem value="draft">Черновик</MenuItem>
+                          <MenuItem value="archive">
+                            Готово к публикации
+                          </MenuItem>
+                          <MenuItem value="published">Опубликовано</MenuItem>
+                          <MenuItem value="archive">Архив</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item={true} xs={12}>
+                      <TextField
+                        id="description"
+                        label="Время прочтения"
+                        type="number"
+                        value={article.time ?? ""}
+                        fullWidth={true}
+                        variant="outlined"
+                        autoComplete="off"
+                        onChange={handleChangeFormField("time")}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item={true} xs={12}>
-                    <FroalaEditor
-                      tag="textarea"
-                      config={froalaEditorConfig}
-                      model={article.body}
-                      onModelChange={handleChangeEditor}
-                    />
-                  </Grid>
-                  <Grid item={true} xs={12}>
-                    <Typography
-                      color="textPrimary"
-                      variant="h6"
-                      component="h6"
-                      gutterBottom={false}
-                    >
-                      Мета информация
-                    </Typography>
-                  </Grid>
-                  <Grid item={true} xs={12}>
-                    <TextField
-                      id="keywords"
-                      label="Keywords"
-                      value={article.keywords}
-                      fullWidth={true}
-                      variant="outlined"
-                      onChange={handleChangeFormField("keywords")}
-                    />
-                  </Grid>
-                  <Grid item={true} xs={12}>
-                    <TextField
-                      id="description"
-                      label="Description"
-                      value={article.description}
-                      fullWidth={true}
-                      variant="outlined"
-                      onChange={handleChangeFormField("description")}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid item={true} sm container={true} spacing={4}>
-                  <Grid item={true} xs={12}>
-                    <Typography
-                      color="textPrimary"
-                      variant="h6"
-                      component="h6"
-                      gutterBottom={true}
-                    >
-                      Титульное изображение
-                    </Typography>
-                    {cover.file !== null && <img width="100%" ref={imageRef} />}
-                    <input
-                      accept="image/*"
-                      id="cover"
-                      ref={fileInputRef}
-                      type="file"
-                      style={{ display: "none" }}
-                      onChange={handleChangeImageFileInput}
-                    />
-                    <label htmlFor="cover">
+                  <Grid
+                    item={true}
+                    xs={12}
+                    container={true}
+                    justify="flex-end"
+                    spacing={2}
+                  >
+                    <Grid item={true}>
                       <Button
                         variant="contained"
                         color="primary"
-                        component="span"
+                        type="button"
+                        onClick={handleClearButtonClick}
                       >
-                        Загрузить
+                        Очистить поля
                       </Button>
-                    </label>
-                  </Grid>
-                  {cover.file !== null && (
-                    <Grid item={true} xs={12} container={true} spacing={1}>
-                      <Grid item={true} xs={12}>
-                        <TextField
-                          id="title"
-                          label="Title"
-                          value={cover.title ?? ""}
-                          fullWidth={true}
-                          variant="outlined"
-                          size="small"
-                          onChange={handleChangeCoverField("title")}
-                        />
-                      </Grid>
-                      <Grid item={true} xs={12}>
-                        <TextField
-                          id="alt"
-                          label="Alt"
-                          value={cover.alt ?? ""}
-                          fullWidth={true}
-                          variant="outlined"
-                          size="small"
-                          onChange={handleChangeCoverField("alt")}
-                        />
-                      </Grid>
-                      <Grid item={true} xs={12}>
-                        <TextField
-                          id="source"
-                          label="Источник"
-                          value={cover.source ?? ""}
-                          fullWidth={true}
-                          variant="outlined"
-                          size="small"
-                          onChange={handleChangeCoverField("source")}
-                        />
-                      </Grid>
                     </Grid>
-                  )}
-                  <Grid item={true} xs={12}>
-                    <FormControl variant="outlined" fullWidth={true}>
-                      <InputLabel ref={inputStatusLabel} id="type">
-                        Статус
-                      </InputLabel>
-                      <Select
-                        labelId="status"
-                        id="status"
-                        labelWidth={statusLabelWidth}
-                        value={article.status}
-                        onChange={handleChangeSelect("status")}
-                      >
-                        <MenuItem value="draft">Черновик</MenuItem>
-                        <MenuItem value="archive">Готово к публикации</MenuItem>
-                        <MenuItem value="published">Опубликовано</MenuItem>
-                        <MenuItem value="archive">Архив</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item={true} xs={12}>
-                    <TextField
-                      id="description"
-                      label="Время прочтения"
-                      type="number"
-                      value={article.time ?? ""}
-                      min="0"
-                      fullWidth={true}
-                      variant="outlined"
-                      autoComplete="off"
-                      onChange={handleChangeFormField("time")}
-                    />
+                    <Grid item={true}>
+                      <Button variant="contained" color="primary" type="submit">
+                        Сохранить
+                      </Button>
+                    </Grid>
                   </Grid>
                 </Grid>
-                <Grid
-                  item={true}
-                  xs={12}
-                  container={true}
-                  justify="flex-end"
-                  spacing={2}
-                >
-                  <Grid item={true}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      type="button"
-                      onClick={handleClearButtonClick}
-                    >
-                      Очистить поля
-                    </Button>
-                  </Grid>
-                  <Grid item={true}>
-                    <Button variant="contained" color="primary" type="submit">
-                      Сохранить
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </form>
-          </Paper>
+              </form>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
+      <SuccessDialog
+        opened={openedDialog}
+        onClose={() => setOpenedDialog(false)}
+      />
+    </Fragment>
   )
 }
+
+type SuccessDialogProps = {
+  opened: boolean
+  onClose: () => void
+}
+
+const SuccessDialog = ({ opened, onClose }: SuccessDialogProps) => (
+  <Dialog open={opened} onClose={onClose}>
+    <DialogTitle>Статья успешно сохранена</DialogTitle>
+    <DialogActions>
+      <Button onClick={onClose} color="primary" autoFocus>
+        Закрыть
+      </Button>
+    </DialogActions>
+  </Dialog>
+)

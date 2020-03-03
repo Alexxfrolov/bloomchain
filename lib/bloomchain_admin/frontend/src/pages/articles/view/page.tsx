@@ -265,11 +265,11 @@ const ArticlesTableRow = ({ article, onDeleteRow }: ArticlesTableRowProps) => (
   <TableRow>
     <TableCell>{article.title}</TableCell>
     <TableCell>{article.author}</TableCell>
-    <TableCell>
+    <TableCell nowrap="true">
       {article.published_at &&
         format(new Date(article.published_at), "dd.mm.yyyy hh:mm")}
     </TableCell>
-    <TableCell>
+    <TableCell nowrap="true">
       {article.updated_at &&
         format(new Date(article.updated_at), "dd.mm.yyyy hh:mm")}
     </TableCell>

@@ -16,18 +16,26 @@ function getById(id: number): AxiosPromise<Article> {
 }
 
 function create(
-  article: Omit<Article, "createdAt" | "updatedAt" | "id">,
+  article: Omit<Article, "createdAt" | "updatedAt" | "id" | "keywords"> & {
+    cover_id: number
+    keywords: string
+  },
 ): AxiosPromise<Article> {
   const data = {
     ...article,
-    keywords: article.keywords.split(", "),
+    keywords: article.keywords.split(/[ ,]+/),
     tags: article.tags.map((tag) => tag.id),
   }
   return axios.post(`${httpConfig.baseUrl}/articles`, data)
 }
 
 function update(article: Article): AxiosPromise<Article> {
-  return axios.patch(`${httpConfig.baseUrl}/articles/${article.id}`, article)
+  const data = {
+    ...article,
+    keywords: article.keywords.split(/[ ,]+/),
+    tags: article.tags.map((tag) => tag.id),
+  }
+  return axios.patch(`${httpConfig.baseUrl}/articles/${article.id}`, data)
 }
 
 function remove(id: number): AxiosPromise {

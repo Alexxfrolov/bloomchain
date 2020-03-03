@@ -1,12 +1,12 @@
 export interface Article {
-  author: string
+  author: string | null
   body: string
   cover?: import("../media").MediaFile[]
   created_at: string
-  description: string
+  description: string | null
   id: number
   keywords: string[]
-  lead: string
+  lead: string | null
   status: "published" | "draft" | "archive" | "ready"
   tags: import("../tags").Tag[]
   time: string | null
