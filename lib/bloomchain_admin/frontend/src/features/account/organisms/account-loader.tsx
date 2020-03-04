@@ -1,7 +1,7 @@
 import React, { useState, useEffect, ReactChild } from "react"
 import { User } from "@api/user"
 import { accountApi } from "@api/account"
-import { AccountContext } from "@features/core"
+import { AccountContext, ErrorDialog } from "@features/core"
 
 type AccountLoaderProps = {
   children: ReactChild | ReactChild[]
@@ -10,6 +10,7 @@ type AccountLoaderProps = {
 export const AccountLoader = ({ children }: AccountLoaderProps) => {
   const [error, setError] = useState(false)
   const [account, setAccount] = useState<User | null>(null)
+  const [openedErrorDialog, setOpenedErrorDialog] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,6 +21,7 @@ export const AccountLoader = ({ children }: AccountLoaderProps) => {
         setAccount(response.data)
       } catch {
         setError(true)
+        setOpenedErrorDialog(true)
       }
     }
     fetchData()
@@ -27,6 +29,15 @@ export const AccountLoader = ({ children }: AccountLoaderProps) => {
 
   if (account === null) {
     return null
+  }
+
+  if (error) {
+    return (
+      <ErrorDialog
+        opened={openedErrorDialog}
+        onClose={() => setOpenedErrorDialog(false)}
+      />
+    )
   }
 
   return (

@@ -14,7 +14,7 @@
   },
   "keywords": [
     "react",
-    "redux",
+    "rxjs",
     "webpack"
   ],
   "bugs": {
@@ -52,9 +52,6 @@
     "@types/node": "^13.7.4",
     "@types/react": "^16.9.22",
     "@types/react-dom": "^16.9.1",
-    "@types/react-redux": "^7.1.4",
-    "@types/redux-actions": "^2.6.1",
-    "@types/redux-thunk": "^2.1.0",
     "@types/reselect": "^2.2.0",
     "@types/webpack": "^4.39.2",
     "@typescript-eslint/eslint-plugin": "^2.20.0",
@@ -91,7 +88,6 @@
     "postcss-safe-parser": "^4.0.1",
     "prettier": "^1.18.2",
     "react-dev-utils": "^9.0.4",
-    "redux-devtools-extension": "^2.13.8",
     "resolve-url-loader": "^3.1.1",
     "sass-loader": "^7.2.0",
     "style-loader": "^0.23.1",
@@ -123,14 +119,7 @@
     "react-dom": "^16.10.1",
     "react-froala-wysiwyg": "^3.1.0",
     "react-hot-loader": "^4.12.14",
-    "react-redux": "^7.2.0",
     "react-router5": "^7.1.0",
-    "redux": "^4.0.4",
-    "redux-actions": "^2.6.5",
-    "redux-router": "^2.1.2",
-    "redux-router5": "^7.0.2",
-    "redux-thunk": "^2.3.0",
-    "reselect": "^4.0.0",
     "router5": "^7.0.2",
     "router5-plugin-browser": "^7.0.2"
   }

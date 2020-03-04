@@ -32,6 +32,7 @@ import { Editor } from "@lib/editor"
 import { articlesApi, Article } from "@api/articles"
 import { tagsApi, Tag } from "@api/tags"
 import { mediaApi, MediaFile } from "@api/media"
+import { ErrorDialog } from "@features/core"
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -97,7 +98,8 @@ export const ActicleCreatePage = () => {
     fetchData()
   }, [])
 
-  const [openedDialog, setOpenedDialog] = useState(false)
+  const [openedSuccessDialog, setOpenedSuccessDialog] = useState(false)
+  const [openedErrorDialog, setOpenedErrorDialog] = useState(false)
 
   const inputTypeLabel: RefObject<HTMLLabelElement> | null = useRef(null)
   const inputStatusLabel: RefObject<HTMLLabelElement> | null = useRef(null)
@@ -209,47 +211,52 @@ export const ActicleCreatePage = () => {
     async (event: FormEvent) => {
       event.preventDefault()
 
-      if (cover.file) {
-        const mediaResponse = await mediaApi.create(cover)
-        if (mediaResponse.status === 201) {
-          const articleResponse = await articlesApi.create({
-            ...article,
-            cover_id: mediaResponse.data.id,
-          })
+      try {
+        if (cover.file) {
+          const mediaResponse = await mediaApi.create(cover)
+          if (mediaResponse.status === 201) {
+            const articleResponse = await articlesApi.create({
+              ...article,
+              cover_id: mediaResponse.data.id,
+            })
 
-          if (articleResponse.status === 201) {
-            setArticle({
-              ...INITIAL_ARTICLE,
-            })
-            setCover({
-              file: null,
-              alt: "",
-              title: "",
-              source: "",
-              type: "image",
-            })
-            setOpenedDialog(true)
+            if (articleResponse.status === 201) {
+              setArticle({
+                ...INITIAL_ARTICLE,
+              })
+              setCover({
+                file: null,
+                alt: "",
+                title: "",
+                source: "",
+                type: "image",
+              })
+              setOpenedSuccessDialog(true)
+            }
           }
         }
-      }
 
-      const articleResponse = await articlesApi.create(article)
+        const articleResponse = await articlesApi.create(article)
 
-      if (articleResponse.status === 201) {
-        setArticle({
-          ...INITIAL_ARTICLE,
-        })
-        setCover({
-          file: null,
-          alt: "",
-          title: "",
-          source: "",
-          type: "image",
-        })
-        setOpenedDialog(true)
+        if (articleResponse.status === 201) {
+          setArticle({
+            ...INITIAL_ARTICLE,
+          })
+          setCover({
+            file: null,
+            alt: "",
+            title: "",
+            source: "",
+            type: "image",
+          })
+          setOpenedSuccessDialog(true)
+        }
+      } catch {
+        setError(true)
+        setOpenedErrorDialog(true)
       }
     },
-    [cover, article, setOpenedDialog],
+    [cover, article, setOpenedSuccessDialog, setError, setOpenedErrorDialog],
   )
 
   const tagsOptions = useMemo(
@@ -523,8 +530,12 @@ export const ActicleCreatePage = () => {
         </Grid>
       </Container>
       <SuccessDialog
-        opened={openedDialog}
-        onClose={() => setOpenedDialog(false)}
+        opened={openedSuccessDialog}
+        onClose={() => setOpenedSuccessDialog(false)}
+      />
+      <ErrorDialog
+        opened={openedErrorDialog}
+        onClose={() => setOpenedErrorDialog(false)}
       />
     </Fragment>
   )

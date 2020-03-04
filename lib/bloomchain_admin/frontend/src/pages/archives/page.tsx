@@ -35,6 +35,7 @@ import { ConditionalList } from "@ui"
 import { archivesApi, Archive } from "@api/archives"
 import { mediaApi } from "@api/media"
 import {
+  ErrorDialog,
   DeleteDialog,
   TableSkeleton,
   TableRow,
@@ -65,6 +66,7 @@ export const ArchivesPage = () => {
   const [currentArchive, setCurrentArchive] = useState<Archive | null>(null)
   const [openedAddFormDialog, seOpenedAddFormDialog] = useState(false)
   const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
+  const [openedErrorDialog, setOpenedErrorDialog] = useState(false)
 
   const closeDeleteDialog = useCallback(() => {
     setOpenedDeleteDialog(false)
@@ -86,10 +88,12 @@ export const ArchivesPage = () => {
   )
 
   const handleConfirmDelete = useCallback(async () => {
-    const response = await archivesApi.remove(currentArchive.id)
-    setOpenedDeleteDialog(false)
-    if (response.status === 204) {
+    try {
+      await archivesApi.remove(currentArchive.id)
+      setOpenedDeleteDialog(false)
       setArchives(archives.filter((item) => item.id !== currentArchive.id))
+    } catch {
+      setOpenedErrorDialog(true)
     }
   }, [archives, currentArchive, setArchives, setOpenedDeleteDialog])
 
@@ -142,6 +146,10 @@ export const ArchivesPage = () => {
           onConfirm={handleConfirmDelete}
         />
       )}
+      <ErrorDialog
+        opened={openedErrorDialog}
+        onClose={() => setOpenedErrorDialog(true)}
+      />
     </Fragment>
   )
 }
