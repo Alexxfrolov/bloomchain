@@ -5,14 +5,7 @@
     "main.js.map": "/js/bundle.js.map",
     "css/admin.css.map": "/css/admin.css.map",
     "index.html": "/index.html",
-    "js/bundle.js.LICENSE.txt": "/js/bundle.js.LICENSE.txt",
-    "static/media/breakfast.910bb34b.jpg": "/static/media/breakfast.910bb34b.jpg",
-    "static/media/burgers.40c2a6fb.jpg": "/static/media/burgers.40c2a6fb.jpg",
-    "static/media/camera.55516532.jpg": "/static/media/camera.55516532.jpg",
-    "static/media/hats.67c0d9df.jpg": "/static/media/hats.67c0d9df.jpg",
-    "static/media/honey.47d8181c.jpg": "/static/media/honey.47d8181c.jpg",
-    "static/media/morning.f0fd32dd.jpg": "/static/media/morning.f0fd32dd.jpg",
-    "static/media/vegetables.9ed88304.jpg": "/static/media/vegetables.9ed88304.jpg"
+    "js/bundle.js.LICENSE.txt": "/js/bundle.js.LICENSE.txt"
   },
   "entrypoints": [
     "css/admin.css",
