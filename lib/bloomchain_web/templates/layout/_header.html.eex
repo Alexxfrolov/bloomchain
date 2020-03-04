@@ -1,11 +1,13 @@
 <header class="bc-header navbar navbar-expand-md navbar-light">
   <div class="container py-2 py-md-4">
-    <a href="/"><img class="bc-header__logo" src="/images/logo.svg"></a>
+    <a href="/">
+      <img class="bc-header__logo" src="/customer/images/logo.svg">
+    </a>
     <div class="d-none d-md-block">
       <div class="bc-header__converter">
         <div class="bc-header__converter__currency align-items-center">
           <input class="bc-header__converter__input form-control js-currency-converter-input" type="number" min="0" max="100" step="0.1" value="1.1">
-          <div class="input-group ml-3">
+          <div class="input-group ml-1">
             <select class="select js-crypto-currency-select">
               <option value="BTC" selected>BTC</option>
               <option value="ETH">ETH</option>
@@ -18,7 +20,7 @@
         <div class="bc-header__converter__equal mx-4">=</div>
         <div class="bc-header__converter__currency align-items-center">
           <span class="bc-header__converter__value js-currency-converter-output"></span>
-          <div class="input-group ml-3">
+          <div class="input-group ml-1">
             <select class="select js-finance-currency-select">
               <option value="USD" selected>USD</option>
               <option value="EUR">EUR</option>

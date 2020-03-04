@@ -9,7 +9,7 @@ use Mix.Config
 config :bloomchain, BloomchainWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
-  code_reloader: false,
+  code_reloader: true,
   check_origin: false,
   watchers: [
     yarn: ["start", cd: Path.expand("../lib/bloomchain_admin/frontend", __DIR__)],
@@ -36,7 +36,7 @@ config :bloomchain, BloomchainWeb.Endpoint,
 config :bloomchain, BloomchainWeb.Endpoint,
   live_reload: [
     patterns: [
-      ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
+      ~r{priv/static/customer/*/*.*(js|css|jpg|svg|png|ico|txt)$},
       ~r{priv/gettext/.*(po)$},
       ~r{lib/bloomchain_web/views/.*(ex)$},
       ~r{lib/bloomchain_web/templates/.*(eex)$}

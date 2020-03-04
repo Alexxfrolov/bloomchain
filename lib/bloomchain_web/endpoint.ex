@@ -15,7 +15,7 @@ defmodule BloomchainWeb.Endpoint do
     at: "/",
     from: :bloomchain,
     gzip: false,
-    only: ~w(css fonts images js grapejs admin favicon.ico robots.txt)
+    only: ~w(customer grapejs admin)
   )
 
   # Code reloading can be explicitly enabled under the
