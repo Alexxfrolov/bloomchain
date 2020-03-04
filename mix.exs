@@ -51,10 +51,19 @@ defmodule Bloomchain.Mixfile do
       {:slugger, "~> 0.3"},
       {:earmark, "~> 1.2.6"},
       {:timex, "~> 3.3.0"},
+      {:elixir_uuid, "~> 1.2"},
+      {:paginator, "~> 0.4.1"},
+
+      # File attachment deps
       {:arc, "~> 0.10.0"},
       {:arc_ecto, "~> 0.10.0"},
-      {:elixir_uuid, "~> 1.2"},
-      {:paginator, "~> 0.4.1"}
+
+      # If using Amazon S3:
+      ex_aws: "~> 2.0",
+      ex_aws_s3: "~> 2.0",
+      hackney: "~> 1.6",
+      poison: "~> 3.1",
+      sweet_xml: "~> 0.6"
     ]
   end
 
