@@ -152,15 +152,51 @@ require.register("js/app.js", function(exports, require, module) {
 "use strict";
 
 $('.js-marquee').marquee({
-  duration: 40000,
+  duration: 4e4,
   gap: 0,
   delayBeforeStart: 0,
-  direction: 'left',
-  duplicated: true
+  direction: "left",
+  duplicated: !0
 });
+$('body').delegate('.js-scroll-button', 'click', function (event) {
+  var _event$currentTarget$ = event.currentTarget.dataset,
+      scroll = _event$currentTarget$.scroll,
+      date = _event$currentTarget$.date;
+
+  if (!!scroll) {
+    var path = "".concat(location.pathname, "?scroll=").concat(scroll, "&last_date=").concat(date);
+    $.get(path, function (response) {
+      var $main = $('.js-main');
+      var $button = $('.container.px-0.pb-5');
+      html = $.parseHTML(response);
+      $button.remove();
+      $main.append(html);
+    });
+  }
+});
+var $currencyConverterInputField = $('.js-currency-converter-input');
+var $currencyConverterOutputField = $('.js-currency-converter-output');
+var $cryptoCurrencySelect = $('.js-crypto-currency-select');
+var $financeCurrencySelect = $('.js-finance-currency-select');
+$currencyConverterInputField.ready(function () {
+  setCurrency($currencyConverterInputField.val());
+});
+$currencyConverterInputField.on('blur', function (event) {
+  setCurrency(event.target.value);
 });
 
-require.register("___globals___", function(exports, require, module) {
+function setCurrency(cryptoValue) {
+  var fsym = $cryptoCurrencySelect.val();
+  var tsyms = $financeCurrencySelect.val();
+  $.get("https://min-api.cryptocompare.com/data/price?fsym=".concat(fsym, "&tsyms=").concat(tsyms), function (data) {
+    var currency = data[tsyms];
+    var value = (cryptoValue * currency).toFixed(2);
+    $currencyConverterOutputField.text(value);
+  });
+}
+});
+
+;require.register("___globals___", function(exports, require, module) {
   
 });})();require('___globals___');
 

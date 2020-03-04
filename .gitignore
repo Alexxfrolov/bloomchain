@@ -34,5 +34,5 @@ npm-debug.log
 
 # frontend
 /lib/bloomchain_admin/frontend/node_modules
-/lib/bloomchain_web/frontend/node_modules
+/lib/bloomchain_web/client/node_modules
 .vscode
