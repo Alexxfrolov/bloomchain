@@ -3,28 +3,28 @@
     <a href="/"><img class="bc-header__logo" src="/images/logo.svg"></a>
     <div class="d-none d-md-block">
       <div class="bc-header__converter">
-        <div class="bc-header__converter__currency">
-          <input class="bc-header__converter__input form-control" type="number" min="0" max="100" step="0.1" value="1.1">
-          <div class="dropdown d-flex align-items-start">
-            <button class="bc-header__converter__select dropdown-toggle ml-3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Источник: coinmarketcap.com">BTC</button>
-            <div class="dropdown-menu dropdown-menu-right mt-2">
-              <button class="dropdown-item" type="button">ETH</button>
-              <button class="dropdown-item" type="button">XRP</button>
-              <button class="dropdown-item" type="button">LTC</button>
-              <button class="dropdown-item" type="button">BCH</button>
-            </div>
+        <div class="bc-header__converter__currency align-items-center">
+          <input class="bc-header__converter__input form-control js-currency-converter-input" type="number" min="0" max="100" step="0.1" value="1.1">
+          <div class="input-group ml-3">
+            <select class="select js-crypto-currency-select">
+              <option value="BTC" selected>BTC</option>
+              <option value="ETH">ETH</option>
+              <option value="XRP">XRP</option>
+              <option value="LTC">LTC</option>
+              <option value="BCH">BCH</option>
+            </select>
           </div>
         </div>
         <div class="bc-header__converter__equal mx-4">=</div>
-        <div class="bc-header__converter__currency">
-          <span class="bc-header__converter__value">16256,23</span>
-          <div class="dropdown d-flex align-items-start">
-            <button class="bc-header__converter__select dropdown-toggle ml-3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Источник: coinmarketcap.com">USD</button>
-            <div class="dropdown-menu dropdown-menu-right mt-2">
-              <button class="dropdown-item" type="button">EUR</button>
-              <button class="dropdown-item" type="button">RUB</button>
-              <button class="dropdown-item" type="button">JPY</button>
-            </div>
+        <div class="bc-header__converter__currency align-items-center">
+          <span class="bc-header__converter__value js-currency-converter-output"></span>
+          <div class="input-group ml-3">
+            <select class="select js-finance-currency-select">
+              <option value="USD" selected>USD</option>
+              <option value="EUR">EUR</option>
+              <option value="RUB">RUB</option>
+              <option value="JPY">JPY</option>
+            </select>
           </div>
         </div>
       </div>
@@ -34,7 +34,6 @@
       <a class="icon-vk ml-3" href="https://vk.com/bloomchain" target="_blank"></a>
       <a class="icon-tg ml-3" href="tg://resolve?domain=bloomchain" target="_blank"></a>
       <a class="icon-tw ml-3" href="https://twitter.com/BloomChainNews" target="_blank"></a>
-      <%# <a class="icon-yt ml-3 d-none d-md-flex" href="#"></a> %>
     </div>
     <div class="d-inline-flex d-md-none">
       <button class="bc-header__search__icon bc-header__search__icon_mobile btn-link nav-link px-0">
