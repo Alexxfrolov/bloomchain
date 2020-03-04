@@ -34,7 +34,7 @@ config :logger, level: :debug
 config :arc,
   # storage: Arc.Storage.Local
   storage: Arc.Storage.S3,
-  bucket: {:system, "AWS_S3_BUCKET"},
+  bucket: {:system, "AWS_BUCKET"},
   virtual_host: true
 
 config :ex_aws,
