@@ -65,5 +65,6 @@ defmodule BloomchainWeb.Router do
     resources("/calendar", CalendarController, only: [:index, :show])
     resources("/research", ResearchController, only: [:index, :show])
     resources("/research-archive", ArchiveController, only: [:index])
+    resources("/search", SearchController, only: [:index, :create])
   end
 end

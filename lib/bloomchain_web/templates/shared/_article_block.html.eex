@@ -1,26 +1,26 @@
 <div class="container py-4">
   <div class="row">
     <div class="col-md-12 mt-md-0">
-      <%= main_article_tag(List.first(@articles)) %>
+      <%= main_article_tag(List.first(@articles), conn: @conn) %>
 
       <div class="mt-4"></div>
 
       <%= if (length(@articles) > 3) || (length(@articles) == 2)  do %>
-        <%= main_article_tag(List.first(@articles |> tl()), :without_img) %>
+        <%= main_article_tag(List.first(@articles |> tl()), :without_img, conn: @conn) %>
 
         <%= for [first | second] <- @articles |> tl() |> tl() |> Enum.chunk_every(2) do %>
           <hr class="bc-article__separator mx-0 my-3">
           <div class="row">
-            <%= article_tag(first) %>
-            <%= article_tag(List.first(second)) %>
+            <%= article_tag(first, conn: @conn) %>
+            <%= article_tag(List.first(second), conn: @conn) %>
           </div>
         <% end %>
         <% else %>
           <%= for [first | second] <- @articles |> tl()  |> Enum.chunk_every(2) do %>
             <hr class="bc-article__separator mx-0 my-3">
             <div class="row">
-              <%= article_tag(first) %>
-              <%= article_tag(List.first(second)) %>
+              <%= article_tag(first, conn: @conn) %>
+              <%= article_tag(List.first(second), conn: @conn) %>
             </div>
           <% end %>
       <% end %>

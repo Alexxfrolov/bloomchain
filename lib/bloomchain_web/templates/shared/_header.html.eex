@@ -28,7 +28,7 @@
             <%= raw(@article.body) %>
 
             <div class="d-flex align-items-center mt-4">
-              <a class="btn btn-link font-weight-medium pl-0" href="/">&larr; Назад</a>
+              <a class="btn btn-link font-weight-medium pl-0" onClick="window.history.back()">&larr; Назад</a>
             </div>
         </div>
     </div>

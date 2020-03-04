@@ -3,8 +3,8 @@ defmodule BloomchainWeb.SharedView do
 
   alias BloomchainWeb.Uploaders.File
 
-  def main_article_tag(item) do
-    content_tag(:a, class: "bc-article__overlay-link", href: href_path(item)) do
+  def main_article_tag(item, conn: conn) do
+    content_tag(:a, class: "bc-article__overlay-link", href: href_path(item, conn)) do
       content_tag(:div, class: "bc-article__image") do
         [
           img_tag(File.url({item.cover.file, item.cover})),
@@ -17,10 +17,10 @@ defmodule BloomchainWeb.SharedView do
     end
   end
 
-  def main_article_tag(item, :without_img) do
+  def main_article_tag(item, :without_img, conn: conn) do
     content_tag(:div) do
       [
-        link(item.title, to: href_path(item), class: "bc-article__heading"),
+        link(item.title, to: href_path(item, conn), class: "bc-article__heading"),
         content_tag(:p, item.lead, class: "bc-article__paragraph"),
         content_tag(:div, class: "d-flex align-items-center mt-3") do
           do_article_attrs(item)
@@ -29,10 +29,10 @@ defmodule BloomchainWeb.SharedView do
     end
   end
 
-  def article_tag(item) do
+  def article_tag(item, conn: conn) do
     content_tag(:div, class: "col-xl-6") do
       [
-        link(item.title, to: href_path(item), class: "bc-article__heading"),
+        link(item.title, to: href_path(item, conn), class: "bc-article__heading"),
         content_tag(:p, item.lead, class: "bc-article__paragraph"),
         content_tag(:div, class: "d-flex align-items-center mt-3") do
           do_article_attrs(item)
@@ -53,12 +53,6 @@ defmodule BloomchainWeb.SharedView do
         type: "button",
         data_scroll: after_cursor
       )
-
-      # link(
-      #   "Загрузить еще",
-      #   to: "#{conn.request_path}?scroll=#{after_cursor}",
-      #   class: "bc-article__heading"
-      # )
     end
   end
 
@@ -74,8 +68,8 @@ defmodule BloomchainWeb.SharedView do
     ]
   end
 
-  defp href_path(item) do
-    "/#{item.type}/#{item.slug}"
+  defp href_path(item, conn) do
+    "#{conn.request_path}/#{item.slug}"
   end
 
   defp time_from(datetime) do
