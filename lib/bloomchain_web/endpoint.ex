@@ -1,7 +1,7 @@
 defmodule BloomchainWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :bloomchain
 
-  socket("/socket", BloomchainWeb.UserSocket)
+  # socket("/socket", BloomchainWeb.UserSocket)
 
   # Serve at "/" the static files from "priv/static" directory.
   #
