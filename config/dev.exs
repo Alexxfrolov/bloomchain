@@ -12,8 +12,8 @@ config :bloomchain, BloomchainWeb.Endpoint,
   code_reloader: true,
   check_origin: false,
   watchers: [
-    yarn: ["start", cd: Path.expand("../lib/bloomchain_admin/frontend", __DIR__)]
-    # yarn: ["watch", cd: Path.expand("../lib/bloomchain_web/client", __DIR__)]
+    yarn: ["start", cd: Path.expand("../lib/bloomchain_admin/frontend", __DIR__)],
+    yarn: ["watch", cd: Path.expand("../lib/bloomchain_web/client", __DIR__)]
   ]
 
 # ## SSL Support

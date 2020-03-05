@@ -1026,7 +1026,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var observer = new MutationObserver(callback);
   observer.observe($main, config);
-  $paginationButton.addEventListener('click', pagination);
+  $paginationButton && $paginationButton.addEventListener('click', pagination);
 
   function pagination(event) {
     var _event$currentTarget$ = event.currentTarget.dataset,
