@@ -33,14 +33,17 @@ defmodule Bloomchain.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.3.4"},
+      {:phoenix, "~> 1.4"},
       {:phoenix_pubsub, "~> 1.0"},
-      {:phoenix_ecto, "~> 3.2"},
+      {:phoenix_ecto, "~> 4.1"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"},
+      {:plug_cowboy, "~> 2.0"},
+
+      # http requests
+      {:httpoison, "~> 1.6"},
 
       # User authentication
       {:guardian, "~> 1.0"},
@@ -52,11 +55,11 @@ defmodule Bloomchain.Mixfile do
       {:earmark, "~> 1.2.6"},
       {:timex, "~> 3.3.0"},
       {:elixir_uuid, "~> 1.2"},
-      {:paginator, "~> 0.4.1"},
+      {:paginator, "~> 0.6"},
 
       # File attachment deps
-      {:arc, "~> 0.10.0"},
-      {:arc_ecto, "~> 0.10.0"},
+      {:arc, "~> 0.11.0"},
+      {:arc_ecto, "~> 0.11.3"},
 
       # If using Amazon S3:
       ex_aws: "~> 2.0",
