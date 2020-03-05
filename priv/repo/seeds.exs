@@ -56,15 +56,42 @@ Repo.insert!(
 )
 
 Repo.insert_all(Subscriber, [
-  %{email: "app@yandex.ru", inserted_at: Timex.now(), updated_at: Timex.now()},
-  %{email: "new@yandex.ru", inserted_at: Timex.now(), updated_at: Timex.now()},
-  %{email: "superemail@google.com", inserted_at: Timex.now(), updated_at: Timex.now()}
+  %{
+    email: "app@yandex.ru",
+    inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
+    updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+  },
+  %{
+    email: "new@yandex.ru",
+    inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
+    updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+  },
+  %{
+    email: "superemail@google.com",
+    inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
+    updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+  }
 ])
 
 Repo.insert_all(Tag, [
-  %{name: "криптовалюта", slug: "kripto", inserted_at: Timex.now(), updated_at: Timex.now()},
-  %{name: "рынок", slug: "rinok", inserted_at: Timex.now(), updated_at: Timex.now()},
-  %{name: "биткоин", slug: "bitcoin", inserted_at: Timex.now(), updated_at: Timex.now()}
+  %{
+    name: "криптовалюта",
+    slug: "kripto",
+    inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
+    updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+  },
+  %{
+    name: "рынок",
+    slug: "rinok",
+    inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
+    updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+  },
+  %{
+    name: "биткоин",
+    slug: "bitcoin",
+    inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
+    updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+  }
 ])
 
 for type <- ~w[newsfeed detailed research analysis in_russia calendar person] do

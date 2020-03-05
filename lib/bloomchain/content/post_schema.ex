@@ -73,7 +73,11 @@ defmodule Bloomchain.Content.Post do
   defp process_published(
          %Ecto.Changeset{valid?: true, changes: %{status: "published"}} = changeset
        ) do
-    put_change(changeset, :published_at, Timex.now())
+    put_change(
+      changeset,
+      :published_at,
+      NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+    )
   end
 
   defp process_published(changeset), do: changeset
