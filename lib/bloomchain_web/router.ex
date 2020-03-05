@@ -66,5 +66,6 @@ defmodule BloomchainWeb.Router do
     resources("/research", ResearchController, only: [:index, :show])
     resources("/research-archive", ArchiveController, only: [:index])
     resources("/search", SearchController, only: [:index, :create])
+    resources("/currency_index", CurrencyIndexController, only: [:index])
   end
 end
