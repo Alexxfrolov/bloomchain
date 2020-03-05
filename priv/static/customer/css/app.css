@@ -10049,12 +10049,7 @@ html.lb-disable-scrolling {
             color: #2633E2;
           }
   
-
-  .sticky {
-    position: sticky;
-    top: 1.25rem;
-  }
-  
+ 
   .icon {
     display: inline-block;
     vertical-align: middle;

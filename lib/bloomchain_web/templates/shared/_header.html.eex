@@ -20,7 +20,7 @@
               <span class="small mr-2">Теги:</span>
 
               <%= for tag <- @article.tags do %>
-                <a class="span badge badge-primary-inverse" href="#"><%= tag.name %></a>
+                <span class="span badge badge-primary-inverse" style="cursor: default"><%= tag.name %></span>
               <% end %>
 
             </div>
