@@ -6,6 +6,7 @@ defmodule BloomchainWeb.AnalysisController do
     %{entries: articles, metadata: meta} = Article.paginate("analysis", scroll)
 
     conn
+    |> put_resp_header("x-pagination-scroll", to_string(meta.after))
     |> put_layout(false)
     |> put_view(BloomchainWeb.SharedView)
     |> render("_article_block.html", articles: articles, meta: meta)

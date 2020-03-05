@@ -4,7 +4,7 @@ defmodule BloomchainWeb.ArchiveView do
 
   def archive_tag(item, conn: _conn) do
     content_tag(:p) do
-      content_tag(:a, href: File.url({item.pdf.file, item.pdf})) do
+      content_tag(:a, href: File.url({item.pdf.file, item.pdf}), target: "_blank") do
         img_tag(
           File.url({item.cover.file, item.cover}),
           class: "alignnone size-full wp-image-62815",

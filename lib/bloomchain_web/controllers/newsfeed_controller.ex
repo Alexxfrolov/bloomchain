@@ -6,13 +6,10 @@ defmodule BloomchainWeb.NewsfeedController do
     %{entries: articles, metadata: meta} = Article.paginate("newsfeed", scroll)
 
     conn
+    |> put_resp_header("x-pagination-scroll", to_string(meta.after))
+    |> put_resp_header("x-last-date", to_string(group(articles) |> Map.keys() |> Enum.min()))
     |> put_layout(false)
-    |> render(
-      detect_template(articles, last_date),
-      articles: group(articles),
-      meta: meta,
-      last_date: Date.from_iso8601!(last_date)
-    )
+    |> render("_articles_block.html", articles: group(articles), previous_date: last_date)
   end
 
   def index(conn, _params) do
@@ -27,17 +24,5 @@ defmodule BloomchainWeb.NewsfeedController do
 
   defp group(items) do
     Enum.group_by(items, &NaiveDateTime.to_date(&1.published_at))
-  end
-
-  defp detect_template([item | _], date) do
-    if Date.from_iso8601!(date) == NaiveDateTime.to_date(item.published_at) do
-      "previous_index.html"
-    else
-      "index.html"
-    end
-  end
-
-  defp detect_template(_, _) do
-    "index.html"
   end
 end

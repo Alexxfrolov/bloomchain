@@ -3,7 +3,7 @@ defmodule BloomchainWeb.NewsfeedView do
   use BloomchainWeb, :view
 
   def header_tag(date) do
-    content_tag(:h1, class: "highlight highlight-date") do
+    content_tag(:h1, class: "highlight highlight-date mt-4") do
       [
         content_tag(:span, formatted_weekday(date), class: "mr-1 d-inline-flex"),
         content_tag(:span, formatted_date(date), class: "d-inline-flex font-weight-semibold")

@@ -1,18 +1,7 @@
-<%= for date <- @articles |> Map.keys() |> Enum.sort(&(&1 >= &2)) do %>
-  <div class="container pt-4 pb-5">
-    <div class="row">
-      <div class="col-lg-12">
-        <%= header_tag(date) %>
-
-          <div class="bc-news mt-3">
-
-            <%= for item <- @articles[date] do %>
-              <%= item_tag(item) %>
-            <% end %>
-          </div>
-        </div>
-    </div>
+<div class="container pt-4 pb-5">
+  <div class="js-article-list">
+    <%= render "_articles_block.html", conn: @conn, articles: @articles, previous_date: nil %>
   </div>
-<% end %>
+</div>
 
 <%= load_more_button(@meta, last_date: @articles |> Map.keys() |> Enum.min()) %>

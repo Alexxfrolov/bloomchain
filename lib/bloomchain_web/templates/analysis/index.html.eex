@@ -29,12 +29,16 @@
 
   </div>
 </div>
+
 <div class="bg-white">
   <div class="container py-5">
     <a name="analitics"></a>
     <h1 class="bc-analitics__h1">Биржевая аналитика</h1>
-    <%= render SharedView, "_article_block.html", assigns %>
+    <div class="js-article-list">
+      <%= render SharedView, "_article_block.html", assigns %>
+    </div>
   </div>
+  <%= SharedView.load_more_button(@meta) %>
 </div>
 
 <script src="https://code.highcharts.com/stock/highstock.js"></script>

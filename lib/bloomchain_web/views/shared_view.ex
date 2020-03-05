@@ -3,6 +3,21 @@ defmodule BloomchainWeb.SharedView do
 
   alias BloomchainWeb.Uploaders.File
 
+  def load_more_button(%Paginator.Page.Metadata{after: nil}) do
+  end
+
+  def load_more_button(%Paginator.Page.Metadata{after: after_cursor}) do
+    content_tag(:div, class: "container px-0 pb-5 js-scroll-button-container") do
+      content_tag(
+        :button,
+        "Загрузить еще",
+        class: "bc-article__btn-link btn btn-link js-scroll-button",
+        type: "button",
+        data_scroll: after_cursor
+      )
+    end
+  end
+
   def main_article_tag(item, conn: conn) do
     content_tag(:a, class: "bc-article__overlay-link", href: href_path(item, conn)) do
       content_tag(:div, class: "bc-article__image") do
@@ -20,7 +35,10 @@ defmodule BloomchainWeb.SharedView do
   def main_article_tag(item, :without_img, conn: conn) do
     content_tag(:div) do
       [
-        link(item.title, to: href_path(item, conn), class: "bc-article__heading"),
+        link(item.title,
+          to: href_path(item, conn),
+          class: "bc-article__heading bc-article__heading__h2"
+        ),
         content_tag(:p, item.lead, class: "bc-article__paragraph"),
         content_tag(:div, class: "d-flex align-items-center mt-3") do
           do_article_attrs(item)
@@ -32,27 +50,13 @@ defmodule BloomchainWeb.SharedView do
   def article_tag(item, conn: conn) do
     content_tag(:div, class: "col-xl-6") do
       [
+        content_tag(:hr, nil, class: "bc-article__separator mx-0 my-3"),
         link(item.title, to: href_path(item, conn), class: "bc-article__heading"),
         content_tag(:p, item.lead, class: "bc-article__paragraph"),
         content_tag(:div, class: "d-flex align-items-center mt-3") do
           do_article_attrs(item)
         end
       ]
-    end
-  end
-
-  def load_more_button(%Paginator.Page.Metadata{after: nil}, conn: _) do
-  end
-
-  def load_more_button(%Paginator.Page.Metadata{after: after_cursor}, conn: conn) do
-    content_tag(:div, class: "container px-0 pb-5 js-scroll-button-container") do
-      content_tag(
-        :button,
-        "Загрузить еще",
-        class: "bc-article__btn-link btn btn-link js-scroll-button",
-        type: "button",
-        data_scroll: after_cursor
-      )
     end
   end
 

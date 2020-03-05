@@ -985,67 +985,37 @@ document.addEventListener('DOMContentLoaded', function () {
     direction: "left",
     duplicated: !0
   });
-  var $main = document.querySelector('.js-main');
-  var $paginationButton = document.querySelector('.js-scroll-button');
-  var config = {
-    attributes: false,
-    childList: true,
-    subtree: true
-  };
-
-  var callback = function callback(mutationsList, observer) {
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-      for (var _iterator = mutationsList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var mutation = _step.value;
-
-        if (mutation.type === 'childList') {
-          if (mutation.addedNodes.length && mutation.addedNodes[0].classList.contains('js-scroll-button-container')) {
-            mutation.addedNodes[0].querySelector('.js-scroll-button').addEventListener('click', pagination);
-          }
-        }
-      }
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-          _iterator["return"]();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
-    }
-  };
-
-  var observer = new MutationObserver(callback);
-  observer.observe($main, config);
-  $paginationButton && $paginationButton.addEventListener('click', pagination);
+  var $main = document.querySelector('.js-article-list');
+  var $scrollButtonContainer = document.querySelector('.js-scroll-button-container');
+  var $scrollButton = document.querySelector('.js-scroll-button');
+  $scrollButton && $scrollButton.addEventListener('click', pagination);
 
   function pagination(event) {
     var _event$currentTarget$ = event.currentTarget.dataset,
         scroll = _event$currentTarget$.scroll,
         date = _event$currentTarget$.date;
+    var url = "".concat(location.pathname, "?scroll=").concat(scroll, "&last_date=").concat(date);
+    var $button = document.querySelector('.container.px-0.pb-5');
+    fetch(url).then(function (response) {
+      var scroll = response.headers.get('x-pagination-scroll');
+      var date = response.headers.get('x-last-date');
 
-    if (!!scroll) {
-      var url = "".concat(location.pathname, "?scroll=").concat(scroll, "&last_date=").concat(date);
-      var $button = document.querySelector('.container.px-0.pb-5');
-      fetch(url).then(function (data) {
-        return data.text();
-      }).then(function (data) {
-        var html = parseHTML(data);
-        $button.remove();
-        Array.from(html).forEach(function (node) {
-          return $main.append(node);
-        });
+      if (!!scroll) {
+        $scrollButton.setAttribute('data-scroll', scroll);
+        $scrollButton.setAttribute('data-date', date);
+      } else {
+        $scrollButton.removeEventListener('click', pagination);
+        $scrollButtonContainer.remove();
+      }
+
+      return response.text();
+    }).then(function (textHTML) {
+      console.log(textHTML);
+      var html = parseHTML(textHTML);
+      Array.from(html).forEach(function (node) {
+        return $main.append(node);
       });
-    }
+    });
   }
 
   var $currencyConverterInputField = document.querySelector('.js-currency-converter-input');
