@@ -6,9 +6,10 @@ import CssBaseline from "@material-ui/core/CssBaseline"
 import {
   ActicleCreatePage,
   ActicleEditPage,
-  ArticlesViewPage,
-  MediaPage,
   ArchivesPage,
+  ArticlesViewPage,
+  AuthorsPage,
+  MediaPage,
   SubscribersPage,
   TagsPage,
   UserAccountPage,
@@ -38,6 +39,8 @@ export const App = () => {
         return <ArticlesViewPage />
       case "admin.articles.edit":
         return <ActicleEditPage />
+      case "admin.authors":
+        return <AuthorsPage />
       case "admin.tags":
         return <TagsPage />
       case "admin.media":

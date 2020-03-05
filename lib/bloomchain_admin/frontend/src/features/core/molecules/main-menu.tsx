@@ -19,6 +19,7 @@ import DraftsRoundedIcon from "@material-ui/icons/DraftsRounded"
 import InsertDriveFileRoundedIcon from "@material-ui/icons/InsertDriveFileRounded"
 import ImportContactsRoundedIcon from "@material-ui/icons/ImportContactsRounded"
 import AlternateEmailIcon from "@material-ui/icons/AlternateEmail"
+import FaceRoundedIcon from "@material-ui/icons/FaceRounded"
 import { NavLink } from "@lib/navlink"
 import { AccountContext } from "@features/core"
 
@@ -213,6 +214,17 @@ export const MainMenu = () => {
       <Divider />
       <List>
         <ListSubheader inset={true}>Словари</ListSubheader>
+        <ListItem
+          aria-current={isCurrentMenu("admin.authors") ? "page" : undefined}
+          className={classes.listitem}
+        >
+          <NavLink routeName="admin.authors" className={classes.link}>
+            <ListItemIcon style={{ paddingLeft: "7px" }}>
+              <FaceRoundedIcon style={{ color: indigo[500] }} />
+            </ListItemIcon>
+            <ListItemText primary="Авторы" />
+          </NavLink>
+        </ListItem>
         <ListItem
           aria-current={isCurrentMenu("admin.tags") ? "page" : undefined}
           className={classes.listitem}

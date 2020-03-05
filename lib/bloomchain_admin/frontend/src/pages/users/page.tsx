@@ -151,11 +151,11 @@ export const UsersPage = () => {
           </Grid>
           <Grid item={true} xs={12}>
             {!error ? (
-              <UserTable
+              <UsersTable
                 data={users}
                 loading={loading}
                 renderRow={(user) => (
-                  <UserTableRow
+                  <UsersTableRow
                     key={nanoid()}
                     user={user}
                     onDetete={handleDeleteButtonClick(user)}
@@ -170,7 +170,7 @@ export const UsersPage = () => {
         </Grid>
       </Container>
       {openedAddFormDialog && (
-        <AddFormDialog
+        <AddUserFormDialog
           opened={openedAddFormDialog}
           onClose={closeAddFormDialog}
           onAddUser={addUser}
@@ -184,7 +184,7 @@ export const UsersPage = () => {
         />
       )}
       {currentUser && openedEditFormDialog && (
-        <EditFormDialog
+        <EditUserFormDialog
           editableUser={currentUser}
           opened={openedEditFormDialog}
           onClose={closeEditFormDialog}
@@ -195,19 +195,19 @@ export const UsersPage = () => {
   )
 }
 
-type UserTableProps = {
+type UsersTableProps = {
   data: User[]
   loading: boolean
-  renderRow: (user: User) => ReactElement<UserTableRowProps>
+  renderRow: (user: User) => ReactElement<UsersTableRowProps>
 }
 
-const UserTable = ({ data, loading, renderRow }: UserTableProps) => (
+const UsersTable = ({ data, loading, renderRow }: UsersTableProps) => (
   <TableContainer component={Paper}>
     <Table>
       <TableHead>
         <TableRow>
           <TableCell width="1%" component="th">
-            Фамилияы
+            Фамилия
           </TableCell>
           <TableCell width="1%" component="th">
             Имя
@@ -245,14 +245,14 @@ const UserTable = ({ data, loading, renderRow }: UserTableProps) => (
   </TableContainer>
 )
 
-type UserTableRowProps = {
+type UsersTableRowProps = {
   user: User
   onDetete: () => void
   onEdit: () => void
 }
 
-const UserTableRow = ({ user, onDetete, onEdit }: UserTableRowProps) => (
-  <TableRow key={nanoid()}>
+const UsersTableRow = ({ user, onDetete, onEdit }: UsersTableRowProps) => (
+  <TableRow>
     <TableCell>{user.last_name}</TableCell>
     <TableCell>{user.first_name}</TableCell>
     <TableCell>{user.role}</TableCell>
@@ -276,17 +276,20 @@ const UserTableRow = ({ user, onDetete, onEdit }: UserTableRowProps) => (
   </TableRow>
 )
 
-type AddFormDialogProps = {
+type AddUserFormDialogProps = {
   opened: boolean
   onClose: () => void
   onAddUser: (user: User) => void
 }
 
-const AddFormDialog = ({ opened, onAddUser, onClose }: AddFormDialogProps) => {
-  const [user, setUser] = useState<
-    Pick<User, "name" | "role" | "job" | "phone" | "email">
-  >({
-    name: "",
+const AddUserFormDialog = ({
+  opened,
+  onAddUser,
+  onClose,
+}: AddUserFormDialogProps) => {
+  const [user, setUser] = useState<User>({
+    first_name: "",
+    last_name: "",
     role: "writer",
     job: "",
     phone: "",
@@ -345,9 +348,18 @@ const AddFormDialog = ({ opened, onAddUser, onClose }: AddFormDialogProps) => {
               <TextField
                 label="Имя"
                 type="text"
-                value={user.name}
+                value={user.first_name}
                 fullWidth
-                onChange={handleChangeTextField("name")}
+                onChange={handleChangeTextField("first_name")}
+              />
+            </Grid>
+            <Grid item={true} xs={12}>
+              <TextField
+                label="Фамилия"
+                type="text"
+                value={user.last_name}
+                fullWidth
+                onChange={handleChangeTextField("last_name")}
               />
             </Grid>
             <Grid item={true} xs={12}>
@@ -409,19 +421,19 @@ const AddFormDialog = ({ opened, onAddUser, onClose }: AddFormDialogProps) => {
   )
 }
 
-type EditFormDialogProps = {
+type EditUserFormDialogProps = {
   editableUser: User
   opened: boolean
   onClose: () => void
   onEditUser: (user: User) => void
 }
 
-const EditFormDialog = ({
+const EditUserFormDialog = ({
   editableUser,
   opened,
   onEditUser,
   onClose,
-}: EditFormDialogProps) => {
+}: EditUserFormDialogProps) => {
   const [user, setUser] = useState<User>({ ...editableUser })
 
   const labelRef: RefObject<HTMLLabelElement> | null = useRef(null)
@@ -476,9 +488,18 @@ const EditFormDialog = ({
               <TextField
                 label="Имя"
                 type="text"
-                value={user.name}
+                value={user.first_name}
                 fullWidth
-                onChange={handleChangeTextField("name")}
+                onChange={handleChangeTextField("first_name")}
+              />
+            </Grid>
+            <Grid item={true} xs={12}>
+              <TextField
+                label="Фамилия"
+                type="text"
+                value={user.last_name}
+                fullWidth
+                onChange={handleChangeTextField("last_name")}
               />
             </Grid>
             <Grid item={true} xs={12}>

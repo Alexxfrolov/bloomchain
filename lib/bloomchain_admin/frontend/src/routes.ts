@@ -1,5 +1,6 @@
 import { Route } from "router5"
 
+//TODO: add canActive for the admin routes
 export const routes: Route[] = [
   {
     name: "admin",
@@ -40,18 +41,12 @@ export const routes: Route[] = [
         path: "/subscribers",
       },
       {
+        name: "authors",
+        path: "/authors",
+      },
+      {
         name: "tags",
         path: "/tags",
-        children: [
-          {
-            name: "create",
-            path: "/create",
-          },
-          {
-            name: "edit",
-            path: "/edit",
-          },
-        ],
       },
       {
         name: "media",

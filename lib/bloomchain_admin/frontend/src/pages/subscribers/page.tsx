@@ -109,7 +109,7 @@ type SubscribersTableRowProps = {
 }
 
 const SubscribersTableRow = ({ subscriber }: SubscribersTableRowProps) => (
-  <TableRow key={nanoid()}>
+  <TableRow>
     <TableCell>{subscriber.email}</TableCell>
     <TableCell>
       {subscriber.created_at &&
