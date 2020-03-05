@@ -45,27 +45,30 @@
 
 <script type="text/javascript">
 
+fetch("/api/currency_index?currency=all")
+  .then(response => response.json())
+  .then(json => {
+    const chart1 = createChart('js-chart-1', json, 40, 'BloomChain Bitcoin Price Index (BCBTC Index)', 'BCBTC')
+  })
+
 fetch("/api/currency_index?currency=bitcoin")
   .then(response => response.json())
   .then(json => {
-    const chart1 = createChart('js-chart-1', json)
-    chart1.setSize(800);
-    const chart2 = createChart('js-chart-2', json)
-    chart2.setSize(800);
+    const chart2 = createChart('js-chart-2', json, 25, 'BloomChain Top 10 Cryptocurrency Index (BC10 Index)', 'BC10')
   })
 
-function createChart(container, data) {
+function createChart(container, data, yAxisOffset, title, seriesName) {
   return Highcharts.stockChart(container, {
   chart: {
-    height: 400,
+    height: 800,
     backgroundColor: "#f8f9fa",
   },
   title: {
-    text: "BloomChain Bitcoin Price Index (BCBTC Index)",
+    text: title,
     align: "left"
   },
   yAxis: {
-    offset: 40
+    offset: yAxisOffset
   },
   rangeSelector: {
     allButtonsEnabled: true,
@@ -155,7 +158,7 @@ function createChart(container, data) {
     enabled: false
   },
   series: [{
-    name: "BCBTC",
+    name: seriesName,
     data,
     type: "line",
     tooltip: {
@@ -165,11 +168,11 @@ function createChart(container, data) {
   responsive: {
       rules: [{
           condition: {
-              maxWidth: 500
+              maxWidth: 800
           },
           chartOptions: {
               chart: {
-                  height: 300
+                  height: 400
               },
               subtitle: {
                   text: null
