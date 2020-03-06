@@ -434,7 +434,7 @@ export const ActicleCreatePage = () => {
                         <Grid item={true} xs={12}>
                           <TextField
                             id="title"
-                            label="Title"
+                            label="Заголовок"
                             value={cover.title ?? ""}
                             fullWidth={true}
                             variant="outlined"
@@ -445,7 +445,7 @@ export const ActicleCreatePage = () => {
                         <Grid item={true} xs={12}>
                           <TextField
                             id="alt"
-                            label="Alt"
+                            label="Атрибут alt"
                             value={cover.alt ?? ""}
                             fullWidth={true}
                             variant="outlined"
@@ -456,7 +456,7 @@ export const ActicleCreatePage = () => {
                         <Grid item={true} xs={12}>
                           <TextField
                             id="source"
-                            label="Источник"
+                            label="Подпись"
                             value={cover.source ?? ""}
                             fullWidth={true}
                             variant="outlined"

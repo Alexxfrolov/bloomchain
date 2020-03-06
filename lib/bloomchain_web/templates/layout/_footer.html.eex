@@ -17,9 +17,7 @@
         </div>
       </div>
     </div>
-    <div class="bc-footer__subscribe">
-      <%= render "_subscribe_form.html", conn: @conn %>
-    </div>
+    <%= render "_subscribe_form.html", conn: @conn %>
     <p class="bc-footer__p text-center mt-3">*Нажимая подписаться вы соглашаетесь с политикой конфиденциальности</p>
   </div>
   <div class="container mt-4 mt-md-5">

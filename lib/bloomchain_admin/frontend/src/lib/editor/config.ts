@@ -1,10 +1,11 @@
+import { mediaApi } from "@api/media"
+
 export const config = {
   height: 385,
   language: "ru",
   placeholderText: "",
   paragraphFormat: {
     N: "Normal",
-    H1: "Heading 1",
     H2: "Heading 2",
     H3: "Heading 3",
     H4: "Heading 4",
@@ -20,6 +21,9 @@ export const config = {
         "insertLink",
         "fontSize",
         "textColor",
+        "backgroundColor",
+        "inlineClass",
+        "inlineStyle",
         "clearFormatting",
       ],
       align: "left",
@@ -43,9 +47,9 @@ export const config = {
       buttonsVisible: 3,
     },
     moreMisc: {
-      buttons: ["undo", "redo"],
+      buttons: ["undo", "redo", "fullscreen"],
       align: "right",
-      buttonsVisible: 2,
+      buttonsVisible: 3,
     },
   },
   quickInsertButtons: ["image", "video", "table", "ul", "qoute"],

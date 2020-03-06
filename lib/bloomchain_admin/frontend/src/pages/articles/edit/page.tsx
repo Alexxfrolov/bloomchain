@@ -412,7 +412,7 @@ export const ActicleEditPage = () => {
                             <TextField
                               id="title"
                               name="title"
-                              label="Title"
+                              label="Заголовок"
                               defaultValue={article.cover?.title ?? ""}
                               fullWidth={true}
                               variant="outlined"
@@ -424,7 +424,7 @@ export const ActicleEditPage = () => {
                             <TextField
                               id="alt"
                               name="alt"
-                              label="Alt"
+                              label="Атрибут alt"
                               defaultValue={article.cover?.alt ?? ""}
                               fullWidth={true}
                               variant="outlined"
@@ -436,7 +436,7 @@ export const ActicleEditPage = () => {
                             <TextField
                               id="source"
                               name="source"
-                              label="Источник"
+                              label="Подпись"
                               defaultValue={article.cover?.source ?? ""}
                               fullWidth={true}
                               variant="outlined"
