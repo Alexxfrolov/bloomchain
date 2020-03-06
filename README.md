@@ -1,3 +1,5 @@
+![Elixir CI](https://github.com/Alexxfrolov/bloomchain/workflows/Elixir%20CI/badge.svg)
+
 # Bloomchain
 
 News site app built on Phoenix framework in Elixir.
