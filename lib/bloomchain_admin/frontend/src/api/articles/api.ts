@@ -37,7 +37,7 @@ function update(
   const data = {
     ...rest,
     tags: tags.reduce((acc: number[], tag) => [...acc, tag.id], []),
-    keywords: Boolean(keywords) ? keywords.split(/[ ,]+/) : [],
+    keywords: keywords.length ? keywords.split(/[ ,]+/) : [],
     cover_id: cover?.id ?? null,
   }
   return axios.patch(`${httpConfig.baseUrl}/articles/${article.id}`, data)

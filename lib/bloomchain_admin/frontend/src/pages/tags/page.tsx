@@ -93,11 +93,11 @@ export const TagsPage = () => {
 
   const handleConfirmDelete = useCallback(async () => {
     if (currentTag) {
-      const response = await tagsApi.remove(currentTag.id)
-      setOpenedDeleteDialog(false)
-      if (response.status === 204) {
+      try {
+        const response = await tagsApi.remove(currentTag.id)
+        setOpenedDeleteDialog(false)
         setTags(tags.filter((item) => item.id !== currentTag.id))
-      }
+      } catch {}
     }
   }, [tags, currentTag, setTags, setOpenedDeleteDialog])
 
@@ -236,11 +236,11 @@ const AddFormDialog = ({ opened, onAddTag, onClose }: AddFormDialogProps) => {
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault()
-      const response = await tagsApi.create(name)
-      if (response.status === 201) {
+      try {
+        const response = await tagsApi.create(name)
         onClose()
         onAddTag(response.data)
-      }
+      } catch {}
     },
     [name, onAddTag, onClose],
   )

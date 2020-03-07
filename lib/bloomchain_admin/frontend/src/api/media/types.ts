@@ -16,3 +16,9 @@ export type UploadableMediaFile = {
   source?: string
   file: File
 }
+
+export type EditableMediaFile = Pick<
+  UploadableMediaFile,
+  "title" | "alt" | "source"
+> &
+  Pick<MediaFile, "id">

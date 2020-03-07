@@ -2,7 +2,7 @@ import axios, { AxiosPromise } from "axios"
 import decamelize from "decamelize"
 import { httpConfig } from "@features/core"
 
-import { MediaFile, UploadableMediaFile } from "./types"
+import { MediaFile, UploadableMediaFile, EditableMediaFile } from "./types"
 
 function get(type: string): AxiosPromise<{ data: MediaFile[] }> {
   return axios.get(`${httpConfig.baseUrl}/media/?type=${type}`)
@@ -16,11 +16,11 @@ function create(file: UploadableMediaFile): AxiosPromise<MediaFile> {
   return axios.post(`${httpConfig.baseUrl}/media`, formData)
 }
 
-function update(media: MediaFile): AxiosPromise<MediaFile> {
+function update(media: EditableMediaFile): AxiosPromise<MediaFile> {
   return axios.patch(`${httpConfig.baseUrl}/media/${media.id}`, media)
 }
 
-function remove(id: number): AxiosPromise {
+function remove(id: number): AxiosPromise<MediaFile> {
   return axios.delete(`${httpConfig.baseUrl}/media/${id}`)
 }
 

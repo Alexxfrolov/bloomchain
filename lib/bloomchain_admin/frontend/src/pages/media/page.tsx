@@ -182,10 +182,12 @@ export const MediaPage = () => {
 
   const handleConfirmDelete = useCallback(async () => {
     if (editableMediaFile) {
-      const response = await mediaApi.remove(editableMediaFile.id)
-      setOpenedDeleteDialog(false)
-      if (response.status === 204) {
+      try {
+        const response = await mediaApi.remove(editableMediaFile.id)
+        setOpenedDeleteDialog(false)
         setMedia(media.filter((item) => item.id !== editableMediaFile.id))
+      } catch {
+        setError(true)
       }
     }
   }, [media, editableMediaFile, setMedia, setOpenedDeleteDialog])
@@ -423,12 +425,12 @@ const AddFormDialog = ({
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault()
-      if (media.file !== null) {
-        const response = await mediaApi.create(media)
-        if (response.status === 201) {
+      if (media.file) {
+        try {
+          const response = await mediaApi.create(media)
           onClose()
           onAddMedia(response.data)
-        }
+        } catch {}
       }
     },
     [media, onAddMedia, onClose],
@@ -539,11 +541,12 @@ const EditFormDialog = ({
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault()
-      const response = await mediaApi.update(media)
-      if (response.status === 200) {
+
+      try {
+        const response = await mediaApi.update(media)
         onClose()
         onUpdateMedia(response.data)
-      }
+      } catch {}
     },
     [media, onUpdateMedia, onClose],
   )

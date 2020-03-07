@@ -332,17 +332,15 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault()
-      const [image, pdf] = await Promise.all([
-        mediaApi.create(archive.cover),
-        mediaApi.create(archive.pdf),
-      ])
-      if (image.status === 201 && pdf.status === 201) {
+      try {
+        const [image, pdf] = await Promise.all([
+          mediaApi.create(archive.cover),
+          mediaApi.create(archive.pdf),
+        ])
         const response = await archivesApi.create(image.data.id, pdf.data.id)
-        if (response.status === 201) {
-          onAdd(response.data)
-          onClose()
-        }
-      }
+        onAdd(response.data)
+        onClose()
+      } catch {}
     },
     [archive, onClose, onAdd],
   )

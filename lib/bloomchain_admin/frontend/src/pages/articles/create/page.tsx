@@ -27,12 +27,18 @@ import {
   DialogActions,
   DialogTitle,
 } from "@material-ui/core"
+import DateFnsUtils from "@date-io/date-fns"
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import { Editor } from "@lib/editor"
 import { articlesApi, Article } from "@api/articles"
 import { tagsApi, Tag } from "@api/tags"
-import { mediaApi, MediaFile } from "@api/media"
+import { mediaApi } from "@api/media"
 import { ErrorDialog } from "@features/core"
+import { ArticleCover } from "@features/articles"
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -56,20 +62,21 @@ const useStyles = makeStyles((theme) =>
 
 const INITIAL_ARTICLE: Omit<
   Article,
-  "created_at" | "updated_at" | "id" | "keywords"
+  "created_at" | "updated_at" | "id" | "keywords" | "cover"
 > & {
   cover_id: number | null
-  keywords: string
+  keywords: string | null
 } = {
-  author: "",
-  body: "",
+  author: null,
+  body: null,
   cover_id: null,
-  description: "",
-  keywords: "",
-  lead: "",
+  published_at: null,
+  description: null,
+  keywords: null,
+  lead: null,
   status: "draft",
   tags: [],
-  time: "",
+  time: null,
   title: "",
   type: "newsfeed",
 }
@@ -107,11 +114,11 @@ export const ActicleCreatePage = () => {
   const [typeLabelWidth, setTypeLabelWidth] = useState(0)
   const [statusLabelWidth, setStatusLabelWidth] = useState(0)
 
-  const [cover, setCover] = useState<MediaFile>({
+  const [cover, setCover] = useState<ArticleCover>({
     file: null,
-    alt: "",
-    title: "",
-    source: "",
+    alt: null,
+    title: null,
+    source: null,
     type: "image",
   })
 
@@ -150,6 +157,16 @@ export const ActicleCreatePage = () => {
     [article, setArticle],
   )
 
+  const handleDateChange = useCallback(
+    (date: Date | null) => {
+      setArticle({
+        ...article,
+        published_at: date,
+      })
+    },
+    [article, setArticle],
+  )
+
   const handleChangeImageFileInput = useCallback(() => {
     if (
       fileInputRef.current &&
@@ -160,9 +177,9 @@ export const ActicleCreatePage = () => {
 
       reader.onload = function(event: ProgressEvent<FileReader>) {
         if (imageRef.current) {
-          event?.target?.result?.[
+          event?.target?.result &&
+            typeof event.target.result === "string" &&
             imageRef.current.setAttribute("src", event.target.result)
-          ]
         }
       }
 
@@ -214,31 +231,11 @@ export const ActicleCreatePage = () => {
       try {
         if (cover.file) {
           const mediaResponse = await mediaApi.create(cover)
-          if (mediaResponse.status === 201) {
-            const articleResponse = await articlesApi.create({
-              ...article,
-              cover_id: mediaResponse.data.id,
-            })
+          await articlesApi.create({
+            ...article,
+            cover_id: mediaResponse.data.id,
+          })
 
-            if (articleResponse.status === 201) {
-              setArticle({
-                ...INITIAL_ARTICLE,
-              })
-              setCover({
-                file: null,
-                alt: "",
-                title: "",
-                source: "",
-                type: "image",
-              })
-              setOpenedSuccessDialog(true)
-            }
-          }
-        }
-
-        const articleResponse = await articlesApi.create(article)
-
-        if (articleResponse.status === 201) {
           setArticle({
             ...INITIAL_ARTICLE,
           })
@@ -251,6 +248,20 @@ export const ActicleCreatePage = () => {
           })
           setOpenedSuccessDialog(true)
         }
+
+        await articlesApi.create(article)
+
+        setArticle({
+          ...INITIAL_ARTICLE,
+        })
+        setCover({
+          file: null,
+          alt: "",
+          title: "",
+          source: "",
+          type: "image",
+        })
+        setOpenedSuccessDialog(true)
       } catch {
         setError(true)
         setOpenedErrorDialog(true)
@@ -317,7 +328,7 @@ export const ActicleCreatePage = () => {
                         id="title"
                         fullWidth={true}
                         label="Заголовок"
-                        value={article.title ?? ""}
+                        value={article.title}
                         variant="outlined"
                         onChange={handleChangeFormField("title")}
                       />
@@ -487,6 +498,22 @@ export const ActicleCreatePage = () => {
                         </Select>
                       </FormControl>
                     </Grid>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <Grid item={true} xs={12}>
+                        <KeyboardDatePicker
+                          variant="dialog"
+                          margin="normal"
+                          id="published_at"
+                          label="Дата публикации"
+                          format="dd/MM/yyyy"
+                          value={article.published_at}
+                          onChange={handleDateChange}
+                          KeyboardButtonProps={{
+                            "aria-label": "Выберите дату",
+                          }}
+                        />
+                      </Grid>
+                    </MuiPickersUtilsProvider>
                     <Grid item={true} xs={12}>
                       <TextField
                         id="description"

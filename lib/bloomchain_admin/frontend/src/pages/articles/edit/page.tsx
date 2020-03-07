@@ -63,20 +63,22 @@ export const ActicleEditPage = () => {
 
   const [tags, setTags] = useState<Tag[]>([])
   const [article, setArticle] = useState<
-    Omit<Article, "createdAt" | "updatedAt" | "keywords" | "id"> & {
+    Omit<Article, "created_at" | "updated_at" | "keywords" | "id"> & {
       keywords: string | null
     }
   >({
     author: null,
     body: null,
+    cover: null,
     description: null,
     keywords: null,
     lead: null,
-    time: null,
     status: "draft",
     tags: [],
+    time: null,
     title: "",
     type: "newsfeed",
+    updated_at: null,
   })
 
   useEffect(() => {
@@ -146,20 +148,17 @@ export const ActicleEditPage = () => {
       const { value, name } = event.currentTarget
 
       if (value) {
-        const response = mediaApi.update({
-          id: article.cover.id,
-          [name]: value,
-        })
+        try {
+          mediaApi.update({
+            id: article.cover.id,
+            [name]: value.trim(),
+          })
+        } catch {
+          setError(true)
+        }
       }
-      // setArticle({
-      //   ...article,
-      //   cover: {
-      //     ...article.cover,
-      //     [name]: value,
-      //   },
-      // })
     },
-    [article, setArticle],
+    [article.cover.id, setError],
   )
 
   const handleChangeEditor = useCallback(
@@ -179,26 +178,18 @@ export const ActicleEditPage = () => {
         file: fileInputRef.current.files[0],
         type: "image",
       }
-      const response = await mediaApi.create(image)
 
-      if (response.status === 201) {
+      try {
+        const response = await mediaApi.create(image)
         setArticle({
           ...article,
           cover: { ...response.data },
         })
+      } catch {
+        setError(true)
       }
-      // const reader = new FileReader()
-      // reader.onload = function(event: ProgressEvent<FileReader>) {
-      //   if (imageRef.current) {
-      //     event?.target?.result?.[
-      //       imageRef.current.setAttribute("src", event.target.result)
-      //     ]
-      //   }
-      // }
-      // reader.readAsDataURL(fileInputRef.current.files[0])
-      // setArticle({ ...article, ...{ cover: fileInputRef.current.files[0] } })
     }
-  }, [article, setArticle])
+  }, [article, setArticle, setError])
 
   const handleChangeSelect = useCallback(
     (name: keyof Pick<Article, "type" | "status">) => (
@@ -226,12 +217,14 @@ export const ActicleEditPage = () => {
     async (event: FormEvent) => {
       event.preventDefault()
 
-      const response = await articlesApi.update(article)
-      if (response.status === 200) {
+      try {
+        await articlesApi.update(article)
         setOpenedDialog(true)
+      } catch {
+        setError(true)
       }
     },
-    [article, setOpenedDialog],
+    [article, setOpenedDialog, setError],
   )
 
   const tagsOptions = useMemo(

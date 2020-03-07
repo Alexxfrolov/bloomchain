@@ -11,8 +11,8 @@ import React, {
 import { useRoute } from "react-router5"
 import DateFnsUtils from "@date-io/date-fns"
 import {
-  MuiPickersUtilsProvider,
   KeyboardDatePicker,
+  MuiPickersUtilsProvider,
 } from "@material-ui/pickers"
 import format from "date-fns/format"
 import {
@@ -105,13 +105,15 @@ export const ArticlesViewPage = () => {
 
   const handleConfirmDelete = useCallback(async () => {
     if (currentArticle) {
-      const response = await articlesApi.remove(currentArticle.id)
-      setOpenedDeleteDialog(false)
-      if (response.status === 204) {
+      try {
+        const response = await articlesApi.remove(currentArticle.id)
+        setOpenedDeleteDialog(false)
         setArticles(articles.filter((item) => item.id !== currentArticle.id))
+      } catch {
+        setError(true)
       }
     }
-  }, [articles, currentArticle, setArticles, setOpenedDeleteDialog])
+  }, [articles, currentArticle, setArticles, setOpenedDeleteDialog, setError])
 
   return (
     <Fragment>

@@ -111,10 +111,12 @@ export const UsersPage = () => {
 
   const handleConfirmDelete = useCallback(async () => {
     if (currentUser) {
-      const response = await usersApi.remove(currentUser.id)
-      setOpenedDeleteDialog(false)
-      if (response.status === 204) {
+      try {
+        const response = await usersApi.remove(currentUser.id)
+        setOpenedDeleteDialog(false)
         setUsers(users.filter((item) => item.id !== currentUser.id))
+      } catch {
+        setError(true)
       }
     }
   }, [users, currentUser, setUsers, setOpenedDeleteDialog])
@@ -322,11 +324,11 @@ const AddUserFormDialog = ({
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault()
-      const response = await usersApi.create(user)
-      if (response.status === 201) {
+      try {
+        const response = await usersApi.create(user)
         onClose()
         onAddUser(response.data)
-      }
+      } catch {}
     },
     [user, onAddUser, onClose],
   )
@@ -462,11 +464,11 @@ const EditUserFormDialog = ({
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault()
-      const response = await usersApi.update(user)
-      if (response.status === 200) {
+      try {
+        const response = await usersApi.update(user)
         onClose()
         onEditUser(response.data)
-      }
+      } catch {}
     },
     [user, onEditUser, onClose],
   )
