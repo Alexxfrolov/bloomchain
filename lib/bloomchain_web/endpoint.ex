@@ -18,6 +18,12 @@ defmodule BloomchainWeb.Endpoint do
     only: ~w(customer grapejs admin)
   )
 
+  plug Plug.Parsers,
+    parsers: [:urlencoded, :multipart, :json],
+    pass: ["*/*"],
+    json_decoder: Poison,
+    length: 50_000_000
+
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
