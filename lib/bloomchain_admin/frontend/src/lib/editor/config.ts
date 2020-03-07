@@ -59,11 +59,12 @@ export const config = {
   imageManagerLoadParams: { type: "image", editor: "true" },
   imageManagerToggleTags: false,
   imageManagerDeleteParams: "",
+  videoAllowedTypes: ["mp4", "avi"],
   events: {
-    "image.beforeUpload": function(images: FileList) {
+    "image.beforeUpload": function(fileList: FileList) {
       const uploadImage = async () => {
         const image = {
-          file: images[0],
+          file: fileList[0],
           type: "image",
         }
         const { data } = await mediaApi.create(image)
@@ -73,6 +74,22 @@ export const config = {
       }
 
       uploadImage()
+
+      return false
+    },
+    "video.beforeUpload": function(fileList: FileList) {
+      const uploadVideo = async () => {
+        const video = {
+          file: fileList[0],
+          type: "video",
+        }
+        const { data } = await mediaApi.create(video)
+
+        this.video.insert(data.link, false, null, this.video.get())
+        this.popups.hideAll()
+      }
+
+      uploadVideo()
 
       return false
     },

@@ -1010,7 +1010,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
       return response.text();
     }).then(function (textHTML) {
-      console.log(textHTML);
       var html = parseHTML(textHTML);
       Array.from(html).forEach(function (node) {
         return $main.append(node);
