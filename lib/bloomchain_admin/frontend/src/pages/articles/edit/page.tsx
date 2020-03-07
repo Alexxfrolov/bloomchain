@@ -158,7 +158,7 @@ export const ActicleEditPage = () => {
         }
       }
     },
-    [article.cover.id, setError],
+    [article.cover, setError],
   )
 
   const handleChangeEditor = useCallback(
