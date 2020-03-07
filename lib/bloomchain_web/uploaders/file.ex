@@ -12,6 +12,10 @@ defmodule BloomchainWeb.Uploaders.File do
     ~w(.pdf) |> Enum.member?(Path.extname(file.file_name))
   end
 
+  def validate({file, %{type: "video"}}) do
+    ~w(.mp4 .avi) |> Enum.member?(Path.extname(file.file_name))
+  end
+
   def storage_dir(_, {_, scope}) do
     "uploads/#{scope.type}/#{scope.uuid}"
   end

@@ -22,14 +22,6 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaController do
     render(conn, "index.json", media: media)
   end
 
-  def create(conn, %{"image" => %Plug.Upload{content_type: _, filename: _, path: _}} = params) do
-    Media.create_changeset(
-      %Media{},
-      Map.merge(params, %{"file" => params["image"], "type" => "image"})
-    )
-    |> do_create(conn)
-  end
-
   def create(
         conn,
         %{"file" => %Plug.Upload{content_type: _, filename: _, path: _}, "type" => _} = params
