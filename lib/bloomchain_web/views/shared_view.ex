@@ -81,6 +81,6 @@ defmodule BloomchainWeb.SharedView do
   end
 
   defp author(item) do
-    Enum.join(item.authors, ", ")
+    item.authors |> Enum.map(fn i -> i.name end) |> Enum.join(", ")
   end
 end
