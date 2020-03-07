@@ -27,7 +27,7 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
       alt: media.alt,
       title: media.title,
       source: media.source,
-      link: File.url({media.file, media}, :original),
+      url: File.url({media.file, media}, :original),
       created_at: media.inserted_at,
       updated_at: media.updated_at
     }

@@ -20,7 +20,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
       id: article.id,
       title: article.title,
       slug: article.slug,
-      link: do_link(article),
+      url: do_link(article),
       lead: article.lead,
       type: article.type,
       status: article.status,
