@@ -1,6 +1,6 @@
 alias Bloomchain.Repo
 
-alias Bloomchain.Content.{Article, Tag, User, Subscriber, Media, Archive}
+alias Bloomchain.Content.{Article, Tag, User, Subscriber, Media, Archive, Author}
 
 cover =
   Repo.insert!(
@@ -52,6 +52,12 @@ Repo.insert!(
     email: "admin@app.com",
     password: "admin123",
     role: "admin"
+  })
+)
+
+Repo.insert!(
+  Author.create_changeset(%Author{}, %{
+    name: "Admin"
   })
 )
 
@@ -110,7 +116,8 @@ for type <- ~w[newsfeed detailed research analysis in_russia calendar person] do
       author: "Frolov Aleksey",
       time: i + 10,
       cover_id: cover.id,
-      tags: [1, 2, 3]
+      tags: [1, 2, 3],
+      authors: [1]
     })
   end
 end

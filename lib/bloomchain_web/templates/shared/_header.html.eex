@@ -10,7 +10,7 @@
           </time>
           <i class="mr-1 icon-user"></i>
           <address class="article__author mr-sm-4 mr-2">
-            <small class="small"><%= @article.author %></small>
+            <small class="small"><%= Enum.join(@article.authors, ", ") %></small>
           </address>
           <i class="mr-1 icon-view"></i>
           <span class="small mr-sm-4 mr-2"><%= @article.total_views %></span>

@@ -8,7 +8,7 @@ defmodule Bloomchain.Content.Article do
     from(
       p in Post,
       where: p.type == ^type and p.status == "published",
-      preload: [:cover],
+      preload: [:cover, :authors],
       order_by: [desc: p.published_at, desc: p.id]
     )
     |> Repo.paginate(cursor_fields: [:published_at, :id], sort_direction: :desc, limit: 6)
@@ -18,7 +18,7 @@ defmodule Bloomchain.Content.Article do
     from(
       p in Post,
       where: p.type == ^type and p.status == "published",
-      preload: [:cover],
+      preload: [:cover, :authors],
       order_by: [desc: p.published_at, desc: p.id]
     )
     |> Repo.paginate(
@@ -34,7 +34,7 @@ defmodule Bloomchain.Content.Article do
       from(
         p in Post,
         where: p.type == ^type and p.status == ^status,
-        preload: [:tags],
+        preload: [:tags, :authors],
         order_by: [desc: :inserted_at]
       )
     )
@@ -45,7 +45,7 @@ defmodule Bloomchain.Content.Article do
       from(
         p in Post,
         where: p.type == ^type and p.status == "published",
-        preload: [:cover],
+        preload: [:cover, :authors],
         order_by: [desc: :published_at],
         limit: ^limit
       )
@@ -54,12 +54,12 @@ defmodule Bloomchain.Content.Article do
 
   def get(id) do
     Repo.get(Post, id)
-    |> Repo.preload([:tags, :cover])
+    |> Repo.preload([:tags, :cover, :authors])
   end
 
   def get(slug, type: type) do
     Repo.get_by(Post, slug: slug, type: type)
-    |> Repo.preload([:tags, :cover])
+    |> Repo.preload([:tags, :cover, :authors])
   end
 
   def create(%{} = params) do
