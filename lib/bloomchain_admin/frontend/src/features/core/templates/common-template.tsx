@@ -10,7 +10,6 @@ import {
 } from "@material-ui/core"
 import MenuRoundedIcon from "@material-ui/icons/MenuRounded"
 import MenuOpenRoundedIcon from "@material-ui/icons/MenuOpenRounded"
-
 import AccountCircleRoundedIcon from "@material-ui/icons/AccountCircleRounded"
 import { NavLink } from "@lib/navlink"
 
@@ -94,7 +93,7 @@ type CommonTemplateProps = {
 
 export const CommonTemplate = ({ children, menu }: CommonTemplateProps) => {
   const classes = useStyles()
-  const [opened, setOpened] = useState(true)
+  const [opened, setOpened] = useState(false)
 
   const handleDrawerOpen = useCallback(() => {
     setOpened(true)
