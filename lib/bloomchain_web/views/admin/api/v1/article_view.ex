@@ -30,7 +30,8 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
       created_at: article.inserted_at,
       updated_at: article.updated_at,
       published_at: article.published_at,
-      tags: Enum.map(article.tags, &tag_json/1)
+      tags: Enum.map(article.tags, &tag_json/1),
+      authors: []
     }
   end
 
