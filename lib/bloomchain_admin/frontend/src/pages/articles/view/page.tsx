@@ -43,6 +43,13 @@ import {
   TableSkeleton,
 } from "@features/core"
 
+const titles = {
+  archive: "Архив",
+  published: "Опубликовано",
+  ready: "Готово к публикации",
+  draft: "Черновик",
+}
+
 export const ArticlesViewPage = () => {
   const { route } = useRoute()
   const [loading, setLoading] = useState(false)
@@ -115,13 +122,15 @@ export const ArticlesViewPage = () => {
     }
   }, [articles, currentArticle, setArticles, setOpenedDeleteDialog, setError])
 
+  const title = useMemo(() => titles[status], [status])
+
   return (
     <Fragment>
       <Container maxWidth="lg">
         <Grid container={true} spacing={3}>
           <Grid item={true} xs={12}>
             <Typography component="h1" variant="h4" gutterBottom={false}>
-              Опубликовано
+              {title}
             </Typography>
           </Grid>
           <Grid item={true} xs={12}>

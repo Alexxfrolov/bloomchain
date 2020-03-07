@@ -67,9 +67,9 @@ export const config = {
           file: fileList[0],
           type: "image",
         }
-        const { data } = await mediaApi.create(image)
+        const response = await mediaApi.create(image)
 
-        this.image.insert(data.link, false, null, this.image.get())
+        this.image.insert(response.data.link, false, null, this.image.get())
         this.popups.hideAll()
       }
 
@@ -79,13 +79,15 @@ export const config = {
     },
     "video.beforeUpload": function(fileList: FileList) {
       const uploadVideo = async () => {
-        const video = {
+        const data = {
           file: fileList[0],
           type: "video",
         }
-        const { data } = await mediaApi.create(video)
+        const response = await mediaApi.create(data)
 
-        this.video.insert(data.link, false, null, this.video.get())
+        const video = `<video controls="controls"><source src="${response.data.link}" /></video>`
+
+        this.video.insert(video)
         this.popups.hideAll()
       }
 
