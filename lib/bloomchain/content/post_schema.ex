@@ -41,7 +41,7 @@ defmodule Bloomchain.Content.Post do
   end
 
   @required_fields ~w(title type)a
-  @optional_fields ~w( body lead type status author time description keywords cover_id)a
+  @optional_fields ~w( body lead type status author time description keywords cover_id published_at)a
 
   def create_changeset(post, attrs) do
     post
@@ -80,7 +80,9 @@ defmodule Bloomchain.Content.Post do
     )
   end
 
-  defp process_published(changeset), do: changeset
+  defp process_published(%Ecto.Changeset{valid?: true} = changeset) do
+    put_change(changeset, :published_at, nil)
+  end
 
   defp process_tags(%Ecto.Changeset{valid?: true} = changeset, [%Tag{} | _] = tags) do
     changeset
