@@ -5,8 +5,8 @@
       <header class="article__header">
         <h1 class="article__heading"><%= @article.title %></h1>
         <div class="d-flex align-items-center">
-          <time pubdate datetime="<%= @article.updated_at %>" title="<%= @article.updated_at %>" class="article__time mr-sm-4 mr-2">
-            <small><%= @article.updated_at %></small>
+          <time pubdate datetime="<%= @article.published_at %>" title="<%= @article.published_at %>" class="article__time mr-sm-4 mr-2">
+            <small><%= @article.published_at %></small>
           </time>
           <i class="mr-1 icon-user"></i>
           <address class="article__author mr-sm-4 mr-2">

@@ -22,7 +22,7 @@ defmodule BloomchainWeb.SharedView do
     content_tag(:a, class: "bc-article__overlay-link", href: href_path(item, conn)) do
       content_tag(:div, class: "bc-article__image") do
         [
-          img_tag(File.url({item.cover.file, item.cover})),
+          do_image_tag(item),
           content_tag(:p, item.title),
           content_tag(:div, class: "d-flex align-items-center") do
             do_article_attrs(item)
@@ -58,6 +58,12 @@ defmodule BloomchainWeb.SharedView do
         end
       ]
     end
+  end
+
+  defp do_image_tag(%{cover: nil}), do: ""
+
+  defp do_image_tag(%{cover: cover}) do
+    img_tag(File.url({cover.file, cover}))
   end
 
   defp do_article_attrs(item) do

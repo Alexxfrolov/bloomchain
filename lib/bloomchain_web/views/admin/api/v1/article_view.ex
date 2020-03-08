@@ -59,6 +59,10 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
   end
 
   defp do_link(item) do
-    "/#{item.type}/#{item.slug}"
+    case item.type do
+      "person" -> "/people/#{item.slug}"
+      "in_russia" -> "/in-russia/#{item.slug}"
+      _ -> "/#{item.type}/#{item.slug}"
+    end
   end
 end
