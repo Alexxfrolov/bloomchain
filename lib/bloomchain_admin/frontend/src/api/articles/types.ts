@@ -1,5 +1,5 @@
 export interface Article {
-  author: string | null
+  authors: import("../authors").Author[]
   body: string | null
   cover: import("../media").MediaFile | null
   created_at: string
@@ -21,4 +21,5 @@ export interface Article {
     | "person"
     | "research"
   updated_at: string | null
+  url?: string | null
 }

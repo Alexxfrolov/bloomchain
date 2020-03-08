@@ -63,7 +63,7 @@ export const ArchivesPage = () => {
     fetchData()
   }, [])
 
-  const [currentArchive, setCurrentArchive] = useState<Archive | null>(null)
+  const [modifyingArchive, setModifyingArchive] = useState<Archive | null>(null)
   const [openedAddFormDialog, seOpenedAddFormDialog] = useState(false)
   const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
   const [openedErrorDialog, setOpenedErrorDialog] = useState(false)
@@ -73,29 +73,29 @@ export const ArchivesPage = () => {
   }, [setOpenedDeleteDialog])
 
   const addArchive = useCallback(
-    (newArchive: Archive) => {
-      setArchives([newArchive, ...archives])
+    (modifedArchive: Archive) => {
+      setArchives([modifedArchive, ...archives])
     },
     [archives, setArchives],
   )
 
   const handleDeleteButtonClick = useCallback(
     (archive: Archive) => () => {
-      setCurrentArchive(archive)
+      setModifyingArchive(archive)
       setOpenedDeleteDialog(true)
     },
-    [setCurrentArchive, setOpenedDeleteDialog],
+    [setModifyingArchive, setOpenedDeleteDialog],
   )
 
   const handleConfirmDelete = useCallback(async () => {
     try {
-      await archivesApi.remove(currentArchive.id)
+      await archivesApi.remove(modifyingArchive.id)
       setOpenedDeleteDialog(false)
-      setArchives(archives.filter((item) => item.id !== currentArchive.id))
+      setArchives(archives.filter((item) => item.id !== modifyingArchive.id))
     } catch {
       setOpenedErrorDialog(true)
     }
-  }, [archives, currentArchive, setArchives, setOpenedDeleteDialog])
+  }, [archives, modifyingArchive, setArchives, setOpenedDeleteDialog])
 
   return (
     <Fragment>
@@ -205,14 +205,14 @@ const ArchivesTableRow = ({ archive, onDelete }: ArchiveTableRowProps) => (
     <TableCell>
       <img
         width="100%"
-        src={archive.cover.link}
-        alt={archive.cover.alt}
-        title={archive.cover.title}
+        src={archive.cover.url}
+        alt={archive.cover.alt ?? ""}
+        title={archive.cover.title ?? ""}
       />
     </TableCell>
     <TableCell>
       <embed
-        src={archive.pdf.link}
+        src={archive.pdf.url}
         type="application/pdf"
         width="160px"
         height="300px"
@@ -243,14 +243,14 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
     cover: {
       file: null,
       id: null,
-      link: "",
+      url: "",
       alt: "",
       type: "image",
     },
     pdf: {
       file: null,
       id: null,
-      link: "",
+      url: "",
       type: "pdf",
     },
   })

@@ -60,7 +60,7 @@ export const TagsPage = () => {
     fetchData()
   }, [])
 
-  const [currentTag, setCurrentTag] = useState<Tag | null>(null)
+  const [modifyingTag, setModifyingTag] = useState<Tag | null>(null)
   const [openedAddDialog, setOpenedAddDialog] = useState(false)
   const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
 
@@ -86,20 +86,20 @@ export const TagsPage = () => {
   const handleDeleteButtonClick = useCallback(
     (tag: Tag) => async () => {
       setOpenedDeleteDialog(true)
-      setCurrentTag(tag)
+      setModifyingTag(tag)
     },
-    [setCurrentTag, setOpenedDeleteDialog],
+    [setModifyingTag, setOpenedDeleteDialog],
   )
 
   const handleConfirmDelete = useCallback(async () => {
-    if (currentTag) {
+    if (modifyingTag) {
       try {
-        const response = await tagsApi.remove(currentTag.id)
+        await tagsApi.remove(modifyingTag.id)
         setOpenedDeleteDialog(false)
-        setTags(tags.filter((item) => item.id !== currentTag.id))
+        setTags(tags.filter((item) => item.id !== modifyingTag.id))
       } catch {}
     }
-  }, [tags, currentTag, setTags, setOpenedDeleteDialog])
+  }, [tags, modifyingTag, setTags, setOpenedDeleteDialog])
 
   return (
     <Fragment>

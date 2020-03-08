@@ -20,8 +20,7 @@ import InsertDriveFileRoundedIcon from "@material-ui/icons/InsertDriveFileRounde
 import ImportContactsRoundedIcon from "@material-ui/icons/ImportContactsRounded"
 import AlternateEmailIcon from "@material-ui/icons/AlternateEmail"
 import FaceRoundedIcon from "@material-ui/icons/FaceRounded"
-import { NavLink } from "@lib/navlink"
-import { AccountContext } from "@features/core"
+import { RouterLink, AccountContext } from "@features/core"
 
 const useStyles = makeStyles((theme) => ({
   listitem: {
@@ -103,12 +102,12 @@ export const MainMenu = () => {
           }
           className={classes.listitem}
         >
-          <NavLink routeName="admin.articles" className={classes.link}>
+          <RouterLink routeName="admin.articles" className={classes.link}>
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <DescriptionRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
             <ListItemText primary="Создать" />
-          </NavLink>
+          </RouterLink>
         </ListItem>
         <ListItem
           aria-current={
@@ -116,12 +115,12 @@ export const MainMenu = () => {
           }
           className={classes.listitem}
         >
-          <NavLink routeName="admin.articles.draft" className={classes.link}>
+          <RouterLink routeName="admin.articles.draft" className={classes.link}>
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <DraftsRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
             <ListItemText primary="Черновик" />
-          </NavLink>
+          </RouterLink>
         </ListItem>
         <ListItem
           aria-current={
@@ -129,12 +128,12 @@ export const MainMenu = () => {
           }
           className={classes.listitem}
         >
-          <NavLink routeName="admin.articles.ready" className={classes.link}>
+          <RouterLink routeName="admin.articles.ready" className={classes.link}>
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <InsertDriveFileRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
             <ListItemText primary="Готово к публикации" />
-          </NavLink>
+          </RouterLink>
         </ListItem>
         <ListItem
           aria-current={
@@ -142,7 +141,7 @@ export const MainMenu = () => {
           }
           className={classes.listitem}
         >
-          <NavLink
+          <RouterLink
             routeName="admin.articles.published"
             className={classes.link}
           >
@@ -150,7 +149,7 @@ export const MainMenu = () => {
               <DescriptionRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
             <ListItemText primary="Опубликовано" />
-          </NavLink>
+          </RouterLink>
         </ListItem>
         <ListItem
           aria-current={
@@ -158,15 +157,17 @@ export const MainMenu = () => {
           }
           className={classes.listitem}
         >
-          <NavLink routeName="admin.articles.archive" className={classes.link}>
+          <RouterLink
+            routeName="admin.articles.archive"
+            className={classes.link}
+          >
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <ArchiveRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
             <ListItemText primary="Архив" />
-          </NavLink>
+          </RouterLink>
         </ListItem>
       </List>
-      <Divider />
       <Divider />
       <List>
         <ListSubheader inset={true}>Страницы</ListSubheader>
@@ -174,14 +175,15 @@ export const MainMenu = () => {
           aria-current={isCurrentMenu("admin.archives") ? "page" : undefined}
           className={classes.listitem}
         >
-          <NavLink routeName="admin.archives" className={classes.link}>
+          <RouterLink routeName="admin.archives" className={classes.link}>
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <ImportContactsRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
-            <ListItemText primary="Архив" />
-          </NavLink>
+            <ListItemText primary="Исследования Архив" />
+          </RouterLink>
         </ListItem>
       </List>
+      <Divider />
       {account.role === "admin" && (
         <List>
           <ListSubheader inset={true}>Управление</ListSubheader>
@@ -189,12 +191,12 @@ export const MainMenu = () => {
             aria-current={isCurrentMenu("admin.users") ? "page" : undefined}
             className={classes.listitem}
           >
-            <NavLink routeName="admin.users" className={classes.link}>
+            <RouterLink routeName="admin.users" className={classes.link}>
               <ListItemIcon style={{ paddingLeft: "7px" }}>
                 <GroupRoundedIcon style={{ color: indigo[500] }} />
               </ListItemIcon>
               <ListItemText primary="Пользователи" />
-            </NavLink>
+            </RouterLink>
           </ListItem>
           <ListItem
             aria-current={
@@ -202,12 +204,12 @@ export const MainMenu = () => {
             }
             className={classes.listitem}
           >
-            <NavLink routeName="admin.subscribers" className={classes.link}>
+            <RouterLink routeName="admin.subscribers" className={classes.link}>
               <ListItemIcon style={{ paddingLeft: "7px" }}>
                 <AlternateEmailIcon style={{ color: indigo[500] }} />
               </ListItemIcon>
               <ListItemText primary="Подписчики" />
-            </NavLink>
+            </RouterLink>
           </ListItem>
         </List>
       )}
@@ -218,34 +220,34 @@ export const MainMenu = () => {
           aria-current={isCurrentMenu("admin.authors") ? "page" : undefined}
           className={classes.listitem}
         >
-          <NavLink routeName="admin.authors" className={classes.link}>
+          <RouterLink routeName="admin.authors" className={classes.link}>
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <FaceRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
             <ListItemText primary="Авторы" />
-          </NavLink>
+          </RouterLink>
         </ListItem>
         <ListItem
           aria-current={isCurrentMenu("admin.tags") ? "page" : undefined}
           className={classes.listitem}
         >
-          <NavLink routeName="admin.tags" className={classes.link}>
+          <RouterLink routeName="admin.tags" className={classes.link}>
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <LabelRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
             <ListItemText primary="Тэги" />
-          </NavLink>
+          </RouterLink>
         </ListItem>
         <ListItem
           aria-current={isCurrentMenu("admin.media") ? "page" : undefined}
           className={classes.listitem}
         >
-          <NavLink routeName="admin.media" className={classes.link}>
+          <RouterLink routeName="admin.media" className={classes.link}>
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <PermMediaRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
             <ListItemText primary="Медиа" />
-          </NavLink>
+          </RouterLink>
         </ListItem>
       </List>
     </Fragment>

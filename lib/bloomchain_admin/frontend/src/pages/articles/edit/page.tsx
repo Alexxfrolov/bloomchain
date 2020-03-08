@@ -379,7 +379,7 @@ export const ActicleEditPage = () => {
                           Титульное изображение
                         </Typography>
                         {article.cover && (
-                          <img width="100%" src={article.cover.link} />
+                          <img width="100%" src={article.cover.url} />
                         )}
                         <input
                           accept="image/*"

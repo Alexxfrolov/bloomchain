@@ -113,9 +113,10 @@ export const MediaPage = () => {
   const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
   const [openedAddFormDialog, setOpenedAddFormDialog] = useState(false)
   const [openedEditFormDialog, setOpenedEditFormDialog] = useState(false)
-  const [editableMediaFile, setEditableMediaFile] = useState<MediaFile | null>(
-    null,
-  )
+  const [
+    modifyingMediaFile,
+    setModifyingMediaFile,
+  ] = useState<MediaFile | null>(null)
 
   const handleAddMedia = useCallback(
     (file: MediaFile) => {
@@ -125,12 +126,12 @@ export const MediaPage = () => {
   )
 
   const editMediaFile = useCallback(
-    (editedMediaFile: MediaFile) => {
+    (modifedMediaFile: MediaFile) => {
       setMedia(
         media.reduce(
           (media: MediaFile[], user) => [
             ...media,
-            user.id !== editedMediaFile.id ? user : editedMediaFile,
+            user.id !== modifedMediaFile.id ? user : modifedMediaFile,
           ],
           [],
         ),
@@ -167,30 +168,30 @@ export const MediaPage = () => {
   const handleDeleteButtonClick = useCallback(
     (media: MediaFile) => () => {
       setOpenedDeleteDialog(true)
-      setEditableMediaFile(media)
+      setModifyingMediaFile(media)
     },
-    [setEditableMediaFile, setOpenedDeleteDialog],
+    [setModifyingMediaFile, setOpenedDeleteDialog],
   )
 
   const handleEditButtonClick = useCallback(
     (media: MediaFile) => () => {
       setOpenedEditFormDialog(true)
-      setEditableMediaFile(media)
+      setModifyingMediaFile(media)
     },
-    [setOpenedEditFormDialog, setEditableMediaFile],
+    [setOpenedEditFormDialog, setModifyingMediaFile],
   )
 
   const handleConfirmDelete = useCallback(async () => {
-    if (editableMediaFile) {
+    if (modifyingMediaFile) {
       try {
-        const response = await mediaApi.remove(editableMediaFile.id)
+        const response = await mediaApi.remove(modifyingMediaFile.id)
         setOpenedDeleteDialog(false)
-        setMedia(media.filter((item) => item.id !== editableMediaFile.id))
+        setMedia(media.filter((item) => item.id !== modifyingMediaFile.id))
       } catch {
         setError(true)
       }
     }
-  }, [media, editableMediaFile, setMedia, setOpenedDeleteDialog])
+  }, [media, modifyingMediaFile, setMedia, setOpenedDeleteDialog])
 
   return (
     <Container maxWidth="lg">
@@ -288,10 +289,10 @@ export const MediaPage = () => {
                         {list.map((item) => (
                           <GridListTile key={nanoid()}>
                             {item.type === "image" ? (
-                              <img src={item.link} alt={item.title} />
+                              <img src={item.url} alt={item.title} />
                             ) : (
                               <embed
-                                src={item.link}
+                                src={item.url}
                                 type="application/pdf"
                                 width="100%"
                                 height="100%"
@@ -352,9 +353,9 @@ export const MediaPage = () => {
           onAddMedia={handleAddMedia}
         />
       )}
-      {editableMediaFile && openedEditFormDialog && (
+      {modifyingMediaFile && openedEditFormDialog && (
         <EditFormDialog
-          editableMediaFile={editableMediaFile}
+          modifyingMediaFile={modifyingMediaFile}
           opened={openedEditFormDialog}
           onClose={() => setOpenedEditFormDialog(false)}
           onUpdateMedia={editMediaFile}
@@ -515,19 +516,19 @@ const AddFormDialog = ({
 }
 
 type EditFormDialogProps = {
-  editableMediaFile: MediaFile
+  modifyingMediaFile: MediaFile
   opened: boolean
   onClose: () => void
   onUpdateMedia: (file: MediaFile) => void
 }
 
 const EditFormDialog = ({
-  editableMediaFile,
+  modifyingMediaFile,
   opened,
   onClose,
   onUpdateMedia,
 }: EditFormDialogProps) => {
-  const [media, setMedia] = useState<MediaFile>({ ...editableMediaFile })
+  const [media, setMedia] = useState<MediaFile>({ ...modifyingMediaFile })
 
   const handleChangeTextField = useCallback(
     (field: keyof UploadableMediaFile) => (
@@ -565,7 +566,7 @@ const EditFormDialog = ({
           <Grid container={true} spacing={4}>
             <Grid item={true} xs={12} container={true} spacing={2}>
               <Grid item={true} xs={12}>
-                <img width="100%" src={media.link} />
+                <img width="100%" src={media.url} />
               </Grid>
             </Grid>
             <Grid item={true} xs={12}>

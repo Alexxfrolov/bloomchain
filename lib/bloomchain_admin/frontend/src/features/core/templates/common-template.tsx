@@ -1,17 +1,15 @@
-import React, { useState, useCallback, ReactElement, ReactNode } from "react"
+import React, {
+  cloneElement,
+  useState,
+  useCallback,
+  ReactElement,
+  ReactNode,
+} from "react"
 import clsx from "clsx"
-import {
-  Drawer,
-  AppBar,
-  Toolbar,
-  Grid,
-  IconButton,
-  makeStyles,
-} from "@material-ui/core"
-import MenuRoundedIcon from "@material-ui/icons/MenuRounded"
+import { Drawer, IconButton, makeStyles } from "@material-ui/core"
 import MenuOpenRoundedIcon from "@material-ui/icons/MenuOpenRounded"
-import AccountCircleRoundedIcon from "@material-ui/icons/AccountCircleRounded"
-import { NavLink } from "@lib/navlink"
+
+import { Header } from "../organisms"
 
 const drawerWidth = 260
 
@@ -88,12 +86,17 @@ const useStyles = makeStyles((theme) => ({
 
 type CommonTemplateProps = {
   children: ReactNode
+  header?: ReactElement
   menu: ReactElement
 }
 
-export const CommonTemplate = ({ children, menu }: CommonTemplateProps) => {
+export const CommonTemplate = ({
+  children,
+  header = <Header />,
+  menu,
+}: CommonTemplateProps) => {
   const classes = useStyles()
-  const [opened, setOpened] = useState(false)
+  const [opened, setOpened] = useState(true)
 
   const handleDrawerOpen = useCallback(() => {
     setOpened(true)
@@ -105,36 +108,10 @@ export const CommonTemplate = ({ children, menu }: CommonTemplateProps) => {
 
   return (
     <div className={classes.root}>
-      <AppBar
-        position="absolute"
-        className={clsx(classes.appBar, opened && classes.appBarShift)}
-      >
-        <Toolbar className={classes.toolbar}>
-          <Grid container={true} justify="space-between" wrap="nowrap">
-            <Grid item={true}>
-              <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                className={clsx(
-                  classes.menuButton,
-                  opened && classes.menuButtonHidden,
-                )}
-              >
-                <MenuRoundedIcon />
-              </IconButton>
-            </Grid>
-            <Grid item={true} container={true} justify="flex-end">
-              <NavLink routeName="admin.account">
-                <IconButton color="inherit">
-                  <AccountCircleRoundedIcon htmlColor="white" />
-                </IconButton>
-              </NavLink>
-            </Grid>
-          </Grid>
-        </Toolbar>
-      </AppBar>
+      {cloneElement(header, {
+        openedDrawer: opened,
+        onDrawerClose: handleDrawerOpen,
+      })}
       <Drawer
         variant="permanent"
         classes={{

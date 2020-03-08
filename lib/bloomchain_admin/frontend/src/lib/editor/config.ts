@@ -69,7 +69,7 @@ export const config = {
         }
         const response = await mediaApi.create(image)
 
-        this.image.insert(response.data.link, false, null, this.image.get())
+        this.image.insert(response.data.url, false, null, this.image.get())
         this.popups.hideAll()
       }
 
@@ -85,7 +85,7 @@ export const config = {
         }
         const response = await mediaApi.create(data)
 
-        const video = `<video controls="controls"><source src="${response.data.link}" /></video>`
+        const video = `<video controls="controls"><source src="${response.data.url}" /></video>`
 
         this.video.insert(video)
         this.popups.hideAll()

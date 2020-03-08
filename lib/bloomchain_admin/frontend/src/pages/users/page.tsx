@@ -66,7 +66,7 @@ export const UsersPage = () => {
     fetchData()
   }, [])
 
-  const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [modifyingUser, setModifyingUser] = useState<User | null>(null)
   const [openedAddFormDialog, setOpenedAddFormDialog] = useState(false)
   const [openedEditFormDialog, setOpenedEditFormDialog] = useState(false)
   const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
@@ -95,12 +95,12 @@ export const UsersPage = () => {
   )
 
   const editUser = useCallback(
-    (editedUser: User) => {
+    (modifedUser: User) => {
       setUsers(
         users.reduce(
           (users: User[], user) => [
             ...users,
-            user.id !== editedUser.id ? user : editedUser,
+            user.id !== modifedUser.id ? user : modifedUser,
           ],
           [],
         ),
@@ -110,31 +110,31 @@ export const UsersPage = () => {
   )
 
   const handleConfirmDelete = useCallback(async () => {
-    if (currentUser) {
+    if (modifyingUser) {
       try {
-        const response = await usersApi.remove(currentUser.id)
+        await usersApi.remove(modifyingUser.id)
         setOpenedDeleteDialog(false)
-        setUsers(users.filter((item) => item.id !== currentUser.id))
+        setUsers(users.filter((item) => item.id !== modifyingUser.id))
       } catch {
         setError(true)
       }
     }
-  }, [users, currentUser, setUsers, setOpenedDeleteDialog])
+  }, [users, modifyingUser, setUsers, setOpenedDeleteDialog])
 
   const handleDeleteButtonClick = useCallback(
     (user: User) => async () => {
       setOpenedDeleteDialog(true)
-      setCurrentUser(user)
+      setModifyingUser(user)
     },
-    [setCurrentUser, setOpenedDeleteDialog],
+    [setModifyingUser, setOpenedDeleteDialog],
   )
 
   const handleClickEditButton = useCallback(
     (user: User) => async () => {
       setOpenedEditFormDialog(true)
-      setCurrentUser(user)
+      setModifyingUser(user)
     },
-    [setCurrentUser, setOpenedEditFormDialog],
+    [setModifyingUser, setOpenedEditFormDialog],
   )
 
   return (
@@ -185,9 +185,9 @@ export const UsersPage = () => {
           onConfirm={handleConfirmDelete}
         />
       )}
-      {currentUser && openedEditFormDialog && (
+      {modifyingUser && openedEditFormDialog && (
         <EditUserFormDialog
-          editableUser={currentUser}
+          editableUser={modifyingUser}
           opened={openedEditFormDialog}
           onClose={closeEditFormDialog}
           onEditUser={editUser}

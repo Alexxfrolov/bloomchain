@@ -1,5 +1,6 @@
 export interface Author {
+  created_at: Date
   id: number
-  first_name: string
-  last_name: string
+  name: string
+  updated_at: Date
 }

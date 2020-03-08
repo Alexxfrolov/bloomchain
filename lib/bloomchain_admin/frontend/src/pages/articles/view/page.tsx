@@ -28,12 +28,14 @@ import {
   TableBody,
   Typography,
   Button,
+  Link,
   IconButton,
 } from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { articlesApi, Article } from "@api/articles"
+import { Author } from "@api/authors"
 import { ConditionalList } from "@ui"
 import {
   RouterLink,
@@ -274,15 +276,30 @@ type ArticlesTableRowProps = {
 
 const ArticlesTableRow = ({ article, onDeleteRow }: ArticlesTableRowProps) => (
   <TableRow>
-    <TableCell>{article.title}</TableCell>
-    <TableCell>{article.author}</TableCell>
+    <TableCell>
+      {article.url ? (
+        <Link href={article.url} target="_blank">
+          {article.title}
+        </Link>
+      ) : (
+        <Fragment>{article.title}</Fragment>
+      )}
+    </TableCell>
+    <TableCell>
+      {article.authors
+        .reduce(
+          (names: string[], author: Author) => [...names, author.name],
+          [],
+        )
+        .join(", ")}
+    </TableCell>
     <TableCell nowrap="true">
       {article.published_at &&
-        format(new Date(article.published_at), "dd.mm.yyyy hh:mm")}
+        format(new Date(article.published_at), "dd.MM.yyyy hh:mm")}
     </TableCell>
     <TableCell nowrap="true">
       {article.updated_at &&
-        format(new Date(article.updated_at), "dd.mm.yyyy hh:mm")}
+        format(new Date(article.updated_at), "dd.MM.yyyy hh:mm")}
     </TableCell>
     <TableCell align="right">{article.total_views}</TableCell>
     <TableCell>

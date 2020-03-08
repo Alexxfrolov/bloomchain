@@ -20,10 +20,12 @@ function create(
     keywords: string
   },
 ): AxiosPromise<Article> {
+  const { tags, keywords, authors, ...rest } = article
   const data = {
-    ...article,
-    tags: article.tags.reduce((acc: number[], tag) => [...acc, tag.id], []),
-    keywords: Boolean(article.keywords) ? article.keywords.split(/[ ,]+/) : [],
+    ...rest,
+    authors: authors.reduce((acc: number[], author) => [...acc, author.id], []),
+    tags: tags.reduce((acc: number[], tag) => [...acc, tag.id], []),
+    keywords: Boolean(keywords) ? keywords.split(/[ ,]+/) : [],
   }
   return axios.post(`${httpConfig.baseUrl}/articles`, data)
 }
@@ -33,9 +35,10 @@ function update(
     keywords: string
   },
 ): AxiosPromise<Article> {
-  const { cover, tags, keywords, ...rest } = article
+  const { cover, tags, keywords, authors, ...rest } = article
   const data = {
     ...rest,
+    authors: authors.reduce((acc: number[], author) => [...acc, author.id], []),
     tags: tags.reduce((acc: number[], tag) => [...acc, tag.id], []),
     keywords: keywords.length ? keywords.split(/[ ,]+/) : [],
     cover_id: cover?.id ?? null,

@@ -28,15 +28,13 @@ import {
   DialogTitle,
 } from "@material-ui/core"
 import DateFnsUtils from "@date-io/date-fns"
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers"
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import { Editor } from "@lib/editor"
 import { articlesApi, Article } from "@api/articles"
 import { tagsApi, Tag } from "@api/tags"
 import { mediaApi } from "@api/media"
+import { authorsApi, Author } from "@api/authors"
 import { ErrorDialog } from "@features/core"
 import { ArticleCover } from "@features/articles"
 
@@ -67,7 +65,7 @@ const INITIAL_ARTICLE: Omit<
   cover_id: number | null
   keywords: string | null
 } = {
-  author: null,
+  authors: [],
   body: null,
   cover_id: null,
   published_at: null,
@@ -87,6 +85,7 @@ export const ActicleCreatePage = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [tags, setTags] = useState<Tag[]>([])
+  const [authors, setAuthors] = useState<Author[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,7 +94,9 @@ export const ActicleCreatePage = () => {
 
       try {
         const response = await tagsApi.get()
+        const { data } = await authorsApi.getLatest()
         setTags(response.data.data)
+        setAuthors(data.data)
       } catch {
         setError(true)
       }
@@ -211,6 +212,16 @@ export const ActicleCreatePage = () => {
     [article, setArticle],
   )
 
+  const handleChangeAuthorsSelect = useCallback(
+    (event: React.ChangeEvent<{}>, authors: Author[]) => {
+      setArticle({
+        ...article,
+        authors,
+      })
+    },
+    [article, setArticle],
+  )
+
   const handleClearButtonClick = useCallback(() => {
     setArticle({
       ...INITIAL_ARTICLE,
@@ -285,6 +296,21 @@ export const ActicleCreatePage = () => {
     [article.tags, tags],
   )
 
+  const authorsOptions = useMemo(
+    () =>
+      authors.reduce((acc: Author[], author) => {
+        const selected = article.authors.some(
+          (articleAuthor) => articleAuthor.id === author.id,
+        )
+        if (!selected) {
+          return [...acc, author]
+        }
+
+        return [...acc]
+      }, []),
+    [article.authors, authors],
+  )
+
   return (
     <Fragment>
       <Container maxWidth="lg" className={classes.root}>
@@ -344,13 +370,22 @@ export const ActicleCreatePage = () => {
                       />
                     </Grid>
                     <Grid item={true} xs={12}>
-                      <TextField
-                        id="author"
-                        fullWidth={true}
-                        label="Автор"
-                        value={article.author ?? ""}
-                        variant="outlined"
-                        onChange={handleChangeFormField("author")}
+                      <Autocomplete<Author>
+                        id="authors"
+                        multiple={true}
+                        options={authorsOptions}
+                        noOptionsText="Пусто"
+                        value={article.authors}
+                        disableCloseOnSelect={true}
+                        getOptionLabel={(option) => option.name}
+                        onChange={handleChangeAuthorsSelect}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Авторы"
+                            variant="outlined"
+                          />
+                        )}
                       />
                     </Grid>
                     <Grid item={true} xs={12}>
@@ -500,17 +535,17 @@ export const ActicleCreatePage = () => {
                     </Grid>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <Grid item={true} xs={12}>
-                        <KeyboardDatePicker
-                          variant="dialog"
-                          margin="normal"
+                        <DatePicker
                           id="published_at"
+                          variant="dialog"
+                          margin="none"
+                          fullWidth={true}
+                          disabled={article.status !== "published"}
+                          inputVariant="outlined"
                           label="Дата публикации"
                           format="dd/MM/yyyy"
                           value={article.published_at}
                           onChange={handleDateChange}
-                          KeyboardButtonProps={{
-                            "aria-label": "Выберите дату",
-                          }}
                         />
                       </Grid>
                     </MuiPickersUtilsProvider>

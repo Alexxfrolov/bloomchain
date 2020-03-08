@@ -106,7 +106,7 @@ export const AuthorsPage = () => {
   const handleConfirmDelete = useCallback(async () => {
     if (modifyingAuthor) {
       try {
-        const response = await authorsApi.remove(modifyingAuthor.id)
+        await authorsApi.remove(modifyingAuthor.id)
         setOpenedDeleteDialog(false)
         setAuthors(authors.filter((item) => item.id !== modifyingAuthor.id))
       } catch {
@@ -194,7 +194,7 @@ export const AuthorsPage = () => {
 type AuthorsTableProps = {
   data: Author[]
   loading: boolean
-  renderRow: (author: Author) => ReactElement<UserTableRowProps>
+  renderRow: (author: Author) => ReactElement<AuthorsTableRowProps>
 }
 
 const AuthorsTable = ({ data, loading, renderRow }: AuthorsTableProps) => (
@@ -202,13 +202,10 @@ const AuthorsTable = ({ data, loading, renderRow }: AuthorsTableProps) => (
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell width="1%" component="th">
-            Фамилия
-          </TableCell>
-          <TableCell width="1%" component="th">
+          <TableCell width="80%" component="th">
             Имя
           </TableCell>
-          <TableCell width="1%" component="th">
+          <TableCell width="20%" component="th">
             Действия
           </TableCell>
         </TableRow>
@@ -241,8 +238,7 @@ const AuthorsTableRow = ({
   onEdit,
 }: AuthorsTableRowProps) => (
   <TableRow>
-    <TableCell>{author.last_name}</TableCell>
-    <TableCell>{author.first_name}</TableCell>
+    <TableCell>{author.name}</TableCell>
     <TableCell>
       <Grid container={true} spacing={2}>
         <Grid item={true}>
@@ -272,8 +268,7 @@ const AddAuthorFormDialog = ({
   onClose,
 }: AddAuthorFormDialogProps) => {
   const [author, setAuthor] = useState<Author>({
-    first_name: "",
-    last_name: "",
+    name: "",
   })
 
   const handleChangeTextField = useCallback(
@@ -312,18 +307,9 @@ const AddAuthorFormDialog = ({
               <TextField
                 label="Имя"
                 type="text"
-                value={author.first_name}
+                value={author.name}
                 fullWidth
-                onChange={handleChangeTextField("first_name")}
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                label="Фамилия"
-                type="text"
-                value={author.last_name}
-                fullWidth
-                onChange={handleChangeTextField("last_name")}
+                onChange={handleChangeTextField("name")}
               />
             </Grid>
           </Grid>
@@ -392,18 +378,9 @@ const EditAuthorFormDialog = ({
               <TextField
                 label="Имя"
                 type="text"
-                value={author.first_name}
+                value={author.name}
                 fullWidth={true}
-                onChange={handleChangeTextField("first_name")}
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                label="Фамилия"
-                type="text"
-                value={author.last_name}
-                fullWidth={true}
-                onChange={handleChangeTextField("last_name")}
+                onChange={handleChangeTextField("name")}
               />
             </Grid>
           </Grid>
