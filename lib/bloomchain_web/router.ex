@@ -58,15 +58,15 @@ defmodule BloomchainWeb.Router do
     get("/", PageController, :index)
     post("/subscribe", PageController, :create)
 
-    resources("/newsfeed", NewsfeedController, only: [:index, :show])
-    resources("/detailed", DetailedController, only: [:index, :show])
-    resources("/analysis", AnalysisController, only: [:index, :show])
-    resources("/people", PersonController, only: [:index, :show])
-    resources("/in-russia", InRussiaController, only: [:index, :show])
-    resources("/calendar", CalendarController, only: [:index, :show])
-    resources("/research", ResearchController, only: [:index, :show])
-    resources("/research-archive", ArchiveController, only: [:index])
-    resources("/search", SearchController, only: [:index, :create])
+    resources("/newsfeed", NewsfeedController, only: [:index, :show], param: "slug")
+    resources("/detailed", DetailedController, only: [:index, :show], param: "slug")
+    resources("/analysis", AnalysisController, only: [:index, :show], param: "slug")
+    resources("/people", PersonController, only: [:index, :show], param: "slug")
+    resources("/in-russia", InRussiaController, only: [:index, :show], param: "slug")
+    resources("/calendar", CalendarController, only: [:index, :show], param: "slug")
+    resources("/research", ResearchController, only: [:index, :show], param: "slug")
+    resources("/research-archive", ArchiveController, only: [:index], param: "slug")
+    resources("/search", SearchController, only: [:index, :create], param: "slug")
 
     scope "/api" do
       pipe_through [:api]

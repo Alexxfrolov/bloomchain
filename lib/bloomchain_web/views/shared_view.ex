@@ -86,6 +86,10 @@ defmodule BloomchainWeb.SharedView do
     Timex.format!(datetime, "{relative}", :relative)
   end
 
+  defp timestamp(datetime) do
+    Timex.format!(datetime, "%d.%m.%Y %H:%m", :strftime)
+  end
+
   defp author(item) do
     item.authors |> Enum.map(fn i -> i.name end) |> Enum.join(", ")
   end

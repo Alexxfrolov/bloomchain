@@ -18,7 +18,12 @@ defmodule BloomchainWeb.ResearchController do
     render(conn, "index.html", articles: articles, meta: meta)
   end
 
-  def show(conn, params) do
-    render(conn, "show.html", article: Article.get(params["id"], type: "research"))
+  def show(conn, %{"slug" => slug}) do
+    article =
+      slug
+      |> Article.get(type: "research")
+      |> Article.inc_total_views()
+
+    render(conn, "show.html", article: article)
   end
 end

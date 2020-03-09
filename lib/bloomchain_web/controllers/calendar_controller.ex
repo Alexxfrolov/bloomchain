@@ -18,7 +18,12 @@ defmodule BloomchainWeb.CalendarController do
     render(conn, "index.html", articles: articles, meta: meta)
   end
 
-  def show(conn, params) do
-    render(conn, "show.html", article: Article.get(params["id"], type: "calendar"))
+  def show(conn, %{"slug" => slug}) do
+    article =
+      slug
+      |> Article.get(type: "calendar")
+      |> Article.inc_total_views()
+
+    render(conn, "show.html", article: article)
   end
 end

@@ -18,8 +18,13 @@ defmodule BloomchainWeb.NewsfeedController do
     render(conn, "index.html", articles: group(articles), meta: meta)
   end
 
-  def show(conn, params) do
-    render(conn, "show.html", article: Article.get(params["id"], type: "newsfeed"))
+  def show(conn, %{"slug" => slug}) do
+    article =
+      slug
+      |> Article.get(type: "newsfeed")
+      |> Article.inc_total_views()
+
+    render(conn, "show.html", article: article)
   end
 
   defp group(items) do
