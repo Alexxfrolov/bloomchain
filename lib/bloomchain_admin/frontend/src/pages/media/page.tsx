@@ -9,11 +9,6 @@ import React, {
   RefObject,
   FormEvent,
 } from "react"
-import DateFnsUtils from "@date-io/date-fns"
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers"
 import {
   makeStyles,
   createStyles,
@@ -140,23 +135,6 @@ export const MediaPage = () => {
     [media, setMedia],
   )
 
-  const [dateStart, setDateStart] = useState<Date | null>(null)
-  const [dateEnd, setDateEnd] = useState<Date | null>(new Date())
-
-  const handleDateStartChange = useCallback(
-    (date: Date | null) => {
-      setDateStart(date)
-    },
-    [setDateStart],
-  )
-
-  const handleDateEndChange = useCallback(
-    (date: Date | null) => {
-      setDateEnd(date)
-    },
-    [setDateEnd],
-  )
-
   const handleChangeTab = useCallback(
     (event: ChangeEvent<{ id: MediaFile["type"] }>, newValue: number) => {
       setType(event.currentTarget.id)
@@ -184,7 +162,7 @@ export const MediaPage = () => {
   const handleConfirmDelete = useCallback(async () => {
     if (modifyingMediaFile) {
       try {
-        const response = await mediaApi.remove(modifyingMediaFile.id)
+        await mediaApi.remove(modifyingMediaFile.id)
         setOpenedDeleteDialog(false)
         setMedia(media.filter((item) => item.id !== modifyingMediaFile.id))
       } catch {
@@ -212,49 +190,6 @@ export const MediaPage = () => {
           <Alert color="error">Произошла ошибка</Alert>
         ) : (
           <Fragment>
-            <Grid item={true} xs={12}>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Grid container={true} spacing={4} alignItems="center">
-                  <Grid item={true}>
-                    <KeyboardDatePicker
-                      variant="dialog"
-                      margin="normal"
-                      id="date-start"
-                      label="Дата начал"
-                      format="dd/MM/yyyy"
-                      value={dateStart}
-                      onChange={handleDateStartChange}
-                      KeyboardButtonProps={{
-                        "aria-label": "Выберите дату",
-                      }}
-                    />
-                  </Grid>
-                  <Grid item={true}>
-                    <KeyboardDatePicker
-                      variant="dialog"
-                      margin="normal"
-                      id="date-end"
-                      label="Дата окончания"
-                      format="dd/MM/yyyy"
-                      value={dateEnd}
-                      onChange={handleDateEndChange}
-                      KeyboardButtonProps={{
-                        "aria-label": "Выберите дату",
-                      }}
-                    />
-                  </Grid>
-                  <Grid item={true}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      component="span"
-                    >
-                      Фильтровать
-                    </Button>
-                  </Grid>
-                </Grid>
-              </MuiPickersUtilsProvider>
-            </Grid>
             <Grid item={true} xs={12}>
               <AppBar position="static" color="default">
                 <Tabs
