@@ -2436,6 +2436,7 @@ html.lb-disable-scrolling {
     letter-spacing: 0.2px;
     text-transform: capitalize;
     align-items: center;
+    cursor: pointer;
     display: inline-flex;
     border-color: transparent; }
     .btn-link:hover {

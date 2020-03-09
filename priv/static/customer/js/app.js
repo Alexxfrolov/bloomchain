@@ -858,15 +858,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         a = o.n(i),
         r = o(1),
         c = o.n(r);
-    s()(".bc-header__nav .dropdown").on("shown.bs.dropdown", function (e) {
-      window.innerWidth < 540 && s()(e.target).prevAll().hide();
-    }), s()(".bc-header__nav .dropdown").on("hidden.bs.dropdown", function (e) {
-      window.innerWidth < 540 && s()(e.target).prevAll().show();
-    }), s()(".bc-header__search__icon").bind("click", function (e) {
-      s()(".bc-header__nav").hide(), s()(".bc-header__search").removeClass("w-auto").addClass("w-100"), s()(".bc-header__search__box").removeClass("d-none").addClass("d-inline-flex"), s()(".bc-header__search__icon").removeClass("pr-0").addClass("px-0"), s()(".bc-header__search__box input").focus(), s()(e.delegateTarget).hasClass("bc-header__search__icon_mobile") && (s()(e.delegateTarget).parent().prevAll().hide(), s()(e.delegateTarget).nextAll().hide(), s()(e.delegateTarget).parent().addClass("w-100"));
-    }), s()(".bc-header__search__close").bind("click", function (e) {
-      s()(".bc-header__nav").show(), s()(".bc-header__search").removeClass("w-100").addClass("w-auto"), s()(".bc-header__search__box").removeClass("d-inline-flex").addClass("d-none"), s()(".bc-header__search__icon").removeClass("px-0").addClass("pr-0"), s()(e.delegateTarget).hasClass("bc-header__search__close_mobile") && (s()(e.delegateTarget).parent().parent().prevAll().show(), s()(e.delegateTarget).parent().nextAll().show(), s()(e.delegateTarget).parent().parent().removeClass("w-100")), s()(void 0).hide();
-    }), s()("body").on("touchmove", function (e) {
+    s()("body").on("touchmove", function (e) {
       s()(".scroll-disable").has(s()(e.target)).length && e.preventDefault();
     }), s()("body").on("shown.bs.modal", function () {
       s()(this).addClass("scroll-disable");
@@ -921,12 +913,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         arrows: !0,
         appendArrows: s()(".bc-slick__arrows-location")
       });
-    }), s()(".marquee").marquee({
-      duration: 4e4,
-      gap: 0,
-      delayBeforeStart: 0,
-      direction: "left",
-      duplicated: !0
     }), a.a.option({
       albumLabel: "%1/%2",
       alwaysShowNavOnTouchDevices: !1,
@@ -978,6 +964,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   }
 });
 document.addEventListener('DOMContentLoaded', function () {
+  $(".bc-header__nav .dropdown").on("shown.bs.dropdown", function (e) {
+    window.innerWidth < 540 && $(e.target).prevAll().hide();
+  });
+  $(".bc-header__nav .dropdown").on("hidden.bs.dropdown", function (e) {
+    window.innerWidth < 540 && $(e.target).prevAll().show();
+  });
+  $(".bc-header__search__icon").bind("click", function (e) {
+    $(".bc-header__nav").hide(), $(".bc-header__search").removeClass("w-auto").addClass("w-100"), $(".bc-header__search__box").removeClass("d-none").addClass("d-inline-flex"), $(".bc-header__search__icon").removeClass("pr-0").addClass("px-0"), $(".bc-header__search__box input").focus(), $(e.delegateTarget).hasClass("bc-header__search__icon_mobile") && ($(e.delegateTarget).parent().prevAll().hide(), $(e.delegateTarget).nextAll().hide(), $(e.delegateTarget).parent().addClass("w-100"));
+  });
+  $(".bc-header__search__close").bind("click", function (e) {
+    $(".bc-header__nav").show(), $(".bc-header__search").removeClass("w-100").addClass("w-auto"), $(".bc-header__search__box").removeClass("d-inline-flex").addClass("d-none"), $(".bc-header__search__icon").removeClass("px-0").addClass("pr-0"), $(e.delegateTarget).hasClass("bc-header__search__close_mobile") && ($(e.delegateTarget).parent().parent().prevAll().show(), $(e.delegateTarget).parent().nextAll().show(), $(e.delegateTarget).parent().parent().removeClass("w-100")), $(void 0).hide();
+  });
   $('.js-marquee').marquee({
     duration: 4e4,
     gap: 0,
