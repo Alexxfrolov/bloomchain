@@ -106,15 +106,12 @@ export const ArticleForm = ({
 
   const handleChangeCoverField = useCallback(
     (field: string) => (event: SyntheticEvent<{ value: string }>) => {
-      setArticle({
-        ...article,
-        cover: {
-          ...article.cover,
-          [field]: event.currentTarget.value,
-        },
+      setImage({
+        ...image,
+        [field]: event.currentTarget.value,
       })
     },
-    [article, setArticle],
+    [image, setImage],
   )
 
   const handleChangeEditor = useCallback(
@@ -395,7 +392,7 @@ export const ArticleForm = ({
                 <TextField
                   id="title"
                   label="Заголовок"
-                  value={article.cover?.title ?? ""}
+                  value={image?.title ?? ""}
                   fullWidth={true}
                   variant="outlined"
                   size="small"
@@ -406,7 +403,7 @@ export const ArticleForm = ({
                 <TextField
                   id="alt"
                   label="Атрибут alt"
-                  value={article.cover?.alt ?? ""}
+                  value={image?.alt ?? ""}
                   fullWidth={true}
                   variant="outlined"
                   size="small"
@@ -417,7 +414,7 @@ export const ArticleForm = ({
                 <TextField
                   id="source"
                   label="Подпись"
-                  value={article.cover?.source ?? ""}
+                  value={image?.source ?? ""}
                   fullWidth={true}
                   variant="outlined"
                   size="small"

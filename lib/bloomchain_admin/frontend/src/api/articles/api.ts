@@ -10,6 +10,28 @@ function getLatest(
   return axios(`${httpConfig.baseUrl}/articles?status=${status}&type=${type}`)
 }
 
+function getByDate({
+  status,
+  type,
+  dateStart,
+  dateEnd,
+}: {
+  status: Article["status"]
+  type: Article["type"]
+  dateStart: Date | null
+  dateEnd: Date | null
+}): AxiosPromise<{ data: Article[] }> {
+  const params = {
+    status,
+    type,
+    date_start: dateStart,
+    date_end: dateEnd,
+  }
+  return axios(`${httpConfig.baseUrl}/articles`, {
+    params,
+  })
+}
+
 function getById(id: number): AxiosPromise<Article> {
   return axios(`${httpConfig.baseUrl}/articles/${id}`)
 }
@@ -47,6 +69,7 @@ function remove(id: number): AxiosPromise {
 
 export const articlesApi = {
   getLatest,
+  getByDate,
   getById,
   create,
   update,

@@ -7,13 +7,11 @@ import React, {
   useMemo,
   ChangeEvent,
   ReactElement,
+  FormEvent,
 } from "react"
 import { useRoute } from "react-router5"
 import DateFnsUtils from "@date-io/date-fns"
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers"
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import format from "date-fns/format"
 import {
   Grid,
@@ -63,7 +61,7 @@ export const ArticlesViewPage = () => {
   const [tabIndex, setTabIndex] = useState(0)
   const [type, setType] = useState<Article["type"]>("newsfeed")
   const [dateStart, setDateStart] = useState<Date | null>(null)
-  const [dateEnd, setDateEnd] = useState<Date | null>(new Date())
+  const [dateEnd, setDateEnd] = useState<Date | null>(null)
   const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
   const [currentArticle, setCurrentArticle] = useState<Article | null>(null)
 
@@ -73,7 +71,7 @@ export const ArticlesViewPage = () => {
       setError(false)
       try {
         const response = await articlesApi.getLatest(status, type)
-        setArticles(response.data.data)
+        setArticles([...response.data.data])
       } catch {
         setError(true)
       }
@@ -115,7 +113,7 @@ export const ArticlesViewPage = () => {
   const handleConfirmDelete = useCallback(async () => {
     if (currentArticle) {
       try {
-        const response = await articlesApi.remove(currentArticle.id)
+        await articlesApi.remove(currentArticle.id)
         setOpenedDeleteDialog(false)
         setArticles(articles.filter((item) => item.id !== currentArticle.id))
       } catch {
@@ -123,6 +121,49 @@ export const ArticlesViewPage = () => {
       }
     }
   }, [articles, currentArticle, setArticles, setOpenedDeleteDialog, setError])
+
+  const handleFilterFormSubmit = useCallback(
+    async (event: FormEvent) => {
+      event.preventDefault()
+      setLoading(true)
+      setError(false)
+      try {
+        const response = await articlesApi.getByDate({
+          type,
+          status,
+          dateStart,
+          dateEnd,
+        })
+        setArticles([...response.data.data])
+      } catch {
+        setError(true)
+      }
+      setLoading(false)
+    },
+    [type, status, dateStart, dateEnd, setArticles, setLoading, setError],
+  )
+
+  const handleResetFilterFormButtonClick = useCallback(async () => {
+    setDateStart(null)
+    setDateEnd(null)
+    setLoading(true)
+    setError(false)
+    try {
+      const response = await articlesApi.getLatest(status, type)
+      setArticles([...response.data.data])
+    } catch {
+      setError(true)
+    }
+    setLoading(false)
+  }, [
+    status,
+    type,
+    setDateStart,
+    setDateEnd,
+    setArticles,
+    setError,
+    setLoading,
+  ])
 
   const title = useMemo(() => titles[status], [status])
 
@@ -136,43 +177,53 @@ export const ArticlesViewPage = () => {
             </Typography>
           </Grid>
           <Grid item={true} xs={12}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <Grid container={true} spacing={4} alignItems="center">
-                <Grid item={true}>
-                  <KeyboardDatePicker
-                    variant="dialog"
-                    margin="normal"
-                    id="date-start"
-                    label="Дата начал"
-                    format="dd/MM/yyyy"
-                    value={dateStart}
-                    onChange={handleDateStartChange}
-                    KeyboardButtonProps={{
-                      "aria-label": "Выберите дату",
-                    }}
-                  />
+            <form onSubmit={handleFilterFormSubmit}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <Grid container={true} spacing={4} alignItems="center">
+                  <Grid item={true}>
+                    <DatePicker
+                      id="date-start"
+                      variant="dialog"
+                      margin="none"
+                      fullWidth={true}
+                      inputVariant="outlined"
+                      label="Дата начала"
+                      format="dd/MM/yyyy"
+                      value={dateStart}
+                      onChange={handleDateStartChange}
+                    />
+                  </Grid>
+                  <Grid item={true}>
+                    <DatePicker
+                      id="date-end"
+                      variant="dialog"
+                      margin="none"
+                      fullWidth={true}
+                      inputVariant="outlined"
+                      label="Дата окончания"
+                      format="dd/MM/yyyy"
+                      value={dateEnd}
+                      onChange={handleDateEndChange}
+                    />
+                  </Grid>
+                  <Grid item={true}>
+                    <Button type="submit" variant="contained" color="primary">
+                      Фильтровать
+                    </Button>
+                  </Grid>
+                  <Grid item={true}>
+                    <Button
+                      type="button"
+                      variant="contained"
+                      color="primary"
+                      onClick={handleResetFilterFormButtonClick}
+                    >
+                      Сбросить фильтр
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item={true}>
-                  <KeyboardDatePicker
-                    variant="dialog"
-                    margin="normal"
-                    id="date-end"
-                    label="Дата окончания"
-                    format="dd/MM/yyyy"
-                    value={dateEnd}
-                    onChange={handleDateEndChange}
-                    KeyboardButtonProps={{
-                      "aria-label": "Выберите дату",
-                    }}
-                  />
-                </Grid>
-                <Grid item={true}>
-                  <Button variant="contained" color="primary" component="span">
-                    Фильтровать
-                  </Button>
-                </Grid>
-              </Grid>
-            </MuiPickersUtilsProvider>
+              </MuiPickersUtilsProvider>
+            </form>
           </Grid>
           <Grid item={true} xs={12}>
             <AppBar position="static" color="default">

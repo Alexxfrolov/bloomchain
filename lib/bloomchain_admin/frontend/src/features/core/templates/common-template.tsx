@@ -4,8 +4,11 @@ import React, {
   useCallback,
   ReactElement,
   ReactNode,
+  useEffect,
 } from "react"
 import clsx from "clsx"
+import useMediaQuery from "@material-ui/core/useMediaQuery"
+import { useTheme } from "@material-ui/core/styles"
 import { Drawer, IconButton, makeStyles } from "@material-ui/core"
 import MenuOpenRoundedIcon from "@material-ui/icons/MenuOpenRounded"
 
@@ -96,7 +99,14 @@ export const CommonTemplate = ({
   menu,
 }: CommonTemplateProps) => {
   const classes = useStyles()
-  const [opened, setOpened] = useState(true)
+  const theme = useTheme()
+  const isSmallDevice = useMediaQuery(theme.breakpoints.down("md"))
+
+  const [opened, setOpened] = useState(isSmallDevice)
+
+  useEffect(() => {
+    isSmallDevice ? setOpened(false) : setOpened(true)
+  }, [isSmallDevice])
 
   const handleDrawerOpen = useCallback(() => {
     setOpened(true)
