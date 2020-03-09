@@ -102,9 +102,16 @@ export const MainMenu = () => {
           }
           className={classes.listitem}
         >
-          <RouterLink routeName="admin.articles" className={classes.link}>
+          <RouterLink
+            routeName="admin.articles"
+            title="Создать"
+            className={classes.link}
+          >
             <ListItemIcon style={{ paddingLeft: "7px" }}>
-              <DescriptionRoundedIcon style={{ color: indigo[500] }} />
+              <DescriptionRoundedIcon
+                style={{ color: indigo[500] }}
+                titleAccess="Создать"
+              />
             </ListItemIcon>
             <ListItemText primary="Создать" />
           </RouterLink>
@@ -115,7 +122,11 @@ export const MainMenu = () => {
           }
           className={classes.listitem}
         >
-          <RouterLink routeName="admin.articles.draft" className={classes.link}>
+          <RouterLink
+            routeName="admin.articles.draft"
+            title="Черновик"
+            className={classes.link}
+          >
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <DraftsRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
@@ -128,7 +139,11 @@ export const MainMenu = () => {
           }
           className={classes.listitem}
         >
-          <RouterLink routeName="admin.articles.ready" className={classes.link}>
+          <RouterLink
+            routeName="admin.articles.ready"
+            title="Готово к публикации"
+            className={classes.link}
+          >
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <InsertDriveFileRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
@@ -143,6 +158,7 @@ export const MainMenu = () => {
         >
           <RouterLink
             routeName="admin.articles.published"
+            title="Опубликовано"
             className={classes.link}
           >
             <ListItemIcon style={{ paddingLeft: "7px" }}>
@@ -159,6 +175,7 @@ export const MainMenu = () => {
         >
           <RouterLink
             routeName="admin.articles.archive"
+            title="Архив"
             className={classes.link}
           >
             <ListItemIcon style={{ paddingLeft: "7px" }}>
@@ -175,7 +192,11 @@ export const MainMenu = () => {
           aria-current={isCurrentMenu("admin.archives") ? "page" : undefined}
           className={classes.listitem}
         >
-          <RouterLink routeName="admin.archives" className={classes.link}>
+          <RouterLink
+            routeName="admin.archives"
+            title="Исследования Архив"
+            className={classes.link}
+          >
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <ImportContactsRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
@@ -191,7 +212,11 @@ export const MainMenu = () => {
             aria-current={isCurrentMenu("admin.users") ? "page" : undefined}
             className={classes.listitem}
           >
-            <RouterLink routeName="admin.users" className={classes.link}>
+            <RouterLink
+              routeName="admin.users"
+              title="Пользователи"
+              className={classes.link}
+            >
               <ListItemIcon style={{ paddingLeft: "7px" }}>
                 <GroupRoundedIcon style={{ color: indigo[500] }} />
               </ListItemIcon>
@@ -204,7 +229,11 @@ export const MainMenu = () => {
             }
             className={classes.listitem}
           >
-            <RouterLink routeName="admin.subscribers" className={classes.link}>
+            <RouterLink
+              routeName="admin.subscribers"
+              title="Подписчики"
+              className={classes.link}
+            >
               <ListItemIcon style={{ paddingLeft: "7px" }}>
                 <AlternateEmailIcon style={{ color: indigo[500] }} />
               </ListItemIcon>
@@ -220,7 +249,11 @@ export const MainMenu = () => {
           aria-current={isCurrentMenu("admin.authors") ? "page" : undefined}
           className={classes.listitem}
         >
-          <RouterLink routeName="admin.authors" className={classes.link}>
+          <RouterLink
+            routeName="admin.authors"
+            title="Авторы"
+            className={classes.link}
+          >
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <FaceRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
@@ -231,7 +264,11 @@ export const MainMenu = () => {
           aria-current={isCurrentMenu("admin.tags") ? "page" : undefined}
           className={classes.listitem}
         >
-          <RouterLink routeName="admin.tags" className={classes.link}>
+          <RouterLink
+            routeName="admin.tags"
+            title="Тэги"
+            className={classes.link}
+          >
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <LabelRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
@@ -242,7 +279,11 @@ export const MainMenu = () => {
           aria-current={isCurrentMenu("admin.media") ? "page" : undefined}
           className={classes.listitem}
         >
-          <RouterLink routeName="admin.media" className={classes.link}>
+          <RouterLink
+            routeName="admin.media"
+            title="Медиа"
+            className={classes.link}
+          >
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <PermMediaRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
