@@ -1,1 +1,1 @@
-export * from "./articles.types"
+export { ArticleForm } from "./organisms"

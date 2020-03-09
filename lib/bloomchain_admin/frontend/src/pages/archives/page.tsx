@@ -172,7 +172,7 @@ const ArchivesTable = ({ loading, data, renderRow }: ArchivesTableProps) => (
             PDF
           </TableCell>
           <TableCell width="15%" component="th">
-            Опубликовано
+            Дата публикации
           </TableCell>
           <TableCell width="15%" component="th">
             Действия

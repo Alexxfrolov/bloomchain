@@ -11,9 +11,9 @@ export interface MediaFile {
 
 export type UploadableMediaFile = {
   type: "image" | "pdf" | "video"
-  title?: string
-  alt?: string
-  source?: string
+  title?: string | null
+  alt?: string | null
+  source?: string | null
   file: File
 }
 

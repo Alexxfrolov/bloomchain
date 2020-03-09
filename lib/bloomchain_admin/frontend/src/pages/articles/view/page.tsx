@@ -240,7 +240,7 @@ const ArticlesTable = ({ data, loading, renderRow }: ArticlesTableProps) => (
             Автор
           </TableCell>
           <TableCell width="10%" component="th">
-            Опубликовано
+            Дата публикации
           </TableCell>
           <TableCell width="10%" component="th">
             Обновлено

@@ -14,18 +14,13 @@ function getById(id: number): AxiosPromise<Article> {
   return axios(`${httpConfig.baseUrl}/articles/${id}`)
 }
 
-function create(
-  article: Omit<Article, "createdAt" | "updatedAt" | "id" | "keywords"> & {
-    cover_id: number
-    keywords: string
-  },
-): AxiosPromise<Article> {
-  const { tags, keywords, authors, ...rest } = article
+function create(article: Omit<Article, "id">): AxiosPromise<Article> {
+  const { tags, authors, keywords, ...rest } = article
   const data = {
     ...rest,
     authors: authors.reduce((acc: number[], author) => [...acc, author.id], []),
     tags: tags.reduce((acc: number[], tag) => [...acc, tag.id], []),
-    keywords: Boolean(keywords) ? keywords.split(/[ ,]+/) : [],
+    keywords: keywords.length ? keywords.split(/[ ,]+/) : [],
   }
   return axios.post(`${httpConfig.baseUrl}/articles`, data)
 }
@@ -41,7 +36,7 @@ function update(
     authors: authors.reduce((acc: number[], author) => [...acc, author.id], []),
     tags: tags.reduce((acc: number[], tag) => [...acc, tag.id], []),
     keywords: keywords.length ? keywords.split(/[ ,]+/) : [],
-    cover_id: cover?.id ?? null,
+    // cover_id: cover?.id ?? null,
   }
   return axios.patch(`${httpConfig.baseUrl}/articles/${article.id}`, data)
 }
