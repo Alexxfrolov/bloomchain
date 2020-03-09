@@ -63,3 +63,14 @@ config :bloomchain, Bloomchain.Repo,
 # Arc Image Upload
 config :arc,
   storage: Arc.Storage.Local
+
+# config :bloomchain, Bloomchain.ElasticsearchCluster,
+#   api: Elasticsearch.API.AWS,
+#   default_options: [
+#     aws: [
+#       service: "es",
+#       region: System.get_env("AWS_REGION"),
+#       access_key: System.get_env("AWS_ACCESS_KEY_ID"),
+#       secret: System.get_env("AWS_SECRET_ACCESS_KEY")
+#     ]
+#   ]

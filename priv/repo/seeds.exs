@@ -113,6 +113,7 @@ for type <- ~w[newsfeed detailed research analysis in_russia calendar person] do
       keywords: ["asdf", "test"],
       body: File.read!("#{File.cwd!()}/priv/repo/data_files/newsfeed.html"),
       status: "published",
+      published_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
       author: "Frolov Aleksey",
       time: i + 10,
       cover_id: cover.id,

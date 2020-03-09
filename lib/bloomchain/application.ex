@@ -10,8 +10,13 @@ defmodule Bloomchain.Application do
     children = [
       # Start the Ecto repository
       supervisor(Bloomchain.Repo, []),
+
       # Start the endpoint when the application starts
       supervisor(BloomchainWeb.Endpoint, []),
+
+      # Start the ES when the application starts
+      supervisor(Bloomchain.ElasticsearchCluster, [])
+
       # Start your own worker by calling: Bloomchain.Worker.start_link(arg1, arg2, arg3)
       # worker(Bloomchain.Worker, [arg1, arg2, arg3]),
     ]
