@@ -53,7 +53,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
       updated_at: article.updated_at,
       published_at: article.published_at,
       tags: Enum.map(article.tags, &tag_json/1),
-      authors: [],
+      authors: Enum.map(article.authors, &author_json/1),
       cover: media_json(article.cover)
     }
   end
