@@ -21,7 +21,7 @@ defmodule BloomchainWeb.SharedView do
   def main_article_tag(nil, conn: conn), do: ""
 
   def main_article_tag(item, conn: conn) do
-    content_tag(:a, class: "bc-article__overlay-link", href: href_path(item, conn)) do
+    content_tag(:a, class: "bc-article__overlay-link", href: href_path(item)) do
       content_tag(:div, class: "bc-article__image") do
         [
           do_image_tag(item),
@@ -38,7 +38,7 @@ defmodule BloomchainWeb.SharedView do
     content_tag(:div) do
       [
         link(item.title,
-          to: href_path(item, conn),
+          to: href_path(item),
           class: "bc-article__heading bc-article__heading__h2"
         ),
         content_tag(:p, item.lead, class: "bc-article__paragraph"),
@@ -53,7 +53,7 @@ defmodule BloomchainWeb.SharedView do
     content_tag(:div, class: "col-xl-6") do
       [
         content_tag(:hr, nil, class: "bc-article__separator mx-0 my-3"),
-        link(item.title, to: href_path(item, conn), class: "bc-article__heading"),
+        link(item.title, to: href_path(item), class: "bc-article__heading"),
         content_tag(:p, item.lead, class: "bc-article__paragraph"),
         content_tag(:div, class: "d-flex align-items-center mt-3") do
           do_article_attrs(item)
@@ -80,8 +80,12 @@ defmodule BloomchainWeb.SharedView do
     ]
   end
 
-  defp href_path(item, conn) do
-    "#{conn.request_path}/#{item.slug}"
+  defp href_path(item) do
+    case item.type do
+      "person" -> "/people/#{item.slug}"
+      "in_russia" -> "/in-russia/#{item.slug}"
+      _ -> "/#{item.type}/#{item.slug}"
+    end
   end
 
   defp time_from(datetime) do
