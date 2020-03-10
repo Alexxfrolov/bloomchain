@@ -2,7 +2,6 @@ import nanoid from "nanoid"
 import React, { useState, useEffect, ReactElement, Fragment } from "react"
 import format from "date-fns/format"
 import {
-  Grid,
   Container,
   Paper,
   TableContainer,
@@ -39,26 +38,20 @@ export const SubscribersPage = () => {
 
   return (
     <Container maxWidth="md">
-      <Grid container={true} spacing={3}>
-        <Grid item={true} xs={12}>
-          <Typography component="h1" variant="h4" gutterBottom={false}>
-            Подписчики
-          </Typography>
-        </Grid>
-        <Grid item={true} xs={12}>
-          {!error ? (
-            <SubscribersTable
-              data={subscribers}
-              loading={loading}
-              renderRow={(subscriber) => (
-                <SubscribersTableRow key={nanoid()} subscriber={subscriber} />
-              )}
-            />
-          ) : (
-            <Alert color="error">Произошла ошибка</Alert>
+      <Typography component="h1" variant="h4" gutterBottom={true}>
+        Подписчики
+      </Typography>
+      {!error ? (
+        <SubscribersTable
+          data={subscribers}
+          loading={loading}
+          renderRow={(subscriber) => (
+            <SubscribersTableRow key={nanoid()} subscriber={subscriber} />
           )}
-        </Grid>
-      </Grid>
+        />
+      ) : (
+        <Alert color="error">Произошла ошибка</Alert>
+      )}
     </Container>
   )
 }

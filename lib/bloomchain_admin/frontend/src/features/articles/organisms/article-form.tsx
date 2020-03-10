@@ -8,6 +8,7 @@ import React, {
   FormEvent,
   SyntheticEvent,
   ChangeEvent,
+  Fragment,
 } from "react"
 import {
   Grid,
@@ -19,15 +20,27 @@ import {
   FormHelperText,
   MenuItem,
   Button,
+  makeStyles,
+  createStyles,
 } from "@material-ui/core"
 import DateFnsUtils from "@date-io/date-fns"
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import Autocomplete from "@material-ui/lab/Autocomplete"
+import { Editor } from "@lib/editor"
 import { Article } from "@api/articles"
 import { Author } from "@api/authors"
 import { mediaApi, UploadableMediaFile } from "@api/media"
-import { Editor } from "@lib/editor"
 import { Tag } from "@api/tags"
+import { ImagesUploadForm } from "@features/media"
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    root: {
+      display: "block",
+      flexGrow: 1,
+    },
+  }),
+)
 
 const INITIAL_ARTICLE: Article = {
   authors: [],
@@ -60,6 +73,8 @@ export const ArticleForm = ({
   tags,
   onSubmit,
 }: ArticleFormProps) => {
+  const classes = useStyles()
+
   const [article, setArticle] = useState<Article>({ ...initialArticle })
   const [image, setImage] = useState<
     Omit<UploadableMediaFile, "file"> & { file: File | null }
@@ -245,54 +260,50 @@ export const ArticleForm = ({
   const disabledForm = useMemo(() => !!Object.keys(errors).length, [errors])
 
   return (
-    <form onSubmit={handleSubmitForm}>
-      <Grid container={true} spacing={3} alignItems="flex-start">
-        <Grid item={true} md={12} lg={9} container={true} spacing={4}>
-          <Grid item={true} xs={12}>
-            <FormControl variant="outlined" fullWidth={true}>
-              <InputLabel ref={inputTypeLabel} id="type">
-                Раздел
-              </InputLabel>
-              <Select
-                labelId="type"
-                id="type"
-                labelWidth={typeLabelWidth}
-                value={article.type}
-                onChange={handleChangeSelect("type")}
-              >
-                <MenuItem value="newsfeed">Коротко</MenuItem>
-                <MenuItem value="detailed">В Деталях</MenuItem>
-                <MenuItem value="analysis">Биржевая аналитика</MenuItem>
-                <MenuItem value="in_russia">Что в России</MenuItem>
-                <MenuItem value="calendar">События</MenuItem>
-                <MenuItem value="person">Персона</MenuItem>
-                <MenuItem value="research">Исследования</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item={true} xs={12}>
-            <TextField
-              id="title"
-              label="Заголовок *"
-              value={article.title}
-              error={!!errors.title}
-              helperText={errors.title}
-              variant="outlined"
-              fullWidth={true}
-              onChange={handleChangeFormField("title")}
-            />
-          </Grid>
-          <Grid item={true} xs={12}>
-            <TextField
-              id="lead"
-              fullWidth={true}
-              label="Лид"
-              value={article.lead ?? ""}
-              variant="outlined"
-              onChange={handleChangeFormField("lead")}
-            />
-          </Grid>
-          <Grid item={true} xs={12}>
+    <form onSubmit={handleSubmitForm} className={classes.root}>
+      <Grid container={true} spacing={4}>
+        <Grid item={true} md={12} lg={9}>
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
+            <InputLabel ref={inputTypeLabel} id="type">
+              Раздел
+            </InputLabel>
+            <Select
+              labelId="type"
+              id="type"
+              labelWidth={typeLabelWidth}
+              value={article.type}
+              onChange={handleChangeSelect("type")}
+            >
+              <MenuItem value="newsfeed">Коротко</MenuItem>
+              <MenuItem value="detailed">В Деталях</MenuItem>
+              <MenuItem value="analysis">Биржевая аналитика</MenuItem>
+              <MenuItem value="in_russia">Что в России</MenuItem>
+              <MenuItem value="calendar">События</MenuItem>
+              <MenuItem value="person">Персона</MenuItem>
+              <MenuItem value="research">Исследования</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            id="title"
+            label="Заголовок *"
+            value={article.title}
+            error={!!errors.title}
+            helperText={errors.title}
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            onChange={handleChangeFormField("title")}
+          />
+          <TextField
+            id="lead"
+            label="Лид"
+            value={article.lead ?? ""}
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            onChange={handleChangeFormField("lead")}
+          />
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
             <Autocomplete<Author>
               id="authors"
               multiple={true}
@@ -306,8 +317,8 @@ export const ArticleForm = ({
                 <TextField {...params} label="Авторы" variant="outlined" />
               )}
             />
-          </Grid>
-          <Grid item={true} xs={12}>
+          </FormControl>
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
             <Autocomplete<Tag>
               id="tags"
               multiple={true}
@@ -321,21 +332,19 @@ export const ArticleForm = ({
                 <TextField {...params} label="Тэги" variant="outlined" />
               )}
             />
-          </Grid>
-          <Grid item={true} xs={12}>
+          </FormControl>
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
             <Editor value={article.body ?? ""} onChange={handleChangeEditor} />
-          </Grid>
-          <Grid item={true} xs={12}>
-            <Typography
-              color="textPrimary"
-              variant="h6"
-              component="h6"
-              gutterBottom={false}
-            >
-              Мета информация
-            </Typography>
-          </Grid>
-          <Grid item={true} xs={12}>
+          </FormControl>
+          <Typography
+            color="textPrimary"
+            variant="h6"
+            component="h6"
+            gutterBottom={true}
+          >
+            Мета информация
+          </Typography>
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
             <TextField
               id="keywords"
               label="Keywords"
@@ -347,20 +356,19 @@ export const ArticleForm = ({
             <FormHelperText variant="filled">
               Разделяйте слова запятыми или пробелами
             </FormHelperText>
-          </Grid>
-          <Grid item={true} xs={12}>
-            <TextField
-              id="description"
-              label="Description"
-              value={article.description ?? ""}
-              fullWidth={true}
-              variant="outlined"
-              onChange={handleChangeFormField("description")}
-            />
-          </Grid>
+          </FormControl>
+          <TextField
+            id="description"
+            label="Description"
+            value={article.description ?? ""}
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            onChange={handleChangeFormField("description")}
+          />
         </Grid>
-        <Grid item={true} md={12} lg={3} container={true} spacing={4}>
-          <Grid item={true} xs={12}>
+        <Grid item={true} md={12} lg={3}>
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
             <Typography
               color="textPrimary"
               variant="h6"
@@ -369,7 +377,8 @@ export const ArticleForm = ({
             >
               Титульное изображение
             </Typography>
-            {image.file || article.cover ? (
+            <ImagesUploadForm />
+            {/* {image.file || article.cover ? (
               <img width="100%" ref={imageRef} />
             ) : null}
             <input
@@ -384,66 +393,61 @@ export const ArticleForm = ({
               <Button variant="contained" color="primary" component="span">
                 Загрузить
               </Button>
-            </label>
-          </Grid>
+            </label> */}
+          </FormControl>
           {image.file || article.cover ? (
-            <Grid item={true} xs={12} container={true} spacing={2}>
-              <Grid item={true} xs={12}>
-                <TextField
-                  id="title"
-                  label="Заголовок"
-                  value={image?.title ?? ""}
-                  fullWidth={true}
-                  variant="outlined"
-                  size="small"
-                  onChange={handleChangeCoverField("title")}
-                />
-              </Grid>
-              <Grid item={true} xs={12}>
-                <TextField
-                  id="alt"
-                  label="Атрибут alt"
-                  value={image?.alt ?? ""}
-                  fullWidth={true}
-                  variant="outlined"
-                  size="small"
-                  onChange={handleChangeCoverField("alt")}
-                />
-              </Grid>
-              <Grid item={true} xs={12}>
-                <TextField
-                  id="source"
-                  label="Подпись"
-                  value={image?.source ?? ""}
-                  fullWidth={true}
-                  variant="outlined"
-                  size="small"
-                  onChange={handleChangeCoverField("source")}
-                />
-              </Grid>
-            </Grid>
+            <Fragment>
+              <TextField
+                id="title"
+                label="Заголовок"
+                value={image?.title ?? ""}
+                fullWidth={true}
+                margin="normal"
+                variant="outlined"
+                size="small"
+                onChange={handleChangeCoverField("title")}
+              />
+              <TextField
+                id="alt"
+                label="Атрибут alt"
+                value={image?.alt ?? ""}
+                fullWidth={true}
+                margin="normal"
+                variant="outlined"
+                size="small"
+                onChange={handleChangeCoverField("alt")}
+              />
+              <TextField
+                id="source"
+                label="Подпись"
+                value={image?.source ?? ""}
+                fullWidth={true}
+                margin="normal"
+                variant="outlined"
+                size="small"
+                onChange={handleChangeCoverField("source")}
+              />
+            </Fragment>
           ) : null}
-          <Grid item={true} xs={12}>
-            <FormControl variant="outlined" fullWidth={true}>
-              <InputLabel ref={inputStatusLabel} id="type">
-                Статус
-              </InputLabel>
-              <Select
-                labelId="status"
-                id="status"
-                labelWidth={statusLabelWidth}
-                value={article.status}
-                onChange={handleChangeSelect("status")}
-              >
-                <MenuItem value="draft">Черновик</MenuItem>
-                <MenuItem value="archive">Готово к публикации</MenuItem>
-                <MenuItem value="published">Опубликовано</MenuItem>
-                <MenuItem value="archive">Архив</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
+          <FormControl margin="normal" variant="outlined" fullWidth={true}>
+            <InputLabel ref={inputStatusLabel} id="type">
+              Статус
+            </InputLabel>
+            <Select
+              labelId="status"
+              id="status"
+              labelWidth={statusLabelWidth}
+              value={article.status}
+              onChange={handleChangeSelect("status")}
+            >
+              <MenuItem value="draft">Черновик</MenuItem>
+              <MenuItem value="archive">Готово к публикации</MenuItem>
+              <MenuItem value="published">Опубликовано</MenuItem>
+              <MenuItem value="archive">Архив</MenuItem>
+            </Select>
+          </FormControl>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid item={true} xs={12}>
+            <FormControl margin="normal" fullWidth={true} variant="outlined">
               <DatePicker
                 id="published_at"
                 variant="dialog"
@@ -461,20 +465,19 @@ export const ArticleForm = ({
               <FormHelperText variant="filled">
                 Доступно при статусе Опубликовано
               </FormHelperText>
-            </Grid>
+            </FormControl>
           </MuiPickersUtilsProvider>
-          <Grid item={true} xs={12}>
-            <TextField
-              id="description"
-              label="Время прочтения"
-              type="number"
-              value={article.time ?? ""}
-              fullWidth={true}
-              variant="outlined"
-              autoComplete="off"
-              onChange={handleChangeFormField("time")}
-            />
-          </Grid>
+          <TextField
+            id="description"
+            label="Время прочтения"
+            type="number"
+            value={article.time ?? ""}
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            autoComplete="off"
+            onChange={handleChangeFormField("time")}
+          />
         </Grid>
         <Grid
           item={true}

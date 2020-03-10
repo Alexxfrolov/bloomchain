@@ -57,7 +57,7 @@ export const UserAccountPage = () => {
     async (event: FormEvent) => {
       event.preventDefault()
       try {
-        const response = await usersApi.update(settings)
+        await usersApi.update(settings)
         setOpenedSuccessDialog(true)
       } catch {
         setOpenedErrorDialog(true)
@@ -68,71 +68,68 @@ export const UserAccountPage = () => {
 
   return (
     <Fragment>
-      <Container maxWidth="sm" className={classes.root}>
+      <Container maxWidth="sm">
         <Paper className={classes.paper} variant="elevation">
-          <form onSubmit={handleSubmit}>
-            <Grid container={true} spacing={4}>
+          <form onSubmit={handleSubmit} className={classes.root}>
+            <Grid container={true} spacing={3}>
               <Grid item={true}>
                 <Avatar className={classes.avatar}>AD</Avatar>
               </Grid>
-              <Grid item={true} xs={10} sm container={true} spacing={4}>
-                <Grid item={true} xs={12}>
-                  <TextField
-                    label="Имя"
-                    id="name"
-                    value={settings.first_name}
-                    fullWidth={true}
-                    variant="outlined"
-                    onChange={handleChangeField("first_name")}
-                  />
-                </Grid>
-                <Grid item={true} xs={12}>
-                  <TextField
-                    label="Фамилия"
-                    id="name"
-                    value={settings.last_name}
-                    fullWidth={true}
-                    variant="outlined"
-                    onChange={handleChangeField("last_name")}
-                  />
-                </Grid>
-                <Grid item={true} xs={12}>
-                  <TextField
-                    label="Должность"
-                    id="job"
-                    value={settings.job ?? ""}
-                    fullWidth={true}
-                    variant="outlined"
-                    onChange={handleChangeField("job")}
-                  />
-                </Grid>
-                <Grid item={true} xs={12}>
-                  <TextField
-                    label="Телефон"
-                    id="phone"
-                    type="tel"
-                    fullWidth={true}
-                    value={settings.phone ?? ""}
-                    variant="outlined"
-                    onChange={handleChangeField("phone")}
-                  />
-                </Grid>
-                <Grid item={true} xs={12}>
-                  <TextField
-                    label="Email"
-                    id="email"
-                    type="email"
-                    fullWidth={true}
-                    value={settings.email ?? ""}
-                    variant="outlined"
-                    onChange={handleChangeField("email")}
-                  />
-                </Grid>
+              <Grid item={true} xs={12} sm>
+                <TextField
+                  label="Имя"
+                  id="name"
+                  value={settings.first_name}
+                  fullWidth={true}
+                  margin="normal"
+                  variant="outlined"
+                  onChange={handleChangeField("first_name")}
+                />
+                <TextField
+                  label="Фамилия"
+                  id="name"
+                  value={settings.last_name}
+                  fullWidth={true}
+                  margin="normal"
+                  variant="outlined"
+                  onChange={handleChangeField("last_name")}
+                />
+                <TextField
+                  label="Должность"
+                  id="job"
+                  value={settings.job ?? ""}
+                  fullWidth={true}
+                  margin="normal"
+                  variant="outlined"
+                  onChange={handleChangeField("job")}
+                />
+                <TextField
+                  label="Телефон"
+                  id="phone"
+                  type="tel"
+                  value={settings.phone ?? ""}
+                  fullWidth={true}
+                  margin="normal"
+                  variant="outlined"
+                  onChange={handleChangeField("phone")}
+                />
+                <TextField
+                  label="Email"
+                  id="email"
+                  type="email"
+                  value={settings.email ?? ""}
+                  fullWidth={true}
+                  margin="normal"
+                  variant="outlined"
+                  onChange={handleChangeField("email")}
+                />
               </Grid>
-              <Grid item={true} xs={12} container={true} justify="flex-end">
-                <Button type="submit" variant="contained" color="primary">
-                  Обновить
-                </Button>
+              <Grid item={true} xs={12}>
+                <Grid container={true} justify="flex-end">
+                  <Button type="submit" variant="contained" color="primary">
+                    Обновить
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
           </form>

@@ -106,7 +106,7 @@ export const TagsPage = () => {
       <Container maxWidth="md">
         <Grid container={true} spacing={3}>
           <Grid item={true}>
-            <Typography component="h1" variant="h4" gutterBottom={false}>
+            <Typography component="h1" variant="h4" gutterBottom={true}>
               Тэги
             </Typography>
           </Grid>
@@ -115,24 +115,22 @@ export const TagsPage = () => {
               <AddBoxIcon color="primary" />
             </IconButton>
           </Grid>
-          <Grid item={true} xs={12}>
-            {!error ? (
-              <TagsTable
-                data={tags}
-                loading={loading}
-                renderRow={(tag) => (
-                  <TagsTableRow
-                    key={nanoid()}
-                    tag={tag}
-                    onDeleteRow={handleDeleteButtonClick(tag)}
-                  />
-                )}
-              />
-            ) : (
-              <Alert color="error">Произошла ошибка</Alert>
-            )}
-          </Grid>
         </Grid>
+        {!error ? (
+          <TagsTable
+            data={tags}
+            loading={loading}
+            renderRow={(tag) => (
+              <TagsTableRow
+                key={nanoid()}
+                tag={tag}
+                onDeleteRow={handleDeleteButtonClick(tag)}
+              />
+            )}
+          />
+        ) : (
+          <Alert color="error">Произошла ошибка</Alert>
+        )}
       </Container>
       <AddFormDialog
         opened={openedAddDialog}

@@ -3,7 +3,6 @@ import { useRoute } from "react-router5"
 import {
   Container,
   Paper,
-  Grid,
   Typography,
   Button,
   Dialog,
@@ -25,15 +24,6 @@ const useStyles = makeStyles((theme) =>
     },
     paper: {
       padding: theme.spacing(3),
-      textAlign: "left",
-      color: theme.palette.text.secondary,
-    },
-    chips: {
-      display: "flex",
-      flexWrap: "wrap",
-    },
-    chip: {
-      margin: 2,
     },
   }),
 )
@@ -124,27 +114,21 @@ export const ActicleEditPage = () => {
   return (
     <Fragment>
       <Container maxWidth="lg" className={classes.root}>
-        <Grid container={true} spacing={3}>
-          <Grid item={true} xs={12}>
-            <Typography component="h1" variant="h4" gutterBottom={false}>
-              Редактирование статьи
-            </Typography>
-          </Grid>
-          <Grid item={true} xs={12}>
-            <Paper className={classes.paper}>
-              {loading ? (
-                <Skeleton width="100%" height="900px" />
-              ) : (
-                <ArticleForm
-                  initialArticle={article}
-                  tags={tags}
-                  authors={authors}
-                  onSubmit={handleFormSubmit}
-                />
-              )}
-            </Paper>
-          </Grid>
-        </Grid>
+        <Typography component="h1" variant="h4" gutterBottom={true}>
+          Редактирование статьи
+        </Typography>
+        <Paper className={classes.paper}>
+          {loading ? (
+            <Skeleton width="100%" height="900px" />
+          ) : (
+            <ArticleForm
+              initialArticle={article}
+              tags={tags}
+              authors={authors}
+              onSubmit={handleFormSubmit}
+            />
+          )}
+        </Paper>
       </Container>
       <SuccessDialog
         opened={openedDialog}

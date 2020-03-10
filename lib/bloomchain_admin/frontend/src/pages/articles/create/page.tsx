@@ -2,7 +2,6 @@ import React, { Fragment, useState, useEffect, useCallback } from "react"
 import {
   Container,
   Paper,
-  Grid,
   Typography,
   Button,
   makeStyles,
@@ -24,15 +23,6 @@ const useStyles = makeStyles((theme) =>
     },
     paper: {
       padding: theme.spacing(3),
-      textAlign: "left",
-      color: theme.palette.text.secondary,
-    },
-    chips: {
-      display: "flex",
-      flexWrap: "wrap",
-    },
-    chip: {
-      margin: 2,
     },
   }),
 )
@@ -83,22 +73,16 @@ export const ActicleCreatePage = () => {
   return (
     <Fragment>
       <Container maxWidth="lg" className={classes.root}>
-        <Grid container={true} spacing={3}>
-          <Grid item={true} xs={12}>
-            <Typography component="h1" variant="h4" gutterBottom={false}>
-              Создать
-            </Typography>
-          </Grid>
-          <Grid item={true} xs={12}>
-            <Paper className={classes.paper}>
-              <ArticleForm
-                tags={tags}
-                authors={authors}
-                onSubmit={handleSubmitForm}
-              />
-            </Paper>
-          </Grid>
-        </Grid>
+        <Typography component="h1" variant="h4" gutterBottom={true}>
+          Создать
+        </Typography>
+        <Paper className={classes.paper}>
+          <ArticleForm
+            tags={tags}
+            authors={authors}
+            onSubmit={handleSubmitForm}
+          />
+        </Paper>
       </Container>
       <SuccessDialog
         opened={openedSuccessDialog}

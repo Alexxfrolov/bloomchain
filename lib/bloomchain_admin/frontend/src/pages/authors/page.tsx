@@ -145,25 +145,23 @@ export const AuthorsPage = () => {
               <AddBoxIcon color="primary" />
             </IconButton>
           </Grid>
-          <Grid item={true} xs={12}>
-            {!error ? (
-              <AuthorsTable
-                data={authors}
-                loading={loading}
-                renderRow={(author) => (
-                  <AuthorsTableRow
-                    key={nanoid()}
-                    author={author}
-                    onDetete={handleDeleteButtonClick(author)}
-                    onEdit={handleClickEditButton(author)}
-                  />
-                )}
-              />
-            ) : (
-              <Alert color="error">Произошла ошибка</Alert>
-            )}
-          </Grid>
         </Grid>
+        {!error ? (
+          <AuthorsTable
+            data={authors}
+            loading={loading}
+            renderRow={(author) => (
+              <AuthorsTableRow
+                key={nanoid()}
+                author={author}
+                onDetete={handleDeleteButtonClick(author)}
+                onEdit={handleClickEditButton(author)}
+              />
+            )}
+          />
+        ) : (
+          <Alert color="error">Произошла ошибка</Alert>
+        )}
       </Container>
       {openedAddFormDialog && (
         <AddAuthorFormDialog

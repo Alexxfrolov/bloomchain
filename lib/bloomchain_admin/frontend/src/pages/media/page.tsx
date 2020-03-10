@@ -173,106 +173,100 @@ export const MediaPage = () => {
 
   return (
     <Container maxWidth="lg">
-      <Grid container={true} spacing={3}>
-        <Grid item={true} xs={12} container={true} spacing={3}>
-          <Grid item={true}>
-            <Typography component="h1" variant="h4" gutterBottom={false}>
-              Медиа
-            </Typography>
-          </Grid>
-          <Grid item={true}>
-            <IconButton onClick={() => setOpenedAddFormDialog(true)}>
-              <AddBoxIcon color="primary" />
-            </IconButton>
-          </Grid>
+      <Grid item={true} xs={12} container={true} spacing={3}>
+        <Grid item={true}>
+          <Typography component="h1" variant="h4" gutterBottom={false}>
+            Медиа
+          </Typography>
         </Grid>
-        {error ? (
-          <Alert color="error">Произошла ошибка</Alert>
-        ) : (
-          <Fragment>
-            <Grid item={true} xs={12}>
-              <AppBar position="static" color="default">
-                <Tabs
-                  value={tabIndex}
-                  onChange={handleChangeTab}
-                  indicatorColor="primary"
-                  textColor="primary"
-                  variant="fullWidth"
-                >
-                  <Tab label="Изображения" id="image" />
-                  <Tab label="PDF" id="pdf" />
-                  {/* <Tab label="Видео" id="video" /> */}
-                </Tabs>
-              </AppBar>
-            </Grid>
-            <Grid item={true} xs={12}>
-              <div className={classes.root}>
-                {loading ? (
-                  <Skeleton width="100%" height="900px" />
-                ) : (
-                  <ConditionalList
-                    list={media}
-                    renderExists={(list) => (
-                      <GridList
-                        cellHeight={300}
-                        className={classes.gridList}
-                        style={{
-                          height: media.length > 10 ? "900px" : "600px",
-                        }}
-                        cols={3}
-                      >
-                        {list.map((item) => (
-                          <GridListTile key={nanoid()}>
-                            {item.type === "image" ? (
-                              <img src={item.url} alt={item.title} />
-                            ) : (
-                              <embed
-                                src={item.url}
-                                type="application/pdf"
-                                width="100%"
-                                height="100%"
-                              />
-                            )}
-                            <GridListTileBar
-                              titlePosition="bottom"
-                              title={item.title ?? ""}
-                              subtitle={<span>{item.source}</span>}
-                              actionPosition="right"
-                              actionIcon={
-                                <Grid container={true}>
-                                  {item.type !== "pdf" && (
-                                    <Grid item={true}>
-                                      <IconButton
-                                        className={classes.icon}
-                                        onClick={handleEditButtonClick(item)}
-                                      >
-                                        <EditIcon />
-                                      </IconButton>
-                                    </Grid>
-                                  )}
-                                  <Grid item={true}>
-                                    <IconButton
-                                      className={classes.icon}
-                                      onClick={handleDeleteButtonClick(item)}
-                                    >
-                                      <DeleteIcon />
-                                    </IconButton>
-                                  </Grid>
-                                </Grid>
-                              }
-                              className={classes.titleBar}
-                            />
-                          </GridListTile>
-                        ))}
-                      </GridList>
-                    )}
-                  />
-                )}
-              </div>
-            </Grid>
-          </Fragment>
-        )}
+        <Grid item={true}>
+          <IconButton onClick={() => setOpenedAddFormDialog(true)}>
+            <AddBoxIcon color="primary" />
+          </IconButton>
+        </Grid>
       </Grid>
+      {error ? (
+        <Alert color="error">Произошла ошибка</Alert>
+      ) : (
+        <Fragment>
+          <AppBar position="static" color="default">
+            <Tabs
+              value={tabIndex}
+              onChange={handleChangeTab}
+              indicatorColor="primary"
+              textColor="primary"
+              variant="fullWidth"
+            >
+              <Tab label="Изображения" id="image" />
+              <Tab label="PDF" id="pdf" />
+              {/* <Tab label="Видео" id="video" /> */}
+            </Tabs>
+          </AppBar>
+          <div className={classes.root}>
+            {loading ? (
+              <Skeleton width="100%" height="900px" />
+            ) : (
+              <ConditionalList
+                list={media}
+                renderExists={(list) => (
+                  <GridList
+                    cellHeight={300}
+                    className={classes.gridList}
+                    style={{
+                      height: media.length > 10 ? "900px" : "600px",
+                    }}
+                    cols={3}
+                  >
+                    {list.map((item) => (
+                      <GridListTile key={nanoid()}>
+                        {item.type === "image" ? (
+                          <img src={item.url} alt={item.title} />
+                        ) : (
+                          <embed
+                            src={item.url}
+                            type="application/pdf"
+                            width="100%"
+                            height="100%"
+                          />
+                        )}
+                        <GridListTileBar
+                          titlePosition="bottom"
+                          title={item.title ?? ""}
+                          subtitle={<span>{item.source}</span>}
+                          actionPosition="right"
+                          actionIcon={
+                            <Grid container={true}>
+                              {item.type !== "pdf" && (
+                                <Grid item={true}>
+                                  <IconButton
+                                    className={classes.icon}
+                                    onClick={handleEditButtonClick(item)}
+                                  >
+                                    <EditIcon />
+                                  </IconButton>
+                                </Grid>
+                              )}
+                              <Grid item={true}>
+                                <IconButton
+                                  className={classes.icon}
+                                  onClick={handleDeleteButtonClick(item)}
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                              </Grid>
+                            </Grid>
+                          }
+                          className={classes.titleBar}
+                        />
+                      </GridListTile>
+                    ))}
+                  </GridList>
+                )}
+              />
+            )}
+          </div>
+        </Fragment>
+      )}
       {openedDeleteDialog && (
         <DeleteDialog
           opened={openedDeleteDialog}

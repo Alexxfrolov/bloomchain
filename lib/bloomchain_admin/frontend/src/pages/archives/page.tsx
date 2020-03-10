@@ -100,37 +100,33 @@ export const ArchivesPage = () => {
   return (
     <Fragment>
       <Container maxWidth="lg">
-        <Grid container={true} spacing={3}>
-          <Grid item={true} xs={12} container={true} spacing={3}>
-            <Grid item={true}>
-              <Typography component="h1" variant="h4" gutterBottom={false}>
-                Архив
-              </Typography>
-            </Grid>
-            <Grid item={true}>
-              <IconButton onClick={() => seOpenedAddFormDialog(true)}>
-                <AddBoxIcon color="primary" />
-              </IconButton>
-            </Grid>
+        <Grid item={true} xs={12} container={true} spacing={3}>
+          <Grid item={true}>
+            <Typography component="h1" variant="h4" gutterBottom={true}>
+              Архив
+            </Typography>
           </Grid>
-          <Grid item={true} xs={12}>
-            {!error ? (
-              <ArchivesTable
-                loading={loading}
-                data={archives}
-                renderRow={(archive) => (
-                  <ArchivesTableRow
-                    key={nanoid()}
-                    archive={archive}
-                    onDelete={handleDeleteButtonClick(archive)}
-                  />
-                )}
-              />
-            ) : (
-              <Alert color="error">Произошла ошибка</Alert>
-            )}
+          <Grid item={true}>
+            <IconButton onClick={() => seOpenedAddFormDialog(true)}>
+              <AddBoxIcon color="primary" />
+            </IconButton>
           </Grid>
         </Grid>
+        {!error ? (
+          <ArchivesTable
+            loading={loading}
+            data={archives}
+            renderRow={(archive) => (
+              <ArchivesTableRow
+                key={nanoid()}
+                archive={archive}
+                onDelete={handleDeleteButtonClick(archive)}
+              />
+            )}
+          />
+        ) : (
+          <Alert color="error">Произошла ошибка</Alert>
+        )}
       </Container>
       {openedAddFormDialog && (
         <AddFormDialog

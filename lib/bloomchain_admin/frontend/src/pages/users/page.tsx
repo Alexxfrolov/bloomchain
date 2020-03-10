@@ -151,25 +151,23 @@ export const UsersPage = () => {
               <AddBoxIcon color="primary" />
             </IconButton>
           </Grid>
-          <Grid item={true} xs={12}>
-            {!error ? (
-              <UsersTable
-                data={users}
-                loading={loading}
-                renderRow={(user) => (
-                  <UsersTableRow
-                    key={nanoid()}
-                    user={user}
-                    onDetete={handleDeleteButtonClick(user)}
-                    onEdit={handleClickEditButton(user)}
-                  />
-                )}
-              />
-            ) : (
-              <Alert color="error">Произошла ошибка</Alert>
-            )}
-          </Grid>
         </Grid>
+        {!error ? (
+          <UsersTable
+            data={users}
+            loading={loading}
+            renderRow={(user) => (
+              <UsersTableRow
+                key={nanoid()}
+                user={user}
+                onDetete={handleDeleteButtonClick(user)}
+                onEdit={handleClickEditButton(user)}
+              />
+            )}
+          />
+        ) : (
+          <Alert color="error">Произошла ошибка</Alert>
+        )}
       </Container>
       {openedAddFormDialog && (
         <AddUserFormDialog
