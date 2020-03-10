@@ -89,17 +89,22 @@
         <button type="button" class="bc-header__search__icon btn-link nav-link pr-0">
           <i class="icon-search"></i>
         </button>
-        <form class="bc-header__search__box d-none">
-          <button type="submit" class="bc-header__search__icon btn-link nav-link pr-0">
+
+        <%= form_for @conn, search_path(@conn, :index), [method: :get, class: "bc-header__search__box d-none"], fn f-> %>
+
+          <%= submit class: "bc-header__search__icon btn-link nav-link pr-0" do %>
             <i class="icon-search"></i>
-          </button>
-          <input class="bc-header__search__input form-control" type="search" placeholder="Поиск по сайту" aria-label="Search">
+          <% end %>
+
+          <%= text_input f, :query, placeholder: "Поиск по сайту", aria_label: "Search", type: "search", class: "bc-header__search__input form-control" %>
+
           <a class="bc-header__search__close hamburger hamburger--slider-r is-active">
             <div class="hamburger-box">
               <div class="hamburger-inner"></div>
             </div>
           </a>
-        </form>
+
+        <% end %>
       </li>
     </ul>
   </div>

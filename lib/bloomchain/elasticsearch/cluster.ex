@@ -14,12 +14,12 @@ defmodule Bloomchain.ElasticsearchCluster do
       },
       sort: [
         %{published_at: %{order: "desc"}},
-        :_score
+        %{id: %{order: "desc"}}
       ],
       size: 6
     }
 
-    with {:ok, result} <- Elasticsearch.post(ES, "/posts/_doc/_search", query) do
+    with {:ok, result} <- Elasticsearch.post(ES, "/posts/_doc/_search/", query) do
       Enum.map(result["hits"]["hits"], &process_item/1)
     end
   end
