@@ -4,23 +4,50 @@ defmodule Bloomchain.ElasticsearchCluster do
   alias Bloomchain.ElasticsearchCluster, as: ES
   alias Bloomchain.Content.Post
 
+  @size 6
+
   def search(query) do
     query = %{
       query: %{
         multi_match: %{
           query: query,
-          fields: ["title^3", "lead^2", "body"]
+          fields: ["title^3", "lead^2", "body"],
+          tie_breaker: 0.1,
+          minimum_should_match: "90%"
         }
       },
       sort: [
         %{published_at: %{order: "desc"}},
         %{id: %{order: "desc"}}
       ],
-      size: 6
+      size: @size
     }
 
-    with {:ok, result} <- Elasticsearch.post(ES, "/posts/_doc/_search/", query) do
-      Enum.map(result["hits"]["hits"], &process_item/1)
+    process_result(Elasticsearch.post(ES, "/posts/_doc/_search/?scroll=5m", query))
+  end
+
+  def scroll(scroll) do
+    query = %{
+      scroll: "5m",
+      scroll_id: scroll
+    }
+
+    process_result(Elasticsearch.post(ES, "/_search/scroll", query))
+  end
+
+  defp process_result(result) do
+    with {:ok, result} <- result do
+      scroll =
+        if result["hits"]["total"] > @size and length(result["hits"]["hits"]) == @size do
+          result["_scroll_id"]
+        else
+          nil
+        end
+
+      %{
+        entries: Enum.map(result["hits"]["hits"], &process_item/1),
+        metadata: %{after: scroll}
+      }
     end
   end
 

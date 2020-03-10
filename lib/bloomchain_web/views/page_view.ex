@@ -1,6 +1,10 @@
 defmodule BloomchainWeb.PageView do
   use BloomchainWeb, :view
+
   alias BloomchainWeb.Uploaders.File
+  alias BloomchainWeb.SharedView
+
+  def render_main_article(nil, conn: _, path: _), do: ""
 
   def render_main_article(item, conn: _conn, path: path) do
     content_tag(:a, class: "bc-article__overlay-link", href: path) do

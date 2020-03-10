@@ -3,10 +3,10 @@ defmodule BloomchainWeb.SharedView do
 
   alias BloomchainWeb.Uploaders.File
 
-  def load_more_button(%Paginator.Page.Metadata{after: nil}) do
+  def load_more_button(%{after: nil}) do
   end
 
-  def load_more_button(%Paginator.Page.Metadata{after: after_cursor}) do
+  def load_more_button(%{after: after_cursor}) do
     content_tag(:div, class: "container px-0 pb-5 js-scroll-button-container") do
       content_tag(
         :button,

@@ -9,3 +9,5 @@
     </div>
   <% end %>
 </div>
+
+<%= SharedView.load_more_button(@meta) %>
