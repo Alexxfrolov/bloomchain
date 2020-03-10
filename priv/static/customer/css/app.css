@@ -7187,7 +7187,7 @@ html.lb-disable-scrolling {
     .bc-header__search {
       width: auto; }
       .bc-header__search__icon {
-        display: inline-flex !important;
+        display: inline-flex;
         border: none !important;
         outline: none !important; }
       .bc-header__search__box {

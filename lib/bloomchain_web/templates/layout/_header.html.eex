@@ -38,10 +38,13 @@
       <a class="icon-tw ml-3" href="https://twitter.com/BloomChainNews" target="_blank"></a>
     </div>
     <div class="d-inline-flex d-md-none">
-      <button class="bc-header__search__icon bc-header__search__icon_mobile btn-link nav-link px-0">
+      <button type="button" class="bc-header__search__icon bc-header__search__icon_mobile btn-link nav-link px-0">
         <i class="icon-search"></i>
       </button>
       <form class="bc-header__search__box bc-header__search__box_mobile d-none">
+        <button type="submit" class="bc-header__search__icon btn-link nav-link pr-0">
+          <i class="icon-search"></i>
+        </button>
         <input class="bc-header__search__input_mobile form-control" type="search" placeholder="Поиск по сайту" aria-label="Search">
         <a class="bc-header__search__close bc-header__search__close_mobile hamburger hamburger--slider-r is-active">
           <div class="hamburger-box">
@@ -83,8 +86,13 @@
     </nav>
     <ul class="navbar-nav d-none d-md-flex bc-header__search">
       <li class="nav-item d-flex align-items-center w-100">
-        <button type="submit" class="bc-header__search__icon btn-link nav-link pr-0"><i class="icon-search"></i></button>
+        <button type="button" class="bc-header__search__icon btn-link nav-link pr-0">
+          <i class="icon-search"></i>
+        </button>
         <form class="bc-header__search__box d-none">
+          <button type="submit" class="bc-header__search__icon btn-link nav-link pr-0">
+            <i class="icon-search"></i>
+          </button>
           <input class="bc-header__search__input form-control" type="search" placeholder="Поиск по сайту" aria-label="Search">
           <a class="bc-header__search__close hamburger hamburger--slider-r is-active">
             <div class="hamburger-box">

@@ -971,6 +971,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.innerWidth < 540 && $(e.target).prevAll().show();
   });
   $(".bc-header__search__icon").bind("click", function (e) {
+    $(this).hide();
     $(".bc-header__nav").hide(), $(".bc-header__search").removeClass("w-auto").addClass("w-100"), $(".bc-header__search__box").removeClass("d-none").addClass("d-inline-flex"), $(".bc-header__search__icon").removeClass("pr-0").addClass("px-0"), $(".bc-header__search__box input").focus(), $(e.delegateTarget).hasClass("bc-header__search__icon_mobile") && ($(e.delegateTarget).parent().prevAll().hide(), $(e.delegateTarget).nextAll().hide(), $(e.delegateTarget).parent().addClass("w-100"));
   });
   $(".bc-header__search__close").bind("click", function (e) {
