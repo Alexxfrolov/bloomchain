@@ -975,7 +975,7 @@ document.addEventListener('DOMContentLoaded', function () {
     $(".bc-header__nav").hide(), $(".bc-header__search").removeClass("w-auto").addClass("w-100"), $(".bc-header__search__box").removeClass("d-none").addClass("d-inline-flex"), $(".bc-header__search__icon").removeClass("pr-0").addClass("px-0"), $(".bc-header__search__box input").focus(), $(e.delegateTarget).hasClass("bc-header__search__icon_mobile") && ($(e.delegateTarget).parent().prevAll().hide(), $(e.delegateTarget).nextAll().hide(), $(e.delegateTarget).parent().addClass("w-100"));
   });
   $(".bc-header__search__close").bind("click", function (e) {
-    $(".bc-header__nav").show(), $(".bc-header__search").removeClass("w-100").addClass("w-auto"), $(".bc-header__search__box").removeClass("d-inline-flex").addClass("d-none"), $(".bc-header__search__icon").removeClass("px-0").addClass("pr-0"), $(e.delegateTarget).hasClass("bc-header__search__close_mobile") && ($(e.delegateTarget).parent().parent().prevAll().show(), $(e.delegateTarget).parent().nextAll().show(), $(e.delegateTarget).parent().parent().removeClass("w-100")), $(void 0).hide();
+    $(".bc-header__search__icon").show(), $(".bc-header__nav").show(), $(".bc-header__search").removeClass("w-100").addClass("w-auto"), $(".bc-header__search__box").removeClass("d-inline-flex").addClass("d-none"), $(".bc-header__search__icon").removeClass("px-0").addClass("pr-0"), $(e.delegateTarget).hasClass("bc-header__search__close_mobile") && ($(e.delegateTarget).parent().parent().prevAll().show(), $(e.delegateTarget).parent().nextAll().show(), $(e.delegateTarget).parent().parent().removeClass("w-100")), $(void 0).hide();
   });
   $('.js-marquee').marquee({
     duration: 4e4,
