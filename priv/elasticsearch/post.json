@@ -1,0 +1,64 @@
+
+{
+  "settings": {
+   "analysis": {
+     "analyzer": {
+       "htmlStripAnalyzer": {
+         "type": "custom",
+         "tokenizer": "standard",
+         "filter": ["standard","lowercase"],
+         "char_filter": [
+           "html_strip"
+         ]
+       }
+     }
+   }
+ },
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "title": {
+          "type": "text"
+        },
+        "lead": {
+          "type": "text"
+        },
+        "body": {
+          "type": "text",
+          "analyzer": "htmlStripAnalyzer"
+        },
+        "status": {
+          "type": "keyword"
+        },
+        "type": {
+          "type": "keyword"
+        },
+        "url": {
+          "type": "text",
+          "index": false
+        },
+        "authors": {
+          "type": "text",
+          "index": false
+        },
+        "time": {
+          "type": "integer"
+        },
+        "published_at": {
+          "type": "date"
+        },
+        "total_views": {
+          "type": "integer"
+        },
+        "cover": {
+          "properties": {
+            "url": {
+              "type": "text",
+              "index": false
+            }
+          }
+        }
+      }
+    }
+  }
+}

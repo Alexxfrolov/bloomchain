@@ -7,7 +7,9 @@ defmodule Bloomchain.ElasticsearchStore do
 
   @impl true
   def stream(schema) do
-    Repo.stream(schema)
+    schema
+    |> Repo.stream()
+    |> Repo.stream_preload(size: 100, preloads: [:authors, :cover])
   end
 
   @impl true
