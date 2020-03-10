@@ -18,6 +18,8 @@ defmodule BloomchainWeb.SharedView do
     end
   end
 
+  def main_article_tag(nil, conn: conn), do: ""
+
   def main_article_tag(item, conn: conn) do
     content_tag(:a, class: "bc-article__overlay-link", href: href_path(item, conn)) do
       content_tag(:div, class: "bc-article__image") do

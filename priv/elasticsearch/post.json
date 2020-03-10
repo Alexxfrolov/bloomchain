@@ -17,6 +17,9 @@
   "mappings": {
     "_doc": {
       "properties": {
+        "id": {
+          "type": "integer"
+        },
         "title": {
           "type": "text"
         },
@@ -33,14 +36,6 @@
         "type": {
           "type": "keyword"
         },
-        "url": {
-          "type": "text",
-          "index": false
-        },
-        "authors": {
-          "type": "text",
-          "index": false
-        },
         "time": {
           "type": "integer"
         },
@@ -50,12 +45,16 @@
         "total_views": {
           "type": "integer"
         },
+        "authors": {
+          "properties": {
+          }
+        },
         "cover": {
           "properties": {
-            "url": {
-              "type": "text",
-              "index": false
-            }
+          }
+        },
+        "tags": {
+          "properties": {
           }
         }
       }

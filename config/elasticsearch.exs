@@ -14,8 +14,8 @@ config :bloomchain, Bloomchain.ElasticsearchCluster,
   # here. It must implement the Elasticsearch.API behaviour.
   api: Elasticsearch.API.HTTP,
   default_options: [
-    timeout: 10_000,
-    recv_timeout: 10_000,
+    timeout: 20_000,
+    recv_timeout: 20_000,
     hackney: [pool: :pool_name]
   ],
 

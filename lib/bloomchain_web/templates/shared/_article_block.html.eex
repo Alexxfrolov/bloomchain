@@ -6,11 +6,10 @@
 
         <div class="mt-4"></div>
 
-        <%= if (length(@articles) > 3) || (length(@articles) == 2)  do %>
+        <%= if (length(@articles) > 3) || (length(@articles) == 2) do %>
           <%= main_article_tag(List.first(@articles |> tl()), :without_img, conn: @conn) %>
 
           <%= for [first | second] <- @articles |> tl() |> tl() |> Enum.chunk_every(2) do %>
-            <hr class="bc-article__separator mx-0 my-3">
             <div class="row">
               <%= article_tag(first, conn: @conn) %>
               <%= article_tag(List.first(second), conn: @conn) %>
@@ -18,7 +17,6 @@
           <% end %>
           <% else %>
             <%= for [first | second] <- @articles |> tl()  |> Enum.chunk_every(2) do %>
-              <hr class="bc-article__separator mx-0 my-3">
               <div class="row">
                 <%= article_tag(first, conn: @conn) %>
                 <%= article_tag(List.first(second), conn: @conn) %>

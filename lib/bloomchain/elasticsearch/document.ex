@@ -6,47 +6,62 @@ defimpl Elasticsearch.Document, for: Bloomchain.Content.Post do
 
   def encode(post) do
     %{
-      # search fields
+      id: post.id,
+      slug: post.slug,
       title: post.title,
-      lead: post.lead,
       body: post.body,
-      status: post.status,
+      lead: post.lead,
       type: post.type,
-      # data fields
-      url: do_url(post),
-      authors: do_authors(post),
+      keywords: post.keywords,
+      description: post.description,
+      status: post.status,
       time: post.time,
-      published_at: post.published_at,
       total_views: post.total_views,
-      cover: do_cover(post)
+      published_at: post.published_at,
+      inserted_at: post.inserted_at,
+      updated_at: post.updated_at,
+      cover: do_cover(post),
+      authors: do_authors(post),
+      tags: do_tags(post)
     }
   end
 
-  defp do_cover(%{cover: nil}) do
-    %{
-      url: nil
-    }
-  end
+  defp do_cover(%{cover: nil}), do: nil
 
   defp do_cover(%{cover: cover}) do
     %{
-      url: File.url({cover.file, cover})
+      id: cover.id,
+      uuid: cover.uuid,
+      inserted_at: cover.inserted_at,
+      type: cover.type,
+      title: cover.title,
+      updated_at: cover.updated_at,
+      source: cover.source,
+      content_type: cover.content_type,
+      file: cover.file
     }
   end
 
-  defp do_authors(%{authors: nil}) do
-    []
-  end
+  defp do_authors(%{authors: nil}), do: nil
 
   defp do_authors(%{authors: authors}) do
-    authors |> Enum.map(fn i -> i.name end)
+    Enum.map(authors, fn author ->
+      %{
+        id: author.id,
+        name: author.name
+      }
+    end)
   end
 
-  defp do_url(item) do
-    case item.type do
-      "person" -> "/people/#{item.slug}"
-      "in_russia" -> "/in-russia/#{item.slug}"
-      _ -> "/#{item.type}/#{item.slug}"
-    end
+  defp do_tags(%{tags: nil}), do: nil
+
+  defp do_tags(%{tags: tags}) do
+    Enum.map(tags, fn tag ->
+      %{
+        id: tag.id,
+        slug: tag.slug,
+        name: tag.name
+      }
+    end)
   end
 end
