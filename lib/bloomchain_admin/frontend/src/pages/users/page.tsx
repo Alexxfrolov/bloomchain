@@ -1,4 +1,3 @@
-import nanoid from "nanoid"
 import React, {
   Fragment,
   useState,
@@ -158,7 +157,7 @@ export const UsersPage = () => {
             loading={loading}
             renderRow={(user) => (
               <UsersTableRow
-                key={nanoid()}
+                key={user.id}
                 user={user}
                 onDetete={handleDeleteButtonClick(user)}
                 onEdit={handleClickEditButton(user)}

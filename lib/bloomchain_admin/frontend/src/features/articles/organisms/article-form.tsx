@@ -31,7 +31,7 @@ import { Article } from "@api/articles"
 import { Author } from "@api/authors"
 import { mediaApi, UploadableMediaFile } from "@api/media"
 import { Tag } from "@api/tags"
-import { ImagesUploadForm } from "@features/media"
+import { MediaUploadForm } from "@features/media"
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -90,7 +90,6 @@ export const ArticleForm = ({
 
   const inputTypeLabel: RefObject<HTMLLabelElement> | null = useRef(null)
   const inputStatusLabel: RefObject<HTMLLabelElement> | null = useRef(null)
-  const fileInputRef: RefObject<HTMLInputElement> | null = useRef(null)
   const imageRef: RefObject<HTMLImageElement> | null = useRef(null)
 
   const [typeLabelWidth, setTypeLabelWidth] = useState(0)
@@ -146,12 +145,8 @@ export const ArticleForm = ({
     [article, setArticle],
   )
 
-  const handleChangeImageFileInput = useCallback(() => {
-    if (
-      fileInputRef.current &&
-      fileInputRef.current.files !== null &&
-      fileInputRef.current.files.length === 1
-    ) {
+  const fileChangeHandler = useCallback(
+    (file: File) => {
       const reader = new FileReader()
 
       reader.onload = function(event: ProgressEvent<FileReader>) {
@@ -162,14 +157,15 @@ export const ArticleForm = ({
         }
       }
 
-      reader.readAsDataURL(fileInputRef.current.files[0])
+      reader.readAsDataURL(file)
 
       setImage({
         ...image,
-        file: fileInputRef.current.files[0],
+        file,
       })
-    }
-  }, [image, setImage])
+    },
+    [image, setImage],
+  )
 
   const handleChangeSelect = useCallback(
     (name: keyof Pick<Article, "type" | "status">) => (
@@ -262,7 +258,7 @@ export const ArticleForm = ({
   return (
     <form onSubmit={handleSubmitForm} className={classes.root}>
       <Grid container={true} spacing={4}>
-        <Grid item={true} md={12} lg={9}>
+        <Grid item={true} md={12} lg={8}>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <InputLabel ref={inputTypeLabel} id="type">
               Раздел
@@ -367,7 +363,7 @@ export const ArticleForm = ({
             onChange={handleChangeFormField("description")}
           />
         </Grid>
-        <Grid item={true} md={12} lg={3}>
+        <Grid item={true} md={12} lg={4}>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <Typography
               color="textPrimary"
@@ -377,25 +373,16 @@ export const ArticleForm = ({
             >
               Титульное изображение
             </Typography>
-            <ImagesUploadForm />
-            {/* {image.file || article.cover ? (
-              <img width="100%" ref={imageRef} />
+            {article.cover || image.file ? (
+              <FormControl margin="normal" fullWidth={true} variant="outlined">
+                <img width="100%" ref={imageRef} />
+              </FormControl>
             ) : null}
-            <input
-              accept="image/*"
-              id="cover"
-              ref={fileInputRef}
-              type="file"
-              style={{ display: "none" }}
-              onChange={handleChangeImageFileInput}
-            />
-            <label htmlFor="cover">
-              <Button variant="contained" color="primary" component="span">
-                Загрузить
-              </Button>
-            </label> */}
+            <FormControl margin="normal" fullWidth={true} variant="outlined">
+              <MediaUploadForm onChange={fileChangeHandler} />
+            </FormControl>
           </FormControl>
-          {image.file || article.cover ? (
+          {article.cover || image.file ? (
             <Fragment>
               <TextField
                 id="title"

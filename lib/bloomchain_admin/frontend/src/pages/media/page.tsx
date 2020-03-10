@@ -1,4 +1,3 @@
-import nanoid from "nanoid"
 import React, {
   Fragment,
   useState,
@@ -12,11 +11,9 @@ import React, {
 import {
   makeStyles,
   createStyles,
-  GridList,
-  GridListTile,
-  GridListTileBar,
   Grid,
   AppBar,
+  Toolbar,
   Tabs,
   Tab,
   Container,
@@ -24,6 +21,7 @@ import {
   DialogContent,
   DialogActions,
   DialogTitle,
+  FormControl,
   TextField,
   Typography,
   Button,
@@ -31,12 +29,10 @@ import {
   Theme,
 } from "@material-ui/core"
 import { Alert, Skeleton } from "@material-ui/lab"
-import DeleteIcon from "@material-ui/icons/Delete"
 import AddBoxIcon from "@material-ui/icons/AddBox"
-import EditIcon from "@material-ui/icons/Edit"
-import { ConditionalList } from "@ui"
 import { mediaApi, MediaFile, UploadableMediaFile } from "@api/media"
 import { DeleteDialog } from "@features/core"
+import { MediaList } from "@features/media"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,34 +43,15 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: "hidden",
       backgroundColor: theme.palette.background.paper,
     },
-    gridList: {
-      width: "100%",
+    title: {
+      marginRight: theme.spacing(2),
     },
-    editInput: {
-      color: "rgba(255, 255, 255, 0.8)",
-      transition: theme.transitions.create("color", {
-        easing: theme.transitions.easing.easeIn,
-        duration: theme.transitions.duration.standard,
-      }),
-      "&:focus": {},
+    toolbar: {
+      marginBottom: theme.spacing(2),
     },
-    editInputFocused: {
-      color: "#fff",
-    },
-    titleBar: {
-      background:
-        "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, " +
-        "rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
-    },
-    icon: {
-      color: "rgba(255, 255, 255, 0.54)",
-      transition: theme.transitions.create("color", {
-        easing: theme.transitions.easing.easeIn,
-        duration: theme.transitions.duration.standard,
-      }),
-      "&:hover": {
-        color: "rgba(255, 255, 255)",
-      },
+    tab: {
+      width: "50%",
+      minWidth: "50%",
     },
   }),
 )
@@ -143,16 +120,16 @@ export const MediaPage = () => {
     [setTabIndex, setType],
   )
 
-  const handleDeleteButtonClick = useCallback(
-    (media: MediaFile) => () => {
+  const deleteButtonHandler = useCallback(
+    (media: MediaFile) => {
       setOpenedDeleteDialog(true)
       setModifyingMediaFile(media)
     },
     [setModifyingMediaFile, setOpenedDeleteDialog],
   )
 
-  const handleEditButtonClick = useCallback(
-    (media: MediaFile) => () => {
+  const editButtonHandler = useCallback(
+    (media: MediaFile) => {
       setOpenedEditFormDialog(true)
       setModifyingMediaFile(media)
     },
@@ -173,18 +150,18 @@ export const MediaPage = () => {
 
   return (
     <Container maxWidth="lg">
-      <Grid item={true} xs={12} container={true} spacing={3}>
-        <Grid item={true}>
-          <Typography component="h1" variant="h4" gutterBottom={false}>
-            Медиа
-          </Typography>
-        </Grid>
-        <Grid item={true}>
-          <IconButton onClick={() => setOpenedAddFormDialog(true)}>
-            <AddBoxIcon color="primary" />
-          </IconButton>
-        </Grid>
-      </Grid>
+      <Toolbar disableGutters={true} className={classes.toolbar}>
+        <Typography component="h1" variant="h4" className={classes.title}>
+          Медиа
+        </Typography>
+        <IconButton
+          edge="end"
+          onClick={() => setOpenedAddFormDialog(true)}
+          aria-label="add media"
+        >
+          <AddBoxIcon color="primary" />
+        </IconButton>
+      </Toolbar>
       {error ? (
         <Alert color="error">Произошла ошибка</Alert>
       ) : (
@@ -197,8 +174,8 @@ export const MediaPage = () => {
               textColor="primary"
               variant="fullWidth"
             >
-              <Tab label="Изображения" id="image" />
-              <Tab label="PDF" id="pdf" />
+              <Tab label="Изображения" id="image" className={classes.tab} />
+              <Tab label="PDF" id="pdf" className={classes.tab} />
               {/* <Tab label="Видео" id="video" /> */}
             </Tabs>
           </AppBar>
@@ -206,62 +183,10 @@ export const MediaPage = () => {
             {loading ? (
               <Skeleton width="100%" height="900px" />
             ) : (
-              <ConditionalList
-                list={media}
-                renderExists={(list) => (
-                  <GridList
-                    cellHeight={300}
-                    className={classes.gridList}
-                    style={{
-                      height: media.length > 10 ? "900px" : "600px",
-                    }}
-                    cols={3}
-                  >
-                    {list.map((item) => (
-                      <GridListTile key={nanoid()}>
-                        {item.type === "image" ? (
-                          <img src={item.url} alt={item.title} />
-                        ) : (
-                          <embed
-                            src={item.url}
-                            type="application/pdf"
-                            width="100%"
-                            height="100%"
-                          />
-                        )}
-                        <GridListTileBar
-                          titlePosition="bottom"
-                          title={item.title ?? ""}
-                          subtitle={<span>{item.source}</span>}
-                          actionPosition="right"
-                          actionIcon={
-                            <Grid container={true}>
-                              {item.type !== "pdf" && (
-                                <Grid item={true}>
-                                  <IconButton
-                                    className={classes.icon}
-                                    onClick={handleEditButtonClick(item)}
-                                  >
-                                    <EditIcon />
-                                  </IconButton>
-                                </Grid>
-                              )}
-                              <Grid item={true}>
-                                <IconButton
-                                  className={classes.icon}
-                                  onClick={handleDeleteButtonClick(item)}
-                                >
-                                  <DeleteIcon />
-                                </IconButton>
-                              </Grid>
-                            </Grid>
-                          }
-                          className={classes.titleBar}
-                        />
-                      </GridListTile>
-                    ))}
-                  </GridList>
-                )}
+              <MediaList
+                media={media}
+                onDelete={deleteButtonHandler}
+                onEdit={editButtonHandler}
               />
             )}
           </div>
@@ -375,61 +300,54 @@ const AddFormDialog = ({
       <form onSubmit={handleSubmit}>
         <DialogTitle id="upload-form-dialog">Загрузка файла</DialogTitle>
         <DialogContent>
-          <Grid container={true} spacing={4}>
-            <Grid item={true} xs={12} container={true} spacing={2}>
-              {media.file && (
-                <Grid item={true} xs={12}>
-                  <img width="100%" ref={imageRef} />
-                </Grid>
-              )}
-              <Grid item={true} xs={12}>
-                <input
-                  accept="image/*"
-                  id="media"
-                  ref={fileInputRef}
-                  type="file"
-                  style={{ display: "none" }}
-                  onChange={handleFileInputChange}
-                />
-                <label htmlFor="media">
-                  <Button variant="contained" color="primary" component="span">
-                    Добавить файл
-                  </Button>
-                </label>
-              </Grid>
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                id="alt"
-                label="Alt"
-                required={true}
-                value={media.alt ?? ""}
-                type="text"
-                fullWidth
-                onChange={handleChangeTextField("alt")}
+          {media.file && (
+            <FormControl margin="normal" fullWidth={true} variant="outlined">
+              <img width="100%" ref={imageRef} />
+            </FormControl>
+          )}
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
+            <label htmlFor="media">
+              <input
+                accept="image/*"
+                id="media"
+                ref={fileInputRef}
+                type="file"
+                style={{ display: "none" }}
+                onChange={handleFileInputChange}
               />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                id="title"
-                label="Title"
-                type="text"
-                value={media.title ?? ""}
-                fullWidth
-                onChange={handleChangeTextField("title")}
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                id="source"
-                label="Source"
-                type="text"
-                value={media.source ?? ""}
-                fullWidth
-                onChange={handleChangeTextField("source")}
-              />
-            </Grid>
-          </Grid>
+              <Button variant="contained" color="primary" component="span">
+                Добавить файл
+              </Button>
+            </label>
+          </FormControl>
+          <TextField
+            id="alt"
+            label="Аттрибут аlt"
+            required={true}
+            value={media.alt ?? ""}
+            type="text"
+            fullWidth={true}
+            margin="normal"
+            onChange={handleChangeTextField("alt")}
+          />
+          <TextField
+            id="title"
+            label="Заголовок"
+            type="text"
+            value={media.title ?? ""}
+            fullWidth={true}
+            margin="normal"
+            onChange={handleChangeTextField("title")}
+          />
+          <TextField
+            id="source"
+            label="Источник"
+            type="text"
+            value={media.source ?? ""}
+            fullWidth={true}
+            margin="normal"
+            onChange={handleChangeTextField("source")}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">
@@ -501,7 +419,7 @@ const EditFormDialog = ({
             <Grid item={true} xs={12}>
               <TextField
                 id="alt"
-                label="Alt"
+                label="Аттрибут аlt"
                 required={true}
                 value={media.alt ?? ""}
                 type="text"
@@ -512,7 +430,7 @@ const EditFormDialog = ({
             <Grid item={true} xs={12}>
               <TextField
                 id="title"
-                label="Title"
+                label="Заголовок"
                 type="text"
                 value={media.title ?? ""}
                 fullWidth
@@ -522,7 +440,7 @@ const EditFormDialog = ({
             <Grid item={true} xs={12}>
               <TextField
                 id="source"
-                label="Source"
+                label="Источник"
                 type="text"
                 value={media.source ?? ""}
                 fullWidth

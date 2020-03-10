@@ -1,4 +1,3 @@
-import nanoid from "nanoid"
 import React, { useState, useEffect, ReactElement, Fragment } from "react"
 import format from "date-fns/format"
 import {
@@ -46,7 +45,7 @@ export const SubscribersPage = () => {
           data={subscribers}
           loading={loading}
           renderRow={(subscriber) => (
-            <SubscribersTableRow key={nanoid()} subscriber={subscriber} />
+            <SubscribersTableRow key={subscriber.id} subscriber={subscriber} />
           )}
         />
       ) : (

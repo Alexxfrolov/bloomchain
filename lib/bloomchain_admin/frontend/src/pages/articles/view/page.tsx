@@ -1,4 +1,3 @@
-import nanoid from "nanoid"
 import React, {
   Fragment,
   useState,
@@ -253,7 +252,7 @@ export const ArticlesViewPage = () => {
               loading={loading}
               renderRow={(article) => (
                 <ArticlesTableRow
-                  key={nanoid()}
+                  key={article.id}
                   article={article}
                   onDeleteRow={handleDeleteButtonClick(article)}
                 />

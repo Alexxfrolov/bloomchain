@@ -1,4 +1,3 @@
-import nanoid from "nanoid"
 import React, {
   Fragment,
   useEffect,
@@ -122,7 +121,7 @@ export const TagsPage = () => {
             loading={loading}
             renderRow={(tag) => (
               <TagsTableRow
-                key={nanoid()}
+                key={tag.id}
                 tag={tag}
                 onDeleteRow={handleDeleteButtonClick(tag)}
               />

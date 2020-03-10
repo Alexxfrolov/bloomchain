@@ -1,4 +1,3 @@
-import nanoid from "nanoid"
 import React, {
   Fragment,
   useState,
@@ -118,7 +117,7 @@ export const ArchivesPage = () => {
             data={archives}
             renderRow={(archive) => (
               <ArchivesTableRow
-                key={nanoid()}
+                key={archive.id}
                 archive={archive}
                 onDelete={handleDeleteButtonClick(archive)}
               />
@@ -207,12 +206,12 @@ const ArchivesTableRow = ({ archive, onDelete }: ArchiveTableRowProps) => (
       />
     </TableCell>
     <TableCell>
-      <embed
-        src={archive.pdf.url}
+      <object
+        data={archive.pdf.url}
         type="application/pdf"
         width="160px"
         height="300px"
-      />
+      ></object>
     </TableCell>
     <TableCell nowrap="true">
       {archive.created_at &&
@@ -295,7 +294,7 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
       reader.onload = function(event: ProgressEvent<FileReader>) {
         if (pdfRef.current) {
           event?.target?.result?.[
-            pdfRef.current.setAttribute("src", event.target.result)
+            pdfRef.current.setAttribute("data", event.target.result)
           ]
         }
       }
@@ -387,12 +386,12 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
             </Grid>
             {archive.pdf.file !== null && (
               <Grid item={true} xs={12}>
-                <embed
+                <object
                   ref={pdfRef}
                   type="application/pdf"
                   width="100%"
                   height="300px"
-                />
+                ></object>
               </Grid>
             )}
             <Grid item={true} xs={12}>
