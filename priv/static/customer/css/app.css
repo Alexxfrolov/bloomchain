@@ -7748,7 +7748,7 @@ html.lb-disable-scrolling {
     .bc-news__time {
       color: #838383;
       line-height: 1.5rem;
-      font-size: 18px;
+      font-size: 15px;
       white-space: nowrap;}
       @media (min-width: 992px) and (max-width: 1199.98px) {
         .bc-news__time {

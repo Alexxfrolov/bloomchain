@@ -235,10 +235,11 @@ export const ArticlesViewPage = () => {
               >
                 <Tab label="Коротко" id="newsfeed" />
                 <Tab label="В Деталях" id="detailed" />
-                <Tab label="Статистика" id="analysis" />
                 <Tab label="Что в России" id="in_russia" />
                 <Tab label="События" id="calendar" />
                 <Tab label="Персона" id="person" />
+                <Tab label="Исследования" id="research" />
+                <Tab label="Биржевая аналитика" id="analysis" />
               </Tabs>
             </AppBar>
           </Grid>

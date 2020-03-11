@@ -12,8 +12,6 @@
             <address class="article__author mr-sm-4 mr-2">
               <small class="small"><%= author(@article) %></small>
             </address>
-            <i class="mr-1 icon-view"></i>
-            <span class="small mr-sm-4 mr-2"><%= @article.total_views %></span>
             <i class="mr-1 icon-clock"></i>
             <time class="mr-sm-4 mr-2">
               <small class="small"><%= "#{@article.time} мин" %></small>

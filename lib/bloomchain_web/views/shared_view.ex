@@ -73,8 +73,6 @@ defmodule BloomchainWeb.SharedView do
       content_tag(:span, time_from(item.published_at), class: "small mr-sm-4 mr-2"),
       content_tag(:i, nil, class: "mr-1 icon-user-white"),
       content_tag(:span, author(item), class: "small mr-sm-4 mr-3"),
-      content_tag(:i, nil, class: "mr-1 icon-view"),
-      content_tag(:span, item.total_views, class: "small mr-4"),
       content_tag(:i, nil, class: "mr-1 icon-clock-white"),
       content_tag(:span, "#{item.time} мин", class: "small")
     ]
