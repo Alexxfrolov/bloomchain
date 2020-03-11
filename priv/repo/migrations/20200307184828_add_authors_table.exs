@@ -3,7 +3,8 @@ defmodule Bloomchain.Repo.Migrations.AddAuthorsTable do
 
   def change do
     create table(:authors) do
-      add(:name, :string, null: false)
+      add(:name, :string, null: true)
+      add(:user_id, references(:users), null: true)
 
       timestamps()
     end

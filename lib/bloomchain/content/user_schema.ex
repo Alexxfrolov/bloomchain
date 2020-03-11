@@ -1,6 +1,7 @@
 defmodule Bloomchain.Content.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Bloomchain.Content.Author
 
   schema "users" do
     field(:role, :string, default: "writer")
@@ -13,6 +14,8 @@ defmodule Bloomchain.Content.User do
 
     field(:password, :string, virtual: true)
     timestamps()
+
+    has_one(:author, Author, on_delete: :delete_all)
   end
 
   @required_fields ~w(first_name last_name email)a

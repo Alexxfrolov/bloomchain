@@ -47,8 +47,8 @@ end
 
 Repo.insert!(
   User.create_changeset(%User{}, %{
-    first_name: "Admin",
-    last_name: "Admin",
+    first_name: "Алексей",
+    last_name: "Фролов",
     email: "admin@app.com",
     password: "admin123",
     role: "admin"
@@ -56,10 +56,32 @@ Repo.insert!(
 )
 
 Repo.insert!(
-  Author.create_changeset(%Author{}, %{
-    name: "Admin"
+  User.create_changeset(%User{}, %{
+    first_name: "Александр",
+    last_name: "Моисеенко",
+    email: "admin2@app.com",
+    password: "admin123",
+    role: "admin"
   })
 )
+
+Repo.insert_all(Author, [
+  %{
+    name: "Bloomchain Research",
+    inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
+    updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+  },
+  %{
+    user_id: 1,
+    inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
+    updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+  },
+  %{
+    user_id: 2,
+    inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
+    updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+  }
+])
 
 Repo.insert_all(Subscriber, [
   %{

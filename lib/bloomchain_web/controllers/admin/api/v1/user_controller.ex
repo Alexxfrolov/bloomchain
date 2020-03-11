@@ -3,7 +3,7 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
 
   require Ecto.Query
 
-  alias Bloomchain.{Repo, Content.User}
+  alias Bloomchain.{Repo, Content.User, Content.Author}
   alias BloomchainWeb.ErrorView
   alias Bloomchain.Auth.Account
 
@@ -19,7 +19,8 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
   def create(conn, params) do
     changeset = User.create_changeset(%User{}, params)
 
-    with {:ok, user} <- Repo.insert(changeset) do
+    with {:ok, user} <- Repo.insert(changeset),
+         {:ok, _author} <- Repo.insert(Author.create_changeset(%Author{}, %{user_id: user.id})) do
       conn
       |> put_status(201)
       |> render("show.json", user: user)

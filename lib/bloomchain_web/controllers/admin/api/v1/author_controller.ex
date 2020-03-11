@@ -11,6 +11,7 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorController do
       Author
       |> Ecto.Query.order_by(desc: :inserted_at)
       |> Repo.all()
+      |> Repo.preload([:user])
 
     render(conn, "index.json", authors: authors)
   end

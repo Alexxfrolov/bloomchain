@@ -1,12 +1,14 @@
 defmodule Bloomchain.Content.Author do
+  use Ecto.Schema
+
   import Ecto.Changeset
 
-  alias Bloomchain.Content.Post
-
-  use Ecto.Schema
+  alias Bloomchain.Content.{Post, User}
 
   schema "authors" do
     field(:name, :string, unique: true)
+
+    belongs_to(:user, User)
 
     many_to_many(:posts, Post, join_through: "posts_authors")
 
@@ -15,8 +17,7 @@ defmodule Bloomchain.Content.Author do
 
   def create_changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name])
-    |> validate_required([:name])
+    |> cast(params, [:name, :user_id])
     |> unique_constraint(:name)
   end
 end
