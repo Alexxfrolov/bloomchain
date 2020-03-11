@@ -6,7 +6,7 @@ defmodule BloomchainWeb.PageController do
   def index(conn, _params) do
     context = %{
       detailed: Article.get_published_posts("detailed", limit: 3),
-      newsfeed: Article.get_published_posts("newsfeed", limit: 12),
+      newsfeed: Article.get_published_posts("newsfeed", limit: 8),
       analysis: Article.get_published_posts("analysis", limit: 3),
       in_russia: Article.get_published_posts("in_russia", limit: 3),
       calendar: Article.get_published_posts("calendar", limit: 3),

@@ -37,7 +37,7 @@ defmodule BloomchainWeb.PageView do
       [
         content_tag(
           :span,
-          Timex.format!(item.published_at, "%d.%m %H:%M", :strftime),
+          date_time_format(item.published_at),
           class: "bc-news__time"
         ),
         link(
@@ -65,5 +65,27 @@ defmodule BloomchainWeb.PageView do
       content_tag(:i, nil, class: "mr-1 icon-clock-white"),
       content_tag(:span, "#{item.time} мин", class: "small")
     ]
+  end
+
+  defp date_time_format(datetime) do
+    time = Timex.format!(datetime, "%H:%M", :strftime)
+
+    month =
+      case datetime.month do
+        1 -> "Янв."
+        2 -> "Февр."
+        3 -> "Марта"
+        4 -> "Апр."
+        5 -> "Мая"
+        6 -> "Июня"
+        7 -> "Июля"
+        8 -> "Авг."
+        9 -> "Сент."
+        10 -> "Окт."
+        11 -> "Нояб."
+        12 -> "Дек."
+      end
+
+    "#{datetime.day} #{month} #{time}"
   end
 end
