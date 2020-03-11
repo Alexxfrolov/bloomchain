@@ -11,7 +11,6 @@ import React, {
 } from "react"
 import format from "date-fns/format"
 import {
-  Grid,
   Container,
   Paper,
   Dialog,
@@ -22,10 +21,14 @@ import {
   Table,
   TableHead,
   TableBody,
+  Toolbar,
   Typography,
   TextField,
+  FormControl,
   Button,
   IconButton,
+  makeStyles,
+  createStyles,
 } from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
 import AddBoxIcon from "@material-ui/icons/AddBox"
@@ -40,8 +43,22 @@ import {
   TableRow,
   TableCell,
 } from "@features/core"
+import { MediaUploadForm } from "@features/media"
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    title: {
+      marginRight: theme.spacing(2),
+    },
+    toolbar: {
+      marginBottom: theme.spacing(2),
+    },
+  }),
+)
 
 export const ArchivesPage = () => {
+  const classes = useStyles()
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [archives, setArchives] = useState<Archive[]>([])
@@ -99,18 +116,18 @@ export const ArchivesPage = () => {
   return (
     <Fragment>
       <Container maxWidth="lg">
-        <Grid item={true} xs={12} container={true} spacing={3}>
-          <Grid item={true}>
-            <Typography component="h1" variant="h4" gutterBottom={true}>
-              Архив
-            </Typography>
-          </Grid>
-          <Grid item={true}>
-            <IconButton onClick={() => seOpenedAddFormDialog(true)}>
-              <AddBoxIcon color="primary" />
-            </IconButton>
-          </Grid>
-        </Grid>
+        <Toolbar disableGutters={true} className={classes.toolbar}>
+          <Typography component="h1" variant="h4" className={classes.title}>
+            Исследования (архив)
+          </Typography>
+          <IconButton
+            edge="end"
+            onClick={() => seOpenedAddFormDialog(true)}
+            aria-label="add tag"
+          >
+            <AddBoxIcon color="primary" />
+          </IconButton>
+        </Toolbar>
         {!error ? (
           <ArchivesTable
             loading={loading}
@@ -218,11 +235,9 @@ const ArchivesTableRow = ({ archive, onDelete }: ArchiveTableRowProps) => (
         format(new Date(archive.created_at), "dd.mm.yyyy hh:mm")}
     </TableCell>
     <TableCell>
-      <Grid container={true} justify="center">
-        <IconButton edge="start" onClick={onDelete}>
-          <DeleteIcon color="error" />
-        </IconButton>
-      </Grid>
+      <IconButton edge="end" onClick={onDelete}>
+        <DeleteIcon color="error" />
+      </IconButton>
     </TableCell>
   </TableRow>
 )
@@ -235,13 +250,7 @@ type AddFormDialogProps = {
 
 const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
   const [archive, setArchive] = useState({
-    cover: {
-      file: null,
-      id: null,
-      url: "",
-      alt: "",
-      type: "image",
-    },
+    cover: null,
     pdf: {
       file: null,
       id: null,
@@ -250,38 +259,8 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
     },
   })
 
-  const imageFileInputRef: RefObject<HTMLInputElement | null> = useRef(null)
   const pdfFileInputRef: RefObject<HTMLInputElement | null> = useRef(null)
-  const imageRef: RefObject<HTMLImageElement | null> = useRef(null)
   const pdfRef: RefObject<HTMLEmbedElement | null> = useRef(null)
-
-  const handleImageFileInputChange = useCallback(async () => {
-    if (
-      imageFileInputRef.current &&
-      imageFileInputRef.current.files !== null &&
-      imageFileInputRef.current.files.length === 1
-    ) {
-      const reader = new FileReader()
-
-      reader.onload = function(event: ProgressEvent<FileReader>) {
-        if (imageRef.current) {
-          event?.target?.result?.[
-            imageRef.current.setAttribute("src", event.target.result)
-          ]
-        }
-      }
-
-      reader.readAsDataURL(imageFileInputRef.current.files[0])
-
-      setArchive({
-        ...archive,
-        cover: {
-          ...archive.cover,
-          file: imageFileInputRef.current.files[0],
-        },
-      })
-    }
-  }, [archive, setArchive])
 
   const handlePDFFileInputChange = useCallback(async () => {
     if (
@@ -289,17 +268,9 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
       pdfFileInputRef.current.files !== null &&
       pdfFileInputRef.current.files.length === 1
     ) {
-      const reader = new FileReader()
+      const blobURL = URL.createObjectURL(pdfFileInputRef.current.files[0])
 
-      reader.onload = function(event: ProgressEvent<FileReader>) {
-        if (pdfRef.current) {
-          event?.target?.result?.[
-            pdfRef.current.setAttribute("data", event.target.result)
-          ]
-        }
-      }
-
-      reader.readAsDataURL(pdfFileInputRef.current.files[0])
+      pdfRef.current?.setAttribute("data", blobURL)
 
       setArchive({
         ...archive,
@@ -311,14 +282,24 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
     }
   }, [archive, setArchive])
 
-  const handleChangeTextField = useCallback(
-    (event: ChangeEvent<{ value: string }>) => {
+  // const handleChangeTextField = useCallback(
+  //   (event: ChangeEvent<{ value: string }>) => {
+  //     setArchive({
+  //       ...archive,
+  //       cover: {
+  //         ...archive.cover,
+  //         alt: event.currentTarget.value,
+  //       },
+  //     })
+  //   },
+  //   [archive, setArchive],
+  // )
+
+  const handleUpload = useCallback(
+    (image: MediaFile) => {
       setArchive({
         ...archive,
-        cover: {
-          ...archive.cover,
-          alt: event.currentTarget.value,
-        },
+        cover: image,
       })
     },
     [archive, setArchive],
@@ -348,68 +329,45 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
     >
       <form onSubmit={handleSubmit}>
         <DialogTitle id="add-archive-form-dialog">
-          Добавить новый архива
+          Добавить новый архив
         </DialogTitle>
         <DialogContent dividers={true}>
-          <Grid container={true} spacing={4}>
-            {archive.cover.file !== null && (
-              <Fragment>
-                <Grid item={true} xs={12}>
-                  <img ref={imageRef} width="100%" />
-                </Grid>
-                <Grid item={true} xs={12}>
-                  <TextField
-                    id="alt"
-                    label="Alt"
-                    value={archive.cover.alt}
-                    type="text"
-                    fullWidth={true}
-                    onChange={handleChangeTextField}
-                  />
-                </Grid>
-              </Fragment>
-            )}
-            <Grid item={true} xs={12}>
-              <input
-                accept="image/*"
-                id="cover"
-                ref={imageFileInputRef}
-                type="file"
-                style={{ display: "none" }}
-                onChange={handleImageFileInputChange}
-              />
-              <label htmlFor="cover">
-                <Button variant="contained" color="primary" component="span">
-                  Добавить обложку
-                </Button>
-              </label>
-            </Grid>
-            {archive.pdf.file !== null && (
-              <Grid item={true} xs={12}>
-                <object
-                  ref={pdfRef}
-                  type="application/pdf"
-                  width="100%"
-                  height="300px"
-                ></object>
-              </Grid>
-            )}
-            <Grid item={true} xs={12}>
-              <input
-                accept="application/pdf"
-                id="pdf"
-                ref={pdfFileInputRef}
-                type="file"
-                style={{ display: "none" }}
-                onChange={handlePDFFileInputChange}
-              />
-              <label htmlFor="pdf">
-                <Button variant="contained" color="primary" component="span">
-                  Добавить PDF
-                </Button>
-              </label>
-            </Grid>
-          </Grid>
+          <Typography variant="h6" component="h6">
+            Обложка
+          </Typography>
+          {archive.cover && (
+            <FormControl margin="normal" fullWidth={true} variant="outlined">
+              <img src={archive.cover.url} width="100%" />
+            </FormControl>
+          )}
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
+            <MediaUploadForm onUpload={handleUpload} />
+          </FormControl>
+          {archive.pdf.file !== null && (
+            <FormControl margin="normal" fullWidth={true} variant="outlined">
+              <object
+                ref={pdfRef}
+                type="application/pdf"
+                width="100%"
+                height="300px"
+              ></object>
+            </FormControl>
+          )}
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
+            <input
+              accept="application/pdf"
+              id="pdf"
+              ref={pdfFileInputRef}
+              type="file"
+              style={{ display: "none" }}
+              onChange={handlePDFFileInputChange}
+            />
+            <label htmlFor="pdf">
+              <Button variant="contained" color="primary" component="span">
+                Добавить PDF
+              </Button>
+            </label>
+          </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">

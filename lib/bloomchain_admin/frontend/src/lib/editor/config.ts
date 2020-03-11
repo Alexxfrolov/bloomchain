@@ -47,7 +47,7 @@ export const config = {
       buttonsVisible: 3,
     },
     moreMisc: {
-      buttons: ["undo", "redo", "fullscreen"],
+      buttons: ["undo", "redo"],
       align: "right",
       buttonsVisible: 3,
     },

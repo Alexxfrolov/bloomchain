@@ -32,7 +32,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
     with {:ok, article} <- Article.create(params) do
       conn
       |> put_status(201)
-      |> render("show.json", article: article |> Repo.preload([:tags, :cover]))
+      |> render("show.json", article: article |> Repo.preload([:tags, :cover, :authors]))
     else
       {:error, changeset} ->
         conn
@@ -73,3 +73,4 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
     end
   end
 end
+

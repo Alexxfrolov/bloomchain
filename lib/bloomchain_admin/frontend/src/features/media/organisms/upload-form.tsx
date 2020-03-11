@@ -82,12 +82,12 @@ const useStyles = makeStyles((theme) =>
 
 type ImagesUploadFormProps = {
   accept?: string[]
-  onChange: (file: File) => void
+  onUpload: (image: MediaFile) => void
 }
 
 export const MediaUploadForm = ({
   accept,
-  onChange,
+  onUpload,
 }: ImagesUploadFormProps) => {
   const classes = useStyles()
 
@@ -124,15 +124,25 @@ export const MediaUploadForm = ({
     setOpenedDialog(false)
   }, [setOpenedDialog])
 
-  const inputFileChangeHandler = useCallback(() => {
-    if (
-      inputFileRef.current &&
-      inputFileRef.current.files !== null &&
-      inputFileRef.current.files.length === 1
-    ) {
-      onChange(inputFileRef.current.files[0])
+  const inputFileChangeHandler = useCallback(async () => {
+    if (inputFileRef.current && inputFileRef.current.files !== null) {
+      try {
+        const { data: image } = await mediaApi.create({
+          file: inputFileRef.current.files[0],
+          type: "image",
+        })
+        onUpload(image)
+      } catch {}
     }
-  }, [onChange])
+  }, [onUpload])
+
+  const handleAddButtonClick = useCallback(
+    (image: MediaFile) => {
+      onUpload(image)
+      closeDialog()
+    },
+    [onUpload, closeDialog],
+  )
 
   return (
     <Fragment>
@@ -181,6 +191,7 @@ export const MediaUploadForm = ({
       <MediaLibraryDialog
         media={media}
         opened={openedDialog}
+        onAdd={handleAddButtonClick}
         onClose={closeDialog}
       />
     </Fragment>
@@ -221,12 +232,14 @@ function TabPanel(props: TabPanelProps) {
 type MediaLibraryDialogProps = {
   media: MediaFile[]
   opened: boolean
+  onAdd: (media: MediaFile) => void
   onClose: () => void
 }
 
 export const MediaLibraryDialog = ({
   media,
   opened,
+  onAdd,
   onClose,
 }: MediaLibraryDialogProps) => {
   const classes = useStyles()
@@ -251,7 +264,7 @@ export const MediaLibraryDialog = ({
           <CloseIcon />
         </IconButton>
       </Toolbar>
-      <ConditionalList
+      <ConditionalList<MediaFile>
         list={media}
         renderExists={(list) => (
           <GridList cellHeight={200} className={classes.gridList} cols={3}>
@@ -265,10 +278,14 @@ export const MediaLibraryDialog = ({
                 <GridListTileBar
                   titlePosition="bottom"
                   title={item.title ?? ""}
-                  subtitle={<span>{item.source}</span>}
+                  subtitle={<span>{item.source ?? ""}</span>}
                   actionPosition="right"
                   actionIcon={
-                    <IconButton size="small" className={classes.iconButton}>
+                    <IconButton
+                      size="small"
+                      className={classes.iconButton}
+                      onClick={() => onAdd(item)}
+                    >
                       <AddRoundedIcon htmlColor={lightBlue[800]} />
                     </IconButton>
                   }

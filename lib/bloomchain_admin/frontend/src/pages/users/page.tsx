@@ -295,7 +295,7 @@ const AddUserFormDialog = ({
     email: "",
   })
 
-  const labelRef: RefObject<HTMLLabelElement> | null = useRef(null)
+  const labelRef: RefObject<HTMLLabelElement | null> = useRef(null)
   const [labelWidth, setSelectRoleLabelWidth] = useState(0)
 
   useEffect(() => {
@@ -435,7 +435,7 @@ const EditUserFormDialog = ({
 }: EditUserFormDialogProps) => {
   const [user, setUser] = useState<User>({ ...editableUser })
 
-  const labelRef: RefObject<HTMLLabelElement> | null = useRef(null)
+  const labelRef: RefObject<HTMLLabelElement | null> = useRef(null)
   const [labelWidth, setSelectRoleLabelWidth] = useState(0)
 
   useEffect(() => {

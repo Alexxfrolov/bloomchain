@@ -8,7 +8,6 @@ import React, {
   FormEvent,
   SyntheticEvent,
   ChangeEvent,
-  Fragment,
 } from "react"
 import {
   Grid,
@@ -29,7 +28,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete"
 import { Editor } from "@lib/editor"
 import { Article } from "@api/articles"
 import { Author } from "@api/authors"
-import { mediaApi, UploadableMediaFile } from "@api/media"
+import { MediaFile } from "@api/media"
 import { Tag } from "@api/tags"
 import { MediaUploadForm } from "@features/media"
 
@@ -67,6 +66,7 @@ type ArticleFormProps = {
   onSubmit: (article: Article) => void
 }
 
+// TODO: add removeObjectURL
 export const ArticleForm = ({
   authors,
   initialArticle = INITIAL_ARTICLE,
@@ -76,21 +76,11 @@ export const ArticleForm = ({
   const classes = useStyles()
 
   const [article, setArticle] = useState<Article>({ ...initialArticle })
-  const [image, setImage] = useState<
-    Omit<UploadableMediaFile, "file"> & { file: File | null }
-  >({
-    type: "image",
-    file: null,
-    title: null,
-    alt: null,
-    source: null,
-  })
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
   const [submitted, setSubmitted] = useState(false)
 
-  const inputTypeLabel: RefObject<HTMLLabelElement> | null = useRef(null)
-  const inputStatusLabel: RefObject<HTMLLabelElement> | null = useRef(null)
-  const imageRef: RefObject<HTMLImageElement> | null = useRef(null)
+  const inputTypeLabel: RefObject<HTMLLabelElement | null> = useRef(null)
+  const inputStatusLabel: RefObject<HTMLLabelElement | null> = useRef(null)
 
   const [typeLabelWidth, setTypeLabelWidth] = useState(0)
   const [statusLabelWidth, setStatusLabelWidth] = useState(0)
@@ -118,15 +108,18 @@ export const ArticleForm = ({
     [article, setArticle],
   )
 
-  const handleChangeCoverField = useCallback(
-    (field: string) => (event: SyntheticEvent<{ value: string }>) => {
-      setImage({
-        ...image,
-        [field]: event.currentTarget.value,
-      })
-    },
-    [image, setImage],
-  )
+  // const handleChangeCoverField = useCallback(
+  //   (field: string) => (event: SyntheticEvent<{ value: string }>) => {
+  //     setArticle({
+  //       ...article,
+  //     })
+  //     setImage({
+  //       ...image,
+  //       [field]: event.currentTarget.value,
+  //     })
+  //   },
+  //   [],
+  // )
 
   const handleChangeEditor = useCallback(
     (value: string) => {
@@ -145,26 +138,14 @@ export const ArticleForm = ({
     [article, setArticle],
   )
 
-  const fileChangeHandler = useCallback(
-    (file: File) => {
-      const reader = new FileReader()
-
-      reader.onload = function(event: ProgressEvent<FileReader>) {
-        if (imageRef.current) {
-          event?.target?.result &&
-            typeof event.target.result === "string" &&
-            imageRef.current.setAttribute("src", event.target.result)
-        }
-      }
-
-      reader.readAsDataURL(file)
-
-      setImage({
-        ...image,
-        file,
+  const handleUpload = useCallback(
+    (image: MediaFile) => {
+      setArticle({
+        ...article,
+        cover: image,
       })
     },
-    [image, setImage],
+    [article, setArticle],
   )
 
   const handleChangeSelect = useCallback(
@@ -206,21 +187,15 @@ export const ArticleForm = ({
   }, [setArticle])
 
   const handleSubmitForm = useCallback(
-    async (event: FormEvent) => {
+    (event: FormEvent) => {
       event.preventDefault()
       setSubmitted(true)
       const { isValid } = validateFormFields(article)
       if (isValid) {
-        try {
-          const response =
-            image.file !== null ? await mediaApi.create(image) : undefined
-          response
-            ? onSubmit({ ...article, cover_id: response.data.id })
-            : onSubmit(article)
-        } catch {}
+        onSubmit(article)
       }
     },
-    [article, image, setSubmitted, onSubmit],
+    [article, setSubmitted, onSubmit],
   )
 
   const tagsOptions = useMemo(
@@ -332,14 +307,11 @@ export const ArticleForm = ({
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <Editor value={article.body ?? ""} onChange={handleChangeEditor} />
           </FormControl>
-          <Typography
-            color="textPrimary"
-            variant="h6"
-            component="h6"
-            gutterBottom={true}
-          >
-            Мета информация
-          </Typography>
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
+            <Typography color="textPrimary" variant="h6" component="h6">
+              Мета информация
+            </Typography>
+          </FormControl>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <TextField
               id="keywords"
@@ -373,21 +345,21 @@ export const ArticleForm = ({
             >
               Титульное изображение
             </Typography>
-            {article.cover || image.file ? (
-              <FormControl margin="normal" fullWidth={true} variant="outlined">
-                <img width="100%" ref={imageRef} />
-              </FormControl>
-            ) : null}
-            <FormControl margin="normal" fullWidth={true} variant="outlined">
-              <MediaUploadForm onChange={fileChangeHandler} />
-            </FormControl>
           </FormControl>
-          {article.cover || image.file ? (
+          {article.cover && (
+            <FormControl margin="normal" fullWidth={true} variant="outlined">
+              <img width="100%" src={article.cover.url} />
+            </FormControl>
+          )}
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
+            <MediaUploadForm onUpload={handleUpload} />
+          </FormControl>
+          {/* {article.cover && (
             <Fragment>
               <TextField
                 id="title"
                 label="Заголовок"
-                value={image?.title ?? ""}
+                value={article.cover?.title ?? ""}
                 fullWidth={true}
                 margin="normal"
                 variant="outlined"
@@ -397,7 +369,7 @@ export const ArticleForm = ({
               <TextField
                 id="alt"
                 label="Атрибут alt"
-                value={image?.alt ?? ""}
+                value={article.cover?.alt ?? ""}
                 fullWidth={true}
                 margin="normal"
                 variant="outlined"
@@ -407,7 +379,7 @@ export const ArticleForm = ({
               <TextField
                 id="source"
                 label="Подпись"
-                value={image?.source ?? ""}
+                value={article.cover?.source ?? ""}
                 fullWidth={true}
                 margin="normal"
                 variant="outlined"
@@ -415,7 +387,7 @@ export const ArticleForm = ({
                 onChange={handleChangeCoverField("source")}
               />
             </Fragment>
-          ) : null}
+          )} */}
           <FormControl margin="normal" variant="outlined" fullWidth={true}>
             <InputLabel ref={inputStatusLabel} id="type">
               Статус
@@ -444,7 +416,6 @@ export const ArticleForm = ({
                 inputVariant="outlined"
                 label="Дата публикации"
                 format="dd/MM/yyyy"
-                // maxDate={}
                 minDate={new Date()}
                 value={article.published_at}
                 onChange={handleDateChange}

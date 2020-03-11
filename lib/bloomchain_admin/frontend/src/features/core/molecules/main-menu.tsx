@@ -200,7 +200,7 @@ export const MainMenu = () => {
             <ListItemIcon style={{ paddingLeft: "7px" }}>
               <ImportContactsRoundedIcon style={{ color: indigo[500] }} />
             </ListItemIcon>
-            <ListItemText primary="Исследования Архив" />
+            <ListItemText primary="Исследования (архив)" />
           </RouterLink>
         </ListItem>
       </List>

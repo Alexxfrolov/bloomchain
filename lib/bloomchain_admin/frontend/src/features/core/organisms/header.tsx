@@ -82,7 +82,7 @@ export const Header = ({ openedDrawer, onDrawerClose }: HeaderProps) => {
             </IconButton>
           </Grid>
           <Grid item={true} container={true} justify="space-between">
-            <Link href="/" className={classes.link}>
+            <Link href="/" target="_blank" className={classes.link}>
               <HomeRoundedIcon color="inherit" />
               <Typography
                 variant="subtitle2"

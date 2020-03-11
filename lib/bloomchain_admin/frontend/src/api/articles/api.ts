@@ -37,9 +37,10 @@ function getById(id: number): AxiosPromise<Article> {
 }
 
 function create(article: Omit<Article, "id">): AxiosPromise<Article> {
-  const { tags, authors, keywords, ...rest } = article
+  const { tags, authors, keywords, cover, ...rest } = article
   const data = {
     ...rest,
+    cover_id: cover?.id ?? null,
     authors: authors.reduce((acc: number[], author) => [...acc, author.id], []),
     tags: tags.reduce((acc: number[], tag) => [...acc, tag.id], []),
     keywords: keywords.length ? keywords.split(/[ ,]+/) : [],
@@ -58,7 +59,7 @@ function update(
     authors: authors.reduce((acc: number[], author) => [...acc, author.id], []),
     tags: tags.reduce((acc: number[], tag) => [...acc, tag.id], []),
     keywords: keywords.length ? keywords.split(/[ ,]+/) : [],
-    // cover_id: cover?.id ?? null,
+    cover_id: cover?.id ?? null,
   }
   return axios.patch(`${httpConfig.baseUrl}/articles/${article.id}`, data)
 }
