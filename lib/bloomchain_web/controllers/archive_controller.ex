@@ -1,11 +1,17 @@
 defmodule BloomchainWeb.ArchiveController do
   use BloomchainWeb, :controller
 
+  require Ecto.Query
+
   alias Bloomchain.Repo
   alias Bloomchain.Content.Archive
 
   def index(conn, _params) do
-    data = Repo.all(Archive) |> Repo.preload([:cover, :pdf])
+    data =
+      Archive
+      |> Ecto.Query.order_by(desc: :inserted_at)
+      |> Repo.all()
+      |> Repo.preload([:cover, :pdf])
 
     render(conn, "index.html", data: data)
   end

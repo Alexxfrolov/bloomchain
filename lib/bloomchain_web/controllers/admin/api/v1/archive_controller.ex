@@ -1,12 +1,18 @@
 defmodule BloomchainWeb.Admin.Api.V1.ArchiveController do
   use BloomchainWeb, :controller
 
+  require Ecto.Query
+
   alias Plug.Conn
   alias Bloomchain.{Repo, Content.Archive}
   alias BloomchainWeb.ErrorView
 
   def index(conn, _params) do
-    archives = Repo.all(Archive) |> Repo.preload([:cover, :pdf])
+    archives =
+      Archive
+      |> Ecto.Query.order_by(desc: :inserted_at)
+      |> Repo.all()
+      |> Repo.preload([:cover, :pdf])
 
     render(conn, "index.json", archives: archives)
   end

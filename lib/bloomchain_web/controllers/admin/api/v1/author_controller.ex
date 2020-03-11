@@ -1,12 +1,16 @@
 defmodule BloomchainWeb.Admin.Api.V1.AuthorController do
   use BloomchainWeb, :controller
 
-  # alias Plug.Conn
+  require Ecto.Query
+
   alias Bloomchain.{Repo, Content.Author}
   alias BloomchainWeb.ErrorView
 
   def index(conn, _params) do
-    authors = Repo.all(Author)
+    authors =
+      Author
+      |> Ecto.Query.order_by(desc: :inserted_at)
+      |> Repo.all()
 
     render(conn, "index.json", authors: authors)
   end

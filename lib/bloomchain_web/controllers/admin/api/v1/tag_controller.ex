@@ -1,12 +1,17 @@
 defmodule BloomchainWeb.Admin.Api.V1.TagController do
   use BloomchainWeb, :controller
 
+  require Ecto.Query
+
   alias Plug.Conn
   alias Bloomchain.{Repo, Content.Tag}
   alias BloomchainWeb.ErrorView
 
   def index(conn, _params) do
-    tags = Repo.all(Tag)
+    tags =
+      Tag
+      |> Ecto.Query.order_by(desc: :inserted_at)
+      |> Repo.all()
 
     render(conn, "index.json", tags: tags)
   end
