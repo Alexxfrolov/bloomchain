@@ -16,10 +16,10 @@ defmodule Bloomchain.ElasticsearchCluster do
           minimum_should_match: "90%"
         }
       },
-      sort: [
-        %{published_at: %{order: "desc"}},
-        %{id: %{order: "desc"}}
-      ],
+      # sort: [
+      #   %{published_at: %{order: "desc"}},
+      #   %{id: %{order: "desc"}}
+      # ],
       size: @size
     }
 
