@@ -37,7 +37,7 @@ defmodule BloomchainWeb.PageView do
       [
         content_tag(
           :span,
-          Timex.format!(item.published_at, "%H:%M", :strftime),
+          Timex.format!(item.published_at, "%d.%m %H:%M", :strftime),
           class: "bc-news__time"
         ),
         link(
