@@ -111,13 +111,11 @@ defmodule Bloomchain.Content.Post do
     |> put_assoc(:tags, Enum.map(tags, &%Tag{id: &1["id"]}))
   end
 
-  defp process_tags(%Ecto.Changeset{valid?: true} = changeset, [_ | _] = tags) do
+  defp process_tags(%Ecto.Changeset{valid?: true} = changeset, tags) do
     tags = Repo.all(from(t in Tag, where: t.id in ^tags))
 
     changeset |> put_assoc(:tags, tags)
   end
-
-  defp process_tags(changeset, _), do: changeset
 
   defp process_authors(%Ecto.Changeset{valid?: true} = changeset, [%Author{} | _] = authors) do
     changeset
@@ -129,11 +127,9 @@ defmodule Bloomchain.Content.Post do
     |> put_assoc(:authors, Enum.map(authors, &%Author{id: &1["id"]}))
   end
 
-  defp process_authors(%Ecto.Changeset{valid?: true} = changeset, [_ | _] = authors) do
+  defp process_authors(%Ecto.Changeset{valid?: true} = changeset, authors) do
     authors = Repo.all(from(t in Author, where: t.id in ^authors))
 
     changeset |> put_assoc(:authors, authors)
   end
-
-  defp process_authors(changeset, _), do: changeset
 end
