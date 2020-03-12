@@ -13,11 +13,11 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorView do
     author_json(author)
   end
 
-  def author_json(%{user: %User{} = user} = author) do
+  def author_json(%{user_id: nil} = author) do
     %{
       id: author.id,
-      name: user.last_name <> " " <> user.first_name,
-      editable: false,
+      name: author.name,
+      editable: true,
       created_at: author.inserted_at,
       updated_at: author.updated_at
     }
@@ -27,7 +27,7 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorView do
     %{
       id: author.id,
       name: author.name,
-      editable: true,
+      editable: false,
       created_at: author.inserted_at,
       updated_at: author.updated_at
     }

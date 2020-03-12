@@ -3,8 +3,25 @@ defmodule Bloomchain.ElasticsearchCluster do
 
   alias Bloomchain.ElasticsearchCluster, as: ES
   alias Bloomchain.Content.Post
+  alias Bloomchain.Repo
 
   @size 6
+
+  def reindex(struct) do
+    post = Repo.preload(struct, [:authors, :tags, :cover])
+
+    # make it async
+    Elasticsearch.put_document(ES, post, "posts")
+
+    {:ok, post}
+  end
+
+  def delete(struct) do
+    # make it async
+    Elasticsearch.delete_document(ES, struct, "posts")
+
+    {:ok, struct}
+  end
 
   def search(query) do
     query = %{
@@ -13,7 +30,7 @@ defmodule Bloomchain.ElasticsearchCluster do
           query: query,
           fields: ["title^3", "lead^2", "body"],
           tie_breaker: 0.1,
-          minimum_should_match: "90%"
+          minimum_should_match: "75%"
         }
       },
       # sort: [

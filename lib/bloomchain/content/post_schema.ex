@@ -56,15 +56,17 @@ defmodule Bloomchain.Content.Post do
   end
 
   def common_changeset(changeset, attrs) do
+    attrs = attrs |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
+
     changeset
     |> cast(attrs, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
     |> validate_length(:title, min: 3)
     |> process_slug
     |> unique_constraint(:uniq_slug_with_type, name: :uniq_slug_with_type)
-    |> process_tags(attrs[:tags] || attrs["tags"])
-    |> process_authors(attrs[:authors] || attrs["authors"])
-    |> process_published
+    |> process_tags(attrs[:tags])
+    |> process_authors(attrs[:authors])
+    |> process_published()
   end
 
   # Private
@@ -79,20 +81,13 @@ defmodule Bloomchain.Content.Post do
   defp process_slug(changeset), do: changeset
 
   defp process_published(
-         %Ecto.Changeset{valid?: true, changes: %{status: "published", published_at: nil}} =
-           changeset
+         %Ecto.Changeset{valid?: true, changes: %{status: "published"} = changes} = changeset
        ) do
     put_change(
       changeset,
       :published_at,
-      NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+      changes[:published_at] || NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
     )
-  end
-
-  defp process_published(
-         %Ecto.Changeset{valid?: true, changes: %{status: "published"}} = changeset
-       ) do
-    changeset
   end
 
   defp process_published(%Ecto.Changeset{valid?: true, changes: %{status: _}} = changeset) do

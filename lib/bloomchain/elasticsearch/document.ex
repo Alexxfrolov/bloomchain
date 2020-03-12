@@ -1,6 +1,4 @@
 defimpl Elasticsearch.Document, for: Bloomchain.Content.Post do
-  alias BloomchainWeb.Uploaders.File
-
   def id(post), do: post.id
   def routing(_), do: false
 

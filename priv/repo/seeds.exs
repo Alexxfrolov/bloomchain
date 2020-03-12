@@ -73,11 +73,13 @@ Repo.insert_all(Author, [
   },
   %{
     user_id: 1,
+    name: "Фролов Алексей",
     inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
     updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
   },
   %{
     user_id: 2,
+    name: "Моисеенко Александр",
     inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
     updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
   }

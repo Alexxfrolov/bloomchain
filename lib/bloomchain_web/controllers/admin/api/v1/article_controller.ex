@@ -61,7 +61,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
 
   def delete(conn, %{"id" => id}) do
     with article = %Post{} <- Article.get(id) do
-      Repo.delete!(article)
+      Article.delete(article)
 
       conn
       |> send_resp(:no_content, "")
@@ -73,4 +73,3 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
     end
   end
 end
-

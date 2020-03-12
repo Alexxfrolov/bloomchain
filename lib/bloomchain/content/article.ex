@@ -1,6 +1,7 @@
 defmodule Bloomchain.Content.Article do
   alias Bloomchain.Content.Post
   alias Bloomchain.Repo
+  alias Bloomchain.ElasticsearchCluster, as: ES
 
   import Ecto.Query
 
@@ -101,8 +102,12 @@ defmodule Bloomchain.Content.Article do
     changeset = Post.create_changeset(%Post{}, params)
 
     case changeset.valid? do
-      true -> Repo.insert(changeset)
-      false -> {:error, changeset}
+      true ->
+        {:ok, article} = Repo.insert(changeset)
+        ES.reindex(article)
+
+      false ->
+        {:error, changeset}
     end
   end
 
@@ -110,9 +115,18 @@ defmodule Bloomchain.Content.Article do
     changeset = Post.common_changeset(post, params)
 
     case changeset.valid? do
-      true -> Repo.update(changeset)
-      false -> {:error, changeset}
+      true ->
+        {:ok, article} = Repo.update(changeset)
+        ES.reindex(article)
+
+      false ->
+        {:error, changeset}
     end
+  end
+
+  def delete(%Post{} = post) do
+    Repo.delete!(post)
+    ES.delete(post)
   end
 
   def inc_total_views(%Post{} = post) do

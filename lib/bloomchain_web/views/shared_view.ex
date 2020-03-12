@@ -18,9 +18,9 @@ defmodule BloomchainWeb.SharedView do
     end
   end
 
-  def main_article_tag(nil, conn: conn), do: ""
+  def main_article_tag(nil, conn: _conn), do: ""
 
-  def main_article_tag(item, conn: conn) do
+  def main_article_tag(item, conn: _conn) do
     content_tag(:a, class: "bc-article__overlay-link", href: href_path(item)) do
       content_tag(:div, class: "bc-article__image") do
         [
@@ -34,7 +34,9 @@ defmodule BloomchainWeb.SharedView do
     end
   end
 
-  def main_article_tag(item, :without_img, conn: conn) do
+  def main_article_tag(nil, :without_img, conn: _conn), do: ""
+
+  def main_article_tag(item, :without_img, conn: _conn) do
     content_tag(:div) do
       [
         link(item.title,
@@ -49,7 +51,9 @@ defmodule BloomchainWeb.SharedView do
     end
   end
 
-  def article_tag(item, conn: conn) do
+  def article_tag(nil, conn: _conn), do: ""
+
+  def article_tag(item, conn: _conn) do
     content_tag(:div, class: "col-xl-6") do
       [
         content_tag(:hr, nil, class: "bc-article__separator mx-0 my-3"),

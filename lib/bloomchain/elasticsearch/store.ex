@@ -1,8 +1,6 @@
 defmodule Bloomchain.ElasticsearchStore do
   @behaviour Elasticsearch.Store
 
-  import Ecto.Query
-
   alias Bloomchain.Repo
 
   @impl true
