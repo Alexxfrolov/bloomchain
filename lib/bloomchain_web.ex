@@ -23,6 +23,8 @@ defmodule BloomchainWeb do
       import Plug.Conn
       import BloomchainWeb.Router.Helpers
       import BloomchainWeb.Gettext
+
+      plug BetterParams, drop_string_keys: true
     end
   end
 

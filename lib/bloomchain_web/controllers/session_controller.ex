@@ -7,7 +7,7 @@ defmodule BloomchainWeb.SessionController do
     render(conn, "new.html")
   end
 
-  def create(conn, %{"session" => %{"email" => email, "password" => password}}) do
+  def create(conn, %{session: %{email: email, password: password}}) do
     case Account.authenticate_user(email, password) do
       {:ok, user} ->
         conn

@@ -9,7 +9,7 @@ defmodule BloomchainWeb.SearchController do
     render(conn, "index.html", articles: articles, meta: meta, query: query)
   end
 
-  def index(conn, %{"scroll" => scroll}) do
+  def index(conn, %{scroll: scroll}) do
     %{entries: articles, metadata: meta} = ES.scroll(scroll)
 
     conn

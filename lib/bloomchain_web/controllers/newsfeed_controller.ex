@@ -18,7 +18,7 @@ defmodule BloomchainWeb.NewsfeedController do
     render(conn, "index.html", articles: group(articles), meta: meta)
   end
 
-  def show(conn, %{"slug" => slug}) do
+  def show(conn, %{slug: slug}) do
     article =
       slug
       |> Article.get(type: "newsfeed")

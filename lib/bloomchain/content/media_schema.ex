@@ -54,11 +54,6 @@ defmodule Bloomchain.Content.Media do
     end
   end
 
-  defp set_content_type(changeset, %{"file" => %Plug.Upload{content_type: content_type}}) do
-    changeset
-    |> put_change(:content_type, content_type)
-  end
-
   defp set_content_type(changeset, %{file: %Plug.Upload{content_type: content_type}}) do
     changeset
     |> put_change(:content_type, content_type)

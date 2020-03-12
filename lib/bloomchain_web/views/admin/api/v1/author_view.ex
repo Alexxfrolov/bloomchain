@@ -1,8 +1,6 @@
 defmodule BloomchainWeb.Admin.Api.V1.AuthorView do
   use BloomchainWeb, :view
 
-  alias Bloomchain.Content.User
-
   def render("index.json", %{authors: authors}) do
     %{
       data: Enum.map(authors, &author_json/1)

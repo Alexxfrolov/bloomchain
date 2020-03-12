@@ -31,7 +31,7 @@ defmodule BloomchainWeb.Admin.Api.V1.TagController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{id: id}) do
     with tag = %Tag{} <- Repo.get(Tag, id) do
       Repo.delete!(tag)
 

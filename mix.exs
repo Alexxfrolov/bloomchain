@@ -41,6 +41,7 @@ defmodule Bloomchain.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:plug_cowboy, "~> 2.0"},
+      {:better_params, "~> 0.5.0"},
 
       # http requests
       {:httpoison, "~> 1.6"},

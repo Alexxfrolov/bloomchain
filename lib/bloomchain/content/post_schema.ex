@@ -56,8 +56,6 @@ defmodule Bloomchain.Content.Post do
   end
 
   def common_changeset(changeset, attrs) do
-    attrs = attrs |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
-
     changeset
     |> cast(attrs, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
@@ -101,9 +99,9 @@ defmodule Bloomchain.Content.Post do
     |> put_assoc(:tags, Enum.map(tags, tags))
   end
 
-  defp process_tags(%Ecto.Changeset{valid?: true} = changeset, [%{"id" => _} | _] = tags) do
+  defp process_tags(%Ecto.Changeset{valid?: true} = changeset, [%{id: _} | _] = tags) do
     changeset
-    |> put_assoc(:tags, Enum.map(tags, &%Tag{id: &1["id"]}))
+    |> put_assoc(:tags, Enum.map(tags, &%Tag{id: &1[:id]}))
   end
 
   defp process_tags(%Ecto.Changeset{valid?: true} = changeset, tags) do
@@ -117,9 +115,9 @@ defmodule Bloomchain.Content.Post do
     |> put_assoc(:authors, Enum.map(authors, authors))
   end
 
-  defp process_authors(%Ecto.Changeset{valid?: true} = changeset, [%{"id" => _} | _] = authors) do
+  defp process_authors(%Ecto.Changeset{valid?: true} = changeset, [%{id: _} | _] = authors) do
     changeset
-    |> put_assoc(:authors, Enum.map(authors, &%Author{id: &1["id"]}))
+    |> put_assoc(:authors, Enum.map(authors, &%Author{id: &1[:id]}))
   end
 
   defp process_authors(%Ecto.Changeset{valid?: true} = changeset, authors) do

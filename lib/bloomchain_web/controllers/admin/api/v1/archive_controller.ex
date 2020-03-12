@@ -17,7 +17,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArchiveController do
     render(conn, "index.json", archives: archives)
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{id: id}) do
     with archive = %Archive{} <- Repo.get(Archive, id) do
       render(conn, "show.json", archive: archive |> Repo.preload([:cover, :pdf]))
     else
@@ -43,7 +43,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArchiveController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{id: id}) do
     with archive = %Archive{} <- Repo.get(Archive, id) do
       Repo.delete!(archive)
 
@@ -57,7 +57,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArchiveController do
     end
   end
 
-  def update(conn, %{"id" => id} = params) do
+  def update(conn, %{id: id} = params) do
     with %Archive{} = archive <- Repo.get(Archive, id),
          {:ok, archive} <- archive |> Archive.create_changeset(params) |> Repo.update() do
       conn

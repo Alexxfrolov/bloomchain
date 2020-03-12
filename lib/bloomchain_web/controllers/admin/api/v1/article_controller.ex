@@ -5,9 +5,9 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
   alias Bloomchain.Content.{Article, Post}
   alias BloomchainWeb.ErrorView
 
-  def index(conn, %{"type" => type, "status" => status} = params) do
+  def index(conn, %{type: type, status: status} = params) do
     articles =
-      case {params["date_start"], params["date_end"]} do
+      case {params[:date_start], params[:date_end]} do
         {nil, nil} -> Article.get_posts_list(type, status)
         {since, nil} -> Article.get_posts_list(type, status, since: since)
         {nil, until} -> Article.get_posts_list(type, status, until: until)
@@ -17,7 +17,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
     render(conn, "index.json", articles: articles)
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{id: id}) do
     with article = %Post{} <- Article.get(id) do
       render(conn, "show.json", article: article)
     else
@@ -41,7 +41,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
     end
   end
 
-  def update(conn, %{"id" => id} = params) do
+  def update(conn, %{id: id} = params) do
     with article = %Post{} <- Article.get(id),
          {:ok, article} <- Article.update(article, params) do
       conn
@@ -59,7 +59,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{id: id}) do
     with article = %Post{} <- Article.get(id) do
       Article.delete(article)
 

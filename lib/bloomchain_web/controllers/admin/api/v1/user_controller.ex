@@ -38,7 +38,7 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{id: id}) do
     with user = %User{} <- Repo.get(User, id) do
       render(conn, "show.json", user: user)
     else
@@ -49,7 +49,7 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{id: id}) do
     with %User{role: "admin"} <- Repo.get(User, id) do
       conn
       |> send_resp(:forbidden, "")
@@ -67,7 +67,7 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
     end
   end
 
-  def update(conn, %{"id" => id} = params) do
+  def update(conn, %{id: id} = params) do
     with %User{} = user <- Repo.get(User, id),
          {:ok, user} <- user |> User.create_changeset(params) |> Repo.update(),
          {:ok, _author} <-

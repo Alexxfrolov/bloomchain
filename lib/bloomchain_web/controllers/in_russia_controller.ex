@@ -2,7 +2,7 @@ defmodule BloomchainWeb.InRussiaController do
   use BloomchainWeb, :controller
   alias Bloomchain.Content.Article
 
-  def index(conn, %{"scroll" => scroll}) do
+  def index(conn, %{scroll: scroll}) do
     %{entries: articles, metadata: meta} = Article.paginate("in_russia", scroll)
 
     conn
@@ -18,7 +18,7 @@ defmodule BloomchainWeb.InRussiaController do
     render(conn, "index.html", articles: articles, meta: meta)
   end
 
-  def show(conn, %{"slug" => slug}) do
+  def show(conn, %{slug: slug}) do
     article =
       slug
       |> Article.get(type: "in_russia")

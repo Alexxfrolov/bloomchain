@@ -30,7 +30,7 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{id: id}) do
     with author = %Author{} <- Repo.get(Author, id) do
       render(conn, "show.json", author: author)
     else
@@ -41,7 +41,7 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{id: id}) do
     with author = %Author{} <- Repo.get(Author, id) do
       Repo.delete!(author)
 
@@ -55,7 +55,7 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorController do
     end
   end
 
-  def update(conn, %{"id" => id} = params) do
+  def update(conn, %{id: id} = params) do
     with %Author{} = author <- Repo.get(Author, id),
          {:ok, author} <- author |> Author.create_changeset(params) |> Repo.update() do
       conn

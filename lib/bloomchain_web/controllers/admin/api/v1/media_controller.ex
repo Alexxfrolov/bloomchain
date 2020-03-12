@@ -4,13 +4,13 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaController do
   alias Bloomchain.{Repo, Content.Media}
   alias BloomchainWeb.ErrorView
 
-  def index(conn, %{"type" => type, "editor" => "true"}) do
+  def index(conn, %{type: type, editor: "true"}) do
     media = Media.list_all(type)
 
     render(conn, "editor.json", media: media)
   end
 
-  def index(conn, %{"type" => type}) do
+  def index(conn, %{type: type}) do
     media = Media.list_all(type)
 
     render(conn, "index.json", media: media)
@@ -24,13 +24,13 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaController do
 
   def create(
         conn,
-        %{"file" => %Plug.Upload{content_type: _, filename: _, path: _}, "type" => _} = params
+        %{file: %Plug.Upload{content_type: _, filename: _, path: _}, type: _} = params
       ) do
     Media.create_changeset(%Media{}, params)
     |> do_create(conn)
   end
 
-  def update(conn, %{"id" => id} = params) do
+  def update(conn, %{id: id} = params) do
     with %Media{} = media <- Repo.get(Media, id),
          {:ok, media} <- media |> Media.create_changeset(params) |> Repo.update() do
       conn
@@ -48,7 +48,7 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{id: id}) do
     with media = %Media{} <- Repo.get(Media, id) do
       Repo.delete!(media)
 
