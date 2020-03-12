@@ -293,6 +293,7 @@ const AddUserFormDialog = ({
     job: "",
     phone: "",
     email: "",
+    password: "",
   })
 
   const labelRef: RefObject<HTMLLabelElement | null> = useRef(null)
@@ -342,70 +343,73 @@ const AddUserFormDialog = ({
           Создание нового пользователя
         </DialogTitle>
         <DialogContent>
-          <Grid container={true} spacing={4}>
-            <Grid item={true} xs={12}>
-              <TextField
-                label="Имя"
-                type="text"
-                value={user.first_name}
-                fullWidth
-                onChange={handleChangeTextField("first_name")}
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                label="Фамилия"
-                type="text"
-                value={user.last_name}
-                fullWidth
-                onChange={handleChangeTextField("last_name")}
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <FormControl fullWidth={true}>
-                <InputLabel ref={labelRef} id="role">
-                  Роль
-                </InputLabel>
-                <Select
-                  labelId="role"
-                  id="role"
-                  labelWidth={labelWidth}
-                  value={user.role}
-                  onChange={handleChangeSelect}
-                >
-                  <MenuItem value="writer">Автор</MenuItem>
-                  <MenuItem value="admin">Админ</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                label="Должность"
-                type="text"
-                value={user.job}
-                fullWidth
-                onChange={handleChangeTextField("job")}
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                label="Телефон"
-                type="tel"
-                value={user.phone}
-                fullWidth
-                onChange={handleChangeTextField("phone")}
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                label="Email"
-                type="email"
-                value={user.email}
-                fullWidth
-                onChange={handleChangeTextField("email")}
-              />
-            </Grid>
-          </Grid>
+          <TextField
+            label="Имя"
+            type="text"
+            required={true}
+            value={user.first_name}
+            fullWidth={true}
+            margin="normal"
+            onChange={handleChangeTextField("first_name")}
+          />
+          <TextField
+            label="Фамилия"
+            type="text"
+            required={true}
+            value={user.last_name}
+            fullWidth={true}
+            margin="normal"
+            onChange={handleChangeTextField("last_name")}
+          />
+          <FormControl fullWidth={true} margin="normal">
+            <InputLabel ref={labelRef} id="role">
+              Роль
+            </InputLabel>
+            <Select
+              labelId="role"
+              id="role"
+              labelWidth={labelWidth}
+              value={user.role}
+              onChange={handleChangeSelect}
+            >
+              <MenuItem value="writer">Автор</MenuItem>
+              <MenuItem value="admin">Админ</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            label="Должность"
+            type="text"
+            value={user.job}
+            fullWidth={true}
+            margin="normal"
+            onChange={handleChangeTextField("job")}
+          />
+          <TextField
+            label="Телефон"
+            type="tel"
+            value={user.phone}
+            fullWidth={true}
+            margin="normal"
+            onChange={handleChangeTextField("phone")}
+          />
+          <TextField
+            label="Email"
+            type="email"
+            required={true}
+            value={user.email}
+            fullWidth={true}
+            margin="normal"
+            onChange={handleChangeTextField("email")}
+          />
+          <TextField
+            label="Пароль"
+            type="password"
+            required={true}
+            value={user.password}
+            fullWidth={true}
+            margin="normal"
+            onChange={handleChangeTextField("password")}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">
@@ -482,70 +486,72 @@ const EditUserFormDialog = ({
           Редактирование пользователя
         </DialogTitle>
         <DialogContent>
-          <Grid container={true} spacing={4}>
-            <Grid item={true} xs={12}>
-              <TextField
-                label="Имя"
-                type="text"
-                value={user.first_name}
-                fullWidth
-                onChange={handleChangeTextField("first_name")}
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                label="Фамилия"
-                type="text"
-                value={user.last_name}
-                fullWidth
-                onChange={handleChangeTextField("last_name")}
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <FormControl fullWidth={true}>
-                <InputLabel ref={labelRef} id="role">
-                  Роль
-                </InputLabel>
-                <Select
-                  labelId="role"
-                  id="role"
-                  labelWidth={labelWidth}
-                  value={user.role}
-                  onChange={handleChangeSelect}
-                >
-                  <MenuItem value="writer">Автор</MenuItem>
-                  <MenuItem value="admin">Админ</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                label="Должность"
-                type="text"
-                value={user.job}
-                fullWidth
-                onChange={handleChangeTextField("job")}
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                label="Телефон"
-                type="tel"
-                value={user.phone}
-                fullWidth
-                onChange={handleChangeTextField("phone")}
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                label="Email"
-                type="email"
-                value={user.email}
-                fullWidth
-                onChange={handleChangeTextField("email")}
-              />
-            </Grid>
-          </Grid>
+          <TextField
+            label="Имя"
+            type="text"
+            required={true}
+            value={user.first_name}
+            fullWidth={true}
+            margin="normal"
+            onChange={handleChangeTextField("first_name")}
+          />
+          <TextField
+            label="Фамилия"
+            type="text"
+            required={true}
+            value={user.last_name}
+            fullWidth={true}
+            margin="normal"
+            onChange={handleChangeTextField("last_name")}
+          />
+          <FormControl fullWidth={true} margin="normal">
+            <InputLabel ref={labelRef} id="role">
+              Роль
+            </InputLabel>
+            <Select
+              labelId="role"
+              id="role"
+              labelWidth={labelWidth}
+              value={user.role}
+              onChange={handleChangeSelect}
+            >
+              <MenuItem value="writer">Автор</MenuItem>
+              <MenuItem value="admin">Админ</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            label="Должность"
+            type="text"
+            value={user.job ?? ""}
+            fullWidth={true}
+            margin="normal"
+            onChange={handleChangeTextField("job")}
+          />
+          <TextField
+            label="Телефон"
+            type="tel"
+            value={user.phone ?? ""}
+            fullWidth={true}
+            margin="normal"
+            onChange={handleChangeTextField("phone")}
+          />
+          <TextField
+            label="Email"
+            type="email"
+            required={true}
+            value={user.email}
+            fullWidth={true}
+            margin="normal"
+            onChange={handleChangeTextField("email")}
+          />
+          <TextField
+            label="Пароль"
+            type="password"
+            value={user.password ?? ""}
+            fullWidth={true}
+            margin="normal"
+            onChange={handleChangeTextField("password")}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">
