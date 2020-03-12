@@ -10,9 +10,10 @@ import React, {
 } from "react"
 import { useRoute } from "react-router5"
 import DateFnsUtils from "@date-io/date-fns"
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
+import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import format from "date-fns/format"
 import {
+  Grid,
   Container,
   AppBar,
   Tabs,
@@ -27,6 +28,8 @@ import {
   Button,
   Link,
   IconButton,
+  makeStyles,
+  createStyles,
 } from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
 import EditIcon from "@material-ui/icons/Edit"
@@ -49,7 +52,20 @@ const titles = {
   draft: "Черновик",
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    toolbar: {
+      marginBottom: theme.spacing(1),
+    },
+    appBar: {
+      marginBottom: theme.spacing(1),
+    },
+  }),
+)
+
 export const ArticlesViewPage = () => {
+  const classes = useStyles()
+
   const { route } = useRoute()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
@@ -174,42 +190,52 @@ export const ArticlesViewPage = () => {
         </Typography>
         <form onSubmit={handleFilterFormSubmit}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <DatePicker
-              id="date-start"
-              variant="dialog"
-              margin="none"
-              fullWidth={true}
-              inputVariant="outlined"
-              label="Дата начала"
-              format="dd/MM/yyyy"
-              value={dateStart}
-              onChange={handleDateStartChange}
-            />
-            <DatePicker
-              id="date-end"
-              variant="dialog"
-              margin="none"
-              fullWidth={true}
-              inputVariant="outlined"
-              label="Дата окончания"
-              format="dd/MM/yyyy"
-              value={dateEnd}
-              onChange={handleDateEndChange}
-            />
-            <Button type="submit" variant="contained" color="primary">
-              Фильтровать
-            </Button>
-            <Button
-              type="button"
-              variant="contained"
-              color="primary"
-              onClick={handleResetFilterFormButtonClick}
-            >
-              Сбросить фильтр
-            </Button>
+            <Grid container={true} spacing={2} alignItems="center" className={classes.toolbar}>
+              <Grid item={true}>
+                <DateTimePicker
+                  id="date-start"
+                  variant="dialog"
+                  margin="none"
+                  inputVariant="outlined"
+                  label="Дата начала"
+                  format="dd/MM/yyyy hh:mm"
+                  size="small"
+                  value={dateStart}
+                  onChange={handleDateStartChange}
+                />
+              </Grid>
+              <Grid item={true}>
+                <DateTimePicker
+                  id="date-end"
+                  variant="dialog"
+                  margin="none"
+                  inputVariant="outlined"
+                  label="Дата окончания"
+                  format="dd/MM/yyyy hh:mm"
+                  size="small"
+                  value={dateEnd}
+                  onChange={handleDateEndChange}
+                />
+              </Grid>
+              <Grid item={true}>
+                <Button type="submit" variant="contained" color="primary">
+                  Фильтровать
+                </Button>
+              </Grid>
+              <Grid item={true}>
+                <Button
+                  type="button"
+                  variant="contained"
+                  color="primary"
+                  onClick={handleResetFilterFormButtonClick}
+                >
+                  Сбросить фильтр
+                </Button>
+              </Grid>
+            </Grid>
           </MuiPickersUtilsProvider>
         </form>
-        <AppBar position="static" color="default">
+        <AppBar position="static" color="default" className={classes.appBar}>
           <Tabs
             value={tabIndex}
             onChange={handleChangeTab}
@@ -234,7 +260,7 @@ export const ArticlesViewPage = () => {
             loading={loading}
             renderRow={(article) => (
               <ArticlesTableRow
-                key={article.id}
+                key={`article-${article.id}`}
                 article={article}
                 onDeleteRow={handleDeleteButtonClick(article)}
               />

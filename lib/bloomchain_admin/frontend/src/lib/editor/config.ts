@@ -100,7 +100,6 @@ export const config = {
     //   return json.data.reduce((acc, image) => [...acc, { url: image.link }], [])
     // },
     "imageManager.imageLoaded": function() {
-      console.log("imageLoaded")
     },
     "imageManager.beforeDeleteImage": function($img) {
       // Do something before deleting an image from the image manager.
@@ -111,7 +110,6 @@ export const config = {
       alert("Image has been deleted.")
     },
     "imageManager.error": function(error, response) {
-      console.log(arguments)
       // Bad link. One of the returned image links cannot be loaded.
       if (error.code == 10) {
       }
@@ -126,7 +124,6 @@ export const config = {
 
       // Parsing response failed.
       else if (error.code == 13) {
-        console.log("error")
       }
     },
   },

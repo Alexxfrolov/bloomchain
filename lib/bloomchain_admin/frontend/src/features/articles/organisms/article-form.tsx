@@ -23,7 +23,7 @@ import {
   createStyles,
 } from "@material-ui/core"
 import DateFnsUtils from "@date-io/date-fns"
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
+import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import { Editor } from "@lib/editor"
 import { Article } from "@api/articles"
@@ -403,7 +403,7 @@ export const ArticleForm = ({
           </FormControl>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <FormControl margin="normal" fullWidth={true} variant="outlined">
-              <DatePicker
+              <DateTimePicker
                 id="published_at"
                 variant="dialog"
                 margin="none"
@@ -411,7 +411,7 @@ export const ArticleForm = ({
                 disabled={article.status !== "published"}
                 inputVariant="outlined"
                 label="Дата публикации"
-                format="dd/MM/yyyy"
+                format="dd/MM/yyyy hh:mm"
                 minDate={new Date()}
                 value={article.published_at}
                 onChange={handleDateChange}
