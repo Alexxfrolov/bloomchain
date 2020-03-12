@@ -86,13 +86,9 @@ export const ArticleForm = ({
   const [statusLabelWidth, setStatusLabelWidth] = useState(0)
 
   useEffect(() => {
-    if (inputTypeLabel.current) {
-      setTypeLabelWidth(inputTypeLabel.current.offsetWidth)
-    }
-    if (inputStatusLabel.current) {
-      setStatusLabelWidth(inputStatusLabel.current.offsetWidth)
-    }
-  }, [])
+    setTypeLabelWidth(inputTypeLabel.current?.offsetWidth ?? 0)
+    setStatusLabelWidth(inputStatusLabel.current?.offsetWidth ?? 0)
+  }, [inputTypeLabel, inputStatusLabel])
 
   useEffect(() => {
     if (submitted) {
@@ -433,7 +429,7 @@ export const ArticleForm = ({
             fullWidth={true}
             margin="normal"
             variant="outlined"
-            autoComplete="off"
+            autoComplete="new-article-time"
             onChange={handleChangeFormField("time")}
           />
         </Grid>

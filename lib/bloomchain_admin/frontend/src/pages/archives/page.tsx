@@ -7,7 +7,6 @@ import React, {
   FormEvent,
   ReactElement,
   RefObject,
-  ChangeEvent,
 } from "react"
 import format from "date-fns/format"
 import {
@@ -43,7 +42,7 @@ import {
   TableRow,
   TableCell,
 } from "@features/core"
-import { MediaUploadForm } from "@features/media"
+import { MediaUploadForm, MediaFile } from "@features/media"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -262,16 +261,12 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
   const pdfFileInputRef: RefObject<HTMLInputElement | null> = useRef(null)
   const pdfRef: RefObject<HTMLEmbedElement | null> = useRef(null)
 
-  const handlePDFFileInputChange = useCallback(async () => {
-    if (
-      pdfFileInputRef.current &&
-      pdfFileInputRef.current.files !== null &&
-      pdfFileInputRef.current.files.length === 1
-    ) {
+  const handlePDFFileInputChange = useCallback(() => {
+    if (pdfFileInputRef.current && pdfFileInputRef.current.files !== null) {
       const blobURL = URL.createObjectURL(pdfFileInputRef.current.files[0])
-
       pdfRef.current?.setAttribute("data", blobURL)
-
+      pdfRef.current?.removeAttribute("hidden")
+      pdfRef.current?.setAttribute("style", "height: 300px;")
       setArchive({
         ...archive,
         pdf: {
@@ -309,11 +304,8 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
     async (event: FormEvent) => {
       event.preventDefault()
       try {
-        const [image, pdf] = await Promise.all([
-          mediaApi.create(archive.cover),
-          mediaApi.create(archive.pdf),
-        ])
-        const response = await archivesApi.create(image.data.id, pdf.data.id)
+        const pdf = await mediaApi.create(archive.pdf)
+        const response = await archivesApi.create(archive.cover.id, pdf.data.id)
         onAdd(response.data)
         onClose()
       } catch {}
@@ -332,9 +324,11 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
           Добавить новый архив
         </DialogTitle>
         <DialogContent dividers={true}>
-          <Typography variant="h6" component="h6">
-            Обложка
-          </Typography>
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
+            <Typography variant="h6" component="h6" gutterBottom={false}>
+              Обложка
+            </Typography>
+          </FormControl>
           {archive.cover && (
             <FormControl margin="normal" fullWidth={true} variant="outlined">
               <img src={archive.cover.url} width="100%" />
@@ -343,16 +337,19 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <MediaUploadForm onUpload={handleUpload} />
           </FormControl>
-          {archive.pdf.file !== null && (
-            <FormControl margin="normal" fullWidth={true} variant="outlined">
-              <object
-                ref={pdfRef}
-                type="application/pdf"
-                width="100%"
-                height="300px"
-              ></object>
-            </FormControl>
-          )}
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
+            <Typography variant="h6" component="h6">
+              PDF
+            </Typography>
+          </FormControl>
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
+            <object
+              ref={pdfRef}
+              type="application/pdf"
+              width="100%"
+              hidden
+            ></object>
+          </FormControl>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <input
               accept="application/pdf"

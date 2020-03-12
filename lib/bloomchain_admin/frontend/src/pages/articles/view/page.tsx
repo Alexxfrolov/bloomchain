@@ -13,7 +13,6 @@ import DateFnsUtils from "@date-io/date-fns"
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import format from "date-fns/format"
 import {
-  Grid,
   Container,
   AppBar,
   Tabs,
@@ -24,6 +23,7 @@ import {
   TableHead,
   TableBody,
   Typography,
+  ButtonGroup,
   Button,
   Link,
   IconButton,
@@ -169,98 +169,78 @@ export const ArticlesViewPage = () => {
   return (
     <Fragment>
       <Container maxWidth="lg">
-        <Grid container={true} spacing={3}>
-          <Grid item={true} xs={12}>
-            <Typography component="h1" variant="h4" gutterBottom={false}>
-              {title}
-            </Typography>
-          </Grid>
-          <Grid item={true} xs={12}>
-            <form onSubmit={handleFilterFormSubmit}>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Grid container={true} spacing={4} alignItems="center">
-                  <Grid item={true}>
-                    <DatePicker
-                      id="date-start"
-                      variant="dialog"
-                      margin="none"
-                      fullWidth={true}
-                      inputVariant="outlined"
-                      label="Дата начала"
-                      format="dd/MM/yyyy"
-                      value={dateStart}
-                      onChange={handleDateStartChange}
-                    />
-                  </Grid>
-                  <Grid item={true}>
-                    <DatePicker
-                      id="date-end"
-                      variant="dialog"
-                      margin="none"
-                      fullWidth={true}
-                      inputVariant="outlined"
-                      label="Дата окончания"
-                      format="dd/MM/yyyy"
-                      value={dateEnd}
-                      onChange={handleDateEndChange}
-                    />
-                  </Grid>
-                  <Grid item={true}>
-                    <Button type="submit" variant="contained" color="primary">
-                      Фильтровать
-                    </Button>
-                  </Grid>
-                  <Grid item={true}>
-                    <Button
-                      type="button"
-                      variant="contained"
-                      color="primary"
-                      onClick={handleResetFilterFormButtonClick}
-                    >
-                      Сбросить фильтр
-                    </Button>
-                  </Grid>
-                </Grid>
-              </MuiPickersUtilsProvider>
-            </form>
-          </Grid>
-          <Grid item={true} xs={12}>
-            <AppBar position="static" color="default">
-              <Tabs
-                value={tabIndex}
-                onChange={handleChangeTab}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="fullWidth"
-              >
-                <Tab label="Коротко" id="newsfeed" />
-                <Tab label="В Деталях" id="detailed" />
-                <Tab label="Что в России" id="in_russia" />
-                <Tab label="События" id="calendar" />
-                <Tab label="Персона" id="person" />
-                <Tab label="Исследования" id="research" />
-                <Tab label="Биржевая аналитика" id="analysis" />
-              </Tabs>
-            </AppBar>
-          </Grid>
-          {error ? (
-            <Grid item={true} xs={12}>
-              <Alert color="error">Произошла ошибка</Alert>
-            </Grid>
-          ) : (
-            <ArticlesTable
-              data={articles}
-              loading={loading}
-              renderRow={(article) => (
-                <ArticlesTableRow
-                  key={article.id}
-                  article={article}
-                  onDeleteRow={handleDeleteButtonClick(article)}
-                />
-              )}
+        <Typography component="h1" variant="h4" gutterBottom={true}>
+          {title}
+        </Typography>
+        <form onSubmit={handleFilterFormSubmit}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <DatePicker
+              id="date-start"
+              variant="dialog"
+              margin="none"
+              fullWidth={true}
+              inputVariant="outlined"
+              label="Дата начала"
+              format="dd/MM/yyyy"
+              value={dateStart}
+              onChange={handleDateStartChange}
             />
-          )}
-        </Grid>
+            <DatePicker
+              id="date-end"
+              variant="dialog"
+              margin="none"
+              fullWidth={true}
+              inputVariant="outlined"
+              label="Дата окончания"
+              format="dd/MM/yyyy"
+              value={dateEnd}
+              onChange={handleDateEndChange}
+            />
+            <Button type="submit" variant="contained" color="primary">
+              Фильтровать
+            </Button>
+            <Button
+              type="button"
+              variant="contained"
+              color="primary"
+              onClick={handleResetFilterFormButtonClick}
+            >
+              Сбросить фильтр
+            </Button>
+          </MuiPickersUtilsProvider>
+        </form>
+        <AppBar position="static" color="default">
+          <Tabs
+            value={tabIndex}
+            onChange={handleChangeTab}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+          >
+            <Tab label="Коротко" id="newsfeed" />
+            <Tab label="В Деталях" id="detailed" />
+            <Tab label="Что в России" id="in_russia" />
+            <Tab label="События" id="calendar" />
+            <Tab label="Персона" id="person" />
+            <Tab label="Исследования" id="research" />
+            <Tab label="Биржевая аналитика" id="analysis" />
+          </Tabs>
+        </AppBar>
+        {error ? (
+          <Alert color="error">Произошла ошибка</Alert>
+        ) : (
+          <ArticlesTable
+            data={articles}
+            loading={loading}
+            renderRow={(article) => (
+              <ArticlesTableRow
+                key={article.id}
+                article={article}
+                onDeleteRow={handleDeleteButtonClick(article)}
+              />
+            )}
+          />
+        )}
       </Container>
       {openedDeleteDialog && (
         <DeleteDialog
@@ -354,23 +334,19 @@ const ArticlesTableRow = ({ article, onDeleteRow }: ArticlesTableRowProps) => (
     </TableCell>
     <TableCell align="right">{article.total_views}</TableCell>
     <TableCell>
-      <Grid container={true} spacing={2} justify="flex-end">
-        <Grid item={true}>
-          <RouterLink
-            routeName="admin.articles.edit"
-            routeParams={{ id: article.id }}
-          >
-            <IconButton edge="start">
-              <EditIcon color="action" />
-            </IconButton>
-          </RouterLink>
-        </Grid>
-        <Grid item={true}>
-          <IconButton edge="start" onClick={onDeleteRow}>
-            <DeleteIcon color="error" />
+      <ButtonGroup>
+        <RouterLink
+          routeName="admin.articles.edit"
+          routeParams={{ id: article.id }}
+        >
+          <IconButton>
+            <EditIcon color="action" />
           </IconButton>
-        </Grid>
-      </Grid>
+        </RouterLink>
+        <IconButton onClick={onDeleteRow}>
+          <DeleteIcon color="error" />
+        </IconButton>
+      </ButtonGroup>
     </TableCell>
   </TableRow>
 )

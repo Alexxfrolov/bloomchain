@@ -11,7 +11,6 @@ import React, {
 import {
   makeStyles,
   createStyles,
-  Grid,
   AppBar,
   Toolbar,
   Tabs,
@@ -26,7 +25,6 @@ import {
   Typography,
   Button,
   IconButton,
-  Theme,
 } from "@material-ui/core"
 import { Alert, Skeleton } from "@material-ui/lab"
 import AddBoxIcon from "@material-ui/icons/AddBox"
@@ -34,7 +32,7 @@ import { mediaApi, MediaFile, UploadableMediaFile } from "@api/media"
 import { DeleteDialog } from "@features/core"
 import { MediaList } from "@features/media"
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       display: "flex",
@@ -256,22 +254,12 @@ const AddFormDialog = ({
   )
 
   const handleFileInputChange = useCallback(() => {
-    if (
-      fileInputRef.current &&
-      fileInputRef.current.files !== null &&
-      fileInputRef.current.files.length === 1
-    ) {
-      const reader = new FileReader()
+    if (fileInputRef.current && fileInputRef.current.files !== null) {
+      const blobURL = URL.createObjectURL(fileInputRef.current.files[0])
 
-      reader.onload = function(event: ProgressEvent<FileReader>) {
-        if (imageRef.current) {
-          event?.target?.result?.[
-            imageRef.current.setAttribute("src", event.target.result)
-          ]
-        }
+      if (imageRef.current) {
+        imageRef.current.setAttribute("src", blobURL)
       }
-
-      reader.readAsDataURL(fileInputRef.current.files[0])
 
       setMedia({ ...media, file: fileInputRef.current.files[0] })
     }
@@ -328,6 +316,7 @@ const AddFormDialog = ({
             type="text"
             fullWidth={true}
             margin="normal"
+            variant="outlined"
             onChange={handleChangeTextField("alt")}
           />
           <TextField
@@ -337,6 +326,7 @@ const AddFormDialog = ({
             value={media.title ?? ""}
             fullWidth={true}
             margin="normal"
+            variant="outlined"
             onChange={handleChangeTextField("title")}
           />
           <TextField
@@ -346,6 +336,7 @@ const AddFormDialog = ({
             value={media.source ?? ""}
             fullWidth={true}
             margin="normal"
+            variant="outlined"
             onChange={handleChangeTextField("source")}
           />
         </DialogContent>
@@ -410,44 +401,40 @@ const EditFormDialog = ({
           Обновление файла
         </DialogTitle>
         <DialogContent>
-          <Grid container={true} spacing={4}>
-            <Grid item={true} xs={12} container={true} spacing={2}>
-              <Grid item={true} xs={12}>
-                <img width="100%" src={media.url} />
-              </Grid>
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                id="alt"
-                label="Аттрибут аlt"
-                required={true}
-                value={media.alt ?? ""}
-                type="text"
-                fullWidth
-                onChange={handleChangeTextField("alt")}
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                id="title"
-                label="Заголовок"
-                type="text"
-                value={media.title ?? ""}
-                fullWidth
-                onChange={handleChangeTextField("title")}
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                id="source"
-                label="Источник"
-                type="text"
-                value={media.source ?? ""}
-                fullWidth
-                onChange={handleChangeTextField("source")}
-              />
-            </Grid>
-          </Grid>
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
+            <img width="100%" src={media.url} />
+          </FormControl>
+          <TextField
+            id="alt"
+            label="Аттрибут аlt"
+            required={true}
+            value={media.alt ?? ""}
+            type="text"
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            onChange={handleChangeTextField("alt")}
+          />
+          <TextField
+            id="title"
+            label="Заголовок"
+            type="text"
+            value={media.title ?? ""}
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            onChange={handleChangeTextField("title")}
+          />
+          <TextField
+            id="source"
+            label="Источник"
+            type="text"
+            value={media.source ?? ""}
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            onChange={handleChangeTextField("source")}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">

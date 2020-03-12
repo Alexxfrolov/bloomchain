@@ -9,7 +9,6 @@ import React, {
 } from "react"
 import format from "date-fns/format"
 import {
-  Grid,
   Container,
   Paper,
   Dialog,
@@ -22,11 +21,16 @@ import {
   TableBody,
   Typography,
   TextField,
+  ButtonGroup,
   Button,
+  Toolbar,
   IconButton,
+  makeStyles,
+  createStyles,
 } from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
 import DeleteIcon from "@material-ui/icons/Delete"
+import EditIcon from "@material-ui/icons/Edit"
 import AddBoxIcon from "@material-ui/icons/AddBox"
 import { ConditionalList } from "@ui"
 import { tagsApi, Tag } from "@api/tags"
@@ -37,7 +41,20 @@ import {
   TableCell,
 } from "@features/core"
 
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    title: {
+      marginRight: theme.spacing(2),
+    },
+    toolbar: {
+      marginBottom: theme.spacing(2),
+    },
+  }),
+)
+
 export const TagsPage = () => {
+  const classes = useStyles()
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [tags, setTags] = useState<Tag[]>([])
@@ -103,25 +120,25 @@ export const TagsPage = () => {
   return (
     <Fragment>
       <Container maxWidth="md">
-        <Grid container={true} spacing={3}>
-          <Grid item={true}>
-            <Typography component="h1" variant="h4" gutterBottom={true}>
-              Тэги
-            </Typography>
-          </Grid>
-          <Grid item={true}>
-            <IconButton onClick={openAddFormDialog}>
-              <AddBoxIcon color="primary" />
-            </IconButton>
-          </Grid>
-        </Grid>
+        <Toolbar disableGutters={true} className={classes.toolbar}>
+          <Typography component="h1" variant="h4" className={classes.title}>
+            Тэги
+          </Typography>
+          <IconButton
+            edge="end"
+            onClick={openAddFormDialog}
+            aria-label="add author"
+          >
+            <AddBoxIcon color="primary" />
+          </IconButton>
+        </Toolbar>
         {!error ? (
           <TagsTable
             data={tags}
             loading={loading}
             renderRow={(tag) => (
               <TagsTableRow
-                key={tag.id}
+                key={`tag-${tag.id}`}
                 tag={tag}
                 onDeleteRow={handleDeleteButtonClick(tag)}
               />
@@ -168,7 +185,7 @@ const TagsTable = ({ data, loading, renderRow }: TagsTableProps) => (
           <TableCell width="20%" component="th">
             Обновлено
           </TableCell>
-          <TableCell width="20%" component="th" align="right">
+          <TableCell width="1%" component="th">
             Действия
           </TableCell>
         </TableRow>
@@ -205,11 +222,18 @@ const TagsTableRow = ({ tag, onDeleteRow }: TagsTableRowProps) => (
       {tag.updated_at && format(new Date(tag.updated_at), "dd.mm.yyyy hh:mm")}
     </TableCell>
     <TableCell>
-      <Grid container={true} justify="flex-end">
-        <IconButton edge="start" onClick={onDeleteRow}>
-          <DeleteIcon color="error" />
-        </IconButton>
-      </Grid>
+      <ButtonGroup>
+        {tag.editable && (
+          <IconButton>
+            <EditIcon color="action" />
+          </IconButton>
+        )}
+        {tag.deletable && (
+          <IconButton>
+            <DeleteIcon color="error" onClick={onDeleteRow} />
+          </IconButton>
+        )}
+      </ButtonGroup>
     </TableCell>
   </TableRow>
 )
@@ -252,16 +276,14 @@ const AddFormDialog = ({ opened, onAddTag, onClose }: AddFormDialogProps) => {
       <form onSubmit={handleSubmit}>
         <DialogTitle id="add-form-dialog">Создание нового тэга</DialogTitle>
         <DialogContent dividers={true}>
-          <Grid container={true} spacing={4}>
-            <Grid item={true} xs={12}>
-              <TextField
-                label="Название"
-                type="text"
-                fullWidth
-                onChange={handleChangeNameField}
-              />
-            </Grid>
-          </Grid>
+          <TextField
+            label="Название"
+            type="text"
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            onChange={handleChangeNameField}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">

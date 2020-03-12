@@ -7,8 +7,8 @@ function getLatest(): AxiosPromise<{ data: Author[] }> {
   return axios.get(`${httpConfig.baseUrl}/authors`)
 }
 
-function create(author: Partial<Author>) {
-  return axios.post(`${httpConfig.baseUrl}/authors`, { ...author })
+function create(name: string) {
+  return axios.post(`${httpConfig.baseUrl}/authors`, { name })
 }
 
 function update(author: Author): AxiosPromise<Author> {

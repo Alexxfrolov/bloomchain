@@ -5,8 +5,8 @@ import {
   GridList,
   GridListTile,
   GridListTileBar,
-  Grid,
   IconButton,
+  ButtonGroup,
 } from "@material-ui/core"
 import DeleteIcon from "@material-ui/icons/Delete"
 import EditIcon from "@material-ui/icons/Edit"
@@ -81,26 +81,22 @@ export const MediaList = ({
                 subtitle={<span>{item.source}</span>}
                 actionPosition="right"
                 actionIcon={
-                  <Grid container={true}>
+                  <ButtonGroup>
                     {item.type !== "pdf" && (
-                      <Grid item={true}>
-                        <IconButton
-                          className={classes.icon}
-                          onClick={() => onEdit(item)}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                      </Grid>
-                    )}
-                    <Grid item={true}>
                       <IconButton
                         className={classes.icon}
-                        onClick={() => onDelete(item)}
+                        onClick={() => onEdit(item)}
                       >
-                        <DeleteIcon />
+                        <EditIcon />
                       </IconButton>
-                    </Grid>
-                  </Grid>
+                    )}
+                    <IconButton
+                      className={classes.icon}
+                      onClick={() => onDelete(item)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </ButtonGroup>
                 }
                 className={classes.titleBar}
               />

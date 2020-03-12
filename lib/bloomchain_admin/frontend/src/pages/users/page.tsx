@@ -10,7 +10,6 @@ import React, {
   RefObject,
 } from "react"
 import {
-  Grid,
   Container,
   Paper,
   TableContainer,
@@ -23,12 +22,16 @@ import {
   DialogContent,
   TextField,
   DialogActions,
+  ButtonGroup,
   Button,
   IconButton,
   FormControl,
+  Toolbar,
   InputLabel,
   Select,
   MenuItem,
+  makeStyles,
+  createStyles,
 } from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
 import AddBoxIcon from "@material-ui/icons/AddBox"
@@ -43,7 +46,19 @@ import {
   TableCell,
 } from "@features/core"
 
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    title: {
+      marginRight: theme.spacing(2),
+    },
+    toolbar: {
+      marginBottom: theme.spacing(2),
+    },
+  }),
+)
+
 export const UsersPage = () => {
+  const classes = useStyles()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [users, setUsers] = useState<User[]>([])
@@ -139,18 +154,18 @@ export const UsersPage = () => {
   return (
     <Fragment>
       <Container maxWidth="lg">
-        <Grid container={true} spacing={3}>
-          <Grid item={true}>
-            <Typography component="h1" variant="h4" gutterBottom={false}>
-              Пользователи
-            </Typography>
-          </Grid>
-          <Grid item={true}>
-            <IconButton onClick={openAddFormDialog}>
-              <AddBoxIcon color="primary" />
-            </IconButton>
-          </Grid>
-        </Grid>
+        <Toolbar disableGutters={true} className={classes.toolbar}>
+          <Typography component="h1" variant="h4" className={classes.title}>
+            Пользователи
+          </Typography>
+          <IconButton
+            edge="end"
+            onClick={openAddFormDialog}
+            aria-label="add user"
+          >
+            <AddBoxIcon color="primary" />
+          </IconButton>
+        </Toolbar>
         {!error ? (
           <UsersTable
             data={users}
@@ -259,18 +274,14 @@ const UsersTableRow = ({ user, onDetete, onEdit }: UsersTableRowProps) => (
     <TableCell>{user.phone}</TableCell>
     <TableCell>{user.email}</TableCell>
     <TableCell>
-      <Grid container={true} spacing={2}>
-        <Grid item={true}>
-          <IconButton edge="start" onClick={onEdit}>
-            <EditIcon color="action" />
-          </IconButton>
-        </Grid>
-        <Grid item={true}>
-          <IconButton edge="start" onClick={onDetete}>
-            <DeleteIcon color="error" />
-          </IconButton>
-        </Grid>
-      </Grid>
+      <ButtonGroup>
+        <IconButton onClick={onEdit}>
+          <EditIcon color="action" />
+        </IconButton>
+        <IconButton onClick={onDetete}>
+          <DeleteIcon color="error" />
+        </IconButton>
+      </ButtonGroup>
     </TableCell>
   </TableRow>
 )
@@ -286,7 +297,9 @@ const AddUserFormDialog = ({
   onAddUser,
   onClose,
 }: AddUserFormDialogProps) => {
-  const [user, setUser] = useState<User>({
+  const [user, setUser] = useState<
+    Omit<User, "created_at" | "updated_at" | "id">
+  >({
     first_name: "",
     last_name: "",
     role: "writer",
@@ -300,20 +313,21 @@ const AddUserFormDialog = ({
   const [labelWidth, setSelectRoleLabelWidth] = useState(0)
 
   useEffect(() => {
-    if (labelRef.current) {
-      setSelectRoleLabelWidth(labelRef.current.offsetWidth)
-    }
-  }, [])
+    setSelectRoleLabelWidth(labelRef.current?.offsetWidth ?? 0)
+  }, [labelRef])
 
   const handleChangeTextField = useCallback(
     (field: keyof User) => (event: ChangeEvent<{ value: string }>) => {
+      setCustomValidity(event)
       setUser({ ...user, [field]: event.currentTarget.value })
     },
     [user, setUser],
   )
 
   const handleChangeSelect = useCallback(
-    (event: ChangeEvent<{ name?: string | undefined; value: unknown }>) => {
+    (
+      event: ChangeEvent<{ name?: string | undefined; value: User["role"] }>,
+    ) => {
       setUser({ ...user, role: event.target.value })
     },
     [user, setUser],
@@ -350,6 +364,8 @@ const AddUserFormDialog = ({
             value={user.first_name}
             fullWidth={true}
             margin="normal"
+            variant="outlined"
+            onInvalid={setCustomValidity}
             onChange={handleChangeTextField("first_name")}
           />
           <TextField
@@ -359,15 +375,17 @@ const AddUserFormDialog = ({
             value={user.last_name}
             fullWidth={true}
             margin="normal"
+            variant="outlined"
+            onInvalid={setCustomValidity}
             onChange={handleChangeTextField("last_name")}
           />
-          <FormControl fullWidth={true} margin="normal">
-            <InputLabel ref={labelRef} id="role">
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
+            <InputLabel ref={labelRef} id="type">
               Роль
             </InputLabel>
             <Select
-              labelId="role"
-              id="role"
+              labelId="type"
+              id="type"
               labelWidth={labelWidth}
               value={user.role}
               onChange={handleChangeSelect}
@@ -382,6 +400,7 @@ const AddUserFormDialog = ({
             value={user.job}
             fullWidth={true}
             margin="normal"
+            variant="outlined"
             onChange={handleChangeTextField("job")}
           />
           <TextField
@@ -390,6 +409,7 @@ const AddUserFormDialog = ({
             value={user.phone}
             fullWidth={true}
             margin="normal"
+            variant="outlined"
             onChange={handleChangeTextField("phone")}
           />
           <TextField
@@ -397,8 +417,11 @@ const AddUserFormDialog = ({
             type="email"
             required={true}
             value={user.email}
+            autoComplete="new-email"
             fullWidth={true}
             margin="normal"
+            variant="outlined"
+            onInvalid={setCustomValidity}
             onChange={handleChangeTextField("email")}
           />
           <TextField
@@ -406,8 +429,11 @@ const AddUserFormDialog = ({
             type="password"
             required={true}
             value={user.password}
+            autoComplete="new-password"
             fullWidth={true}
             margin="normal"
+            variant="outlined"
+            onInvalid={setCustomValidity}
             onChange={handleChangeTextField("password")}
           />
         </DialogContent>
@@ -443,9 +469,7 @@ const EditUserFormDialog = ({
   const [labelWidth, setSelectRoleLabelWidth] = useState(0)
 
   useEffect(() => {
-    if (labelRef.current) {
-      setSelectRoleLabelWidth(labelRef.current.offsetWidth)
-    }
+    setSelectRoleLabelWidth(labelRef.current?.offsetWidth ?? 0)
   }, [])
 
   const handleChangeTextField = useCallback(
@@ -456,7 +480,9 @@ const EditUserFormDialog = ({
   )
 
   const handleChangeSelect = useCallback(
-    (event: ChangeEvent<{ name?: string | undefined; value: unknown }>) => {
+    (
+      event: ChangeEvent<{ name?: string | undefined; value: User["role"] }>,
+    ) => {
       setUser({ ...user, role: event.target.value })
     },
     [user, setUser],
@@ -493,6 +519,8 @@ const EditUserFormDialog = ({
             value={user.first_name}
             fullWidth={true}
             margin="normal"
+            variant="outlined"
+            onInvalid={setCustomValidity}
             onChange={handleChangeTextField("first_name")}
           />
           <TextField
@@ -502,9 +530,11 @@ const EditUserFormDialog = ({
             value={user.last_name}
             fullWidth={true}
             margin="normal"
+            variant="outlined"
+            onInvalid={setCustomValidity}
             onChange={handleChangeTextField("last_name")}
           />
-          <FormControl fullWidth={true} margin="normal">
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
             <InputLabel ref={labelRef} id="role">
               Роль
             </InputLabel>
@@ -525,6 +555,7 @@ const EditUserFormDialog = ({
             value={user.job ?? ""}
             fullWidth={true}
             margin="normal"
+            variant="outlined"
             onChange={handleChangeTextField("job")}
           />
           <TextField
@@ -533,6 +564,7 @@ const EditUserFormDialog = ({
             value={user.phone ?? ""}
             fullWidth={true}
             margin="normal"
+            variant="outlined"
             onChange={handleChangeTextField("phone")}
           />
           <TextField
@@ -542,6 +574,8 @@ const EditUserFormDialog = ({
             value={user.email}
             fullWidth={true}
             margin="normal"
+            variant="outlined"
+            onInvalid={setCustomValidity}
             onChange={handleChangeTextField("email")}
           />
           <TextField
@@ -550,6 +584,7 @@ const EditUserFormDialog = ({
             value={user.password ?? ""}
             fullWidth={true}
             margin="normal"
+            variant="outlined"
             onChange={handleChangeTextField("password")}
           />
         </DialogContent>
@@ -564,4 +599,16 @@ const EditUserFormDialog = ({
       </form>
     </Dialog>
   )
+}
+
+function setCustomValidity(event) {
+  const { value } = event.target
+  if (!value.length) {
+    event.target.setAttribute("aria-invalid", "true")
+    event.target.setCustomValidity("Это поле обязательно")
+    return
+  }
+
+  event.target.setAttribute("aria-invalid", "false")
+  event.target.setCustomValidity("")
 }

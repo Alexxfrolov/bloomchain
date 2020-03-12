@@ -8,7 +8,6 @@ import React, {
   FormEvent,
 } from "react"
 import {
-  Grid,
   Container,
   Paper,
   TableContainer,
@@ -20,9 +19,13 @@ import {
   DialogTitle,
   DialogContent,
   TextField,
+  Toolbar,
   DialogActions,
   Button,
   IconButton,
+  ButtonGroup,
+  makeStyles,
+  createStyles,
 } from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
 import AddBoxIcon from "@material-ui/icons/AddBox"
@@ -37,7 +40,20 @@ import {
   TableCell,
 } from "@features/core"
 
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    title: {
+      marginRight: theme.spacing(2),
+    },
+    toolbar: {
+      marginBottom: theme.spacing(2),
+    },
+  }),
+)
+
 export const AuthorsPage = () => {
+  const classes = useStyles()
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [authors, setAuthors] = useState<Author[]>([])
@@ -133,18 +149,18 @@ export const AuthorsPage = () => {
   return (
     <Fragment>
       <Container maxWidth="lg">
-        <Grid container={true} spacing={3}>
-          <Grid item={true}>
-            <Typography component="h1" variant="h4" gutterBottom={false}>
-              Авторы
-            </Typography>
-          </Grid>
-          <Grid item={true}>
-            <IconButton onClick={openAddFormDialog}>
-              <AddBoxIcon color="primary" />
-            </IconButton>
-          </Grid>
-        </Grid>
+        <Toolbar disableGutters={true} className={classes.toolbar}>
+          <Typography component="h1" variant="h4" className={classes.title}>
+            Авторы
+          </Typography>
+          <IconButton
+            edge="end"
+            onClick={openAddFormDialog}
+            aria-label="add author"
+          >
+            <AddBoxIcon color="primary" />
+          </IconButton>
+        </Toolbar>
         {!error ? (
           <AuthorsTable
             data={authors}
@@ -237,18 +253,18 @@ const AuthorsTableRow = ({
   <TableRow>
     <TableCell>{author.name}</TableCell>
     <TableCell>
-      <Grid container={true} spacing={2}>
-        <Grid item={true}>
-          <IconButton edge="start" onClick={onEdit}>
+      <ButtonGroup>
+        {author.editable && (
+          <IconButton onClick={onEdit}>
             <EditIcon color="action" />
           </IconButton>
-        </Grid>
-        <Grid item={true}>
-          <IconButton edge="start" onClick={onDetete}>
+        )}
+        {author.deletable && (
+          <IconButton onClick={onDetete}>
             <DeleteIcon color="error" />
           </IconButton>
-        </Grid>
-      </Grid>
+        )}
+      </ButtonGroup>
     </TableCell>
   </TableRow>
 )
@@ -264,27 +280,25 @@ const AddAuthorFormDialog = ({
   onAddUser,
   onClose,
 }: AddAuthorFormDialogProps) => {
-  const [author, setAuthor] = useState<Author>({
-    name: "",
-  })
+  const [name, setName] = useState("")
 
   const handleChangeTextField = useCallback(
-    (field: keyof Author) => (event: ChangeEvent<{ value: string }>) => {
-      setAuthor({ ...author, [field]: event.currentTarget.value })
+    (event: ChangeEvent<{ value: string }>) => {
+      setName(event.currentTarget.value)
     },
-    [author, setAuthor],
+    [setName],
   )
 
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault()
       try {
-        const response = await authorsApi.create(author)
+        const response = await authorsApi.create(name)
         onClose()
         onAddUser(response.data)
       } catch {}
     },
-    [author, onAddUser, onClose],
+    [name, onAddUser, onClose],
   )
 
   return (
@@ -299,17 +313,15 @@ const AddAuthorFormDialog = ({
           Добавление нового автора
         </DialogTitle>
         <DialogContent>
-          <Grid container={true} spacing={4}>
-            <Grid item={true} xs={12}>
-              <TextField
-                label="Имя"
-                type="text"
-                value={author.name}
-                fullWidth
-                onChange={handleChangeTextField("name")}
-              />
-            </Grid>
-          </Grid>
+          <TextField
+            label="Имя"
+            type="text"
+            value={name}
+            fullWidth={true}
+            variant="outlined"
+            margin="normal"
+            onChange={handleChangeTextField}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">
@@ -370,17 +382,16 @@ const EditAuthorFormDialog = ({
           Редактирование автора
         </DialogTitle>
         <DialogContent>
-          <Grid container={true} spacing={4}>
-            <Grid item={true} xs={12}>
-              <TextField
-                label="Имя"
-                type="text"
-                value={author.name}
-                fullWidth={true}
-                onChange={handleChangeTextField("name")}
-              />
-            </Grid>
-          </Grid>
+          <TextField
+            label="Имя"
+            type="text"
+            value={author.name}
+            fullWidth={true}
+            required={true}
+            variant="outlined"
+            margin="normal"
+            onChange={handleChangeTextField("name")}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">

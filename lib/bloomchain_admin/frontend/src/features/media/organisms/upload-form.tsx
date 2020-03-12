@@ -255,12 +255,7 @@ export const MediaLibraryDialog = ({
         <Typography variant="h6" className={classes.title}>
           Библиотека изображений
         </Typography>
-        <IconButton
-          edge="start"
-          color="inherit"
-          onClick={onClose}
-          aria-label="close"
-        >
+        <IconButton color="inherit" onClick={onClose} aria-label="close">
           <CloseIcon />
         </IconButton>
       </Toolbar>
