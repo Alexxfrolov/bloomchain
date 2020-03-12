@@ -16,6 +16,7 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorView do
       id: author.id,
       name: author.name,
       editable: true,
+      deletable: true,
       created_at: author.inserted_at,
       updated_at: author.updated_at
     }
@@ -26,6 +27,7 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorView do
       id: author.id,
       name: author.name,
       editable: false,
+      deletable: false,
       created_at: author.inserted_at,
       updated_at: author.updated_at
     }
