@@ -2,6 +2,21 @@ defmodule BloomchainWeb.NewsfeedView do
   require Integer
   use BloomchainWeb, :view
 
+  def title("index.html", _assigns),
+    do: "Все новости о криптовалютах, блокчейне и финтехе"
+
+  def meta("index.html", :description, _assigns),
+    do:
+      "Горячие новости мира криптовалют, блокчейн-технологий и финтеха. Последние новости и экспертные комментарии на портале Блумчейн.ру."
+
+  def meta("index.html", :keywords, _assigns), do: ""
+
+  def title("show.html", assigns), do: assigns[:article].title
+
+  def meta("show.html", :description, assigns), do: assigns[:article].description
+
+  def meta("show.html", :keywords, assigns), do: assigns[:article].keywords
+
   def header_tag(date) do
     content_tag(:h1, class: "highlight highlight-date mt-4") do
       [

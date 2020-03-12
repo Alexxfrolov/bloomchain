@@ -2,6 +2,14 @@ defmodule BloomchainWeb.ArchiveView do
   use BloomchainWeb, :view
   alias BloomchainWeb.Uploaders.File
 
+  def title("index.html", _assigns),
+    do: "Исследования — Bloomchain"
+
+  def meta("index.html", :description, _assigns),
+    do: "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
+
+  def meta("index.html", :keywords, _assigns), do: ""
+
   def archive_tag(item, conn: _conn) do
     content_tag(:p) do
       content_tag(:a, href: File.url({item.pdf.file, item.pdf}), target: "_blank") do

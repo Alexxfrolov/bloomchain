@@ -2,7 +2,7 @@ defmodule BloomchainWeb.NewsfeedController do
   use BloomchainWeb, :controller
   alias Bloomchain.Content.Article
 
-  def index(conn, %{"scroll" => scroll, "last_date" => last_date}) do
+  def index(conn, %{scroll: scroll, last_date: last_date}) do
     %{entries: articles, metadata: meta} = Article.paginate("newsfeed", scroll)
 
     conn

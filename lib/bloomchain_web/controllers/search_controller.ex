@@ -3,7 +3,7 @@ defmodule BloomchainWeb.SearchController do
 
   alias Bloomchain.ElasticsearchCluster, as: ES
 
-  def index(conn, %{"query" => query}) do
+  def index(conn, %{query: query}) do
     %{entries: articles, metadata: meta} = ES.search(query)
 
     render(conn, "index.html", articles: articles, meta: meta, query: query)
