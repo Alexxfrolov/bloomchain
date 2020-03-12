@@ -193,13 +193,9 @@ export const ArticleForm = ({
       const { isValid } = validateFormFields(article)
       if (isValid) {
         onSubmit(article)
-        setSubmitted(false)
-        setArticle({
-          ...INITIAL_ARTICLE,
-        })
       }
     },
-    [article, setArticle, setSubmitted, onSubmit],
+    [article, onSubmit],
   )
 
   const tagsOptions = useMemo(
