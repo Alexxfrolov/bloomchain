@@ -15,7 +15,7 @@ defmodule Bloomchain.Content.Author do
     timestamps()
   end
 
-  def create_changeset(struct, params \\ %{}) do
+  def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:name, :user_id])
     |> unique_constraint(:name)

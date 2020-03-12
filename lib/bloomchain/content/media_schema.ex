@@ -35,7 +35,7 @@ defmodule Bloomchain.Content.Media do
   @doc """
   Builds a changeset based on the `struct` and `params`.
   """
-  def create_changeset(struct, params \\ %{}) do
+  def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, @required_fields ++ @optional_fields)
     |> check_uuid

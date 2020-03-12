@@ -29,7 +29,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArchiveController do
   end
 
   def create(conn, params) do
-    changeset = Archive.create_changeset(%Archive{}, params)
+    changeset = Archive.changeset(%Archive{}, params)
 
     with {:ok, archive} <- Repo.insert(changeset) do
       conn
@@ -59,7 +59,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArchiveController do
 
   def update(conn, %{id: id} = params) do
     with %Archive{} = archive <- Repo.get(Archive, id),
-         {:ok, archive} <- archive |> Archive.create_changeset(params) |> Repo.update() do
+         {:ok, archive} <- archive |> Archive.changeset(params) |> Repo.update() do
       conn
       |> render("show.json", archive: archive |> Repo.preload([:cover, :pdf]))
     else

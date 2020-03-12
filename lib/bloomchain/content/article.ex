@@ -99,7 +99,7 @@ defmodule Bloomchain.Content.Article do
   end
 
   def create(%{} = params) do
-    changeset = Post.create_changeset(%Post{}, params)
+    changeset = Post.changeset(%Post{}, params)
 
     case changeset.valid? do
       true ->

@@ -9,7 +9,7 @@ defmodule Bloomchain.Content.Subscriber do
     timestamps()
   end
 
-  def create_changeset(subscriber, params \\ %{}) do
+  def changeset(subscriber, params \\ %{}) do
     subscriber
     |> cast(params, [:email])
     |> validate_required([:email])

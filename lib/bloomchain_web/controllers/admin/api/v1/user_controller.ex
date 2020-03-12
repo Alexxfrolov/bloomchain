@@ -17,16 +17,15 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
   end
 
   def create(conn, params) do
-    changeset = User.create_changeset(%User{}, params)
+    changeset = User.changeset(%User{}, params)
 
     with {:ok, user} <- Repo.insert(changeset),
          {:ok, _author} <-
-           Repo.insert(
-             Author.create_changeset(%Author{}, %{
-               user_id: user.id,
-               name: user.last_name <> " " <> user.first_name
-             })
-           ) do
+           Author.changeset(%Author{}, %{
+             user_id: user.id,
+             name: user.last_name <> " " <> user.first_name
+           })
+           |> Repo.insert() do
       conn
       |> put_status(201)
       |> render("show.json", user: user)
@@ -69,9 +68,11 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
 
   def update(conn, %{id: id} = params) do
     with %User{} = user <- Repo.get(User, id),
-         {:ok, user} <- user |> User.create_changeset(params) |> Repo.update(),
+         {:ok, user} <- user |> User.changeset(params) |> Repo.update(),
          {:ok, _author} <-
-           Author.create_changeset(%Author{}, %{name: user.last_name <> " " <> user.first_name})
+           Author.changeset((user |> Repo.preload(:author)).author, %{
+             name: params[:last_name] <> " " <> params[:first_name]
+           })
            |> Repo.update() do
       conn
       |> render("show.json", user: user)

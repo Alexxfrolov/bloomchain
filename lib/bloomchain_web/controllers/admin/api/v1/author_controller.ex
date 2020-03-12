@@ -16,7 +16,7 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorController do
   end
 
   def create(conn, params) do
-    changeset = Author.create_changeset(%Author{}, params)
+    changeset = Author.changeset(%Author{}, params)
 
     with {:ok, author} <- Repo.insert(changeset) do
       conn
@@ -57,7 +57,7 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorController do
 
   def update(conn, %{id: id} = params) do
     with %Author{} = author <- Repo.get(Author, id),
-         {:ok, author} <- author |> Author.create_changeset(params) |> Repo.update() do
+         {:ok, author} <- author |> Author.changeset(params) |> Repo.update() do
       conn
       |> render("show.json", author: author)
     else

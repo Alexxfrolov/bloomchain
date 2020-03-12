@@ -14,7 +14,7 @@ defmodule Bloomchain.Content.Tag do
     timestamps()
   end
 
-  def create_changeset(tag, params \\ %{}) do
+  def changeset(tag, params \\ %{}) do
     tag
     |> cast(params, [:name])
     |> validate_required([:name])

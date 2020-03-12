@@ -50,7 +50,7 @@ defmodule Bloomchain.Content.Post do
   @required_fields ~w(title type)a
   @optional_fields ~w( body lead type status time description keywords cover_id published_at)a
 
-  def create_changeset(post, attrs) do
+  def changeset(post, attrs) do
     post
     |> common_changeset(attrs)
   end

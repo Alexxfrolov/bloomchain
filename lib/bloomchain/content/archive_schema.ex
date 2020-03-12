@@ -17,7 +17,7 @@ defmodule Bloomchain.Content.Archive do
   @doc """
   Builds a changeset based on the `struct` and `params`.
   """
-  def create_changeset(struct, params \\ %{}) do
+  def changeset(struct, params \\ %{}) do
     struct
     |> cast(prepared_params(params), @required_fields)
     |> validate_required(@required_fields)
