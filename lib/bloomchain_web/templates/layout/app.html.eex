@@ -8,21 +8,21 @@
     <title><%= @view_module.title(@view_template, assigns) %></title>
     <meta name="keywords" content="<%= @view_module.meta(@view_template, :keywords, assigns) %>" >
     <meta name="description" content="<%= @view_module.meta(@view_template, :description, assigns) %>" >
+    <link rel="icon" type="image/png" href="<%= static_path(@conn, "/customer/favicon-huge.ico") %>">
 
     <link href="https://fonts.gstatic.com" crossorigin="" rel="preconnect">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap&subset=cyrillic,cyrillic-ext" rel="stylesheet">
     <link rel="stylesheet" href="<%= static_path(@conn, "/customer/css/app.css") %>">
     <meta name="theme-color" content="#2f358f">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <meta name="application-name" content="BloomChain">
     <meta name="apple-mobile-web-app-title" content="BloomChain">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@BloomChainNews">
     <meta property="og:site_name" content="BloomChain">
     <meta property="og:type" content="website">
-    <meta name="twitter:url" property="og:url" content="https://bloomchain.ru/">
-    <meta name="twitter:title" property="og:title" content="Bloomchain — Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе">
-    <meta name="twitter:description" property="og:description" content="Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе.">
+    <meta name="twitter:url" property="og:url" content="http://bloomchain.herokuapp.com/">
+    <meta name="twitter:title" property="og:title" content="Bloomchain - финтех, блокчейн, криптовалюты">
+    <meta name="twitter:description" property="og:description" content="Ежедневно и вдумчиво говорим о рынке цифровых финансов в  России и мире">
     <meta name="format-detection" content="telephone=no">
   </head>
   <body class="bg-light">
