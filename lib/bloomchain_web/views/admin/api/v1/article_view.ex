@@ -58,12 +58,16 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
     }
   end
 
-  defp do_link(item) do
+  defp do_link(%{status: "published"} = item) do
     case item.type do
       "person" -> "/people/#{item.slug}"
       "in_russia" -> "/in-russia/#{item.slug}"
       _ -> "/#{item.type}/#{item.slug}"
     end
+  end
+
+  defp do_link(_) do
+    nil
   end
 
   defp do_published_at(%{published_at: nil}) do
