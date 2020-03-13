@@ -68,7 +68,7 @@ defmodule BloomchainWeb.PageView do
     [
       content_tag(
         :span,
-        Timex.format!(item.published_at, "{relative}", :relative),
+        time_from(item),
         class: "small mr-sm-4 mr-2"
       ),
       content_tag(:i, nil, class: "mr-1 icon-clock-white"),
@@ -96,5 +96,9 @@ defmodule BloomchainWeb.PageView do
       end
 
     "#{datetime.day} #{month} #{time}"
+  end
+
+  defp time_from(%{published_at: published_at}) do
+    Timex.lformat!(published_at, "{relative}", "ru", :relative)
   end
 end

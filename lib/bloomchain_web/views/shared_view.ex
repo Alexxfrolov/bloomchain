@@ -91,7 +91,7 @@ defmodule BloomchainWeb.SharedView do
   end
 
   defp time_from(datetime) do
-    Timex.format!(datetime, "{relative}", :relative)
+    Timex.lformat!(datetime, "{relative}", "ru", :relative)
   end
 
   defp timestamp(datetime) do
