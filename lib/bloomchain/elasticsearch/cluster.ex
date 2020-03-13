@@ -26,11 +26,20 @@ defmodule Bloomchain.ElasticsearchCluster do
   def search(query) do
     query = %{
       query: %{
-        multi_match: %{
-          query: query,
-          fields: ["title^3", "lead^2", "body"],
-          tie_breaker: 0.1,
-          minimum_should_match: "75%"
+        bool: %{
+          must: [
+            %{
+              multi_match: %{
+                query: query,
+                fields: ["title^3", "lead^2", "body"],
+                tie_breaker: 0.1,
+                minimum_should_match: "75%"
+              }
+            }
+          ],
+          filter: [
+            %{term: %{status: "published"}}
+          ]
         }
       },
       # sort: [

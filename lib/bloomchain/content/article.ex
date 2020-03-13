@@ -94,7 +94,7 @@ defmodule Bloomchain.Content.Article do
   end
 
   def get(slug, type: type) do
-    Repo.get_by(Post, slug: slug, type: type)
+    Repo.get_by(Post, slug: slug, type: type, status: "published")
     |> Repo.preload([:tags, :cover, :authors])
   end
 
