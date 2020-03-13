@@ -4,7 +4,7 @@ alias Bloomchain.Content.{Article, Tag, User, Subscriber, Media, Archive, Author
 
 cover =
   Repo.insert!(
-    Media.create_changeset(%Media{}, %{
+    Media.changeset(%Media{}, %{
       alt: "test image",
       type: "image",
       file: %Plug.Upload{
@@ -20,7 +20,7 @@ for i <- 1..5, i > 0 do
 
   cover =
     Repo.insert!(
-      Media.create_changeset(%Media{}, %{
+      Media.changeset(%Media{}, %{
         type: "image",
         file: %Plug.Upload{
           content_type: "image/jpeg",
@@ -32,7 +32,7 @@ for i <- 1..5, i > 0 do
 
   pdf =
     Repo.insert!(
-      Media.create_changeset(%Media{}, %{
+      Media.changeset(%Media{}, %{
         type: "pdf",
         file: %Plug.Upload{
           content_type: "application/pdf",
@@ -42,11 +42,11 @@ for i <- 1..5, i > 0 do
       })
     )
 
-  Repo.insert!(Archive.create_changeset(%Archive{}, %{cover_id: cover.id, pdf_id: pdf.id}))
+  Repo.insert!(Archive.changeset(%Archive{}, %{cover_id: cover.id, pdf_id: pdf.id}))
 end
 
 Repo.insert!(
-  User.create_changeset(%User{}, %{
+  User.changeset(%User{}, %{
     first_name: "Алексей",
     last_name: "Фролов",
     email: "admin@app.com",
@@ -56,7 +56,7 @@ Repo.insert!(
 )
 
 Repo.insert!(
-  User.create_changeset(%User{}, %{
+  User.changeset(%User{}, %{
     first_name: "Александр",
     last_name: "Моисеенко",
     email: "admin2@app.com",

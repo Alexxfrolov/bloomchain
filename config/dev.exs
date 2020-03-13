@@ -60,17 +60,18 @@ config :bloomchain, Bloomchain.Repo,
   port: System.get_env("DB_PORT") || 5432,
   pool_size: 10
 
-# Arc Image Upload
+# # Arc Image Upload
 config :arc,
   storage: Arc.Storage.Local
 
-# config :bloomchain, Bloomchain.ElasticsearchCluster,
-#   api: Elasticsearch.API.AWS,
-#   default_options: [
-#     aws: [
-#       service: "es",
-#       region: System.get_env("AWS_REGION"),
-#       access_key: System.get_env("AWS_ACCESS_KEY_ID"),
-#       secret: System.get_env("AWS_SECRET_ACCESS_KEY")
-#     ]
-#   ]
+# Arc Image Upload
+# config :arc,
+#   # storage: Arc.Storage.Local
+#   storage: Arc.Storage.S3,
+#   bucket: {:system, "AWS_BUCKET"},
+#   virtual_host: true
+#
+# config :ex_aws,
+#   access_key_id: [{:system, "AWS_ACCESS_KEY_ID"}, :instance_role],
+#   secret_access_key: [{:system, "AWS_SECRET_ACCESS_KEY"}, :instance_role],
+#   region: [{:system, "AWS_REGION"}, :instance_role]
