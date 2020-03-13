@@ -17,8 +17,8 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorView do
       name: author.name,
       editable: true,
       deletable: true,
-      created_at: author.inserted_at,
-      updated_at: author.updated_at
+      created_at: author.inserted_at |> Timex.local(),
+      updated_at: author.updated_at |> Timex.local()
     }
   end
 
@@ -28,8 +28,8 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorView do
       name: author.name,
       editable: false,
       deletable: false,
-      created_at: author.inserted_at,
-      updated_at: author.updated_at
+      created_at: author.inserted_at |> Timex.local(),
+      updated_at: author.updated_at |> Timex.local()
     }
   end
 end

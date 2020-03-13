@@ -68,11 +68,15 @@ defmodule BloomchainWeb.NewsfeedView do
   end
 
   defp formatted_time(datetime) do
-    Timex.format!(datetime, "%H:%m", :strftime)
+    datetime
+    |> Timex.local()
+    |> Timex.format!("%H:%m", :strftime)
   end
 
   defp formatted_date(date) do
-    Timex.format!(date, "%d.%m.%Y", :strftime)
+    date
+    |> Timex.local()
+    |> Timex.format!("%d.%m.%Y", :strftime)
   end
 
   defp href_path(item) do

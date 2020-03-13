@@ -18,8 +18,8 @@ defmodule BloomchainWeb.Admin.Api.V1.TagView do
       slug: tag.slug,
       editable: false,
       deletable: true,
-      created_at: tag.inserted_at,
-      updated_at: tag.updated_at
+      created_at: tag.inserted_at |> Timex.local(),
+      updated_at: tag.updated_at |> Timex.local()
     }
   end
 end

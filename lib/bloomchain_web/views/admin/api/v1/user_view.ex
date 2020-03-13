@@ -20,8 +20,8 @@ defmodule BloomchainWeb.Admin.Api.V1.UserView do
       role: user.role,
       job: user.job,
       phone: user.phone,
-      created_at: user.inserted_at,
-      updated_at: user.updated_at
+      created_at: user.inserted_at |> Timex.local(),
+      updated_at: user.updated_at |> Timex.local()
     }
   end
 end

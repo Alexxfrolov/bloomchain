@@ -28,9 +28,9 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
       keywords: article.keywords,
       total_views: article.total_views,
       time: article.time,
-      created_at: article.inserted_at,
-      updated_at: article.updated_at,
-      published_at: article.published_at,
+      created_at: article.inserted_at |> Timex.local(),
+      updated_at: article.updated_at |> Timex.local(),
+      published_at: article.published_at |> Timex.local(),
       tags: Enum.map(article.tags, &tag_json/1),
       authors: Enum.map(article.authors, &author_json/1)
     }
@@ -49,9 +49,9 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
       keywords: article.keywords,
       total_views: article.total_views,
       time: article.time,
-      created_at: article.inserted_at,
-      updated_at: article.updated_at,
-      published_at: article.published_at,
+      created_at: article.inserted_at |> Timex.local(),
+      updated_at: article.updated_at |> Timex.local(),
+      published_at: article.published_at |> Timex.local(),
       tags: Enum.map(article.tags, &tag_json/1),
       authors: Enum.map(article.authors, &author_json/1),
       cover: media_json(article.cover)

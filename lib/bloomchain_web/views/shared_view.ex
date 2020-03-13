@@ -95,7 +95,9 @@ defmodule BloomchainWeb.SharedView do
   end
 
   defp timestamp(datetime) do
-    Timex.format!(datetime, "%d.%m.%Y %H:%m", :strftime)
+    datetime
+    |> Timex.local()
+    |> Timex.format!("%d.%m.%Y %H:%m", :strftime)
   end
 
   defp author(item) do
