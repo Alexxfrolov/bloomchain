@@ -77,7 +77,7 @@ defmodule BloomchainWeb.PageView do
   end
 
   defp date_time_format(datetime) do
-    time = datetime |> Timex.local() |> Timex.format!(datetime, "%H:%m", :strftime)
+    time = datetime |> Timex.local() |> Timex.format!("%H:%m", :strftime)
 
     month =
       case datetime.month do
