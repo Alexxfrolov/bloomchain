@@ -30,7 +30,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
       time: article.time,
       created_at: article.inserted_at |> Timex.local(),
       updated_at: article.updated_at |> Timex.local(),
-      published_at: article.published_at |> Timex.local(),
+      published_at: do_published_at(article),
       tags: Enum.map(article.tags, &tag_json/1),
       authors: Enum.map(article.authors, &author_json/1)
     }
@@ -51,7 +51,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
       time: article.time,
       created_at: article.inserted_at |> Timex.local(),
       updated_at: article.updated_at |> Timex.local(),
-      published_at: article.published_at |> Timex.local(),
+      published_at: do_published_at(article),
       tags: Enum.map(article.tags, &tag_json/1),
       authors: Enum.map(article.authors, &author_json/1),
       cover: media_json(article.cover)
@@ -64,5 +64,12 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
       "in_russia" -> "/in-russia/#{item.slug}"
       _ -> "/#{item.type}/#{item.slug}"
     end
+  end
+
+  defp do_published_at(%{published_at: nil}) do
+  end
+
+  defp do_published_at(%{published_at: published_at}) do
+    published_at |> Timex.local()
   end
 end
