@@ -224,6 +224,11 @@ export const ArticleForm = ({
     [article.authors, authors],
   )
 
+  const enabledDatePicker = useMemo(
+    () => !["published", "ready"].includes(article.status),
+    [article.status],
+  )
+
   const disabledForm = useMemo(() => !!Object.keys(errors).length, [errors])
 
   return (
@@ -396,7 +401,7 @@ export const ArticleForm = ({
               onChange={handleChangeSelect("status")}
             >
               <MenuItem value="draft">Черновик</MenuItem>
-              <MenuItem value="archive">Готово к публикации</MenuItem>
+              <MenuItem value="ready">Готово к публикации</MenuItem>
               <MenuItem value="published">Опубликовано</MenuItem>
               <MenuItem value="archive">Архив</MenuItem>
             </Select>
@@ -408,16 +413,15 @@ export const ArticleForm = ({
                 variant="dialog"
                 margin="none"
                 fullWidth={true}
-                disabled={article.status !== "published"}
+                disabled={enabledDatePicker}
                 inputVariant="outlined"
                 label="Дата публикации"
                 format="dd/MM/yyyy hh:mm"
-                minDate={new Date()}
                 value={article.published_at}
                 onChange={handleDateChange}
               />
               <FormHelperText variant="filled">
-                Доступно при статусе Опубликовано
+                Доступно при статусе Опубликовано или Готово к публикации
               </FormHelperText>
             </FormControl>
           </MuiPickersUtilsProvider>
