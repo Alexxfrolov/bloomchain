@@ -231,7 +231,7 @@ const ArchivesTableRow = ({ archive, onDelete }: ArchiveTableRowProps) => (
     </TableCell>
     <TableCell nowrap="true">
       {archive.created_at &&
-        format(new Date(archive.created_at), "dd.mm.yyyy hh:mm")}
+        format(new Date(archive.created_at), "dd.mm.yyyy HH:mm")}
     </TableCell>
     <TableCell>
       <IconButton edge="end" onClick={onDelete}>

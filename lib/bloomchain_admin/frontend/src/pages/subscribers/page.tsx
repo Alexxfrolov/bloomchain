@@ -105,7 +105,7 @@ const SubscribersTableRow = ({ subscriber }: SubscribersTableRowProps) => (
     <TableCell>{subscriber.email}</TableCell>
     <TableCell>
       {subscriber.created_at &&
-        format(new Date(subscriber.created_at), "dd.mm.yyyy hh:mm")}
+        format(new Date(subscriber.created_at), "dd.mm.yyyy HH:mm")}
     </TableCell>
   </TableRow>
 )

@@ -198,7 +198,7 @@ export const ArticlesViewPage = () => {
                   margin="none"
                   inputVariant="outlined"
                   label="Дата начала"
-                  format="dd/MM/yyyy hh:mm"
+                  format="dd/MM/yyyy HH:mm"
                   size="small"
                   value={dateStart}
                   onChange={handleDateStartChange}
@@ -211,7 +211,7 @@ export const ArticlesViewPage = () => {
                   margin="none"
                   inputVariant="outlined"
                   label="Дата окончания"
-                  format="dd/MM/yyyy hh:mm"
+                  format="dd/MM/yyyy HH:mm"
                   size="small"
                   value={dateEnd}
                   onChange={handleDateEndChange}
@@ -352,11 +352,11 @@ const ArticlesTableRow = ({ article, onDeleteRow }: ArticlesTableRowProps) => (
     </TableCell>
     <TableCell nowrap="true">
       {article.published_at &&
-        format(new Date(article.published_at), "dd.MM.yyyy hh:mm")}
+        format(new Date(article.published_at), "dd.MM.yyyy HH:mm")}
     </TableCell>
     <TableCell nowrap="true">
       {article.updated_at &&
-        format(new Date(article.updated_at), "dd.MM.yyyy hh:mm")}
+        format(new Date(article.updated_at), "dd.MM.yyyy HH:mm")}
     </TableCell>
     <TableCell align="right">{article.total_views}</TableCell>
     <TableCell>

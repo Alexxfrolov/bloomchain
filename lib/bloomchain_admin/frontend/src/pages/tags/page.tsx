@@ -216,10 +216,10 @@ const TagsTableRow = ({ tag, onDeleteRow }: TagsTableRowProps) => (
     <TableCell>{tag.name}</TableCell>
     <TableCell>{tag.slug}</TableCell>
     <TableCell>
-      {tag.created_at && format(new Date(tag.created_at), "dd.mm.yyyy hh:mm")}
+      {tag.created_at && format(new Date(tag.created_at), "dd.mm.yyyy HH:mm")}
     </TableCell>
     <TableCell>
-      {tag.updated_at && format(new Date(tag.updated_at), "dd.mm.yyyy hh:mm")}
+      {tag.updated_at && format(new Date(tag.updated_at), "dd.mm.yyyy HH:mm")}
     </TableCell>
     <TableCell>
       <ButtonGroup>

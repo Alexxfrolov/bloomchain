@@ -24,6 +24,7 @@ import {
 } from "@material-ui/core"
 import DateFnsUtils from "@date-io/date-fns"
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
+import { ru } from "date-fns/locale"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import { Editor } from "@lib/editor"
 import { Article } from "@api/articles"
@@ -406,17 +407,18 @@ export const ArticleForm = ({
               <MenuItem value="archive">Архив</MenuItem>
             </Select>
           </FormControl>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
             <FormControl margin="normal" fullWidth={true} variant="outlined">
               <DateTimePicker
                 id="published_at"
                 variant="dialog"
+                ampm={false}
                 margin="none"
                 fullWidth={true}
                 disabled={enabledDatePicker}
                 inputVariant="outlined"
                 label="Дата публикации"
-                format="dd/MM/yyyy hh:mm"
+                format="dd/MM/yyyy HH:mm"
                 value={article.published_at}
                 onChange={handleDateChange}
               />
