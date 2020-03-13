@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useCallback, useRef, Ref } from "react"
+import { useDropzone } from "react-dropzone"
 import {
   Box,
   AppBar,
@@ -34,8 +35,7 @@ const useStyles = makeStyles((theme) =>
     input: {
       display: "none",
     },
-    label: {
-      position: "relative",
+    box: {
       padding: "1.25rem 0.9375rem",
       display: "block",
       fontSize: "14px",
@@ -90,6 +90,25 @@ export const MediaUploadForm = ({
   onUpload,
 }: ImagesUploadFormProps) => {
   const classes = useStyles()
+
+  const onDrop = useCallback(
+    async (files) => {
+      if (files.length === 1) {
+        try {
+          const { data: image } = await mediaApi.create({
+            file: files[0],
+            type: "image",
+          })
+          onUpload(image)
+        } catch {}
+      }
+    },
+    [onUpload],
+  )
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+  })
 
   const [tabIndex, setTabIndex] = useState(0)
   const [openedDialog, setOpenedDialog] = useState(false)
@@ -172,7 +191,18 @@ export const MediaUploadForm = ({
           </Tabs>
         </AppBar>
         <TabPanel value={tabIndex} index={0}>
-          <label htmlFor="input-file" className={classes.label}>
+          <div {...getRootProps()}>
+            <Box p={2} className={classes.box}>
+              <input {...getInputProps()} />
+              <Fragment>
+                <Typography align="center" variant="subtitle1" component="p">
+                  <strong>Переместите сюда изображение</strong>
+                </Typography>
+                <Typography align="center">(или нажмите)</Typography>
+              </Fragment>
+            </Box>
+          </div>
+          {/* <label htmlFor="input-file" className={classes.label}>
             <input
               id="input-file"
               accept="image/*"
@@ -185,7 +215,7 @@ export const MediaUploadForm = ({
               <strong>Переместите сюда изображение</strong>
             </Typography>
             <Typography>(или нажмите)</Typography>
-          </label>
+          </label> */}
         </TabPanel>
       </Paper>
       <MediaLibraryDialog

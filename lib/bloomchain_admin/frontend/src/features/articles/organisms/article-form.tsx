@@ -347,14 +347,14 @@ export const ArticleForm = ({
               Титульное изображение
             </Typography>
           </FormControl>
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
+            <MediaUploadForm onUpload={handleUpload} />
+          </FormControl>
           {article.cover && (
             <FormControl margin="normal" fullWidth={true} variant="outlined">
               <img width="100%" src={article.cover.url} />
             </FormControl>
           )}
-          <FormControl margin="normal" fullWidth={true} variant="outlined">
-            <MediaUploadForm onUpload={handleUpload} />
-          </FormControl>
           {/* {article.cover && (
             <Fragment>
               <TextField

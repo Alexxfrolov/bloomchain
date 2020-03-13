@@ -329,14 +329,14 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
               Обложка
             </Typography>
           </FormControl>
+          <FormControl margin="normal" fullWidth={true} variant="outlined">
+            <MediaUploadForm onUpload={handleUpload} />
+          </FormControl>
           {archive.cover && (
             <FormControl margin="normal" fullWidth={true} variant="outlined">
               <img src={archive.cover.url} width="100%" />
             </FormControl>
           )}
-          <FormControl margin="normal" fullWidth={true} variant="outlined">
-            <MediaUploadForm onUpload={handleUpload} />
-          </FormControl>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <Typography variant="h6" component="h6">
               PDF
