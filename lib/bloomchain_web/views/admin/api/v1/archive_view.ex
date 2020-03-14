@@ -18,7 +18,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArchiveView do
       cover: media_json(archive.cover),
       pdf: media_json(archive.pdf),
       created_at: archive.inserted_at |> Timex.local(),
-      updated_at: archive.updated_a |> Timex.local()
+      updated_at: archive.updated_at |> Timex.local()
     }
   end
 end
