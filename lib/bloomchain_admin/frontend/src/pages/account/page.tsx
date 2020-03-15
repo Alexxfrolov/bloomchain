@@ -1,6 +1,7 @@
 import React, {
   Fragment,
   useState,
+  useMemo,
   useCallback,
   useContext,
   FormEvent,
@@ -66,6 +67,15 @@ export const UserAccountPage = () => {
     [settings, setOpenedSuccessDialog, setOpenedErrorDialog],
   )
 
+  const avatarCaption = useMemo(
+    () =>
+      settings.first_name
+        .charAt(0)
+        .toUpperCase()
+        .concat(settings.last_name.charAt(0).toUpperCase()),
+    [settings.first_name, settings.last_name],
+  )
+
   return (
     <Fragment>
       <Container maxWidth="sm">
@@ -73,14 +83,14 @@ export const UserAccountPage = () => {
           <form onSubmit={handleSubmit} className={classes.root}>
             <Grid container={true} spacing={3}>
               <Grid item={true}>
-                <Avatar className={classes.avatar}>AD</Avatar>
+                <Avatar className={classes.avatar}>{avatarCaption}</Avatar>
               </Grid>
               <Grid item={true} xs={12} sm>
                 <TextField
                   label="Имя"
                   id="name"
                   value={settings.first_name}
-                  fullWidth={true}
+                  fullWidth
                   margin="normal"
                   variant="outlined"
                   onChange={handleChangeField("first_name")}
@@ -89,7 +99,7 @@ export const UserAccountPage = () => {
                   label="Фамилия"
                   id="name"
                   value={settings.last_name}
-                  fullWidth={true}
+                  fullWidth
                   margin="normal"
                   variant="outlined"
                   onChange={handleChangeField("last_name")}
@@ -98,7 +108,7 @@ export const UserAccountPage = () => {
                   label="Должность"
                   id="job"
                   value={settings.job ?? ""}
-                  fullWidth={true}
+                  fullWidth
                   margin="normal"
                   variant="outlined"
                   onChange={handleChangeField("job")}
@@ -108,7 +118,7 @@ export const UserAccountPage = () => {
                   id="phone"
                   type="tel"
                   value={settings.phone ?? ""}
-                  fullWidth={true}
+                  fullWidth
                   margin="normal"
                   variant="outlined"
                   onChange={handleChangeField("phone")}
@@ -118,7 +128,7 @@ export const UserAccountPage = () => {
                   id="email"
                   type="email"
                   value={settings.email ?? ""}
-                  fullWidth={true}
+                  fullWidth
                   margin="normal"
                   variant="outlined"
                   onChange={handleChangeField("email")}
