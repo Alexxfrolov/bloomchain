@@ -221,10 +221,10 @@ const UsersTable = ({ data, loading, renderRow }: UsersTableProps) => (
       <TableHead>
         <TableRow>
           <TableCell width="1%" component="th">
-            Фамилия
+            Имя
           </TableCell>
           <TableCell width="1%" component="th">
-            Имя
+            Фамилия
           </TableCell>
           <TableCell width="1%" component="th">
             Роль
@@ -267,8 +267,8 @@ type UsersTableRowProps = {
 
 const UsersTableRow = ({ user, onDetete, onEdit }: UsersTableRowProps) => (
   <TableRow>
-    <TableCell>{user.last_name}</TableCell>
     <TableCell>{user.first_name}</TableCell>
+    <TableCell>{user.last_name}</TableCell>
     <TableCell>{user.role}</TableCell>
     <TableCell>{user.job}</TableCell>
     <TableCell>{user.phone}</TableCell>
