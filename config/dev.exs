@@ -60,6 +60,8 @@ config :bloomchain, Bloomchain.Repo,
   port: System.get_env("DB_PORT") || 5432,
   pool_size: 10
 
+config :bloomchain, Bloomchain.ElasticsearchCluster, url: System.get_env("ES_URL")
+
 # # Arc Image Upload
 config :arc,
   storage: Arc.Storage.Local

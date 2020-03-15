@@ -8,7 +8,19 @@ News site app built on Phoenix framework in Elixir.
 
 * Clone repository `git clone https://github.com/Alexxfrolov/bloomchain.git`
 * Fetch dependencies with `cd bloomchain && mix deps.get`
+
+### Setup ES
+* `docker pull docker.elastic.co/elasticsearch/elasticsearch:6.8.7`
+* `docker run --name elastic -p 9201:9200 -p 9301:9300  -e "discovery.type=single-node" -d docker.elastic.co/elasticsearch/elasticsearch:6.8.7`
+
+### Setup DB
+* `docker pull postgres`
+* `docker run --name psql -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d postgres`
+
+### Run migrations and seed data
 * Setup database and seed data `mix ecto.setup`
+
+### Start phoenix app
 * Start Phoenix server `mix phoenix.server`
 
 

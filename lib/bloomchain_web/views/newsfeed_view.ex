@@ -5,13 +5,13 @@ defmodule BloomchainWeb.NewsfeedView do
   def title("index.html", _assigns),
     do: "Все новости о криптовалютах, блокчейне и финтехе"
 
+  def title("show.html", assigns), do: assigns[:article].title
+
   def meta("index.html", :description, _assigns),
     do:
       "Горячие новости мира криптовалют, блокчейн-технологий и финтеха. Последние новости и экспертные комментарии на портале Блумчейн.ру."
 
   def meta("index.html", :keywords, _assigns), do: ""
-
-  def title("show.html", assigns), do: assigns[:article].title
 
   def meta("show.html", :description, assigns), do: assigns[:article].description
 

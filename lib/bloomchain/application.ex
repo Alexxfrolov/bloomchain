@@ -16,9 +16,6 @@ defmodule Bloomchain.Application do
 
       # Start the ES when the application starts
       supervisor(Bloomchain.ElasticsearchCluster, [])
-
-      # Start your own worker by calling: Bloomchain.Worker.start_link(arg1, arg2, arg3)
-      # worker(Bloomchain.Worker, [arg1, arg2, arg3]),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -1,21 +1,25 @@
 alias Bloomchain.Repo
 
-alias Bloomchain.Content.{Article, Tag, User, Subscriber, Media, Archive, Author}
+alias Bloomchain.Content.{Article, Tag, User, Subscriber, Media, Archive, Author, Index}
 
-cover =
+# Seed Indices
+first = Timex.shift(Timex.now(), days: -2) |> Timex.to_unix()
+last = Timex.now() |> Timex.to_unix()
+# 15 minutes
+step = 900
+
+for time <- :lists.seq(first, last, step), time > 0 do
   Repo.insert!(
-    Media.changeset(%Media{}, %{
-      alt: "test image",
-      type: "image",
-      file: %Plug.Upload{
-        content_type: "image/jpeg",
-        filename: "cover.png",
-        path: "#{File.cwd!()}/priv/repo/data_files/img-bitcoin.jpg"
-      }
-    })
+    Index.changeset(%Index{}, %{value: Enum.random(5100..5500), type: "bitcoin", time: time})
   )
 
-for i <- 1..5, i > 0 do
+  Repo.insert!(
+    Index.changeset(%Index{}, %{value: Enum.random(110..180), type: "top_10", time: time})
+  )
+end
+
+# Seed Archive
+for i <- 1..4, i > 0 do
   path = "#{File.cwd!()}/priv/repo/data_files/archive/"
 
   cover =
@@ -45,6 +49,7 @@ for i <- 1..5, i > 0 do
   Repo.insert!(Archive.changeset(%Archive{}, %{cover_id: cover.id, pdf_id: pdf.id}))
 end
 
+# Seed Users
 Repo.insert!(
   User.changeset(%User{}, %{
     first_name: "Алексей",
@@ -65,6 +70,7 @@ Repo.insert!(
   })
 )
 
+# Seed Authors
 Repo.insert_all(Author, [
   %{
     name: "Bloomchain Research",
@@ -85,6 +91,7 @@ Repo.insert_all(Author, [
   }
 ])
 
+# Seed Subscribers
 Repo.insert_all(Subscriber, [
   %{
     email: "app@yandex.ru",
@@ -103,6 +110,7 @@ Repo.insert_all(Subscriber, [
   }
 ])
 
+# Seed Tags
 Repo.insert_all(Tag, [
   %{
     name: "криптовалюта",
@@ -123,6 +131,20 @@ Repo.insert_all(Tag, [
     updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
   }
 ])
+
+# Seed Posts
+cover =
+  Repo.insert!(
+    Media.changeset(%Media{}, %{
+      alt: "test image",
+      type: "image",
+      file: %Plug.Upload{
+        content_type: "image/jpeg",
+        filename: "cover.png",
+        path: "#{File.cwd!()}/priv/repo/data_files/img-bitcoin.jpg"
+      }
+    })
+  )
 
 for type <- ~w[newsfeed detailed research analysis in_russia calendar person] do
   for i <- 1..15, i > 0 do

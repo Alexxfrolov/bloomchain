@@ -86,8 +86,8 @@ defmodule Bloomchain.Mixfile do
       "ecto.setup": [
         "ecto.create",
         "ecto.migrate",
-        "run priv/repo/seeds.exs",
-        "elasticsearch.build posts --cluster Bloomchain.ElasticsearchCluster"
+        "elasticsearch.build posts --cluster Bloomchain.ElasticsearchCluster",
+        "run priv/repo/seeds.exs"
       ],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]

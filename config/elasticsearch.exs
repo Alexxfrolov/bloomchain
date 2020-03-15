@@ -1,17 +1,6 @@
 use Mix.Config
 
 config :bloomchain, Bloomchain.ElasticsearchCluster,
-  # The URL where Elasticsearch is hosted on your system
-  url: "https://afc0043ba3df4afc91d49e5c31687c1a.eu-central-1.aws.cloud.es.io:9243",
-
-  # If your Elasticsearch cluster uses HTTP basic authentication,
-  # specify the username and password here:
-  username: "elastic",
-  password: "TMEYpCUhKqbOGnKp1BNbQL1Q",
-
-  # If you want to mock the responses of the Elasticsearch JSON API
-  # for testing or other purposes, you can inject a different module
-  # here. It must implement the Elasticsearch.API behaviour.
   api: Elasticsearch.API.HTTP,
   default_options: [
     timeout: 20_000,
