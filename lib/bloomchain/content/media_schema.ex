@@ -4,6 +4,7 @@ defmodule Bloomchain.Content.Media do
 
   import Ecto.Changeset
   import Ecto.Query
+
   alias Bloomchain.Repo
   alias Bloomchain.Content.{Media}
   alias BloomchainWeb.Uploaders.File

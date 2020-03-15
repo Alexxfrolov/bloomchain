@@ -42,16 +42,10 @@ config :ex_aws,
   secret_access_key: [{:system, "AWS_SECRET_ACCESS_KEY"}, :instance_role],
   region: [{:system, "AWS_REGION"}, :instance_role]
 
-# config :bloomchain, Bloomchain.ElasticsearchCluster,
-#   api: Elasticsearch.API.AWS,
-#   default_options: [
-#     aws: [
-#       service: "es",
-#       region: System.get_env("AWS_REGION"),
-#       access_key: System.get_env("AWS_ACCESS_KEY_ID"),
-#       secret: System.get_env("AWS_SECRET_ACCESS_KEY")
-#     ]
-#   ]
+config :bloomchain, Bloomchain.ElasticsearchCluster,
+  url: System.get_env("ES_URL"),
+  username: System.get_env("ES_USER"),
+  password: System.get_env("ES_PASSWORD")
 
 # ## SSL Support
 #

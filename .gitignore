@@ -5,6 +5,7 @@
 /deps
 /uploads
 /*.ez
+/vendor
 
 # Generated on crash by the VM
 erl_crash.dump
@@ -27,10 +28,10 @@ npm-debug.log
 # secrets files as long as you replace their contents by environment
 # variables.
 /config/*.secret.exs
-/web/
+
 
 # environmental variables
-.env 
+.env
 
 # frontend
 /lib/bloomchain_admin/frontend/node_modules
