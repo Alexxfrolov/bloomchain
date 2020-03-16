@@ -20,9 +20,9 @@
     <meta name="twitter:site" content="@BloomChainNews">
     <meta property="og:site_name" content="BloomChain">
     <meta property="og:type" content="website">
-    <meta name="twitter:url" property="og:url" content="http://bloomchain.herokuapp.com/">
-    <meta name="twitter:title" property="og:title" content="Bloomchain - финтех, блокчейн, криптовалюты">
-    <meta name="twitter:description" property="og:description" content="Ежедневно и вдумчиво говорим о рынке цифровых финансов в  России и мире">
+    <meta property="og:url" content="http://bloomchain.herokuapp.com/">
+    <meta property="og:title" content="Bloomchain - финтех, блокчейн, криптовалюты">
+    <meta property="og:description" content="Ежедневно и вдумчиво говорим о рынке цифровых финансов в  России и мире">
     <meta name="format-detection" content="telephone=no">
   </head>
   <body class="bg-light">
