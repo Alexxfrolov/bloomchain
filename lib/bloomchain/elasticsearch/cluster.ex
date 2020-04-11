@@ -23,14 +23,14 @@ defmodule Bloomchain.ElasticsearchCluster do
     {:ok, struct}
   end
 
-  def search(query) do
+  def search(str) do
     query = %{
       query: %{
         bool: %{
           must: [
             %{
               multi_match: %{
-                query: query,
+                query: str,
                 fields: ["title^3", "lead^2", "body"],
                 tie_breaker: 0.1,
                 type: "most_fields",
@@ -43,14 +43,43 @@ defmodule Bloomchain.ElasticsearchCluster do
           ]
         }
       },
-      # sort: [
-      #   %{published_at: %{order: "desc"}},
-      #   %{id: %{order: "desc"}}
-      # ],
       size: @size
     }
 
     process_result(Elasticsearch.post(ES, "/posts/_doc/_search/?scroll=5m", query))
+  end
+
+  def recomendations_for(article) do
+    query = %{
+      query: %{
+        function_score: %{
+          query: %{
+            bool: %{
+              must: [%{term: %{status: "published"}}],
+              must_not: [%{term: %{id: article.id}}]
+            }
+          },
+          functions: [
+            %{
+              filter: %{terms: %{"tags.slug": Enum.map(article.tags, & &1.slug)}},
+              weight: 8
+            },
+            %{
+              filter: %{term: %{type: article.type}},
+              weight: 4
+            },
+            %{
+              filter: %{terms: %{keywords: article.keywords}},
+              weight: 2
+            }
+          ],
+          score_mode: "sum"
+        }
+      },
+      size: 4
+    }
+
+    process_result(Elasticsearch.post(ES, "/posts/_search/", query))
   end
 
   def scroll(scroll) do
@@ -75,6 +104,12 @@ defmodule Bloomchain.ElasticsearchCluster do
         entries: Enum.map(result["hits"]["hits"], &process_item/1),
         metadata: %{after: scroll}
       }
+    else
+      {:error, err} ->
+        %{
+          entries: [],
+          metadata: %{error: true, after: nil}
+        }
     end
   end
 

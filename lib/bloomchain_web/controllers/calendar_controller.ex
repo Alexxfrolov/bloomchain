@@ -1,6 +1,7 @@
 defmodule BloomchainWeb.CalendarController do
   use BloomchainWeb, :controller
   alias Bloomchain.Content.Article
+  alias Bloomchain.ElasticsearchCluster, as: ES
 
   def index(conn, %{scroll: scroll}) do
     %{entries: articles, metadata: meta} = Article.paginate("calendar", scroll)
@@ -24,6 +25,9 @@ defmodule BloomchainWeb.CalendarController do
       |> Article.get(type: "calendar")
       |> Article.inc_total_views()
 
-    render(conn, "show.html", article: article)
+    render(conn, "show.html",
+      article: article,
+      recomendations: ES.recomendations_for(article)[:entries]
+    )
   end
 end

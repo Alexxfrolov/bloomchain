@@ -54,7 +54,11 @@
           }
         },
         "tags": {
+          "type": "nested",
           "properties": {
+            "slug":  {"type": "keyword"},
+            "name": {"type": "keyword"},
+            "id": {"type": "integer"}
           }
         }
       }

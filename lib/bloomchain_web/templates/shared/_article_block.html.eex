@@ -11,18 +11,18 @@
         <%= if (length(@articles) > 3) or (length(@articles) == 2) do %>
 
           <%= main_article_tag(List.first(@articles |> tl()), :without_img, conn: @conn) %>
-          <%= for [first | second] <- @articles |> tl() |> tl() |> Enum.chunk_every(2) do %>
+          <%= for [first | others] <- @articles |> tl() |> tl() |> Enum.chunk_every(2) do %>
             <div class="row">
               <%= article_tag(first, conn: @conn) %>
-              <%= article_tag(List.first(second), conn: @conn) %>
+              <%= article_tag(List.first(others), conn: @conn) %>
             </div>
           <% end %>
 
         <% else %>
-            <%= for [first | second] <- @articles |> tl() |> Enum.chunk_every(2) do %>
+            <%= for [first | others] <- @articles |> tl() |> Enum.chunk_every(2) do %>
               <div class="row">
                 <%= article_tag(first, conn: @conn) %>
-                <%= article_tag(List.first(second), conn: @conn) %>
+                <%= article_tag(List.first(others), conn: @conn) %>
               </div>
           <% end %>
         <% end %>
