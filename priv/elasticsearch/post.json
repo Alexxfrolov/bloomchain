@@ -54,7 +54,7 @@
           }
         },
         "tags": {
-          "type": "nested",
+          "type": "object",
           "properties": {
             "slug":  {"type": "keyword"},
             "name": {"type": "keyword"},

@@ -5,7 +5,7 @@ defmodule Bloomchain.ElasticsearchCluster do
   alias Bloomchain.Content.Post
   alias Bloomchain.Repo
 
-  @size 6
+  @max_size 6
 
   def reindex(struct) do
     post = Repo.preload(struct, [:authors, :tags, :cover])
@@ -23,30 +23,21 @@ defmodule Bloomchain.ElasticsearchCluster do
     {:ok, struct}
   end
 
-  def search(str) do
+  def search(query) do
+    process_result(Elasticsearch.post(ES, "/posts/_doc/_search/", query))
+  end
+
+  def search(query, scroll: scroll) do
+    process_result(Elasticsearch.post(ES, "/posts/_doc/_search?scroll=#{scroll}", query))
+  end
+
+  def scroll(scroll) do
     query = %{
-      query: %{
-        bool: %{
-          must: [
-            %{
-              multi_match: %{
-                query: str,
-                fields: ["title^3", "lead^2", "body"],
-                tie_breaker: 0.1,
-                type: "most_fields",
-                fuzziness: "auto"
-              }
-            }
-          ],
-          filter: [
-            %{term: %{status: "published"}}
-          ]
-        }
-      },
-      size: @size
+      scroll: "5m",
+      scroll_id: scroll
     }
 
-    process_result(Elasticsearch.post(ES, "/posts/_doc/_search/?scroll=5m", query))
+    process_result(Elasticsearch.post(ES, "/_search/scroll", query))
   end
 
   def recomendations_for(article) do
@@ -76,25 +67,17 @@ defmodule Bloomchain.ElasticsearchCluster do
           score_mode: "sum"
         }
       },
+      sort: [%{published_at: %{order: "desc"}}],
       size: 4
     }
 
     process_result(Elasticsearch.post(ES, "/posts/_search/", query))
   end
 
-  def scroll(scroll) do
-    query = %{
-      scroll: "5m",
-      scroll_id: scroll
-    }
-
-    process_result(Elasticsearch.post(ES, "/_search/scroll", query))
-  end
-
   defp process_result(result) do
     with {:ok, result} <- result do
       scroll =
-        if result["hits"]["total"] > @size and length(result["hits"]["hits"]) == @size do
+        if result["hits"]["total"] > @max_size and length(result["hits"]["hits"]) == @max_size do
           result["_scroll_id"]
         else
           nil
@@ -105,7 +88,7 @@ defmodule Bloomchain.ElasticsearchCluster do
         metadata: %{after: scroll}
       }
     else
-      {:error, err} ->
+      {:error, _err} ->
         %{
           entries: [],
           metadata: %{error: true, after: nil}

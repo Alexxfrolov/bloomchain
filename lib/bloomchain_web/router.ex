@@ -66,7 +66,8 @@ defmodule BloomchainWeb.Router do
     resources("/calendar", CalendarController, only: [:index, :show], param: "slug")
     resources("/research", ResearchController, only: [:index, :show], param: "slug")
     resources("/research-archive", ArchiveController, only: [:index], param: "slug")
-    resources("/search", SearchController, only: [:index, :create], param: "slug")
+    resources("/search", SearchController, only: [:index, :create])
+    resources("/tag", TagController, only: [:show], param: "tag")
 
     scope "/api" do
       pipe_through [:api]

@@ -138,4 +138,38 @@ defmodule Bloomchain.Content.Article do
 
     put_in(post.total_views, total_views)
   end
+
+  def recomendations_for(post) do
+    query = %{
+      query: %{
+        function_score: %{
+          query: %{
+            bool: %{
+              must: [%{term: %{status: "published"}}],
+              must_not: [%{term: %{id: post.id}}]
+            }
+          },
+          functions: [
+            %{
+              filter: %{terms: %{"tags.slug": Enum.map(post.tags, & &1.slug)}},
+              weight: 8
+            },
+            %{
+              filter: %{term: %{type: post.type}},
+              weight: 4
+            },
+            %{
+              filter: %{terms: %{keywords: post.keywords}},
+              weight: 2
+            }
+          ],
+          score_mode: "sum"
+        }
+      },
+      sort: [%{published_at: %{order: "desc"}}],
+      size: 4
+    }
+
+    ES.search(query)[:entries]
+  end
 end

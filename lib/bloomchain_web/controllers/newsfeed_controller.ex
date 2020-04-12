@@ -1,7 +1,6 @@
 defmodule BloomchainWeb.NewsfeedController do
   use BloomchainWeb, :controller
   alias Bloomchain.Content.Article
-  alias Bloomchain.ElasticsearchCluster, as: ES
 
   def index(conn, %{scroll: scroll, last_date: last_date}) do
     %{entries: articles, metadata: meta} = Article.paginate("newsfeed", scroll)
@@ -27,7 +26,7 @@ defmodule BloomchainWeb.NewsfeedController do
 
     render(conn, "show.html",
       article: article,
-      recomendations: ES.recomendations_for(article)[:entries]
+      recomendations: Article.recomendations_for(article)
     )
   end
 
