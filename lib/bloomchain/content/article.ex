@@ -88,13 +88,13 @@ defmodule Bloomchain.Content.Article do
     )
   end
 
-  def get(id) do
-    Repo.get(Post, id)
+  def get!(id) do
+    Repo.get!(Post, id)
     |> Repo.preload([:tags, :cover, :authors])
   end
 
   def get(slug, type: type) do
-    Repo.get_by(Post, slug: slug, type: type, status: "published")
+    Repo.get_by!(Post, slug: slug, type: type, status: "published")
     |> Repo.preload([:tags, :cover, :authors])
   end
 
@@ -124,7 +124,9 @@ defmodule Bloomchain.Content.Article do
     end
   end
 
-  def delete(%Post{} = post) do
+  def delete!(id) do
+    post = Repo.get!(Post, id)
+
     Repo.delete!(post)
     ES.delete(post)
   end

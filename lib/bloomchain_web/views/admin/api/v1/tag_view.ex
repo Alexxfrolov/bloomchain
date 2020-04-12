@@ -17,6 +17,7 @@ defmodule BloomchainWeb.Admin.Api.V1.TagView do
       name: tag.name,
       slug: tag.slug,
       editable: false,
+      # TO DO: check if any record in posts_tags to set correct deletable
       deletable: true,
       created_at: tag.inserted_at |> Timex.local(),
       updated_at: tag.updated_at |> Timex.local()

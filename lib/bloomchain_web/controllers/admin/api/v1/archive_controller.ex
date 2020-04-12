@@ -3,9 +3,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArchiveController do
 
   require Ecto.Query
 
-  alias Plug.Conn
   alias Bloomchain.{Repo, Content.Archive}
-  alias BloomchainWeb.ErrorView
 
   def index(conn, _params) do
     archives =
@@ -18,60 +16,35 @@ defmodule BloomchainWeb.Admin.Api.V1.ArchiveController do
   end
 
   def show(conn, %{id: id}) do
-    with archive = %Archive{} <- Repo.get(Archive, id) do
-      render(conn, "show.json", archive: archive |> Repo.preload([:cover, :pdf]))
-    else
-      nil ->
-        conn
-        |> put_status(404)
-        |> render(ErrorView, "404.json", error: "Not found")
-    end
+    archive = Repo.get!(Archive, id) |> Repo.preload([:cover, :pdf])
+
+    render(conn, "show.json", archive: archive)
   end
 
   def create(conn, params) do
-    changeset = Archive.changeset(%Archive{}, params)
+    archive =
+      Archive.changeset(%Archive{}, params)
+      |> Repo.insert!()
+      |> Repo.preload([:cover, :pdf])
 
-    with {:ok, archive} <- Repo.insert(changeset) do
-      conn
-      |> Conn.put_status(201)
-      |> render("show.json", archive: archive |> Repo.preload([:cover, :pdf]))
-    else
-      {:error, changeset} ->
-        conn
-        |> put_status(422)
-        |> render(ErrorView, "422.json", %{changeset: changeset})
-    end
+    conn
+    |> put_status(201)
+    |> render("show.json", archive: archive)
   end
 
   def delete(conn, %{id: id}) do
-    with archive = %Archive{} <- Repo.get(Archive, id) do
-      Repo.delete!(archive)
+    Repo.get!(Archive, id) |> Repo.delete!()
 
-      conn
-      |> send_resp(:no_content, "")
-    else
-      nil ->
-        conn
-        |> put_status(404)
-        |> render(ErrorView, "404.json", error: "Not found")
-    end
+    send_resp(conn, :no_content, "")
   end
 
   def update(conn, %{id: id} = params) do
-    with %Archive{} = archive <- Repo.get(Archive, id),
-         {:ok, archive} <- archive |> Archive.changeset(params) |> Repo.update() do
-      conn
-      |> render("show.json", archive: archive |> Repo.preload([:cover, :pdf]))
-    else
-      nil ->
-        conn
-        |> put_status(404)
-        |> render(ErrorView, "404.json", error: "Not found")
+    archive =
+      Repo.get!(Archive, id)
+      |> Archive.changeset(params)
+      |> Repo.update!()
+      |> Repo.preload([:cover, :pdf])
 
-      {:error, changeset} ->
-        conn
-        |> put_status(422)
-        |> render(ErrorView, "422.json", %{changeset: changeset})
-    end
+    render(conn, "show.json", archive: archive)
   end
 end

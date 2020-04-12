@@ -13,15 +13,6 @@ defmodule Bloomchain.Auth.Account do
     Auth.Guardian.Plug.current_resource(conn)
   end
 
-  def is_current_user_admin?(conn) do
-    user = Auth.Guardian.Plug.current_resource(conn)
-
-    case user do
-      nil -> false
-      user -> user.role == "admin"
-    end
-  end
-
   def authenticate_user(email, given_password) do
     query = from(u in User, where: u.email == ^email)
 

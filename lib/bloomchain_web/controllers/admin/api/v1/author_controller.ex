@@ -4,7 +4,6 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorController do
   require Ecto.Query
 
   alias Bloomchain.{Repo, Content.Author}
-  alias BloomchainWeb.ErrorView
 
   def index(conn, _params) do
     authors =
@@ -16,60 +15,28 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorController do
   end
 
   def create(conn, params) do
-    changeset = Author.changeset(%Author{}, params)
+    author = Author.changeset(%Author{}, params) |> Repo.insert!()
 
-    with {:ok, author} <- Repo.insert(changeset) do
-      conn
-      |> put_status(201)
-      |> render("show.json", author: author)
-    else
-      {:error, changeset} ->
-        conn
-        |> put_status(422)
-        |> render(ErrorView, "422.json", %{changeset: changeset})
-    end
+    conn
+    |> put_status(201)
+    |> render("show.json", author: author)
   end
 
   def show(conn, %{id: id}) do
-    with author = %Author{} <- Repo.get(Author, id) do
-      render(conn, "show.json", author: author)
-    else
-      nil ->
-        conn
-        |> put_status(404)
-        |> render(ErrorView, "404.json", error: "Not found")
-    end
+    author = Repo.get!(Author, id)
+
+    render(conn, "show.json", author: author)
   end
 
   def delete(conn, %{id: id}) do
-    with author = %Author{} <- Repo.get(Author, id) do
-      Repo.delete!(author)
+    Repo.get!(Author, id) |> Repo.delete!()
 
-      conn
-      |> send_resp(:no_content, "")
-    else
-      nil ->
-        conn
-        |> put_status(404)
-        |> render(ErrorView, "404.json", error: "Not found")
-    end
+    send_resp(conn, :no_content, "")
   end
 
   def update(conn, %{id: id} = params) do
-    with %Author{} = author <- Repo.get(Author, id),
-         {:ok, author} <- author |> Author.changeset(params) |> Repo.update() do
-      conn
-      |> render("show.json", author: author)
-    else
-      nil ->
-        conn
-        |> put_status(404)
-        |> render(ErrorView, "404.json", error: "Not found")
+    author = Repo.get!(Author, id) |> Author.changeset(params) |> Repo.update!()
 
-      {:error, changeset} ->
-        conn
-        |> put_status(422)
-        |> render(ErrorView, "422.json", %{changeset: changeset})
-    end
+    render(conn, "show.json", author: author)
   end
 end
