@@ -150,26 +150,23 @@ defmodule Bloomchain.Content.Article do
               must_not: [%{term: %{id: post.id}}]
             }
           },
-          functions: [
-            %{
-              gauss: %{
-                published_at: %{
-                  origin: Timex.now() |> Timex.shift(days: -1),
-                  scale: "24h",
-                  offset: "4h",
-                  decay: 0.5
+          functions:
+            [
+              %{
+                gauss: %{
+                  published_at: %{
+                    origin: Timex.now() |> Timex.shift(days: -1),
+                    scale: "24h",
+                    offset: "4h",
+                    decay: 0.5
+                  }
                 }
+              },
+              %{
+                filter: %{term: %{type: post.type}},
+                weight: 4
               }
-            },
-            %{
-              filter: %{terms: %{"tags.slug": Enum.map(post.tags, & &1.slug)}},
-              weight: 4
-            },
-            %{
-              filter: %{term: %{type: post.type}},
-              weight: 2
-            }
-          ],
+            ] ++ tags_functions(post.tags),
           score_mode: "sum"
         }
       },
@@ -177,5 +174,16 @@ defmodule Bloomchain.Content.Article do
     }
 
     ES.search(query)[:entries]
+  end
+
+  defp tags_functions(tags) do
+    weight = 10 / length(tags)
+
+    Enum.map(tags, fn tag ->
+      %{
+        filter: %{term: %{"tags.slug": tag.slug}},
+        weight: weight
+      }
+    end)
   end
 end

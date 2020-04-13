@@ -40,40 +40,6 @@ defmodule Bloomchain.ElasticsearchCluster do
     process_result(Elasticsearch.post(ES, "/_search/scroll", query))
   end
 
-  def recomendations_for(article) do
-    query = %{
-      query: %{
-        function_score: %{
-          query: %{
-            bool: %{
-              must: [%{term: %{status: "published"}}],
-              must_not: [%{term: %{id: article.id}}]
-            }
-          },
-          functions: [
-            %{
-              filter: %{terms: %{"tags.slug": Enum.map(article.tags, & &1.slug)}},
-              weight: 8
-            },
-            %{
-              filter: %{term: %{type: article.type}},
-              weight: 4
-            },
-            %{
-              filter: %{terms: %{keywords: article.keywords}},
-              weight: 2
-            }
-          ],
-          score_mode: "sum"
-        }
-      },
-      sort: [%{published_at: %{order: "desc"}}],
-      size: 4
-    }
-
-    process_result(Elasticsearch.post(ES, "/posts/_search/", query))
-  end
-
   defp process_result(result) do
     with {:ok, result} <- result do
       scroll =
