@@ -21,10 +21,12 @@ News site app built on Phoenix framework in Elixir.
 * Setup database and seed data `mix ecto.setup`
 
 ### Start phoenix app
-* Start Phoenix server `mix phoenix.server`
+* Start Phoenix server `mix pxh.server`
 
 
-## Frontend
-# For installation dependencies and devDependencies run `yarn install`
-# For starting webpack-dev-server run `yarn start`
-# For production build run `yarn build`
+### Frontend аdmin 
+
+Requires [Node.js](https://nodejs.org/) >=10.16.0+ to run.
+For installation dependencies and devDependencies run `yarn install`
+For starting webpack-dev-server run `yarn start`
+For production build run `yarn build`
