@@ -22,7 +22,6 @@ import {
   TableBody,
   Toolbar,
   Typography,
-  TextField,
   FormControl,
   Button,
   IconButton,
@@ -258,8 +257,8 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
     },
   })
 
-  const pdfFileInputRef: RefObject<HTMLInputElement | null> = useRef(null)
-  const pdfRef: RefObject<HTMLEmbedElement | null> = useRef(null)
+  const pdfFileInputRef: RefObject<HTMLInputElement> = useRef(null)
+  const pdfRef: RefObject<HTMLEmbedElement> = useRef(null)
 
   const handlePDFFileInputChange = useCallback(() => {
     if (pdfFileInputRef.current && pdfFileInputRef.current.files !== null) {

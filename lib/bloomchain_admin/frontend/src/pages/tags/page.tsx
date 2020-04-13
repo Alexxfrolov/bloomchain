@@ -113,9 +113,11 @@ export const TagsPage = () => {
         await tagsApi.remove(modifyingTag.id)
         setOpenedDeleteDialog(false)
         setTags(tags.filter((item) => item.id !== modifyingTag.id))
-      } catch {}
+      } catch {
+        setError(true)
+      }
     }
-  }, [tags, modifyingTag, setTags, setOpenedDeleteDialog])
+  }, [tags, modifyingTag, setTags, setOpenedDeleteDialog, setError])
 
   return (
     <Fragment>
@@ -261,7 +263,9 @@ const AddFormDialog = ({ opened, onAddTag, onClose }: AddFormDialogProps) => {
         const response = await tagsApi.create(name)
         onClose()
         onAddTag(response.data)
-      } catch {}
+      } catch {
+        throw new Error("Add tag form dialog error")
+      }
     },
     [name, onAddTag, onClose],
   )

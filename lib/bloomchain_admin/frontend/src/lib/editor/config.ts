@@ -95,36 +95,5 @@ export const config = {
 
       return false
     },
-    // "imageManager.imagesLoaded": function(data) {
-    //   const json = JSON.parse(data)
-    //   return json.data.reduce((acc, image) => [...acc, { url: image.link }], [])
-    // },
-    "imageManager.imageLoaded": function() {
-    },
-    "imageManager.beforeDeleteImage": function($img) {
-      // Do something before deleting an image from the image manager.
-      alert("Image will be deleted.")
-    },
-    "imageManager.imageDeleted": function(data) {
-      // Do something after the image was deleted from the image manager.
-      alert("Image has been deleted.")
-    },
-    "imageManager.error": function(error, response) {
-      // Bad link. One of the returned image links cannot be loaded.
-      if (error.code == 10) {
-      }
-
-      // Error during request.
-      else if (error.code == 11) {
-      }
-
-      // Missing imagesLoadURL option.
-      else if (error.code == 12) {
-      }
-
-      // Parsing response failed.
-      else if (error.code == 13) {
-      }
-    },
   },
 }

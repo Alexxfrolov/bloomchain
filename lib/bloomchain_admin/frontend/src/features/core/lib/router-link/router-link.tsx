@@ -1,5 +1,5 @@
-import React, { forwardRef, Ref, MouseEventHandler } from "react"
-import { useRouter, BaseLink } from "react-router5"
+import React, { forwardRef, Ref, MouseEventHandler, ReactNode } from "react"
+import { useRouter, Link } from "react-router5"
 
 type RouterLinkProps = {
   children: ReactNode
@@ -14,14 +14,14 @@ type RouterLinkProps = {
 
 export const RouterLink = forwardRef(function RouterLink(
   props: RouterLinkProps,
-  ref: Ref<BaseLink>,
+  ref: Ref<Link>,
 ) {
   const { children, routeParams, routeName, ...rest } = props
 
   const router = useRouter()
 
   return (
-    <BaseLink
+    <Link
       ref={ref}
       router={router}
       routeName={routeName}
@@ -29,6 +29,6 @@ export const RouterLink = forwardRef(function RouterLink(
       {...rest}
     >
       {children}
-    </BaseLink>
+    </Link>
   )
 })

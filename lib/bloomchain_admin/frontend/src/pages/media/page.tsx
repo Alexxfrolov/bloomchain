@@ -230,8 +230,8 @@ const AddFormDialog = ({
   onClose,
   onAddMedia,
 }: AddFormDialogProps) => {
-  const imageRef: RefObject<HTMLImageElement | null> = useRef(null)
-  const fileInputRef: RefObject<HTMLInputElement | null> = useRef(null)
+  const imageRef: RefObject<HTMLImageElement> = useRef(null)
+  const fileInputRef: RefObject<HTMLInputElement> = useRef(null)
   const [media, setMedia] = useState<
     Pick<UploadableMediaFile, "title" | "alt" | "source" | "type"> & {
       file: File | null

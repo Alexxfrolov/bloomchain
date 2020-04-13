@@ -1,30 +1,14 @@
 import "react-app-polyfill/stable"
-import "date-fns"
 
 import React from "react"
 import ReactDOM from "react-dom"
-import createRouter from "router5"
 import { RouterProvider } from "react-router5"
-import browserPlugin from "router5-plugin-browser"
+import { router } from "@features/core"
 
-import { routes } from "./routes"
+import * as serviceWorker from "./service-worker"
 import { App } from "./app"
 
 const root = document.getElementById("root")
-
-const router = createRouter(routes)
-
-router
-  .setOption("allowNotFound", true)
-  .setOption("queryParamsMode", "loose")
-  .setOption("caseSensitive", true)
-  .setOption("queryParams", {
-    arrayFormat: "none",
-    nullFormat: "string",
-    booleanFormat: "string",
-  })
-  .setOption("defaultRoute", "articles.create")
-  .usePlugin(browserPlugin())
 
 const render = () => {
   if (root) {
@@ -46,3 +30,8 @@ if (typeof module.hot !== "undefined") {
 router.start(() => {
   render()
 })
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister()

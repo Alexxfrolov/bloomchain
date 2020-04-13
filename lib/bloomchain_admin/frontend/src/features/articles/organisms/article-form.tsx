@@ -80,8 +80,8 @@ export const ArticleForm = ({
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
   const [submitted, setSubmitted] = useState(false)
 
-  const inputTypeLabel: RefObject<HTMLLabelElement | null> = useRef(null)
-  const inputStatusLabel: RefObject<HTMLLabelElement | null> = useRef(null)
+  const inputTypeLabel: RefObject<HTMLLabelElement> = useRef(null)
+  const inputStatusLabel: RefObject<HTMLLabelElement> = useRef(null)
 
   const [typeLabelWidth, setTypeLabelWidth] = useState(0)
   const [statusLabelWidth, setStatusLabelWidth] = useState(0)
@@ -158,7 +158,7 @@ export const ArticleForm = ({
   )
 
   const handleChangeTagsSelect = useCallback(
-    (event: ChangeEvent<{}>, tags: Tag[]) => {
+    (_event: ChangeEvent<{}>, tags: Tag[]) => {
       setArticle({
         ...article,
         tags,
@@ -168,7 +168,7 @@ export const ArticleForm = ({
   )
 
   const handleChangeAuthorsSelect = useCallback(
-    (event: ChangeEvent<{}>, authors: Author[]) => {
+    (_event: ChangeEvent<{}>, authors: Author[]) => {
       setArticle({
         ...article,
         authors,
@@ -318,7 +318,7 @@ export const ArticleForm = ({
             <TextField
               id="keywords"
               label="Keywords"
-              value={article.keywords ?? ""}
+              value={article.keywords}
               fullWidth={true}
               variant="outlined"
               onChange={handleChangeFormField("keywords")}
@@ -353,7 +353,11 @@ export const ArticleForm = ({
           </FormControl>
           {article.cover && (
             <FormControl margin="normal" fullWidth={true} variant="outlined">
-              <img width="100%" src={article.cover.url} />
+              <img
+                width="100%"
+                src={article.cover.url}
+                alt={article.cover.alt ?? ""}
+              />
             </FormControl>
           )}
           {/* {article.cover && (
