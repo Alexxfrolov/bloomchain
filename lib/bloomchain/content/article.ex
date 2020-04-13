@@ -145,28 +145,34 @@ defmodule Bloomchain.Content.Article do
         function_score: %{
           query: %{
             bool: %{
-              must: [%{term: %{status: "published"}}],
+              must: %{match_all: %{}},
+              filter: [%{term: %{status: "published"}}],
               must_not: [%{term: %{id: post.id}}]
             }
           },
           functions: [
             %{
-              filter: %{terms: %{"tags.slug": Enum.map(post.tags, & &1.slug)}},
-              weight: 8
+              gauss: %{
+                published_at: %{
+                  origin: Timex.now() |> Timex.shift(days: -1),
+                  scale: "24h",
+                  offset: "4h",
+                  decay: 0.5
+                }
+              }
             },
             %{
-              filter: %{term: %{type: post.type}},
+              filter: %{terms: %{"tags.slug": Enum.map(post.tags, & &1.slug)}},
               weight: 4
             },
             %{
-              filter: %{terms: %{keywords: post.keywords}},
+              filter: %{term: %{type: post.type}},
               weight: 2
             }
           ],
           score_mode: "sum"
         }
       },
-      sort: [%{published_at: %{order: "desc"}}],
       size: 4
     }
 
