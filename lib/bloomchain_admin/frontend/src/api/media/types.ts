@@ -17,8 +17,9 @@ export type UploadableMediaFile = {
   file: File
 }
 
-export type EditableMediaFile = Pick<
-  UploadableMediaFile,
-  "title" | "alt" | "source"
-> &
-  Pick<MediaFile, "id">
+export type EditableMediaFile = {
+  title: UploadableMediaFile["title"]
+  alt: UploadableMediaFile["alt"]
+  source: UploadableMediaFile["source"]
+  id: MediaFile["id"]
+}

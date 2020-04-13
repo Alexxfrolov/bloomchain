@@ -190,7 +190,12 @@ export const ArticlesViewPage = () => {
         </Typography>
         <form onSubmit={handleFilterFormSubmit}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container={true} spacing={2} alignItems="center" className={classes.toolbar}>
+            <Grid
+              container={true}
+              spacing={2}
+              alignItems="center"
+              className={classes.toolbar}
+            >
               <Grid item={true}>
                 <DateTimePicker
                   id="date-start"

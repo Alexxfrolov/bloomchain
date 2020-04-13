@@ -116,7 +116,7 @@ export const MediaUploadForm = ({
   const [error, setError] = useState(false)
   const [media, setMedia] = useState<MediaFile[]>([])
 
-  const inputFileRef: Ref<HTMLInputElement | null> = useRef(null)
+  const inputFileRef: Ref<HTMLInputElement> = useRef(null)
 
   const handleChangeTab = useCallback(
     (event: React.ChangeEvent<{ checked: boolean }>, value: number) => {

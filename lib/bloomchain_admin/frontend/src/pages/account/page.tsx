@@ -127,7 +127,7 @@ export const UserAccountPage = () => {
                   label="Email"
                   id="email"
                   type="email"
-                  value={settings.email ?? ""}
+                  value={settings.email}
                   fullWidth
                   margin="normal"
                   variant="outlined"

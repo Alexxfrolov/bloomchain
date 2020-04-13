@@ -309,7 +309,7 @@ const AddUserFormDialog = ({
     password: "",
   })
 
-  const labelRef: RefObject<HTMLLabelElement | null> = useRef(null)
+  const labelRef: RefObject<HTMLLabelElement> = useRef(null)
   const [labelWidth, setSelectRoleLabelWidth] = useState(0)
 
   useEffect(() => {

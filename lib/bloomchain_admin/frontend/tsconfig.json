@@ -1,42 +1,46 @@
 {
   "compilerOptions": {
     "strict": true,
-    "outDir": "build",
     "module": "esnext",
     "target": "es5",
-    "lib": ["es5", "es6", "es7", "dom"],
-    "sourceMap": true,
-    "allowJs": false,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+    ],
+    "allowJs": true,
     "jsx": "react",
     "moduleResolution": "node",
     "baseUrl": "src",
     "paths": {
-      "@ui": ["ui/index"],
+      "@ui": ["ui"],
       "@ui/*": ["ui/*"],
-      "@lib": ["lib/index"],
+      "@lib": ["lib"],
       "@lib/*": ["lib/*"],
       "@features/*": ["features/*"],
       "@api/*": ["api/*"],
-      "@pages": ["pages/index"],
+      "@pages": ["pages"],
       "@pages/*": ["pages/*"],
+      "@tests": ["tests"],
+      "@tests/*": ["tests/*"],
     },
     "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true,
     "forceConsistentCasingInFileNames": true,
+    "downlevelIteration": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noErrorTruncation": true,
     "noEmitOnError": true,
     "suppressImplicitAnyIndexErrors": true,
+    "skipLibCheck": true,
     "esModuleInterop": true,
     "noEmit": true,
     "resolveJsonModule": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
   },
-  // "include": [
-  //   "src/**/*"
-  // ],
-  // "exclude": ["node_modules", "build", "scripts", "webpack", "jest"]
+  "exclude": [
+    "node_modules",
+    "scripts",
+    "config",
+    "public"
+  ]
 }
