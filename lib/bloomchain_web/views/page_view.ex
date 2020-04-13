@@ -32,8 +32,8 @@ defmodule BloomchainWeb.PageView do
   def render_article(item, conn: _conn, path: path) do
     content_tag(:div) do
       [
-        link(item.title, to: path, class: "bc-article__heading"),
-        content_tag(:p, item.lead, class: "bc-article__paragraph"),
+        link(item.title, to: path, class: "bc-article__heading line-clamp line-clamp__size_3"),
+        content_tag(:p, item.lead, class: "bc-article__paragraph mt-1 line-clamp line-clamp__size_3"),
         content_tag(:div, class: "d-flex align-items-center mt-3") do
           do_article_attrs(item)
         end
@@ -52,7 +52,7 @@ defmodule BloomchainWeb.PageView do
         link(
           item.title,
           to: newsfeed_path(conn, :show, item.slug),
-          class: "bc-news__title bc-article__heading font-weight-medium"
+          class: "bc-news__title bc-article__heading font-weight-medium line-clamp line-clamp__size_2"
         )
       ]
     end
