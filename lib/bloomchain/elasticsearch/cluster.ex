@@ -5,7 +5,7 @@ defmodule Bloomchain.ElasticsearchCluster do
   alias Bloomchain.Content.Post
   alias Bloomchain.Repo
 
-  @size 6
+  @max_size 6
 
   def reindex(struct) do
     post = Repo.preload(struct, [:authors, :tags, :cover])
@@ -24,32 +24,11 @@ defmodule Bloomchain.ElasticsearchCluster do
   end
 
   def search(query) do
-    query = %{
-      query: %{
-        bool: %{
-          must: [
-            %{
-              multi_match: %{
-                query: query,
-                fields: ["title^3", "lead^2", "body"],
-                tie_breaker: 0.1,
-                minimum_should_match: "75%"
-              }
-            }
-          ],
-          filter: [
-            %{term: %{status: "published"}}
-          ]
-        }
-      },
-      # sort: [
-      #   %{published_at: %{order: "desc"}},
-      #   %{id: %{order: "desc"}}
-      # ],
-      size: @size
-    }
+    process_result(Elasticsearch.post(ES, "/posts/_doc/_search/", query))
+  end
 
-    process_result(Elasticsearch.post(ES, "/posts/_doc/_search/?scroll=5m", query))
+  def search(query, scroll: scroll) do
+    process_result(Elasticsearch.post(ES, "/posts/_doc/_search?scroll=#{scroll}", query))
   end
 
   def scroll(scroll) do
@@ -61,10 +40,44 @@ defmodule Bloomchain.ElasticsearchCluster do
     process_result(Elasticsearch.post(ES, "/_search/scroll", query))
   end
 
+  def recomendations_for(article) do
+    query = %{
+      query: %{
+        function_score: %{
+          query: %{
+            bool: %{
+              must: [%{term: %{status: "published"}}],
+              must_not: [%{term: %{id: article.id}}]
+            }
+          },
+          functions: [
+            %{
+              filter: %{terms: %{"tags.slug": Enum.map(article.tags, & &1.slug)}},
+              weight: 8
+            },
+            %{
+              filter: %{term: %{type: article.type}},
+              weight: 4
+            },
+            %{
+              filter: %{terms: %{keywords: article.keywords}},
+              weight: 2
+            }
+          ],
+          score_mode: "sum"
+        }
+      },
+      sort: [%{published_at: %{order: "desc"}}],
+      size: 4
+    }
+
+    process_result(Elasticsearch.post(ES, "/posts/_search/", query))
+  end
+
   defp process_result(result) do
     with {:ok, result} <- result do
       scroll =
-        if result["hits"]["total"] > @size and length(result["hits"]["hits"]) == @size do
+        if result["hits"]["total"] > @max_size and length(result["hits"]["hits"]) == @max_size do
           result["_scroll_id"]
         else
           nil
@@ -74,6 +87,12 @@ defmodule Bloomchain.ElasticsearchCluster do
         entries: Enum.map(result["hits"]["hits"], &process_item/1),
         metadata: %{after: scroll}
       }
+    else
+      {:error, _err} ->
+        %{
+          entries: [],
+          metadata: %{error: true, after: nil}
+        }
     end
   end
 

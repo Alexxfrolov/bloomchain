@@ -88,13 +88,13 @@ defmodule Bloomchain.Content.Article do
     )
   end
 
-  def get(id) do
-    Repo.get(Post, id)
+  def get!(id) do
+    Repo.get!(Post, id)
     |> Repo.preload([:tags, :cover, :authors])
   end
 
   def get(slug, type: type) do
-    Repo.get_by(Post, slug: slug, type: type, status: "published")
+    Repo.get_by!(Post, slug: slug, type: type, status: "published")
     |> Repo.preload([:tags, :cover, :authors])
   end
 
@@ -124,7 +124,9 @@ defmodule Bloomchain.Content.Article do
     end
   end
 
-  def delete(%Post{} = post) do
+  def delete!(id) do
+    post = Repo.get!(Post, id)
+
     Repo.delete!(post)
     ES.delete(post)
   end
@@ -135,5 +137,39 @@ defmodule Bloomchain.Content.Article do
       |> Repo.update_all(inc: [total_views: 1])
 
     put_in(post.total_views, total_views)
+  end
+
+  def recomendations_for(post) do
+    query = %{
+      query: %{
+        function_score: %{
+          query: %{
+            bool: %{
+              must: [%{term: %{status: "published"}}],
+              must_not: [%{term: %{id: post.id}}]
+            }
+          },
+          functions: [
+            %{
+              filter: %{terms: %{"tags.slug": Enum.map(post.tags, & &1.slug)}},
+              weight: 8
+            },
+            %{
+              filter: %{term: %{type: post.type}},
+              weight: 4
+            },
+            %{
+              filter: %{terms: %{keywords: post.keywords}},
+              weight: 2
+            }
+          ],
+          score_mode: "sum"
+        }
+      },
+      sort: [%{published_at: %{order: "desc"}}],
+      size: 4
+    }
+
+    ES.search(query)[:entries]
   end
 end

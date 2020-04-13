@@ -24,6 +24,9 @@ defmodule BloomchainWeb.InRussiaController do
       |> Article.get(type: "in_russia")
       |> Article.inc_total_views()
 
-    render(conn, "show.html", article: article)
+    render(conn, "show.html",
+      article: article,
+      recomendations: Article.recomendations_for(article)
+    )
   end
 end

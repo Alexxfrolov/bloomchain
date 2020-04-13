@@ -20,7 +20,7 @@
           <div class="mt-3">
             <small class="small mr-2">Теги:</small>
             <%= for tag <- @article.tags do %>
-              <span class="span badge badge-primary-inverse" style="cursor: default"><%= tag.name %></span>
+              <%= link(tag.name, to: tag_path(@conn, :show, tag.slug), class: "span badge badge-primary-inverse") %>
             <% end %>
           </div>
         </header>

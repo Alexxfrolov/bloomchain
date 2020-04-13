@@ -24,7 +24,10 @@ defmodule BloomchainWeb.NewsfeedController do
       |> Article.get(type: "newsfeed")
       |> Article.inc_total_views()
 
-    render(conn, "show.html", article: article)
+    render(conn, "show.html",
+      article: article,
+      recomendations: Article.recomendations_for(article)
+    )
   end
 
   defp group(items) do

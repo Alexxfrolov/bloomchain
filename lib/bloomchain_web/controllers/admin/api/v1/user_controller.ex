@@ -4,7 +4,6 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
   require Ecto.Query
 
   alias Bloomchain.{Repo, Content.User, Content.Author}
-  alias BloomchainWeb.ErrorView
   alias Bloomchain.Auth.Account
 
   def index(conn, _params) do
@@ -17,80 +16,53 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
   end
 
   def create(conn, params) do
-    changeset = User.changeset(%User{}, params)
+    user = User.changeset(%User{}, params) |> Repo.insert!()
 
-    with {:ok, user} <- Repo.insert(changeset),
-         {:ok, _author} <-
-           Author.changeset(%Author{}, %{
-             user_id: user.id,
-             name: user.last_name <> " " <> user.first_name
-           })
-           |> Repo.insert() do
-      conn
-      |> put_status(201)
-      |> render("show.json", user: user)
-    else
-      {:error, changeset} ->
-        conn
-        |> put_status(422)
-        |> render(ErrorView, "422.json", %{changeset: changeset})
-    end
+    Author.changeset(%Author{}, %{
+      user_id: user.id,
+      name: user.last_name <> " " <> user.first_name
+    })
+    |> Repo.insert!()
+
+    conn
+    |> put_status(201)
+    |> render("show.json", user: user)
   end
 
   def show(conn, %{id: id}) do
-    with user = %User{} <- Repo.get(User, id) do
-      render(conn, "show.json", user: user)
-    else
-      nil ->
-        conn
-        |> put_status(404)
-        |> render(ErrorView, "404.json", error: "Not found")
-    end
+    user = Repo.get!(User, id)
+
+    render(conn, "show.json", user: user)
   end
 
   def delete(conn, %{id: id}) do
-    with %User{role: "admin"} <- Repo.get(User, id) do
+    with %User{role: "admin"} <- Repo.get!(User, id) do
       conn
       |> send_resp(:forbidden, "")
     else
-      %User{} = user ->
+      user ->
         Repo.delete!(user)
 
         conn
         |> send_resp(:no_content, "")
-
-      nil ->
-        conn
-        |> put_status(404)
-        |> render(ErrorView, "404.json", error: "Not found")
     end
   end
 
   def update(conn, %{id: id} = params) do
-    with %User{} = user <- Repo.get(User, id),
-         {:ok, user} <- user |> User.changeset(params) |> Repo.update(),
-         {:ok, _author} <-
-           Author.changeset((user |> Repo.preload(:author)).author, %{
-             name: params[:last_name] <> " " <> params[:first_name]
-           })
-           |> Repo.update() do
-      conn
-      |> render("show.json", user: user)
-    else
-      nil ->
-        conn
-        |> put_status(404)
-        |> render(ErrorView, "404.json", error: "Not found")
+    user = Repo.get!(User, id) |> User.changeset(params) |> Repo.update!()
 
-      {:error, changeset} ->
-        conn
-        |> put_status(422)
-        |> render(ErrorView, "422.json", %{changeset: changeset})
-    end
+    Author.changeset((user |> Repo.preload(:author)).author, %{
+      name: params[:last_name] <> " " <> params[:first_name]
+    })
+    |> Repo.update!()
+
+    conn
+    |> render("show.json", user: user)
   end
 
   def current(conn, _params) do
     user = Account.get_current_user(conn)
+
     render(conn, "show.json", user: user)
   end
 end

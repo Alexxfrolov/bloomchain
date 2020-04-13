@@ -1,0 +1,12 @@
+<div class="bg-white">
+  <div class="container py-5">
+    <h4 class="text-secondary mb-4">Рекомендации</h4>
+
+    <%= for [first | others] <- @recomendations |> Enum.chunk_every(2) do %>
+      <div class="row">
+        <%= article_tag(first, conn: @conn) %>
+        <%= article_tag(List.first(others), conn: @conn) %>
+      </div>
+    <% end %>
+  </div>
+</div>
