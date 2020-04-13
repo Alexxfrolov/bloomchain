@@ -5,6 +5,23 @@ defmodule BloomchainWeb.ErrorView do
     Phoenix.Controller.status_message_from_template(template)
   end
 
+  def title("not_found.html", _assigns),
+    do:
+      "Bloomchain — Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
+
+  def meta("not_found.html", :description, _assigns),
+    do: "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
+
+  def meta("not_found.html", :keywords, _assigns), do: ""
+
+  def render("404.html", assigns) do
+    render(
+      __MODULE__,
+      "not_found.html",
+      Map.merge(assigns, %{layout: {BloomchainWeb.LayoutView, "app.html"}})
+    )
+  end
+
   def render("404.json", _assigns) do
     %{errors: %{detail: "Not found"}}
   end
