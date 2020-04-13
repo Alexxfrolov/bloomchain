@@ -6,26 +6,31 @@
 
         <div class="mt-4"></div>
 
+        <%= case length(@articles) do %>
 
+          <% x when x == 2 or x > 3 -> %>
 
-        <%= if (length(@articles) > 3) or (length(@articles) == 2) do %>
+            <%= main_article_tag(List.first(@articles |> tl()), :without_img, conn: @conn) %>
+            <%= for [first | others] <- @articles |> tl() |> tl() |> Enum.chunk_every(2) do %>
+              <div class="row">
+                <%= article_tag(first, conn: @conn) %>
+                <%= article_tag(List.first(others), conn: @conn) %>
+              </div>
+            <% end %>
 
-          <%= main_article_tag(List.first(@articles |> tl()), :without_img, conn: @conn) %>
-          <%= for [first | others] <- @articles |> tl() |> tl() |> Enum.chunk_every(2) do %>
-            <div class="row">
-              <%= article_tag(first, conn: @conn) %>
-              <%= article_tag(List.first(others), conn: @conn) %>
-            </div>
-          <% end %>
+          <% x when x > 0 -> %>
 
-        <% else %>
             <%= for [first | others] <- @articles |> tl() |> Enum.chunk_every(2) do %>
               <div class="row">
                 <%= article_tag(first, conn: @conn) %>
                 <%= article_tag(List.first(others), conn: @conn) %>
               </div>
-          <% end %>
+            <% end %>
+
+          <% _ -> %>
+
         <% end %>
+
       </div>
     </div>
   </div>
