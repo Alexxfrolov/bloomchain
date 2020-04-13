@@ -9,4 +9,18 @@ defmodule BloomchainWeb.TagView do
     do: "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
 
   def meta("show.html", :keywords, _assigns), do: ""
+
+  def meta("show.html", :og_url, assigns), do: ""
+
+  def meta("show.html", :og_type, assigns), do: ""
+
+  def meta("show.html", :og_title, assigns), do: ""
+
+  def meta("show.html", :og_description, assigns), do: ""
+
+  def meta("show.html", :og_image, assigns), do: ""
+
+  def meta("show.html", :og_image_width, assigns), do: ""
+
+  def meta("show.html", :og_image_height, assigns), do: ""
 end

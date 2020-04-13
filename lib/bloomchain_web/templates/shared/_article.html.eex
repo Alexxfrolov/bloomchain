@@ -12,10 +12,12 @@
             <address class="article__author mr-sm-4 mr-2">
               <small class="small"><%= author(@article) %></small>
             </address>
-            <i class="mr-1 icon-clock"></i>
-            <time class="mr-sm-4 mr-2">
-              <small class="small"><%= "#{@article.time} мин" %></small>
-            </time>
+            <%= if @article.time do %>
+              <i class="mr-1 icon-clock"></i>
+              <time class="mr-sm-4 mr-2">
+                <small class="small"><%= "#{@article.time} мин" %></small>
+              </time>
+            <% end %>
           </div>
           <div class="mt-3">
             <small class="small mr-2">Теги:</small>
@@ -32,6 +34,11 @@
 
       <div class="d-flex align-items-center mt-4">
         <a class="btn btn-link font-weight-medium pl-0" onClick="window.history.back()">&larr; Назад</a>
+        <span class="small ml-auto mr-1">Поделиться:</span>
+        <a data-social-sharer="vk" class="icon-vk-round-primary mx-1"></a>
+        <a data-social-sharer="facebook" class="icon-fb-round-primary mx-1"></a>
+        <a data-social-sharer="twitter" data-title="<%= @article.title %>" class="icon-tw-round-primary mx-1"></a>
+        <a data-social-sharer="telegram" class="icon-tg-round-primary mx-1"></a>
       </div>
     </div>
   </div>

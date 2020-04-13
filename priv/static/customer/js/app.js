@@ -963,7 +963,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     });
   }
 });
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   $(".bc-header__nav .dropdown").on("shown.bs.dropdown", function (e) {
     window.innerWidth < 540 && $(e.target).prevAll().hide();
   });
@@ -977,33 +977,33 @@ document.addEventListener('DOMContentLoaded', function () {
   $(".bc-header__search__close").bind("click", function (e) {
     $(".bc-header__search__icon").show(), $(".bc-header__nav").show(), $(".bc-header__search").removeClass("w-100").addClass("w-auto"), $(".bc-header__search__box").removeClass("d-inline-flex").addClass("d-none"), $(".bc-header__search__icon").removeClass("px-0").addClass("pr-0"), $(e.delegateTarget).hasClass("bc-header__search__close_mobile") && ($(e.delegateTarget).parent().parent().prevAll().show(), $(e.delegateTarget).parent().nextAll().show(), $(e.delegateTarget).parent().parent().removeClass("w-100")), $(void 0).hide();
   });
-  $('.js-marquee').marquee({
+  $(".js-marquee").marquee({
     duration: 4e4,
     gap: 0,
     delayBeforeStart: 0,
     direction: "left",
     duplicated: !0
   });
-  var $main = document.querySelector('.js-article-list');
-  var $scrollButtonContainer = document.querySelector('.js-scroll-button-container');
-  var $scrollButton = document.querySelector('.js-scroll-button');
-  $scrollButton && $scrollButton.addEventListener('click', pagination);
+  var $main = document.querySelector(".js-article-list");
+  var $scrollButtonContainer = document.querySelector(".js-scroll-button-container");
+  var $scrollButton = document.querySelector(".js-scroll-button");
+  $scrollButton && $scrollButton.addEventListener("click", pagination);
 
   function pagination(event) {
     var _event$currentTarget$ = event.currentTarget.dataset,
         scroll = _event$currentTarget$.scroll,
         date = _event$currentTarget$.date;
     var url = "".concat(location.pathname, "?scroll=").concat(scroll, "&last_date=").concat(date);
-    var $button = document.querySelector('.container.px-0.pb-5');
+    var $button = document.querySelector(".container.px-0.pb-5");
     fetch(url).then(function (response) {
-      var scroll = response.headers.get('x-pagination-scroll');
-      var date = response.headers.get('x-last-date');
+      var scroll = response.headers.get("x-pagination-scroll");
+      var date = response.headers.get("x-last-date");
 
       if (!!scroll) {
-        $scrollButton.setAttribute('data-scroll', scroll);
-        $scrollButton.setAttribute('data-date', date);
+        $scrollButton.setAttribute("data-scroll", scroll);
+        $scrollButton.setAttribute("data-date", date);
       } else {
-        $scrollButton.removeEventListener('click', pagination);
+        $scrollButton.removeEventListener("click", pagination);
         $scrollButtonContainer.remove();
       }
 
@@ -1016,10 +1016,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  var $currencyConverterInputField = document.querySelector('.js-currency-converter-input');
-  var $currencyConverterOutputField = document.querySelector('.js-currency-converter-output');
-  var $cryptoCurrencySelect = document.querySelector('.js-crypto-currency-select');
-  var $financeCurrencySelect = document.querySelector('.js-finance-currency-select');
+  var $currencyConverterInputField = document.querySelector(".js-currency-converter-input");
+  var $currencyConverterOutputField = document.querySelector(".js-currency-converter-output");
+  var $cryptoCurrencySelect = document.querySelector(".js-crypto-currency-select");
+  var $financeCurrencySelect = document.querySelector(".js-finance-currency-select");
 
   if ($cryptoCurrencySelect && $financeCurrencySelect && $currencyConverterOutputField && $currencyConverterInputField) {
     var setCurrency = function setCurrency() {
@@ -1037,11 +1037,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setCurrency($currencyConverterInputField.value);
     Array.from([$cryptoCurrencySelect, $financeCurrencySelect]).forEach(function (select) {
-      return select.addEventListener('change', function () {
+      return select.addEventListener("change", function () {
         setCurrency();
       });
     });
-    $currencyConverterInputField.addEventListener('input', function () {
+    $currencyConverterInputField.addEventListener("input", function () {
       setCurrency();
     });
   }
@@ -1049,15 +1049,150 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function parseHTML(string) {
   var context = document.implementation.createHTMLDocument();
-  var base = context.createElement('base');
+  var base = context.createElement("base");
   base.href = document.location.href;
   context.head.appendChild(base);
   context.body.innerHTML = string;
   return context.body.children;
 }
+
+(function (window, document) {
+  var Sharer = function Sharer(el) {
+    this.el = el;
+  };
+
+  Sharer.init = function () {
+    var selectors = document.querySelectorAll("[data-social-sharer]");
+    var length = selectors.length;
+
+    for (var i = 0; i < length; i++) {
+      selectors[i].addEventListener("click", Sharer.add);
+
+      if (selectors[i].tagName === "A") {
+        selectors[i].setAttribute("target", "_blank");
+      }
+    }
+  };
+
+  Sharer.add = function (el) {
+    var target = el.currentTarget || el.srcElement;
+    var sharer = new Sharer(target);
+    sharer.share();
+  };
+
+  Sharer.prototype = {
+    constructor: Sharer,
+    getValue: function getValue(attr) {
+      var val = this.el.getAttribute("data-" + attr);
+
+      if (val && attr === "hashtag") {
+        if (!val.startsWith("#")) {
+          val = "#" + val;
+        }
+      }
+
+      return val;
+    },
+    share: function share() {
+      var sharer = this.getValue("social-sharer").toLowerCase();
+      var sharers = {
+        facebook: {
+          url: "https://www.facebook.com/sharer/sharer.php",
+          params: {
+            u: this.getValue("url") || location.href,
+            hashtag: this.getValue("hashtag")
+          },
+          isLink: true
+        },
+        twitter: {
+          url: "https://twitter.com/intent/tweet/",
+          params: {
+            text: this.getValue("title"),
+            url: this.getValue("url") || location.href,
+            hashtags: this.getValue("hashtags"),
+            via: this.getValue("via")
+          },
+          isLink: true
+        },
+        telegram: {
+          url: this.getValue("web") !== null ? "https://telegram.me/share" : "tg://msg_url",
+          params: {
+            text: this.getValue("title"),
+            url: this.getValue("url") || location.href,
+            to: this.getValue("to")
+          },
+          isLink: true
+        },
+        vk: {
+          url: "http://vk.com/share.php",
+          params: {
+            url: this.getValue("url") || location.href,
+            title: this.getValue("title"),
+            description: this.getValue("caption"),
+            image: this.getValue("image")
+          },
+          isLink: true
+        }
+      };
+      var social = sharers[sharer];
+
+      if (social) {
+        social.width = this.getValue("width");
+        social.height = this.getValue("height");
+      }
+
+      return social !== undefined ? this.urlSharer(social) : false;
+    },
+    urlSharer: function urlSharer(sharer) {
+      var p = sharer.params || {},
+          keys = Object.keys(p),
+          i,
+          str = keys.length > 0 ? "?" : "";
+
+      for (i = 0; i < keys.length; i++) {
+        if (str !== "?") {
+          str += "&";
+        }
+
+        if (p[keys[i]]) {
+          str += keys[i] + "=" + encodeURIComponent(p[keys[i]]);
+        }
+      }
+
+      sharer.url += str;
+
+      if (!sharer.isLink) {
+        var popWidth = sharer.width || 600,
+            popHeight = sharer.height || 480,
+            left = window.innerWidth / 2 - popWidth / 2 + window.screenX,
+            top = window.innerHeight / 2 - popHeight / 2 + window.screenY,
+            popParams = "scrollbars=no, width=" + popWidth + ", height=" + popHeight + ", top=" + top + ", left=" + left,
+            newWindow = window.open(sharer.url, "", popParams);
+
+        if (window.focus) {
+          newWindow.focus();
+        }
+      } else {
+        window.open(sharer.url);
+      }
+    }
+  };
+
+  if (document.readyState === "complete" || document.readyState !== "loading") {
+    Sharer.init();
+  } else {
+    document.addEventListener("DOMContentLoaded", Sharer.init);
+  } // turbolinks 3 compatibility
+
+
+  window.addEventListener("page:load", Sharer.init); // turbolinks 5 compatibility
+
+  window.addEventListener("turbolinks:load", Sharer.init);
+  window.Sharer = Sharer;
+})(window, document);
 });
 
-;require.register("___globals___", function(exports, require, module) {
+require.register("___globals___", function(exports, require, module) {
   
 });})();require('___globals___');
 
