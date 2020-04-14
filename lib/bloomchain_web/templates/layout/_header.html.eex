@@ -19,7 +19,7 @@
         </div>
         <div class="bc-header__converter__equal mx-4">=</div>
         <div class="bc-header__converter__currency align-items-center">
-          <span class="bc-header__converter__value js-currency-converter-output"></span>
+          <input type="text" readonly class="bc-header__converter__value js-currency-converter-output"></input>
           <div class="input-group ml-1">
             <select class="select js-finance-currency-select">
               <option value="USD" selected>USD</option>

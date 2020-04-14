@@ -14,6 +14,21 @@ defmodule BloomchainWeb.ErrorView do
 
   def meta("not_found.html", :keywords, _assigns), do: ""
 
+
+  def meta("not_found.html", :og_url, _assigns), do: ""
+
+  def meta("not_found.html", :og_type, _assigns), do: ""
+
+  def meta("not_found.html", :og_title, _assigns), do: ""
+
+  def meta("not_found.html", :og_description, _assigns), do: ""
+
+  def meta("not_found.html", :og_image, _assigns), do: ""
+
+  def meta("not_found.html", :og_image_width, _assigns), do: ""
+
+  def meta("not_found.html", :og_image_height, _assigns), do: ""
+
   def render("404.html", assigns) do
     render(
       __MODULE__,

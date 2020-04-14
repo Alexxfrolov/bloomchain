@@ -7133,7 +7133,7 @@ html.lb-disable-scrolling {
         display: flex; }
       .bc-header__converter__input {
         text-align: right;
-        padding: 0;
+        padding: 0 10px;
         border: none;
         border-bottom: 1px solid transparent;
         transition: none;
@@ -7149,15 +7149,20 @@ html.lb-disable-scrolling {
           outline: none;
           border-bottom: 1px solid #ced4da; }
       .bc-header__converter__value {
+        padding: 0 10px;
         display: inline-flex;
-        width: 60px;
+        width: 100%;
+        max-width: 80px;
         text-align: right;
-        padding: 0;
         border: none;
-        border-bottom: 1px solid transparent;
         transition: none;
         font-size: 14px;
-        font-weight: 600; }
+        font-weight: 600;
+        line-height: 1;
+      }
+      .bc-header__converter__value:active {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
       .bc-header__converter__equal {
         color: #838383; }
       .bc-header__converter__select {
@@ -10248,4 +10253,17 @@ html.lb-disable-scrolling {
 
 .line-clamp__size_3 {
   -webkit-line-clamp: 3;
+}
+
+* {
+  outline: none;
+}
+
+*:focus-visible  {
+  outline: 1px solid blue;
+}
+
+input:focus-visible,
+input:focus-within {
+  background-color: red;
 }

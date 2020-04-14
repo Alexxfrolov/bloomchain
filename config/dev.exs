@@ -8,8 +8,8 @@ use Mix.Config
 # with brunch.io to recompile .js and .css sources.
 config :bloomchain, BloomchainWeb.Endpoint,
   http: [port: 4000],
-  debug_errors: false,
-  code_reloader: false,
+  debug_errors: true,
+  code_reloader: true,
   check_origin: false,
   watchers: [
     yarn: ["watch", cd: Path.expand("../lib/bloomchain_web/client", __DIR__)]
