@@ -35,10 +35,10 @@
       <div class="d-flex align-items-center mt-4">
         <a class="btn btn-link font-weight-medium pl-0" onClick="window.history.back()">&larr; Назад</a>
         <span class="small ml-auto mr-1">Поделиться:</span>
-        <a data-social-sharer="vk" class="icon-vk-round-primary mx-1"></a>
-        <a data-social-sharer="facebook" class="icon-fb-round-primary mx-1"></a>
-        <a data-social-sharer="twitter" data-title="<%= @article.title %>" class="icon-tw-round-primary mx-1"></a>
-        <a data-social-sharer="telegram" class="icon-tg-round-primary mx-1"></a>
+        <a data-social-share="vk" class="icon-vk-round-primary mx-1"></a>
+        <a data-social-share="facebook" class="icon-fb-round-primary mx-1"></a>
+        <a data-social-share="twitter" data-title="<%= @article.title %>" class="icon-tw-round-primary mx-1"></a>
+        <a data-social-share="telegram" data-title="<%= @article.title %>" class="icon-tg-round-primary mx-1"></a>
       </div>
     </div>
   </div>

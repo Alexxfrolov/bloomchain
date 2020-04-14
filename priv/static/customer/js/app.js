@@ -1062,7 +1062,7 @@ function parseHTML(string) {
   };
 
   Sharer.init = function () {
-    var selectors = document.querySelectorAll("[data-social-sharer]");
+    var selectors = document.querySelectorAll("[data-social-share]");
     var length = selectors.length;
 
     for (var i = 0; i < length; i++) {
@@ -1094,7 +1094,7 @@ function parseHTML(string) {
       return val;
     },
     share: function share() {
-      var sharer = this.getValue("social-sharer").toLowerCase();
+      var sharer = this.getValue("social-share").toLowerCase();
       var sharers = {
         facebook: {
           url: "https://www.facebook.com/sharer/sharer.php",
@@ -1144,12 +1144,11 @@ function parseHTML(string) {
       return social !== undefined ? this.urlSharer(social) : false;
     },
     urlSharer: function urlSharer(sharer) {
-      var p = sharer.params || {},
-          keys = Object.keys(p),
-          i,
-          str = keys.length > 0 ? "?" : "";
+      var p = sharer.params || {};
+      var keys = Object.keys(p);
+      var str = keys.length > 0 ? "?" : "";
 
-      for (i = 0; i < keys.length; i++) {
+      for (var i = 0; i < keys.length; i++) {
         if (str !== "?") {
           str += "&";
         }
