@@ -47,7 +47,7 @@ export const config = {
       buttonsVisible: 3,
     },
     moreMisc: {
-      buttons: ["undo", "redo"],
+      buttons: ["undo", "redo", "embedly"],
       align: "right",
       buttonsVisible: 3,
     },
@@ -61,7 +61,7 @@ export const config = {
   imageManagerDeleteParams: "",
   videoAllowedTypes: ["mp4", "avi"],
   events: {
-    "image.beforeUpload": function(fileList: FileList) {
+    "image.beforeUpload": function (fileList: FileList) {
       const uploadImage = async () => {
         const image = {
           file: fileList[0],
@@ -77,7 +77,7 @@ export const config = {
 
       return false
     },
-    "video.beforeUpload": function(fileList: FileList) {
+    "video.beforeUpload": function (fileList: FileList) {
       const uploadVideo = async () => {
         const data = {
           file: fileList[0],
