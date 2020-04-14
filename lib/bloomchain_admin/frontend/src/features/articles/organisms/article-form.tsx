@@ -19,6 +19,7 @@ import {
   FormHelperText,
   MenuItem,
   Button,
+  Input,
   makeStyles,
   createStyles,
 } from "@material-ui/core"
@@ -42,18 +43,24 @@ const useStyles = makeStyles(() =>
   }),
 )
 
-const INITIAL_ARTICLE: Article = {
+const INITIAL_ARTICLE: Omit<Article, "id"> & { id: null | number } = {
   authors: [],
   body: null,
   cover: null,
   created_at: null,
-  description: null,
   id: null,
-  keywords: [],
   lead: null,
   published_at: null,
   status: "draft",
   tags: [],
+  seo_settings: {
+    description: "",
+    keywords: [],
+    og_type: "article",
+    og_title: "",
+    og_description: "",
+    og_image: "",
+  },
   time: null,
   title: "",
   type: "newsfeed",
@@ -62,7 +69,7 @@ const INITIAL_ARTICLE: Article = {
 
 type ArticleFormProps = {
   authors: Author[]
-  initialArticle?: Article
+  initialArticle?: Omit<Article, "id"> & { id: null | number }
   tags: Tag[]
   onSubmit: (article: Article) => void
 }
@@ -76,7 +83,9 @@ export const ArticleForm = ({
 }: ArticleFormProps) => {
   const classes = useStyles()
 
-  const [article, setArticle] = useState<Article>({ ...initialArticle })
+  const [article, setArticle] = useState<
+    Omit<Article, "id"> & { id: null | number }
+  >({ ...initialArticle })
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
   const [submitted, setSubmitted] = useState(false)
 
@@ -105,19 +114,6 @@ export const ArticleForm = ({
     [article, setArticle],
   )
 
-  // const handleChangeCoverField = useCallback(
-  //   (field: string) => (event: SyntheticEvent<{ value: string }>) => {
-  //     setArticle({
-  //       ...article,
-  //     })
-  //     setImage({
-  //       ...image,
-  //       [field]: event.currentTarget.value,
-  //     })
-  //   },
-  //   [],
-  // )
-
   const handleChangeEditor = useCallback(
     (value: string) => {
       setArticle({ ...article, ...{ body: value } })
@@ -130,6 +126,21 @@ export const ArticleForm = ({
       setArticle({
         ...article,
         published_at: date,
+      })
+    },
+    [article, setArticle],
+  )
+
+  const seoSettingsChangeHandler = useCallback(
+    (field: keyof Article["seo_settings"]) => (
+      event: SyntheticEvent<{ value: string }>,
+    ) => {
+      setArticle({
+        ...article,
+        seo_settings: {
+          ...article.seo_settings,
+          [field]: event.currentTarget.value,
+        },
       })
     },
     [article, setArticle],
@@ -311,31 +322,94 @@ export const ArticleForm = ({
           </FormControl>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <Typography color="textPrimary" variant="h6" component="h6">
-              Мета информация
+              SEO настройки
             </Typography>
           </FormControl>
-          <FormControl margin="normal" fullWidth={true} variant="outlined">
+          <FormControl margin="normal" fullWidth={true}>
             <TextField
               id="keywords"
               label="Keywords"
-              value={article.keywords}
+              value={article.seo_settings.keywords}
               fullWidth={true}
               variant="outlined"
-              onChange={handleChangeFormField("keywords")}
+              onChange={seoSettingsChangeHandler("keywords")}
             />
             <FormHelperText variant="filled">
-              Разделяйте слова запятыми или пробелами
+              Разделяйте слова запятыми или пробелами. По умолчанию тэги статьи.
             </FormHelperText>
           </FormControl>
-          <TextField
-            id="description"
-            label="Description"
-            value={article.description ?? ""}
-            fullWidth={true}
-            margin="normal"
-            variant="outlined"
-            onChange={handleChangeFormField("description")}
-          />
+          <FormControl margin="normal" fullWidth={true}>
+            <TextField
+              id="description"
+              label="Description"
+              value={article.seo_settings.description ?? ""}
+              inputProps={{ maxLength: 255 }}
+              fullWidth={true}
+              margin="normal"
+              variant="outlined"
+              onChange={seoSettingsChangeHandler("description")}
+            />
+            <FormHelperText variant="filled">
+              Не более 255 символов. По умолчанию лид статьи.
+            </FormHelperText>
+          </FormControl>
+          <FormControl margin="normal" fullWidth={true}>
+            <TextField
+              id="description"
+              label="og:type"
+              value={article.seo_settings.og_type}
+              fullWidth={true}
+              margin="normal"
+              variant="outlined"
+              onChange={seoSettingsChangeHandler("og_type")}
+            />
+            <FormHelperText variant="filled">
+              По умолчанию article.
+            </FormHelperText>
+          </FormControl>
+          <FormControl margin="normal" fullWidth={true}>
+            <TextField
+              id="description"
+              label="og:title"
+              value={article.seo_settings.og_title ?? ""}
+              fullWidth={true}
+              margin="normal"
+              variant="outlined"
+              onChange={seoSettingsChangeHandler("og_title")}
+            />
+            <FormHelperText variant="filled">
+              По умолчанию заголовок статьи.
+            </FormHelperText>
+          </FormControl>
+          <FormControl margin="normal" fullWidth={true}>
+            <TextField
+              id="description"
+              label="og:description"
+              value={article.seo_settings.og_description ?? ""}
+              inputProps={{ maxLength: 255 }}
+              fullWidth={true}
+              margin="normal"
+              variant="outlined"
+              onChange={seoSettingsChangeHandler("og_description")}
+            />
+            <FormHelperText variant="filled">
+              Не более 255 символов. По умолчанию лид статьи.
+            </FormHelperText>
+          </FormControl>
+          <FormControl margin="normal" fullWidth={true}>
+            <TextField
+              id="description"
+              label="og:image"
+              value={article.seo_settings.og_image ?? ""}
+              fullWidth={true}
+              margin="normal"
+              variant="outlined"
+              onChange={seoSettingsChangeHandler("og_image")}
+            />
+            <FormHelperText variant="filled">
+              По умолчанию превью статьи.
+            </FormHelperText>
+          </FormControl>
         </Grid>
         <Grid item={true} md={12} lg={4}>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
@@ -360,40 +434,6 @@ export const ArticleForm = ({
               />
             </FormControl>
           )}
-          {/* {article.cover && (
-            <Fragment>
-              <TextField
-                id="title"
-                label="Заголовок"
-                value={article.cover?.title ?? ""}
-                fullWidth={true}
-                margin="normal"
-                variant="outlined"
-                size="small"
-                onChange={handleChangeCoverField("title")}
-              />
-              <TextField
-                id="alt"
-                label="Атрибут alt"
-                value={article.cover?.alt ?? ""}
-                fullWidth={true}
-                margin="normal"
-                variant="outlined"
-                size="small"
-                onChange={handleChangeCoverField("alt")}
-              />
-              <TextField
-                id="source"
-                label="Подпись"
-                value={article.cover?.source ?? ""}
-                fullWidth={true}
-                margin="normal"
-                variant="outlined"
-                size="small"
-                onChange={handleChangeCoverField("source")}
-              />
-            </Fragment>
-          )} */}
           <FormControl margin="normal" variant="outlined" fullWidth={true}>
             <InputLabel ref={inputStatusLabel} id="type">
               Статус
