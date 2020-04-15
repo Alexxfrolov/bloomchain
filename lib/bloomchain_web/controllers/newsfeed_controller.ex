@@ -9,7 +9,7 @@ defmodule BloomchainWeb.NewsfeedController do
     |> put_resp_header("x-pagination-scroll", to_string(meta.after))
     |> put_resp_header("x-last-date", to_string(group(articles) |> Map.keys() |> Enum.min()))
     |> put_layout(false)
-    |> render("_articles_block.html", articles: group(articles), previous_date: last_date)
+    |> render("_article_block.html", articles: group(articles), previous_date: last_date)
   end
 
   def index(conn, _params) do
