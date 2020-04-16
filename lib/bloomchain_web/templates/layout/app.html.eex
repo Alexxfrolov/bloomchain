@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title><%= @view_module.title(@view_template, assigns) %></title>
-    <meta name="keywords" content="<%= @view_module.meta(@view_template, :keywords, assigns) %>" >
-    <meta name="description" content="<%= @view_module.meta(@view_template, :description, assigns) %>" >
+    <title><%= title(assigns) %></title>
+    <meta name="keywords" content="<%= meta(:keywords, assigns) %>" >
+    <meta name="description" content="<%= meta(:description, assigns) %>" >
     <link rel="icon" type="image/png" href="<%= static_path(@conn, "/customer/favicon-huge.ico") %>">
 
     <link href="https://fonts.gstatic.com" crossorigin="" rel="preconnect">
@@ -27,13 +27,13 @@
     <meta name="twitter:image" content=""> %>
 
     <meta property="og:site_name" content="Bloomсhain">
-    <meta property="og:type" content="<%= @view_module.meta(@view_template, :og_type, assigns) %>" >
-    <meta property="og:url" content="<%= @view_module.meta(@view_template, :og_url, assigns) %>" >
-    <meta property="og:title" content="<%= @view_module.meta(@view_template, :og_title, assigns) %>">
-    <meta property="og:description" content="<%= @view_module.meta(@view_template, :og_description, assigns) %>" >
-    <meta property="og:image" content="<%= @view_module.meta(@view_template, :og_image, assigns) %>" >
-    <meta property="og:image:width" content="<%= @view_module.meta(@view_template, :og_image_width, assigns) %>">
-    <meta property="og:image:height" content="<%= @view_module.meta(@view_template, :og_image_height, assigns) %>" >
+    <meta property="og:type" content="<%= meta(:og_type, assigns) %>" >
+    <meta property="og:url" content="<%= meta(:og_url, assigns) %>" >
+    <meta property="og:title" content="<%= meta(:og_title, assigns) %>">
+    <meta property="og:description" content="<%= meta(:og_description, assigns) %>" >
+    <meta property="og:image" content="<%= meta(:og_image, assigns) %>" >
+    <meta property="og:image:width" content="<%= meta(:og_image_width, assigns) %>">
+    <meta property="og:image:height" content="<%= meta(:og_image_height, assigns) %>" >
 
     <meta name="format-detection" content="telephone=no">
   </head>

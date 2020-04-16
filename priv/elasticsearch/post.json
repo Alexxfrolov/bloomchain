@@ -53,6 +53,10 @@
           "properties": {
           }
         },
+        "seo_settings": {
+          "type": "object",
+          "properties": {}
+        },
         "tags": {
           "type": "object",
           "properties": {

@@ -15,7 +15,13 @@ defmodule BloomchainWeb.CalendarController do
   def index(conn, _params) do
     %{entries: articles, metadata: meta} = Article.paginate("calendar")
 
-    render(conn, "index.html", articles: articles, meta: meta)
+    render(conn, "index.html",
+      articles: articles,
+      meta: meta,
+      title: "Календарь событий в сфере блокчейна и криптовалют — Bloomchain",
+      description:
+        "Календарь предстоящих событий в сфере криптовалют и блокчейна. Следите за ближайшими событиями в криптовалютном мире на Блумчейн.ру."
+    )
   end
 
   def show(conn, %{slug: slug}) do

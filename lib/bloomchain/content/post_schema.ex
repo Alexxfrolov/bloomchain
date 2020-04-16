@@ -12,17 +12,22 @@ defmodule Bloomchain.Content.Post do
 
   @derive {Phoenix.Param, key: :slug}
 
+  def fetch(term, key) do
+    term
+    |> Map.from_struct()
+    |> Map.fetch(key)
+  end
+
   schema "posts" do
-    field(:slug, :string, unique: true)
+    field(:slug, :string)
     field(:title, :string)
     field(:body, :string)
     field(:lead, :string)
     field(:type, :string)
-    field(:keywords, {:array, :string})
-    field(:description, :string)
     field(:status, :string)
     field(:time, :integer)
     field(:total_views, :integer)
+    field(:seo_settings, :map)
 
     # belongs_to(:user, User)
     belongs_to(:cover, Media, foreign_key: :cover_id)
@@ -48,7 +53,7 @@ defmodule Bloomchain.Content.Post do
   end
 
   @required_fields ~w(title type)a
-  @optional_fields ~w( body lead type status time description keywords cover_id published_at)a
+  @optional_fields ~w( body lead type status time cover_id published_at seo_settings)a
 
   def changeset(post, attrs) do
     post

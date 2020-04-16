@@ -15,7 +15,13 @@ defmodule BloomchainWeb.ResearchController do
   def index(conn, _params) do
     %{entries: articles, metadata: meta} = Article.paginate("research")
 
-    render(conn, "index.html", articles: articles, meta: meta)
+    render(conn, "index.html",
+      articles: articles,
+      meta: meta,
+      title: "Исследования — Bloomchain",
+      description:
+        "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
+    )
   end
 
   def show(conn, %{slug: slug}) do

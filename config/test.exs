@@ -14,7 +14,7 @@ config :bloomchain, Bloomchain.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: System.get_env("DB_USER"),
   password: System.get_env("DB_PASSWORD"),
-  database: System.get_env("DB_NAME") || 'bloomchain_dev',
+  database: System.get_env("DB_NAME") || 'bloomchain_test',
   hostname: System.get_env("DB_HOST") || 'localhost',
   port: System.get_env("DB_PORT") || 5432,
   pool: Ecto.Adapters.SQL.Sandbox

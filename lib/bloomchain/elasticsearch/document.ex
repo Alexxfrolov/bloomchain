@@ -10,8 +10,6 @@ defimpl Elasticsearch.Document, for: Bloomchain.Content.Post do
       body: post.body,
       lead: post.lead,
       type: post.type,
-      keywords: post.keywords,
-      description: post.description,
       status: post.status,
       time: post.time,
       total_views: post.total_views,
@@ -20,7 +18,8 @@ defimpl Elasticsearch.Document, for: Bloomchain.Content.Post do
       updated_at: post.updated_at,
       cover: do_cover(post),
       authors: do_authors(post),
-      tags: do_tags(post)
+      tags: do_tags(post),
+      seo_settings: post.seo_settings
     }
   end
 

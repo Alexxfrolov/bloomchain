@@ -13,6 +13,11 @@ defmodule BloomchainWeb.ArchiveController do
       |> Repo.all()
       |> Repo.preload([:cover, :pdf])
 
-    render(conn, "index.html", data: data)
+    render(conn, "index.html",
+      data: data,
+      title: "Исследования — Bloomchain",
+      description:
+        "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
+    )
   end
 end

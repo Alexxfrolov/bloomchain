@@ -43,8 +43,9 @@ defmodule Bloomchain.Mixfile do
       {:plug_cowboy, "~> 2.0"},
       {:better_params, "~> 0.5.0"},
 
-      # http requests
+      # json serializer
       {:httpoison, "~> 1.6"},
+      {:jason, "~> 1.1"},
 
       # User authentication
       {:guardian, "~> 1.0"},
