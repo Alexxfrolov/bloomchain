@@ -15,7 +15,13 @@ defmodule BloomchainWeb.NewsfeedController do
   def index(conn, _params) do
     %{entries: articles, metadata: meta} = Article.paginate("newsfeed")
 
-    render(conn, "index.html", articles: group(articles), meta: meta)
+    render(conn, "index.html",
+      articles: group(articles),
+      meta: meta,
+      title: "Все новости о криптовалютах, блокчейне и финтехе",
+      description:
+        "Горячие новости мира криптовалют, блокчейн-технологий и финтеха. Последние новости и экспертные комментарии на портале Блумчейн.ру."
+    )
   end
 
   def show(conn, %{slug: slug}) do

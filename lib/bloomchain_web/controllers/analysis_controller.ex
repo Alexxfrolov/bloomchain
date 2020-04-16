@@ -15,7 +15,13 @@ defmodule BloomchainWeb.AnalysisController do
   def index(conn, _params) do
     %{entries: articles, metadata: meta} = Article.paginate("analysis")
 
-    render(conn, "index.html", articles: articles, meta: meta)
+    render(conn, "index.html",
+      articles: articles,
+      meta: meta,
+      title: "Биткоин к доллару | График BTC/USD | Анализ криптовалют | Статистика)",
+      description:
+        "График биткоина к доллару (BTC/USD) на сегодня. Технический анализ криптовалют bitcoin, ethereum, ripple и других от специалистов рынка на портале Блумчейн.ру. Криптовалютная статистика, аналитика, мнения экспертов."
+    )
   end
 
   def show(conn, %{slug: slug}) do

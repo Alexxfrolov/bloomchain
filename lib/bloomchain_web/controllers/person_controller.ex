@@ -15,7 +15,13 @@ defmodule BloomchainWeb.PersonController do
   def index(conn, _params) do
     %{entries: articles, metadata: meta} = Article.paginate("person")
 
-    render(conn, "index.html", articles: articles, meta: meta)
+    render(conn, "index.html",
+      articles: articles,
+      meta: meta,
+      title: "Люди из мира криптовалют, блокчейна и финтеха",
+      description:
+        "Последние новости о людях из мира криптовалют, блокчейна и финтеха. Аналитические статьи, комментарии экспертов на сайте Блумчейн.ру."
+    )
   end
 
   def show(conn, %{slug: slug}) do

@@ -4,43 +4,6 @@ defmodule BloomchainWeb.PageView do
   alias BloomchainWeb.Uploaders.File
   alias BloomchainWeb.SharedView
 
-  def title("index.html", _assigns),
-    do:
-      "Bloomchain — Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
-
-  def meta("index.html", :description, _assigns),
-    do: "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
-
-  def meta("index.html", :keywords, _assigns), do: ""
-
-  def meta("index.html", :og_url, _assigns), do: ""
-
-  def meta("show.html", :og_url, assigns), do: ""
-
-  def meta("index.html", :og_type, _assigns), do: ""
-
-  def meta("show.html", :og_type, assigns), do: ""
-
-  def meta("index.html", :og_title, _assigns), do: ""
-
-  def meta("show.html", :og_title, assigns), do: ""
-
-  def meta("index.html", :og_description, _assigns), do: ""
-
-  def meta("show.html", :og_description, assigns), do: ""
-
-  def meta("index.html", :og_image, _assigns), do: ""
-
-  def meta("show.html", :og_image, assigns), do: ""
-
-  def meta("index.html", :og_image_width, _assigns), do: ""
-
-  def meta("show.html", :og_image_width, assigns), do: ""
-
-  def meta("index.html", :og_image_height, _assigns), do: ""
-
-  def meta("show.html", :og_image_height, assigns), do: ""
-
   def render_main_article(nil, conn: _, path: _), do: ""
 
   def render_main_article(item, conn: _conn, path: path) do
@@ -61,7 +24,9 @@ defmodule BloomchainWeb.PageView do
     content_tag(:div) do
       [
         link(item.title, to: path, class: "bc-article__heading line-clamp line-clamp__size_3"),
-        content_tag(:p, item.lead, class: "bc-article__paragraph mt-1 line-clamp line-clamp__size_3"),
+        content_tag(:p, item.lead,
+          class: "bc-article__paragraph mt-1 line-clamp line-clamp__size_3"
+        ),
         content_tag(:div, class: "d-flex align-items-center mt-3") do
           do_article_attrs(item)
         end
@@ -80,7 +45,8 @@ defmodule BloomchainWeb.PageView do
         link(
           item.title,
           to: newsfeed_path(conn, :show, item.slug),
-          class: "bc-news__title bc-article__heading font-weight-medium line-clamp line-clamp__size_2"
+          class:
+            "bc-news__title bc-article__heading font-weight-medium line-clamp line-clamp__size_2"
         )
       ]
     end

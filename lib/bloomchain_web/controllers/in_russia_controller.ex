@@ -15,7 +15,13 @@ defmodule BloomchainWeb.InRussiaController do
   def index(conn, _params) do
     %{entries: articles, metadata: meta} = Article.paginate("in_russia")
 
-    render(conn, "index.html", articles: articles, meta: meta)
+    render(conn, "index.html",
+      articles: articles,
+      meta: meta,
+      title: "Новости блокчейна и криптовалют в России - Bloomchain",
+      description:
+        "Читайте эксклюзивные новости о блокчейне и криптовалютах в России. Аналитические статьи, исследования, комментарии экспертов на Блумчейн.ру."
+    )
   end
 
   def show(conn, %{slug: slug}) do
