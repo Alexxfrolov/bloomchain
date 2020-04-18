@@ -4,13 +4,14 @@ defmodule Bloomchain.Repo do
     adapter: Ecto.Adapters.Postgres
 
   use Paginator
-
+  require Ecto.Query
   alias Bloomchain.Repo
 
   @doc """
   Dynamically loads the repository url from the
   DATABASE_URL environment variable.
   """
+
   def init(_, opts) do
     {:ok, Keyword.put(opts, :url, System.get_env("DATABASE_URL"))}
   end
@@ -21,5 +22,10 @@ defmodule Bloomchain.Repo do
     |> Stream.flat_map(fn chunk ->
       Repo.preload(chunk, preloads)
     end)
+  end
+
+  def q_sort_by(query, sort_params) do
+    query
+    |> Ecto.Query.order_by(^sort_params)
   end
 end

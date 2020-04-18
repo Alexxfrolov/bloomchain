@@ -1,14 +1,14 @@
 defmodule BloomchainWeb.Admin.Api.V1.TagController do
   use BloomchainWeb, :controller
-
-  require Ecto.Query
-
+  import Bloomchain.Plug.ValidParams
   alias Bloomchain.{Repo, Content.Tag}
+
+  plug :valid_sort_params when action in [:index]
 
   def index(conn, _params) do
     tags =
       Tag
-      |> Ecto.Query.order_by(desc: :inserted_at)
+      |> Repo.q_sort_by(conn.assigns.sort_params)
       |> Repo.all()
 
     render(conn, "index.json", tags: tags)

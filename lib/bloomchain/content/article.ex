@@ -30,62 +30,19 @@ defmodule Bloomchain.Content.Article do
     )
   end
 
-  def get_posts_list(type, status) do
-    Repo.all(
-      from(
-        p in Post,
-        where: p.type == ^type and p.status == ^status,
-        preload: [:tags, :authors],
-        order_by: [desc: :inserted_at]
-      )
-    )
-  end
+  def get_posts_list(type, status, filter_params \\ %{}, sort_params \\ [desc: :inserted_at]) do
+    since = filter_params[:since] || ~N[2000-01-01 00:00:00]
+    until = filter_params[:until] || DateTime.utc_now()
 
-  def get_posts_list(type, status, since: since, until: until) do
-    Repo.all(
-      from(
-        p in Post,
-        where:
-          p.type == ^type and p.status == ^status and p.inserted_at >= ^since and
-            p.inserted_at < ^until,
-        preload: [:tags, :authors],
-        order_by: [desc: :inserted_at]
-      )
+    from(
+      p in Post,
+      where:
+        p.type == ^type and p.status == ^status and p.inserted_at >= ^since and
+          p.inserted_at < ^until,
+      preload: [:tags, :authors],
+      order_by: ^sort_params
     )
-  end
-
-  def get_posts_list(type, status, since: since) do
-    Repo.all(
-      from(
-        p in Post,
-        where: p.type == ^type and p.status == ^status and p.inserted_at >= ^since,
-        preload: [:tags, :authors],
-        order_by: [desc: :inserted_at]
-      )
-    )
-  end
-
-  def get_posts_list(type, status, until: until) do
-    Repo.all(
-      from(
-        p in Post,
-        where: p.type == ^type and p.status == ^status and p.inserted_at < ^until,
-        preload: [:tags, :authors],
-        order_by: [desc: :inserted_at]
-      )
-    )
-  end
-
-  def get_published_posts(type, limit: limit) do
-    Repo.all(
-      from(
-        p in Post,
-        where: p.type == ^type and p.status == "published",
-        preload: [:cover, :authors],
-        order_by: [desc: :published_at],
-        limit: ^limit
-      )
-    )
+    |> Repo.all()
   end
 
   def get!(id) do

@@ -1,7 +1,6 @@
 defmodule BloomchainWeb.Admin.Api.V1.UserController do
   use BloomchainWeb, :controller
-
-  require Ecto.Query
+  import Bloomchain.Plug.ValidParams
 
   alias Bloomchain.{Repo, Content.User, Content.Author}
   alias Bloomchain.Auth.Account
@@ -9,7 +8,7 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
   def index(conn, _params) do
     users =
       User
-      |> Ecto.Query.order_by(desc: :inserted_at)
+      |> Repo.q_sort_by(conn.assigns.sort_params)
       |> Repo.all()
 
     render(conn, "index.json", users: users)

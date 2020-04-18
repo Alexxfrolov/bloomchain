@@ -1,14 +1,15 @@
 defmodule BloomchainWeb.Admin.Api.V1.ArchiveController do
   use BloomchainWeb, :controller
-
-  require Ecto.Query
+  import Bloomchain.Plug.ValidParams
 
   alias Bloomchain.{Repo, Content.Archive}
+
+  plug :valid_sort_params when action in [:index]
 
   def index(conn, _params) do
     archives =
       Archive
-      |> Ecto.Query.order_by(desc: :inserted_at)
+      |> Repo.q_sort_by(conn.assigns.sort_params)
       |> Repo.all()
       |> Repo.preload([:cover, :pdf])
 

@@ -1,18 +1,18 @@
 defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
   use BloomchainWeb, :controller
 
+  import Bloomchain.Plug.ValidParams
+
   alias Bloomchain.Repo
   alias Bloomchain.Content.Article
   alias BloomchainWeb.ErrorView
 
+  plug :valid_filters when action in [:index]
+  plug :valid_sort_params when action in [:index]
+
   def index(conn, %{type: type, status: status} = params) do
     articles =
-      case {params[:date_start], params[:date_end]} do
-        {nil, nil} -> Article.get_posts_list(type, status)
-        {since, nil} -> Article.get_posts_list(type, status, since: since)
-        {nil, until} -> Article.get_posts_list(type, status, until: until)
-        {since, until} -> Article.get_posts_list(type, status, since: since, until: until)
-      end
+      Article.get_posts_list(type, status, conn.assigns.filters, conn.assigns.sort_params)
 
     render(conn, "index.json", articles: articles)
   end
