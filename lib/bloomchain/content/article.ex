@@ -40,6 +40,18 @@ defmodule Bloomchain.Content.Article do
     |> Repo.preload([:tags, :cover, :authors])
   end
 
+  def get_published_posts(type, limit: limit) do
+    Repo.all(
+      from(
+        p in Post,
+        where: p.type == ^type and p.status == "published",
+        preload: [:cover, :authors],
+        order_by: [desc: :published_at],
+        limit: ^limit
+      )
+    )
+  end
+
   def create(%{} = params) do
     changeset = Post.changeset(%Post{}, params)
 
