@@ -1,21 +1,21 @@
 defmodule BloomchainWeb.Admin.Api.V1.ArchiveController do
   use BloomchainWeb, :controller
   import Bloomchain.Plug.ValidParams
+  import Bloomchain.Paginator
 
   alias Bloomchain.{Repo, Content.Archive}
 
   plug :valid_filters, [:since, :until] when action in [:index]
   plug :valid_sort_params when action in [:index]
 
-  def index(conn, _params) do
-    archives =
+  def index(conn, params) do
+    %{entries: archives, metadata: meta} =
       Archive
       |> Repo.q_filter_by(conn.assigns.filters)
       |> Repo.q_sort_by(conn.assigns.sort_params)
-      |> Repo.all()
-      |> Repo.preload([:cover, :pdf])
+      |> paginate(params)
 
-    render(conn, "index.json", archives: archives)
+    render(conn, "index.json", archives: archives |> Repo.preload([:cover, :pdf]), meta: meta)
   end
 
   def show(conn, %{id: id}) do

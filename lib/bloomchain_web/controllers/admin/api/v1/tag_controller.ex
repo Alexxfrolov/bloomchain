@@ -1,19 +1,22 @@
 defmodule BloomchainWeb.Admin.Api.V1.TagController do
   use BloomchainWeb, :controller
+
   import Bloomchain.Plug.ValidParams
+  import Bloomchain.Paginator
+
   alias Bloomchain.{Repo, Content.Tag}
 
   plug :valid_filters, [:since, :until] when action in [:index]
   plug :valid_sort_params when action in [:index]
 
-  def index(conn, _params) do
-    tags =
+  def index(conn, params) do
+    %{entries: tags, metadata: meta} =
       Tag
       |> Repo.q_filter_by(conn.assigns.filters)
       |> Repo.q_sort_by(conn.assigns.sort_params)
-      |> Repo.all()
+      |> paginate(params)
 
-    render(conn, "index.json", tags: tags)
+    render(conn, "index.json", tags: tags, meta: meta)
   end
 
   def create(conn, params) do

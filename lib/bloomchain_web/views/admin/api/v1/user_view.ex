@@ -1,9 +1,10 @@
 defmodule BloomchainWeb.Admin.Api.V1.UserView do
   use BloomchainWeb, :view
 
-  def render("index.json", %{users: users}) do
+  def render("index.json", %{users: users, meta: meta}) do
     %{
-      data: Enum.map(users, &user_json/1)
+      data: Enum.map(users, &user_json/1),
+      meta: meta
     }
   end
 

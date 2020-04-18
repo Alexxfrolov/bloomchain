@@ -1,29 +1,32 @@
 defmodule BloomchainWeb.Admin.Api.V1.MediaController do
   use BloomchainWeb, :controller
+
   import Bloomchain.Plug.ValidParams
+  import Bloomchain.Paginator
+
   alias Bloomchain.{Repo, Content.Media}
 
   plug :valid_filters, [:type, :since, :until] when action in [:index]
   plug :valid_sort_params when action in [:index]
 
-  def index(conn, %{editor: "true"}) do
-    media =
+  def index(conn, %{editor: "true"} = params) do
+    %{entries: media, metadata: meta} =
       Media
       |> Repo.q_filter_by(conn.assigns.filters)
       |> Repo.q_sort_by(conn.assigns.sort_params)
-      |> Repo.all()
+      |> paginate(params)
 
-    render(conn, "editor.json", media: media)
+    render(conn, "editor.json", media: media, meta: meta)
   end
 
-  def index(conn, _params) do
-    media =
+  def index(conn, params) do
+    %{entries: media, metadata: meta} =
       Media
       |> Repo.q_filter_by(conn.assigns.filters)
       |> Repo.q_sort_by(conn.assigns.sort_params)
-      |> Repo.all()
+      |> paginate(params)
 
-    render(conn, "index.json", media: media)
+    render(conn, "index.json", media: media, meta: meta)
   end
 
   def create(

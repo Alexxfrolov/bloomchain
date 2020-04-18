@@ -2,6 +2,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
   use BloomchainWeb, :controller
 
   import Bloomchain.Plug.ValidParams
+  import Bloomchain.Paginator
 
   alias Bloomchain.Repo
   alias Bloomchain.Content.{Article, Post}
@@ -11,14 +12,16 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
   plug :valid_sort_params when action in [:index]
 
   def index(conn, %{type: type, status: status} = params) do
-    articles =
+    %{entries: articles, metadata: meta} =
       Post
       |> Repo.q_filter_by(conn.assigns.filters)
       |> Repo.q_sort_by(conn.assigns.sort_params)
-      |> Repo.all()
-      |> Repo.preload([:tags, :cover, :authors])
+      |> paginate(params)
 
-    render(conn, "index.json", articles: articles)
+    render(conn, "index.json",
+      articles: articles |> Repo.preload([:tags, :cover, :authors]),
+      meta: meta
+    )
   end
 
   def show(conn, %{id: id}) do

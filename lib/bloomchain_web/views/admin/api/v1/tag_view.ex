@@ -1,9 +1,10 @@
 defmodule BloomchainWeb.Admin.Api.V1.TagView do
   use BloomchainWeb, :view
 
-  def render("index.json", %{tags: tags}) do
+  def render("index.json", %{tags: tags, meta: meta}) do
     %{
-      data: Enum.map(tags, &tag_json/1)
+      data: Enum.map(tags, &tag_json/1),
+      meta: meta
     }
   end
 

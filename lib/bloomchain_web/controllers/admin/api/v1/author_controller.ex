@@ -1,19 +1,22 @@
 defmodule BloomchainWeb.Admin.Api.V1.AuthorController do
   use BloomchainWeb, :controller
+
   import Bloomchain.Plug.ValidParams
+  import Bloomchain.Paginator
+
   alias Bloomchain.{Repo, Content.Author}
 
   plug :valid_filters, [:since, :until] when action in [:index]
   plug :valid_sort_params when action in [:index]
 
-  def index(conn, _params) do
-    authors =
+  def index(conn, params) do
+    %{entries: authors, metadata: meta} =
       Author
       |> Repo.q_filter_by(conn.assigns.filters)
       |> Repo.q_sort_by(conn.assigns.sort_params)
-      |> Repo.all()
+      |> paginate(params)
 
-    render(conn, "index.json", authors: authors)
+    render(conn, "index.json", authors: authors, meta: meta)
   end
 
   def create(conn, params) do

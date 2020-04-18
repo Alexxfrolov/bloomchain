@@ -2,9 +2,10 @@ defmodule BloomchainWeb.Admin.Api.V1.ArchiveView do
   use BloomchainWeb, :view
   import BloomchainWeb.Admin.Api.V1.MediaView, only: [media_json: 1]
 
-  def render("index.json", %{archives: archives}) do
+  def render("index.json", %{archives: archives, meta: meta}) do
     %{
-      data: Enum.map(archives, &archive_json/1)
+      data: Enum.map(archives, &archive_json/1),
+      meta: meta
     }
   end
 

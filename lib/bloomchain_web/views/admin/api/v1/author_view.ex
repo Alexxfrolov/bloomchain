@@ -1,9 +1,10 @@
 defmodule BloomchainWeb.Admin.Api.V1.AuthorView do
   use BloomchainWeb, :view
 
-  def render("index.json", %{authors: authors}) do
+  def render("index.json", %{authors: authors, meta: meta}) do
     %{
-      data: Enum.map(authors, &author_json/1)
+      data: Enum.map(authors, &author_json/1),
+      meta: meta
     }
   end
 

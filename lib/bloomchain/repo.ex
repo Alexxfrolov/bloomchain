@@ -4,6 +4,7 @@ defmodule Bloomchain.Repo do
     adapter: Ecto.Adapters.Postgres
 
   use Paginator
+
   require Ecto.Query
   import Ecto.Query
   alias Bloomchain.Repo

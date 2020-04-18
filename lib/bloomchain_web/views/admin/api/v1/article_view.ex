@@ -5,9 +5,10 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
   import BloomchainWeb.Admin.Api.V1.MediaView, only: [media_json: 1]
   import BloomchainWeb.Admin.Api.V1.AuthorView, only: [author_json: 1]
 
-  def render("index.json", %{articles: articles}) do
+  def render("index.json", %{articles: articles, meta: meta}) do
     %{
-      data: Enum.map(articles, &article_json/1)
+      data: Enum.map(articles, &article_json/1),
+      meta: meta
     }
   end
 

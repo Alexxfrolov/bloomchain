@@ -2,9 +2,10 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
   use BloomchainWeb, :view
   alias BloomchainWeb.Uploaders.File
 
-  def render("index.json", %{media: media}) do
+  def render("index.json", %{media: media, meta: meta}) do
     %{
-      data: Enum.map(media, &media_json/1)
+      data: Enum.map(media, &media_json/1),
+      meta: meta
     }
   end
 

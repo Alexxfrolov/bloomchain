@@ -57,6 +57,8 @@ defmodule Bloomchain.Mixfile do
       {:earmark, "~> 1.2.6"},
       {:timex, "~> 3.3.0"},
       {:elixir_uuid, "~> 1.2"},
+
+      # Cursor pagation
       {:paginator, "~> 0.6"},
 
       # File attachment deps
