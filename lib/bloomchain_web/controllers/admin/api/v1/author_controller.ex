@@ -3,11 +3,13 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorController do
   import Bloomchain.Plug.ValidParams
   alias Bloomchain.{Repo, Content.Author}
 
+  plug :valid_filters, [:since, :until] when action in [:index]
   plug :valid_sort_params when action in [:index]
 
   def index(conn, _params) do
     authors =
       Author
+      |> Repo.q_filter_by(conn.assigns.filters)
       |> Repo.q_sort_by(conn.assigns.sort_params)
       |> Repo.all()
 

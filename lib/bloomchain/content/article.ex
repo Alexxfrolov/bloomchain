@@ -30,21 +30,6 @@ defmodule Bloomchain.Content.Article do
     )
   end
 
-  def get_posts_list(type, status, filter_params \\ %{}, sort_params \\ [desc: :inserted_at]) do
-    since = filter_params[:since] || ~N[2000-01-01 00:00:00]
-    until = filter_params[:until] || DateTime.utc_now()
-
-    from(
-      p in Post,
-      where:
-        p.type == ^type and p.status == ^status and p.inserted_at >= ^since and
-          p.inserted_at < ^until,
-      preload: [:tags, :authors],
-      order_by: ^sort_params
-    )
-    |> Repo.all()
-  end
-
   def get!(id) do
     Repo.get!(Post, id)
     |> Repo.preload([:tags, :cover, :authors])

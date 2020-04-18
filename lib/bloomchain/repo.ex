@@ -5,6 +5,7 @@ defmodule Bloomchain.Repo do
 
   use Paginator
   require Ecto.Query
+  import Ecto.Query
   alias Bloomchain.Repo
 
   @doc """
@@ -21,6 +22,27 @@ defmodule Bloomchain.Repo do
     |> Stream.chunk_every(size)
     |> Stream.flat_map(fn chunk ->
       Repo.preload(chunk, preloads)
+    end)
+  end
+
+  def q_filter_by(query, params) do
+    Enum.reduce(params, query, fn {key, value}, query ->
+      case key do
+        :since ->
+          from(p in query,
+            where: field(p, :inserted_at) >= ^value
+          )
+
+        :until ->
+          from(p in query,
+            where: field(p, :inserted_at) < ^value
+          )
+
+        _ ->
+          from(p in query,
+            where: field(p, ^key) == ^value
+          )
+      end
     end)
   end
 

@@ -1,8 +1,12 @@
 defmodule Bloomchain.Plug.ValidParams do
   import Plug.Conn, only: [assign: 3]
 
-  def valid_filters(%{params: params} = conn, _params) do
-    conn |> assign(:filters, %{since: params[:since], until: params[:until]})
+  def valid_filters(conn, params) do
+    filters =
+      conn.params
+      |> Enum.filter(fn {key, _value} -> Enum.member?(params, key) end)
+
+    conn |> assign(:filters, filters)
   end
 
   def valid_sort_params(%{params: %{sort_by: str}} = conn, _params) do

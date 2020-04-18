@@ -5,9 +5,13 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
   alias Bloomchain.{Repo, Content.User, Content.Author}
   alias Bloomchain.Auth.Account
 
+  plug :valid_filters, [:since, :until] when action in [:index]
+  plug :valid_sort_params when action in [:index]
+
   def index(conn, _params) do
     users =
       User
+      |> Repo.q_filter_by(conn.assigns.filters)
       |> Repo.q_sort_by(conn.assigns.sort_params)
       |> Repo.all()
 

@@ -4,15 +4,19 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
   import Bloomchain.Plug.ValidParams
 
   alias Bloomchain.Repo
-  alias Bloomchain.Content.Article
+  alias Bloomchain.Content.{Article, Post}
   alias BloomchainWeb.ErrorView
 
-  plug :valid_filters when action in [:index]
+  plug :valid_filters, [:type, :status, :since, :until] when action in [:index]
   plug :valid_sort_params when action in [:index]
 
   def index(conn, %{type: type, status: status} = params) do
     articles =
-      Article.get_posts_list(type, status, conn.assigns.filters, conn.assigns.sort_params)
+      Post
+      |> Repo.q_filter_by(conn.assigns.filters)
+      |> Repo.q_sort_by(conn.assigns.sort_params)
+      |> Repo.all()
+      |> Repo.preload([:tags, :cover, :authors])
 
     render(conn, "index.json", articles: articles)
   end

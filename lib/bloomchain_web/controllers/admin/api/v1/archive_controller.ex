@@ -4,11 +4,13 @@ defmodule BloomchainWeb.Admin.Api.V1.ArchiveController do
 
   alias Bloomchain.{Repo, Content.Archive}
 
+  plug :valid_filters, [:since, :until] when action in [:index]
   plug :valid_sort_params when action in [:index]
 
   def index(conn, _params) do
     archives =
       Archive
+      |> Repo.q_filter_by(conn.assigns.filters)
       |> Repo.q_sort_by(conn.assigns.sort_params)
       |> Repo.all()
       |> Repo.preload([:cover, :pdf])
