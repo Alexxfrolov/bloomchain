@@ -64,7 +64,7 @@ export const AuthorsPage = () => {
       setError(false)
 
       try {
-        const response = await authorsApi.getLatest()
+        const response = await authorsApi.get()
         setAuthors(response.data.data)
       } catch {
         setError(true)

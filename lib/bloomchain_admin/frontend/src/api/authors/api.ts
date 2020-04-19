@@ -3,7 +3,7 @@ import { httpConfig } from "@features/core"
 
 import { Author } from "./types"
 
-function getLatest(): AxiosPromise<{ data: Author[] }> {
+function get(): AxiosPromise<{ data: Author[] }> {
   return axios.get(`${httpConfig.baseUrl}/authors`)
 }
 
@@ -20,7 +20,7 @@ function remove(id: number): AxiosPromise<Author> {
 }
 
 export const authorsApi = {
-  getLatest,
+  get,
   create,
   update,
   remove,

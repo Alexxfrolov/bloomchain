@@ -19,7 +19,6 @@ import {
   FormHelperText,
   MenuItem,
   Button,
-  Input,
   makeStyles,
   createStyles,
 } from "@material-ui/core"
@@ -236,10 +235,9 @@ export const ArticleForm = ({
     [article.authors, authors],
   )
 
-  const enabledDatePicker = useMemo(
-    () => !["published", "ready"].includes(article.status),
-    [article.status],
-  )
+  const enabledDatePicker = useMemo(() => !["ready"].includes(article.status), [
+    article.status,
+  ])
 
   const disabledForm = useMemo(() => !!Object.keys(errors).length, [errors])
 
@@ -320,96 +318,6 @@ export const ArticleForm = ({
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <Editor value={article.body ?? ""} onChange={handleChangeEditor} />
           </FormControl>
-          <FormControl margin="normal" fullWidth={true} variant="outlined">
-            <Typography color="textPrimary" variant="h6" component="h6">
-              SEO настройки
-            </Typography>
-          </FormControl>
-          <FormControl margin="normal" fullWidth={true}>
-            <TextField
-              id="keywords"
-              label="Keywords"
-              value={article.seo_settings.keywords}
-              fullWidth={true}
-              variant="outlined"
-              onChange={seoSettingsChangeHandler("keywords")}
-            />
-            <FormHelperText variant="filled">
-              Разделяйте слова запятыми или пробелами. По умолчанию тэги статьи.
-            </FormHelperText>
-          </FormControl>
-          <FormControl margin="normal" fullWidth={true}>
-            <TextField
-              id="description"
-              label="Description"
-              value={article.seo_settings.description ?? ""}
-              inputProps={{ maxLength: 255 }}
-              fullWidth={true}
-              margin="normal"
-              variant="outlined"
-              onChange={seoSettingsChangeHandler("description")}
-            />
-            <FormHelperText variant="filled">
-              Не более 255 символов. По умолчанию лид статьи.
-            </FormHelperText>
-          </FormControl>
-          <FormControl margin="normal" fullWidth={true}>
-            <TextField
-              id="description"
-              label="og:type"
-              value={article.seo_settings.og_type}
-              fullWidth={true}
-              margin="normal"
-              variant="outlined"
-              onChange={seoSettingsChangeHandler("og_type")}
-            />
-            <FormHelperText variant="filled">
-              По умолчанию article.
-            </FormHelperText>
-          </FormControl>
-          <FormControl margin="normal" fullWidth={true}>
-            <TextField
-              id="description"
-              label="og:title"
-              value={article.seo_settings.og_title ?? ""}
-              fullWidth={true}
-              margin="normal"
-              variant="outlined"
-              onChange={seoSettingsChangeHandler("og_title")}
-            />
-            <FormHelperText variant="filled">
-              По умолчанию заголовок статьи.
-            </FormHelperText>
-          </FormControl>
-          <FormControl margin="normal" fullWidth={true}>
-            <TextField
-              id="description"
-              label="og:description"
-              value={article.seo_settings.og_description ?? ""}
-              inputProps={{ maxLength: 255 }}
-              fullWidth={true}
-              margin="normal"
-              variant="outlined"
-              onChange={seoSettingsChangeHandler("og_description")}
-            />
-            <FormHelperText variant="filled">
-              Не более 255 символов. По умолчанию лид статьи.
-            </FormHelperText>
-          </FormControl>
-          <FormControl margin="normal" fullWidth={true}>
-            <TextField
-              id="description"
-              label="og:image"
-              value={article.seo_settings.og_image ?? ""}
-              fullWidth={true}
-              margin="normal"
-              variant="outlined"
-              onChange={seoSettingsChangeHandler("og_image")}
-            />
-            <FormHelperText variant="filled">
-              По умолчанию превью статьи.
-            </FormHelperText>
-          </FormControl>
         </Grid>
         <Grid item={true} md={12} lg={4}>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
@@ -467,7 +375,7 @@ export const ArticleForm = ({
                 onChange={handleDateChange}
               />
               <FormHelperText variant="filled">
-                Доступно при статусе Опубликовано или Готово к публикации
+                Доступно при статусе &laquo;Готово к публикации&raquo;
               </FormHelperText>
             </FormControl>
           </MuiPickersUtilsProvider>
@@ -482,6 +390,93 @@ export const ArticleForm = ({
             autoComplete="new-article-time"
             onChange={handleChangeFormField("time")}
           />
+        </Grid>
+        <Grid item={true} xs={12}>
+          <FormControl margin="dense" fullWidth={true} variant="outlined">
+            <Typography color="textPrimary" variant="h6" component="h6">
+              SEO настройки
+            </Typography>
+          </FormControl>
+          <FormControl margin="dense" fullWidth={true}>
+            <TextField
+              id="keywords"
+              label="Keywords"
+              value={article.seo_settings.keywords}
+              fullWidth={true}
+              variant="outlined"
+              onChange={seoSettingsChangeHandler("keywords")}
+            />
+            <FormHelperText variant="filled">
+              Разделяйте слова запятыми или пробелами. По умолчанию тэги статьи.
+            </FormHelperText>
+          </FormControl>
+          <FormControl margin="dense" fullWidth={true}>
+            <TextField
+              id="description"
+              label="Description"
+              value={article.seo_settings.description ?? ""}
+              inputProps={{ maxLength: 200 }}
+              fullWidth={true}
+              variant="outlined"
+              onChange={seoSettingsChangeHandler("description")}
+            />
+            <FormHelperText variant="filled">
+              Не более 200 символов. По умолчанию лид статьи.
+            </FormHelperText>
+          </FormControl>
+          <FormControl margin="dense" fullWidth={true}>
+            <TextField
+              id="description"
+              label="og:type"
+              value={article.seo_settings.og_type}
+              fullWidth={true}
+              variant="outlined"
+              onChange={seoSettingsChangeHandler("og_type")}
+            />
+            <FormHelperText variant="filled">
+              По умолчанию article.
+            </FormHelperText>
+          </FormControl>
+          <FormControl margin="dense" fullWidth={true}>
+            <TextField
+              id="description"
+              label="og:title"
+              value={article.seo_settings.og_title ?? ""}
+              fullWidth={true}
+              variant="outlined"
+              onChange={seoSettingsChangeHandler("og_title")}
+            />
+            <FormHelperText variant="filled">
+              По умолчанию заголовок статьи.
+            </FormHelperText>
+          </FormControl>
+          <FormControl margin="dense" fullWidth={true}>
+            <TextField
+              id="description"
+              label="og:description"
+              value={article.seo_settings.og_description ?? ""}
+              inputProps={{ maxLength: 200 }}
+              fullWidth={true}
+              variant="outlined"
+              onChange={seoSettingsChangeHandler("og_description")}
+            />
+            <FormHelperText variant="filled">
+              Не более 200 символов. По умолчанию лид статьи.
+            </FormHelperText>
+          </FormControl>
+          <FormControl margin="dense" fullWidth={true}>
+            <TextField
+              id="description"
+              label="og:image"
+              value={article.seo_settings.og_image ?? ""}
+              fullWidth={true}
+              variant="outlined"
+              onChange={seoSettingsChangeHandler("og_image")}
+            />
+            <FormHelperText variant="filled">
+              По умолчанию превью статьи.
+            </FormHelperText>
+          </FormControl>
         </Grid>
         <Grid
           item={true}

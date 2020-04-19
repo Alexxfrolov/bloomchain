@@ -4,7 +4,7 @@ import { httpConfig } from "@features/core"
 
 import { Archive } from "./types"
 
-function getLatest(): AxiosPromise<{ data: Archive[] }> {
+function get(): AxiosPromise<{ data: Archive[] }> {
   return axios.get(`${httpConfig.baseUrl}/archives`)
 }
 
@@ -17,7 +17,7 @@ function remove(id: number): AxiosPromise {
 }
 
 export const archivesApi = {
-  getLatest,
+  get,
   create,
   remove,
 }

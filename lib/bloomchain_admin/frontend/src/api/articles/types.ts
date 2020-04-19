@@ -11,7 +11,7 @@ export interface Article {
   tags: import("../tags").Tag[]
   time: string | null
   title: string
-  total_views?: number
+  total_views: number
   type:
     | "newsfeed"
     | "detailed"

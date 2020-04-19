@@ -67,7 +67,7 @@ export const ArchivesPage = () => {
       setError(false)
 
       try {
-        const response = await archivesApi.getLatest()
+        const response = await archivesApi.get()
         setArchives(response.data.data)
       } catch {
         setError(true)

@@ -46,8 +46,14 @@ export const ActicleEditPage = () => {
     body: null,
     cover: null,
     created_at: null,
-    description: null,
-    keywords: null,
+    seo_settings: {
+      description: "",
+      keywords: [],
+      og_type: "article",
+      og_title: "",
+      og_description: "",
+      og_image: "",
+    },
     lead: null,
     published_at: null,
     status: "draft",
@@ -66,7 +72,7 @@ export const ActicleEditPage = () => {
 
       try {
         const response = await tagsApi.get()
-        const { data } = await authorsApi.getLatest()
+        const { data } = await authorsApi.get()
         setAuthors(data.data)
         setTags(response.data.data)
       } catch {

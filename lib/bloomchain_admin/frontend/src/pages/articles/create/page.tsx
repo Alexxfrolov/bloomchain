@@ -42,7 +42,7 @@ export const ActicleCreatePage = () => {
 
       try {
         const response = await tagsApi.get()
-        const { data } = await authorsApi.getLatest()
+        const { data } = await authorsApi.get()
         setTags(response.data.data)
         setAuthors(data.data)
       } catch {

@@ -3,32 +3,35 @@ import { httpConfig } from "@features/core"
 
 import { Article } from "./types"
 
-function getLatest(
-  status: Article["status"],
-  type: Article["type"],
-): AxiosPromise<{ data: Article[] }> {
-  return axios(`${httpConfig.baseUrl}/articles?status=${status}&type=${type}`)
-}
+type Order = "asc" | "desc"
 
-function getByDate({
-  status,
-  type,
-  dateStart,
-  dateEnd,
-}: {
+interface Options {
+  order: Order
+  orderBy: keyof Article
+  page_size: number
+  page: number
   status: Article["status"]
   type: Article["type"]
-  dateStart: Date | null
-  dateEnd: Date | null
-}): AxiosPromise<{ data: Article[] }> {
-  const params = {
-    status,
-    type,
-    date_start: dateStart,
-    date_end: dateEnd,
-  }
+  since?: Date | null
+  until?: Date | null
+}
+
+interface Pagination {
+  page: number
+  page_size: number
+  total_items: number
+  total_pages: number
+}
+
+function get(
+  options: Options,
+): AxiosPromise<{ data: Article[]; meta: Pagination }> {
+  const { order, orderBy, ...restOptions } = options
   return axios(`${httpConfig.baseUrl}/articles`, {
-    params,
+    params: {
+      ...restOptions,
+      sort_by: `${order}(${orderBy})`,
+    },
   })
 }
 
@@ -68,9 +71,23 @@ function remove(id: number): AxiosPromise {
   return axios.delete(`${httpConfig.baseUrl}/articles/${id}`)
 }
 
+interface SearchParams {
+  status: Article["status"]
+  type: Article["type"]
+  query: string
+}
+
+function search(options: SearchParams) {
+  return axios.get(`${httpConfig.baseUrl}/articles/search`, {
+    params: {
+      ...options,
+    },
+  })
+}
+
 export const articlesApi = {
-  getLatest,
-  getByDate,
+  search,
+  get,
   getById,
   create,
   update,

@@ -25,7 +25,7 @@ export const SubscribersPage = () => {
       setError(false)
 
       try {
-        const response = await subscribersAPI.getLatest()
+        const response = await subscribersAPI.get()
         setSubscribers(response.data.data)
       } catch {
         setError(true)

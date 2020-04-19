@@ -14,9 +14,17 @@ type RouterLinkProps = {
 
 export const RouterLink = forwardRef(function RouterLink(
   props: RouterLinkProps,
-  ref: Ref<Link>,
+  ref: Ref<typeof Link>,
 ) {
-  const { children, routeParams, routeName, ...rest } = props
+  const {
+    children,
+    routeParams,
+    routeName,
+    disableFocusRipple: _disableFocusRipple,
+    disableRipple: _disableRipple,
+    fullWidth: _fullWidth,
+    ...rest
+  } = props
 
   const router = useRouter()
 
