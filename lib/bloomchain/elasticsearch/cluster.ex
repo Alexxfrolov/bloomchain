@@ -53,7 +53,7 @@ defmodule Bloomchain.ElasticsearchCluster do
         entries: Enum.map(result["hits"]["hits"], &process_item/1),
         metadata: %{
           after: scroll,
-          total: result["hits"]["total"]["value"],
+          total_items: result["hits"]["total"]["value"],
           size: length(result["hits"]["hits"])
         }
       }
