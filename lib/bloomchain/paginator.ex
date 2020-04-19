@@ -14,7 +14,7 @@ defmodule Bloomchain.Paginator do
     %Paginator{
       entries: entries(query, page_number, page_size),
       metadata: %{
-        page_number: page_number,
+        page: page_number,
         page_size: page_size,
         total_items: total_items,
         total_pages: total_pages(total_items, page_size)
