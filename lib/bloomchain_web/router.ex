@@ -44,6 +44,10 @@ defmodule BloomchainWeb.Router do
       resources("/authors", Admin.Api.V1.AuthorController)
     end
 
+    scope "/preview" do
+      get "/articles/:type/:slug", Admin.Preview.ArticleController, :show
+    end
+
     get("/*path", Admin.HomeController, :index)
   end
 

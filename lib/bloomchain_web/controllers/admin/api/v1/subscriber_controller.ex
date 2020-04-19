@@ -4,8 +4,7 @@ defmodule BloomchainWeb.Admin.Api.V1.SubscriberController do
   import Bloomchain.Plug.ValidParams
   import Bloomchain.Paginator
 
-  alias Bloomchain.Repo
-  alias Bloomchain.Content.Subscriber
+  alias Bloomchain.{Repo, Content.Subscriber}
 
   plug :valid_filters, [:since, :until] when action in [:index]
   plug :valid_sort_params when action in [:index]

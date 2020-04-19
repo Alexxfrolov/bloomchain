@@ -1,5 +1,6 @@
 defmodule BloomchainWeb.Admin.Api.V1.ArchiveController do
   use BloomchainWeb, :controller
+
   import Bloomchain.Plug.ValidParams
   import Bloomchain.Paginator
 

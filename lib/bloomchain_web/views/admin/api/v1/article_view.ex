@@ -21,7 +21,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
       id: article.id,
       title: article.title,
       slug: article.slug,
-      url: do_link(article),
+      url: href_path(article),
       lead: article.lead,
       type: article.type,
       status: article.status,
@@ -56,7 +56,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
     }
   end
 
-  defp do_link(%{status: "published"} = item) do
+  defp href_path(%{status: "published"} = item) do
     case item.type do
       "person" -> "/people/#{item.slug}"
       "in_russia" -> "/in-russia/#{item.slug}"
@@ -64,8 +64,12 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
     end
   end
 
-  defp do_link(_) do
-    nil
+  defp href_path(item) do
+    case item.type do
+      "person" -> "/admin/preview/articles/people/#{item.slug}"
+      "in_russia" -> "/admin/preview/articles/in-russia/#{item.slug}"
+      _ -> "/admin/preview/articles/#{item.type}/#{item.slug}"
+    end
   end
 
   defp do_published_at(%{published_at: nil}) do
