@@ -10,12 +10,12 @@ News site app built on Phoenix framework in Elixir.
 * Fetch dependencies with `cd bloomchain && mix deps.get`
 
 ### Setup ES
-* `docker pull docker.elastic.co/elasticsearch/elasticsearch:6.8.7`
-* `docker run --name elastic -p 9201:9200 -p 9301:9300  -e "discovery.type=single-node" -d docker.elastic.co/elasticsearch/elasticsearch:6.8.7`
+* `docker pull docker.elastic.co/elasticsearch/elasticsearch:7.6.2`
+* `docker run --name bloomchain-es -p 9201:9200 -p 9301:9300  -e "discovery.type=single-node" -d docker.elastic.co/elasticsearch/elasticsearch:7.6.2`
 
 ### Setup DB
 * `docker pull postgres`
-* `docker run --name psql -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d postgres`
+* `docker run --name bloomchain-psql -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d postgres`
 
 ### Run migrations and seed data
 * Setup database and seed data `mix ecto.setup`
@@ -24,7 +24,7 @@ News site app built on Phoenix framework in Elixir.
 * Start Phoenix server `mix pxh.server`
 
 
-### Frontend аdmin 
+### Frontend аdmin
 
 Requires [Node.js](https://nodejs.org/) >=10.16.0+ to run.
 For installation dependencies and devDependencies run `yarn install`

@@ -51,7 +51,11 @@ defmodule Bloomchain.ElasticsearchCluster do
 
       %{
         entries: Enum.map(result["hits"]["hits"], &process_item/1),
-        metadata: %{after: scroll}
+        metadata: %{
+          after: scroll,
+          total: result["hits"]["total"]["value"],
+          size: length(result["hits"]["hits"])
+        }
       }
     else
       {:error, _err} ->
@@ -63,8 +67,12 @@ defmodule Bloomchain.ElasticsearchCluster do
   end
 
   defp process_item(%{"_source" => post}) do
-    struct(Post, keys_to_atoms(post))
-    |> set_correct_dates
+    article =
+      post
+      |> keys_to_atoms
+      |> transform_dates
+
+    struct(Post, article)
   end
 
   defp keys_to_atoms(string_key_map) when is_map(string_key_map) do
@@ -78,12 +86,40 @@ defmodule Bloomchain.ElasticsearchCluster do
 
   defp keys_to_atoms(value), do: value
 
-  defp set_correct_dates(post) do
+  defp transform_dates(list) when is_list(list) do
+    list
+    |> Enum.map(&transform_dates/1)
+  end
+
+  defp transform_dates(%{published_at: _, inserted_at: _, updated_at: _} = item) do
+    struct = %{
+      item
+      | published_at: NaiveDateTime.from_iso8601!(item.published_at),
+        inserted_at: NaiveDateTime.from_iso8601!(item.inserted_at),
+        updated_at: NaiveDateTime.from_iso8601!(item.updated_at)
+    }
+
+    for({key, value} <- struct, into: %{}, do: {key, transform_dates(value)})
+  end
+
+  defp transform_dates(%{inserted_at: _, updated_at: _} = item) do
+    struct = %{
+      item
+      | inserted_at: NaiveDateTime.from_iso8601!(item.inserted_at),
+        updated_at: NaiveDateTime.from_iso8601!(item.updated_at)
+    }
+
+    for({key, value} <- struct, into: %{}, do: {key, transform_dates(value)})
+  end
+
+  defp transform_dates(value), do: value
+
+  defp set_correct_dates(item) do
     %{
-      post
-      | published_at: NaiveDateTime.from_iso8601!(post.published_at),
-        inserted_at: NaiveDateTime.from_iso8601!(post.inserted_at),
-        updated_at: NaiveDateTime.from_iso8601!(post.updated_at)
+      item
+      | published_at: NaiveDateTime.from_iso8601!(item.published_at),
+        inserted_at: NaiveDateTime.from_iso8601!(item.inserted_at),
+        updated_at: NaiveDateTime.from_iso8601!(item.updated_at)
     }
   end
 end

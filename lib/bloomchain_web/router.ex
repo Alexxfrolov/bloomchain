@@ -31,6 +31,7 @@ defmodule BloomchainWeb.Router do
     scope "/api/v1" do
       pipe_through [:api]
 
+      get("/articles/search", Admin.Api.V1.ArticleController, :search)
       resources("/articles", Admin.Api.V1.ArticleController)
 
       get "/users/current", Admin.Api.V1.UserController, :current

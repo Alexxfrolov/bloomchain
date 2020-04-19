@@ -6,6 +6,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
 
   alias Bloomchain.Repo
   alias Bloomchain.Content.{Article, Post}
+  alias Bloomchain.ElasticsearchCluster, as: ES
   alias BloomchainWeb.ErrorView
 
   plug :valid_filters, [:type, :status, :since, :until] when action in [:index]
@@ -28,6 +29,12 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
     article = Article.get!(id)
 
     render(conn, "show.json", article: article)
+  end
+
+  def search(conn, %{type: type, status: status, query: query}) do
+    %{entries: articles, metadata: meta} = do_query(query, type, status) |> ES.search()
+
+    render(conn, "index.json", articles: articles, meta: meta)
   end
 
   def create(conn, params) do
@@ -61,5 +68,26 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
     Article.delete!(id)
 
     send_resp(conn, :no_content, "")
+  end
+
+  defp do_query(query, type, status) do
+    %{
+      query: %{
+        bool: %{
+          must: %{
+            multi_match: %{
+              query: query,
+              type: "bool_prefix",
+              fields: ["title", "title._2gram", "title._3gram"]
+            }
+          },
+          filter: [
+            %{term: %{type: type}},
+            %{term: %{status: status}}
+          ]
+        }
+      },
+      size: 40
+    }
   end
 end

@@ -6,7 +6,7 @@
        "htmlStripAnalyzer": {
          "type": "custom",
          "tokenizer": "standard",
-         "filter": ["standard","lowercase"],
+         "filter": ["lowercase"],
          "char_filter": [
            "html_strip"
          ]
@@ -15,55 +15,53 @@
    }
  },
   "mappings": {
-    "_doc": {
-      "properties": {
-        "id": {
-          "type": "integer"
-        },
-        "title": {
-          "type": "text"
-        },
-        "lead": {
-          "type": "text"
-        },
-        "body": {
-          "type": "text",
-          "analyzer": "htmlStripAnalyzer"
-        },
-        "status": {
-          "type": "keyword"
-        },
-        "type": {
-          "type": "keyword"
-        },
-        "time": {
-          "type": "integer"
-        },
-        "published_at": {
-          "type": "date"
-        },
-        "total_views": {
-          "type": "integer"
-        },
-        "authors": {
-          "properties": {
-          }
-        },
-        "cover": {
-          "properties": {
-          }
-        },
-        "seo_settings": {
-          "type": "object",
-          "properties": {}
-        },
-        "tags": {
-          "type": "object",
-          "properties": {
-            "slug":  {"type": "keyword"},
-            "name": {"type": "keyword"},
-            "id": {"type": "integer"}
-          }
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "title": {
+        "type": "search_as_you_type"
+      },
+      "lead": {
+        "type": "text"
+      },
+      "body": {
+        "type": "text",
+        "analyzer": "htmlStripAnalyzer"
+      },
+      "status": {
+        "type": "keyword"
+      },
+      "type": {
+        "type": "keyword"
+      },
+      "time": {
+        "type": "integer"
+      },
+      "published_at": {
+        "type": "date"
+      },
+      "total_views": {
+        "type": "integer"
+      },
+      "authors": {
+        "properties": {
+        }
+      },
+      "cover": {
+        "properties": {
+        }
+      },
+      "seo_settings": {
+        "type": "object",
+        "properties": {}
+      },
+      "tags": {
+        "type": "object",
+        "properties": {
+          "slug":  {"type": "keyword"},
+          "name": {"type": "keyword"},
+          "id": {"type": "integer"}
         }
       }
     }
