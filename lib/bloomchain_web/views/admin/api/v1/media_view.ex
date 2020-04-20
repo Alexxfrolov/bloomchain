@@ -29,7 +29,7 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
       title: media.title,
       source: media.source,
       url: File.url({media.file, media}, :original),
-      created_at: media.inserted_at |> Timex.local(),
+      inserted_at: media.inserted_at |> Timex.local(),
       updated_at: media.updated_at |> Timex.local()
     }
   end
