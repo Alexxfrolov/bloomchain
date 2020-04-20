@@ -7,8 +7,6 @@ defmodule Bloomchain.Content.Index do
   alias Bloomchain.Repo
   alias Bloomchain.Content.Index
 
-  @types ["bitcoin", "top_10"]
-
   schema "indices" do
     field(:value, :float)
     field(:type, :string)

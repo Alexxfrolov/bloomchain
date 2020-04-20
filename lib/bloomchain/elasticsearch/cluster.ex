@@ -113,13 +113,4 @@ defmodule Bloomchain.ElasticsearchCluster do
   end
 
   defp transform_dates(value), do: value
-
-  defp set_correct_dates(item) do
-    %{
-      item
-      | published_at: NaiveDateTime.from_iso8601!(item.published_at),
-        inserted_at: NaiveDateTime.from_iso8601!(item.inserted_at),
-        updated_at: NaiveDateTime.from_iso8601!(item.updated_at)
-    }
-  end
 end

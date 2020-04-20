@@ -12,7 +12,7 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
   plug :valid_filters, [:type, :status, :since, :until] when action in [:index]
   plug :valid_sort_params when action in [:index]
 
-  def index(conn, %{type: type, status: status} = params) do
+  def index(conn, %{type: _, status: _} = params) do
     %{entries: articles, metadata: meta} =
       Post
       |> Repo.q_filter_by(conn.assigns.filters)
@@ -32,7 +32,8 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
   end
 
   def search(conn, %{type: type, status: status, query: query}) do
-    %{entries: articles, metadata: meta} = do_query(query, type, status) |> ES.search()
+    %{entries: articles, metadata: meta} =
+      do_query(URI.decode(query), type, status) |> ES.search()
 
     render(conn, "index.json", articles: articles, meta: meta)
   end
