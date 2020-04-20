@@ -1,8 +1,10 @@
 import React, {
+  memo,
   Fragment,
   useEffect,
   useState,
   useCallback,
+  useMemo,
   ChangeEvent,
   FormEvent,
   ReactElement,
@@ -20,6 +22,8 @@ import {
   TableHead,
   TableBody,
   Typography,
+  TableSortLabel,
+  TablePagination,
   TextField,
   ButtonGroup,
   Button,
@@ -33,6 +37,7 @@ import DeleteIcon from "@material-ui/icons/Delete"
 import EditIcon from "@material-ui/icons/Edit"
 import AddBoxIcon from "@material-ui/icons/AddBox"
 import { ConditionalList } from "@ui"
+import { Order, Pagination } from "@api/types"
 import { tagsApi, Tag } from "@api/tags"
 import {
   DeleteDialog,
@@ -49,15 +54,52 @@ const useStyles = makeStyles((theme) =>
     toolbar: {
       marginBottom: theme.spacing(2),
     },
+    table: {
+      tableLayout: "fixed",
+    },
+    visuallyHidden: {
+      border: 0,
+      clip: "rect(0 0 0 0)",
+      height: 1,
+      margin: -1,
+      overflow: "hidden",
+      padding: 0,
+      position: "absolute",
+      top: 20,
+      width: 1,
+    },
+    tableSortLabel: {
+      "&:hover": {
+        color: "rgba(255, 255, 255, 0.54) !important",
+      },
+    },
+    tableSortLabelActive: {
+      color: "#fff !important",
+    },
+    tableSortLabelIcon: {
+      color: "rgba(255, 255, 255, 0.54) !important",
+    },
   }),
 )
+
+const PAGINATION_PRESET = {
+  page: 1,
+  page_size: 20,
+  total_pages: 1,
+  total_items: 0,
+}
 
 export const TagsPage = () => {
   const classes = useStyles()
 
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+  const [isDataLoading, setLoading] = useState(false)
+  const [hasError, setError] = useState(false)
   const [tags, setTags] = useState<Tag[]>([])
+  const [pagination, setPagination] = useState<Pagination>({
+    ...PAGINATION_PRESET,
+  })
+  const [order, setOrder] = useState<Order>("desc")
+  const [orderBy, setOrderBy] = useState<keyof Tag>("inserted_at")
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,8 +107,18 @@ export const TagsPage = () => {
       setError(false)
 
       try {
-        const response = await tagsApi.get()
+        const { page_size, page } = pagination
+        const response = await tagsApi.get({
+          page_size,
+          page,
+          order,
+          orderBy,
+        })
         setTags(response.data.data)
+        setPagination({
+          ...pagination,
+          ...response.data.meta,
+        })
       } catch {
         setError(true)
       }
@@ -74,50 +126,95 @@ export const TagsPage = () => {
       setLoading(false)
     }
     fetchData()
-  }, [])
+  }, [pagination.page_size, pagination.page, order, orderBy])
 
   const [modifyingTag, setModifyingTag] = useState<Tag | null>(null)
-  const [openedAddDialog, setOpenedAddDialog] = useState(false)
-  const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
+  const [isOpenedAddDialog, setOpenedAddDialog] = useState(false)
+  const [isOpenedDeleteDialog, setOpenedDeleteDialog] = useState(false)
 
-  const openAddFormDialog = useCallback(() => {
-    setOpenedAddDialog(true)
-  }, [setOpenedAddDialog])
+  const openAddFormDialog = useMemo(
+    () => () => {
+      setOpenedAddDialog(true)
+    },
+    [setOpenedAddDialog],
+  )
 
-  const closeAddFormDialog = useCallback(() => {
-    setOpenedAddDialog(false)
-  }, [setOpenedAddDialog])
+  const closeAddFormDialog = useMemo(
+    () => () => {
+      setOpenedAddDialog(false)
+    },
+    [setOpenedAddDialog],
+  )
 
-  const closeDeleteDialog = useCallback(() => {
-    setOpenedDeleteDialog(false)
-  }, [setOpenedDeleteDialog])
+  const closeDeleteDialog = useMemo(
+    () => () => {
+      setOpenedDeleteDialog(false)
+    },
+    [setOpenedDeleteDialog],
+  )
 
-  const addTags = useCallback(
-    (tag: Tag) => {
+  const addTags = useMemo(
+    () => (tag: Tag) => {
       setTags([tag, ...tags])
     },
     [tags, setTags],
   )
 
-  const handleDeleteButtonClick = useCallback(
-    (tag: Tag) => async () => {
+  const handleDeleteButtonClick = useMemo(
+    () => (tag: Tag) => async () => {
       setOpenedDeleteDialog(true)
       setModifyingTag(tag)
     },
     [setModifyingTag, setOpenedDeleteDialog],
   )
 
-  const handleConfirmDelete = useCallback(async () => {
-    if (modifyingTag) {
-      try {
-        await tagsApi.remove(modifyingTag.id)
-        setOpenedDeleteDialog(false)
-        setTags(tags.filter((item) => item.id !== modifyingTag.id))
-      } catch {
-        setError(true)
+  const handleConfirmDelete = useMemo(
+    () => async () => {
+      if (modifyingTag) {
+        try {
+          await tagsApi.remove(modifyingTag.id)
+          setOpenedDeleteDialog(false)
+          setTags(tags.filter((item) => item.id !== modifyingTag.id))
+        } catch {
+          setError(true)
+        }
       }
-    }
-  }, [tags, modifyingTag, setTags, setOpenedDeleteDialog, setError])
+    },
+    [tags, modifyingTag, setTags, setOpenedDeleteDialog, setError],
+  )
+
+  const handleTablePageChange = useMemo(
+    () => (
+      _event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+      page: number,
+    ) => {
+      setPagination({
+        ...pagination,
+        page: page + 1,
+      })
+    },
+    [pagination, setPagination],
+  )
+
+  const handleTableRowsPerPage = useMemo(
+    () => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setPagination({
+        ...pagination,
+        page: 1,
+        page_size: parseInt(event.target.value, 10),
+      })
+    },
+    [pagination, setPagination],
+  )
+
+  const handleRequestSort = useMemo(
+    () => (property: keyof Tag) => {
+      const isAsc = orderBy === property && order === "asc"
+      setOrder(isAsc ? "desc" : "asc")
+      setOrderBy(property)
+    },
+    [order, orderBy],
+  )
 
   return (
     <Fragment>
@@ -134,10 +231,13 @@ export const TagsPage = () => {
             <AddBoxIcon color="primary" />
           </IconButton>
         </Toolbar>
-        {!error ? (
+        {!hasError ? (
           <TagsTable
             data={tags}
-            loading={loading}
+            isDataLoading={isDataLoading}
+            pagination={pagination}
+            order={order}
+            orderBy={orderBy}
             renderRow={(tag) => (
               <TagsTableRow
                 key={`tag-${tag.id}`}
@@ -145,18 +245,21 @@ export const TagsPage = () => {
                 onDeleteRow={handleDeleteButtonClick(tag)}
               />
             )}
+            onRequestSort={handleRequestSort}
+            onChangePage={handleTablePageChange}
+            onChangeRowsPerPage={handleTableRowsPerPage}
           />
         ) : (
           <Alert color="error">Произошла ошибка</Alert>
         )}
       </Container>
       <AddFormDialog
-        opened={openedAddDialog}
+        isOpened={isOpenedAddDialog}
         onAddTag={addTags}
         onClose={closeAddFormDialog}
       />
       <DeleteDialog
-        opened={openedDeleteDialog}
+        isOpened={isOpenedDeleteDialog}
         onCancel={closeDeleteDialog}
         onConfirm={handleConfirmDelete}
       />
@@ -164,89 +267,197 @@ export const TagsPage = () => {
   )
 }
 
+type TablePageChangeAction = (
+  event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+  page: number,
+) => void
+
+const head_cells: import("@features/core").HeadCell<Tag>[] = [
+  {
+    id: "name",
+    sort_field: "name",
+    label: "Наименование",
+    width: "20%",
+  },
+  {
+    id: "slug",
+    sort_field: "slug",
+    label: "Описание",
+    width: "20%",
+  },
+  {
+    id: "inserted_at",
+    sort_field: "inserted_at",
+    label: "Дата создания",
+    width: "20%",
+  },
+  {
+    id: "updated_at",
+    sort_field: "updated_at",
+    label: "Дата обновления",
+    width: "20%",
+  },
+  {
+    id: "actions",
+    label: "Действия",
+    width: "1%",
+  },
+]
+
 type TagsTableProps = {
   data: Tag[]
-  loading: boolean
+  isDataLoading: boolean
+  order: Order
+  orderBy: keyof Tag
+  pagination: Pagination
   renderRow: (tag: Tag) => ReactElement<TagsTableRowProps>
+  onChangePage: TablePageChangeAction
+  onChangeRowsPerPage: (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void
+  onRequestSort: (property: keyof Tag) => void
 }
 
-const TagsTable = ({ data, loading, renderRow }: TagsTableProps) => (
-  <TableContainer component={Paper}>
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell width="20%" component="th">
-            Наименование
-          </TableCell>
-          <TableCell width="20%" component="th">
-            Описание
-          </TableCell>
-          <TableCell width="20%" component="th">
-            Создан
-          </TableCell>
-          <TableCell width="20%" component="th">
-            Обновлено
-          </TableCell>
-          <TableCell width="1%" component="th">
-            Действия
-          </TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {!loading ? (
-          <ConditionalList
-            list={data}
-            renderExists={(list) => (
-              <Fragment>{list.map((tag) => renderRow(tag))}</Fragment>
+const TagsTable = memo(function (props: TagsTableProps) {
+  const classes = useStyles()
+  const {
+    order,
+    orderBy,
+    pagination,
+    data,
+    isDataLoading,
+    renderRow,
+    onChangePage,
+    onChangeRowsPerPage,
+    onRequestSort,
+  } = props
+
+  const createSortHandler = useMemo(
+    () => (property: keyof Tag) => () => {
+      onRequestSort(property)
+    },
+    [onRequestSort],
+  )
+
+  return (
+    <Fragment>
+      <TableContainer component={Paper}>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              {head_cells.map((head_cell) => (
+                <TableCell
+                  key={head_cell.id}
+                  align={head_cell.align}
+                  sortDirection={
+                    orderBy === head_cell.sort_field ? order : false
+                  }
+                  style={{ width: head_cell.width }}
+                >
+                  <TableSortLabel
+                    active={orderBy === head_cell.sort_field}
+                    direction={orderBy === head_cell.sort_field ? order : "asc"}
+                    onClick={createSortHandler(
+                      head_cell.sort_field ?? "inserted_at",
+                    )}
+                    classes={{
+                      root: classes.tableSortLabel,
+                      active: classes.tableSortLabelActive,
+                      icon: classes.tableSortLabelIcon,
+                    }}
+                  >
+                    {head_cell.label}
+                    {orderBy === head_cell.id ? (
+                      <span className={classes.visuallyHidden}>
+                        {order === "desc"
+                          ? "sorted descending"
+                          : "sorted ascending"}
+                      </span>
+                    ) : null}
+                  </TableSortLabel>
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {!isDataLoading ? (
+              <ConditionalList
+                list={data}
+                renderExists={(list) => (
+                  <Fragment>{list.map((tag) => renderRow(tag))}</Fragment>
+                )}
+              />
+            ) : (
+              <TableSkeleton
+                colSpan={5}
+                length={data.length || pagination.page_size}
+              />
             )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <ConditionalList
+        list={data}
+        renderExists={() => (
+          <TablePagination
+            rowsPerPageOptions={[20, 50, 100]}
+            component="div"
+            count={pagination.total_items}
+            rowsPerPage={Number(pagination.page_size)}
+            page={pagination.page - 1}
+            onChangePage={onChangePage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
           />
-        ) : (
-          <TableSkeleton colSpan={5} />
         )}
-      </TableBody>
-    </Table>
-  </TableContainer>
-)
+      />
+    </Fragment>
+  )
+})
 
 type TagsTableRowProps = {
   tag: Tag
   onDeleteRow: () => void
 }
 
-const TagsTableRow = ({ tag, onDeleteRow }: TagsTableRowProps) => (
-  <TableRow>
-    <TableCell>{tag.name}</TableCell>
-    <TableCell>{tag.slug}</TableCell>
-    <TableCell>
-      {tag.created_at && format(new Date(tag.created_at), "dd.mm.yyyy HH:mm")}
-    </TableCell>
-    <TableCell>
-      {tag.updated_at && format(new Date(tag.updated_at), "dd.mm.yyyy HH:mm")}
-    </TableCell>
-    <TableCell>
-      <ButtonGroup>
-        {tag.editable && (
-          <IconButton>
-            <EditIcon color="action" />
-          </IconButton>
-        )}
-        {tag.deletable && (
-          <IconButton>
-            <DeleteIcon color="error" onClick={onDeleteRow} />
-          </IconButton>
-        )}
-      </ButtonGroup>
-    </TableCell>
-  </TableRow>
-)
+const TagsTableRow = memo(function (props: TagsTableRowProps) {
+  const { tag, onDeleteRow } = props
+
+  return (
+    <TableRow>
+      <TableCell>{tag.name}</TableCell>
+      <TableCell>{tag.slug}</TableCell>
+      <TableCell>
+        {tag.inserted_at &&
+          format(new Date(tag.inserted_at), "dd.mm.yyyy HH:mm")}
+      </TableCell>
+      <TableCell>
+        {tag.updated_at && format(new Date(tag.updated_at), "dd.mm.yyyy HH:mm")}
+      </TableCell>
+      <TableCell>
+        <ButtonGroup>
+          {tag.editable && (
+            <IconButton>
+              <EditIcon color="action" />
+            </IconButton>
+          )}
+          {tag.deletable && (
+            <IconButton>
+              <DeleteIcon color="error" onClick={onDeleteRow} />
+            </IconButton>
+          )}
+        </ButtonGroup>
+      </TableCell>
+    </TableRow>
+  )
+})
 
 type AddFormDialogProps = {
-  opened: boolean
+  isOpened: boolean
   onClose: () => void
   onAddTag: (tag: Tag) => void
 }
 
-const AddFormDialog = ({ opened, onAddTag, onClose }: AddFormDialogProps) => {
+const AddFormDialog = ({ isOpened, onAddTag, onClose }: AddFormDialogProps) => {
   const [name, setName] = useState("")
 
   const handleChangeNameField = useCallback(
@@ -264,7 +475,7 @@ const AddFormDialog = ({ opened, onAddTag, onClose }: AddFormDialogProps) => {
         onClose()
         onAddTag(response.data)
       } catch {
-        throw new Error("Add tag form dialog error")
+        throw new Error("Add tag form dialog hasError")
       }
     },
     [name, onAddTag, onClose],
@@ -273,11 +484,11 @@ const AddFormDialog = ({ opened, onAddTag, onClose }: AddFormDialogProps) => {
   return (
     <Dialog
       maxWidth="md"
-      open={opened}
+      open={isOpened}
       onClose={onClose}
       aria-labelledby="add-form-dialog"
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate={true}>
         <DialogTitle id="add-form-dialog">Создание нового тэга</DialogTitle>
         <DialogContent dividers={true}>
           <TextField

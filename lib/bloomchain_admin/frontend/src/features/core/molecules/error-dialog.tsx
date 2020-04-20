@@ -2,12 +2,16 @@ import React from "react"
 import { Dialog, DialogActions, DialogTitle, Button } from "@material-ui/core"
 
 type ErrorDialogProps = {
-  opened: boolean
+  isOpened: boolean
   onClose: () => void
 }
 
-export const ErrorDialog = ({ opened, onClose }: ErrorDialogProps) => (
-  <Dialog open={opened} onClose={onClose} aria-labelledby="error-dialog-title">
+export const ErrorDialog = ({ isOpened, onClose }: ErrorDialogProps) => (
+  <Dialog
+    open={isOpened}
+    onClose={onClose}
+    aria-labelledby="error-dialog-title"
+  >
     <DialogTitle id="error-dialog-title">Произошла ошибка</DialogTitle>
     <DialogActions>
       <Button onClick={onClose} color="primary">

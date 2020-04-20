@@ -80,7 +80,11 @@ export const UserAccountPage = () => {
     <Fragment>
       <Container maxWidth="sm">
         <Paper className={classes.paper} variant="elevation">
-          <form onSubmit={handleSubmit} className={classes.root}>
+          <form
+            onSubmit={handleSubmit}
+            className={classes.root}
+            noValidate={true}
+          >
             <Grid container={true} spacing={3}>
               <Grid item={true}>
                 <Avatar className={classes.avatar}>{avatarCaption}</Avatar>
@@ -146,11 +150,11 @@ export const UserAccountPage = () => {
         </Paper>
       </Container>
       <SuccessDialog
-        opened={openedSuccessDialog}
+        isOpened={openedSuccessDialog}
         onClose={() => setOpenedSuccessDialog(false)}
       />
       <ErrorDialog
-        opened={openedErrorDialog}
+        isOpened={openedErrorDialog}
         onClose={() => setOpenedErrorDialog(false)}
       />
     </Fragment>
@@ -158,12 +162,12 @@ export const UserAccountPage = () => {
 }
 
 type SuccessDialogProps = {
-  opened: boolean
+  isOpened: boolean
   onClose: () => void
 }
 
-const SuccessDialog = ({ opened, onClose }: SuccessDialogProps) => (
-  <Dialog open={opened} onClose={onClose}>
+const SuccessDialog = ({ isOpened, onClose }: SuccessDialogProps) => (
+  <Dialog open={isOpened} onClose={onClose}>
     <DialogTitle>Статья успешно сохранена</DialogTitle>
     <DialogActions>
       <Button onClick={onClose} color="primary" autoFocus>

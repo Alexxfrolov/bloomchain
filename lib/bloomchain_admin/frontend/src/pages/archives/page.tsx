@@ -1,5 +1,6 @@
 import React, {
   Fragment,
+  memo,
   useState,
   useCallback,
   useEffect,
@@ -7,6 +8,7 @@ import React, {
   FormEvent,
   ReactElement,
   RefObject,
+  ChangeEvent,
 } from "react"
 import format from "date-fns/format"
 import {
@@ -17,6 +19,8 @@ import {
   DialogContent,
   DialogActions,
   TableContainer,
+  TableSortLabel,
+  TablePagination,
   Table,
   TableHead,
   TableBody,
@@ -32,8 +36,9 @@ import { Alert } from "@material-ui/lab"
 import AddBoxIcon from "@material-ui/icons/AddBox"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { ConditionalList } from "@ui"
+import { Order, Pagination } from "@api/types"
 import { archivesApi, Archive } from "@api/archives"
-import { mediaApi } from "@api/media"
+import { mediaApi, MediaFile } from "@api/media"
 import {
   ErrorDialog,
   DeleteDialog,
@@ -41,9 +46,9 @@ import {
   TableRow,
   TableCell,
 } from "@features/core"
-import { MediaUploadForm, MediaFile } from "@features/media"
+import { MediaUploadForm } from "@features/media"
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     title: {
       marginRight: theme.spacing(2),
@@ -51,36 +56,83 @@ const useStyles = makeStyles((theme: Theme) =>
     toolbar: {
       marginBottom: theme.spacing(2),
     },
+    table: {
+      tableLayout: "fixed",
+    },
+    visuallyHidden: {
+      border: 0,
+      clip: "rect(0 0 0 0)",
+      height: 1,
+      margin: -1,
+      overflow: "hidden",
+      padding: 0,
+      position: "absolute",
+      top: 20,
+      width: 1,
+    },
+    tableSortLabel: {
+      "&:hover": {
+        color: "rgba(255, 255, 255, 0.54) !important",
+      },
+    },
+    tableSortLabelActive: {
+      color: "#fff !important",
+    },
+    tableSortLabelIcon: {
+      color: "rgba(255, 255, 255, 0.54) !important",
+    },
   }),
 )
+
+const PAGINATION_PRESET = {
+  page: 1,
+  page_size: 20,
+  total_pages: 1,
+  total_items: 0,
+}
 
 export const ArchivesPage = () => {
   const classes = useStyles()
 
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+  const [isDataLoading, setDataLoading] = useState(false)
+  const [hasError, setError] = useState(false)
   const [archives, setArchives] = useState<Archive[]>([])
+  const [pagination, setPagination] = useState<Pagination>({
+    ...PAGINATION_PRESET,
+  })
+  const [order, setOrder] = useState<Order>("desc")
+  const [orderBy, setOrderBy] = useState<keyof Archive>("inserted_at")
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
+      setDataLoading(true)
       setError(false)
 
       try {
-        const response = await archivesApi.get()
+        const { page_size, page } = pagination
+        const response = await archivesApi.get({
+          page_size,
+          page,
+          order,
+          orderBy,
+        })
         setArchives(response.data.data)
+        setPagination({
+          ...pagination,
+          ...response.data.meta,
+        })
       } catch {
         setError(true)
       }
-      setLoading(false)
+      setDataLoading(false)
     }
     fetchData()
-  }, [])
+  }, [pagination.page_size, pagination.page, order, orderBy])
 
   const [modifyingArchive, setModifyingArchive] = useState<Archive | null>(null)
-  const [openedAddFormDialog, seOpenedAddFormDialog] = useState(false)
-  const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
-  const [openedErrorDialog, setOpenedErrorDialog] = useState(false)
+  const [isOpenedAddFormDialog, seOpenedAddFormDialog] = useState(false)
+  const [isOpenedDeleteDialog, setOpenedDeleteDialog] = useState(false)
+  const [isOpenedErrorDialog, setOpenedErrorDialog] = useState(false)
 
   const closeDeleteDialog = useCallback(() => {
     setOpenedDeleteDialog(false)
@@ -111,6 +163,39 @@ export const ArchivesPage = () => {
     }
   }, [archives, modifyingArchive, setArchives, setOpenedDeleteDialog])
 
+  const handleTablePageChange = useCallback(
+    (
+      _event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+      page: number,
+    ) => {
+      setPagination({
+        ...pagination,
+        page: page + 1,
+      })
+    },
+    [pagination, setPagination],
+  )
+
+  const handleTableRowsPerPage = useCallback(
+    (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setPagination({
+        ...pagination,
+        page: 1,
+        page_size: parseInt(event.target.value, 10),
+      })
+    },
+    [pagination, setPagination],
+  )
+
+  const handleRequestSort = useCallback(
+    (property: keyof Archive) => {
+      const isAsc = orderBy === property && order === "asc"
+      setOrder(isAsc ? "desc" : "asc")
+      setOrderBy(property)
+    },
+    [order, orderBy],
+  )
+
   return (
     <Fragment>
       <Container maxWidth="lg">
@@ -126,10 +211,13 @@ export const ArchivesPage = () => {
             <AddBoxIcon color="primary" />
           </IconButton>
         </Toolbar>
-        {!error ? (
+        {!hasError ? (
           <ArchivesTable
-            loading={loading}
+            isDataLoading={isDataLoading}
             data={archives}
+            pagination={pagination}
+            order={order}
+            orderBy={orderBy}
             renderRow={(archive) => (
               <ArchivesTableRow
                 key={archive.id}
@@ -137,116 +225,223 @@ export const ArchivesPage = () => {
                 onDelete={handleDeleteButtonClick(archive)}
               />
             )}
+            onRequestSort={handleRequestSort}
+            onChangePage={handleTablePageChange}
+            onChangeRowsPerPage={handleTableRowsPerPage}
           />
         ) : (
           <Alert color="error">Произошла ошибка</Alert>
         )}
       </Container>
-      {openedAddFormDialog && (
+      {isOpenedAddFormDialog && (
         <AddFormDialog
-          opened={openedAddFormDialog}
+          isOpened={isOpenedAddFormDialog}
           onClose={() => seOpenedAddFormDialog(false)}
           onAdd={addArchive}
         />
       )}
-      {openedDeleteDialog && (
+      {isOpenedDeleteDialog && (
         <DeleteDialog
-          opened={openedDeleteDialog}
+          isOpened={isOpenedDeleteDialog}
           onCancel={closeDeleteDialog}
           onConfirm={handleConfirmDelete}
         />
       )}
       <ErrorDialog
-        opened={openedErrorDialog}
+        isOpened={isOpenedErrorDialog}
         onClose={() => setOpenedErrorDialog(true)}
       />
     </Fragment>
   )
 }
 
+type TablePageChangeAction = (
+  event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+  page: number,
+) => void
+
+const head_cells: import("@features/core").HeadCell<Archive>[] = [
+  {
+    id: "banner",
+    label: "Баннер",
+    width: "45%",
+  },
+  {
+    id: "pdf",
+    label: "PDF",
+    width: "25%",
+  },
+  {
+    id: "inserted_at",
+    sort_field: "inserted_at",
+    label: "Дата публикации",
+    width: "15%",
+  },
+  {
+    id: "actions",
+    label: "Действия",
+    width: "15%",
+  },
+]
+
 type ArchivesTableProps = {
-  loading: boolean
+  isDataLoading: boolean
   data: Archive[]
+  order: Order
+  orderBy: keyof Archive
+  pagination: Pagination
   renderRow: (item: Archive) => ReactElement
+  onChangePage: TablePageChangeAction
+  onChangeRowsPerPage: (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void
+  onRequestSort: (property: keyof Archive) => void
 }
 
-const ArchivesTable = ({ loading, data, renderRow }: ArchivesTableProps) => (
-  <TableContainer component={Paper}>
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell width="45%" component="th">
-            Баннер
-          </TableCell>
-          <TableCell width="25%" component="th">
-            PDF
-          </TableCell>
-          <TableCell width="15%" component="th">
-            Дата публикации
-          </TableCell>
-          <TableCell width="15%" component="th">
-            Действия
-          </TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {!loading ? (
-          <ConditionalList
-            list={data}
-            renderExists={(list) => (
-              <Fragment>{list.map((archive) => renderRow(archive))}</Fragment>
+const ArchivesTable = memo(function (props: ArchivesTableProps) {
+  const classes = useStyles()
+  const {
+    order,
+    orderBy,
+    pagination,
+    data,
+    isDataLoading,
+    renderRow,
+    onChangePage,
+    onChangeRowsPerPage,
+    onRequestSort,
+  } = props
+
+  const createSortHandler = useCallback(
+    (property: keyof Archive) => () => {
+      onRequestSort(property)
+    },
+    [onRequestSort],
+  )
+
+  return (
+    <Fragment>
+      <TableContainer component={Paper}>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              {head_cells.map((head_cell) => (
+                <TableCell
+                  key={head_cell.id}
+                  align={head_cell.align}
+                  sortDirection={
+                    orderBy === head_cell.sort_field ? order : false
+                  }
+                  style={{ width: head_cell.width }}
+                >
+                  <TableSortLabel
+                    active={orderBy === head_cell.sort_field}
+                    direction={orderBy === head_cell.sort_field ? order : "asc"}
+                    onClick={createSortHandler(
+                      head_cell.sort_field ?? "inserted_at",
+                    )}
+                    classes={{
+                      root: classes.tableSortLabel,
+                      active: classes.tableSortLabelActive,
+                      icon: classes.tableSortLabelIcon,
+                    }}
+                  >
+                    {head_cell.label}
+                    {orderBy === head_cell.id ? (
+                      <span className={classes.visuallyHidden}>
+                        {order === "desc"
+                          ? "sorted descending"
+                          : "sorted ascending"}
+                      </span>
+                    ) : null}
+                  </TableSortLabel>
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {!isDataLoading ? (
+              <ConditionalList
+                list={data}
+                renderExists={(list) => (
+                  <Fragment>
+                    {list.map((archive) => renderRow(archive))}
+                  </Fragment>
+                )}
+              />
+            ) : (
+              <TableSkeleton colSpan={4} />
             )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <ConditionalList
+        list={data}
+        renderExists={() => (
+          <TablePagination
+            rowsPerPageOptions={[20, 50, 100]}
+            component="div"
+            count={pagination.total_items}
+            rowsPerPage={Number(pagination.page_size)}
+            page={pagination.page - 1}
+            onChangePage={onChangePage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
           />
-        ) : (
-          <TableSkeleton colSpan={4} />
         )}
-      </TableBody>
-    </Table>
-  </TableContainer>
-)
+      />
+    </Fragment>
+  )
+})
 
 type ArchiveTableRowProps = {
   archive: Archive
   onDelete: () => void
 }
 
-const ArchivesTableRow = ({ archive, onDelete }: ArchiveTableRowProps) => (
-  <TableRow>
-    <TableCell>
-      <img
-        width="100%"
-        src={archive.cover.url}
-        alt={archive.cover.alt ?? ""}
-        title={archive.cover.title ?? ""}
-      />
-    </TableCell>
-    <TableCell>
-      <object
-        data={archive.pdf.url}
-        type="application/pdf"
-        width="160px"
-        height="300px"
-      ></object>
-    </TableCell>
-    <TableCell nowrap="true">
-      {archive.created_at &&
-        format(new Date(archive.created_at), "dd.mm.yyyy HH:mm")}
-    </TableCell>
-    <TableCell>
-      <IconButton edge="end" onClick={onDelete}>
-        <DeleteIcon color="error" />
-      </IconButton>
-    </TableCell>
-  </TableRow>
-)
+const ArchivesTableRow = memo(function (props: ArchiveTableRowProps) {
+  const { archive, onDelete } = props
+  return (
+    <TableRow>
+      <TableCell>
+        <img
+          width="100%"
+          src={archive.cover.url}
+          alt={archive.cover.alt ?? ""}
+          title={archive.cover.title ?? ""}
+        />
+      </TableCell>
+      <TableCell>
+        <object
+          data={archive.pdf.url}
+          type="application/pdf"
+          width="160px"
+          height="300px"
+          aria-label="pdf preview"
+        ></object>
+      </TableCell>
+      <TableCell nowrap="true">
+        {format(new Date(archive.inserted_at), "dd.mm.yyyy HH:mm")}
+      </TableCell>
+      <TableCell>
+        <IconButton edge="end" onClick={onDelete}>
+          <DeleteIcon color="error" />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  )
+})
 
 type AddFormDialogProps = {
-  opened: boolean
+  isOpened: boolean
   onAdd: (archive: Archive) => void
   onClose: () => void
 }
 
-const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
+const AddFormDialog = memo(function ({
+  isOpened,
+  onAdd,
+  onClose,
+}: AddFormDialogProps) {
   const [archive, setArchive] = useState({
     cover: null,
     pdf: {
@@ -314,11 +509,11 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
 
   return (
     <Dialog
-      open={opened}
+      open={isOpened}
       onClose={onClose}
       aria-labelledby="add-archive-form-dialog"
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate={true}>
         <DialogTitle id="add-archive-form-dialog">
           Добавить новый архив
         </DialogTitle>
@@ -333,7 +528,11 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
           </FormControl>
           {archive.cover && (
             <FormControl margin="normal" fullWidth={true} variant="outlined">
-              <img src={archive.cover.url} width="100%" />
+              <img
+                src={archive.cover.url}
+                width="100%"
+                alt={archive.cover?.alt ?? ""}
+              />
             </FormControl>
           )}
           <FormControl margin="normal" fullWidth={true} variant="outlined">
@@ -347,6 +546,7 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
               type="application/pdf"
               width="100%"
               hidden
+              aria-label="pdf preview"
             ></object>
           </FormControl>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
@@ -376,4 +576,4 @@ const AddFormDialog = ({ opened, onAdd, onClose }: AddFormDialogProps) => {
       </form>
     </Dialog>
   )
-}
+})

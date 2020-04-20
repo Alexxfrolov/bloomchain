@@ -1,5 +1,5 @@
 export interface Author {
-  created_at: Date
+  inserted_at: Date
   deletable: boolean
   editable: boolean
   id: number

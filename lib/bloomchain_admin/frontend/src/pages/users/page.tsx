@@ -1,5 +1,6 @@
 import React, {
   Fragment,
+  memo,
   useState,
   useEffect,
   useCallback,
@@ -16,13 +17,14 @@ import {
   Table,
   TableHead,
   TableBody,
+  TableSortLabel,
+  TablePagination,
   Typography,
   Dialog,
   DialogTitle,
   DialogContent,
   TextField,
   DialogActions,
-  ButtonGroup,
   Button,
   IconButton,
   FormControl,
@@ -38,6 +40,7 @@ import AddBoxIcon from "@material-ui/icons/AddBox"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { ConditionalList } from "@ui"
+import { Order, Pagination } from "@api/types"
 import { usersApi, User } from "@api/user"
 import {
   DeleteDialog,
@@ -54,14 +57,51 @@ const useStyles = makeStyles((theme) =>
     toolbar: {
       marginBottom: theme.spacing(2),
     },
+    table: {
+      tableLayout: "fixed",
+    },
+    visuallyHidden: {
+      border: 0,
+      clip: "rect(0 0 0 0)",
+      height: 1,
+      margin: -1,
+      overflow: "hidden",
+      padding: 0,
+      position: "absolute",
+      top: 20,
+      width: 1,
+    },
+    tableSortLabel: {
+      "&:hover": {
+        color: "rgba(255, 255, 255, 0.54) !important",
+      },
+    },
+    tableSortLabelActive: {
+      color: "#fff !important",
+    },
+    tableSortLabelIcon: {
+      color: "rgba(255, 255, 255, 0.54) !important",
+    },
   }),
 )
 
+const PAGINATION_PRESET = {
+  page: 1,
+  page_size: 20,
+  total_pages: 1,
+  total_items: 0,
+}
+
 export const UsersPage = () => {
   const classes = useStyles()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+  const [isDataLoading, setLoading] = useState(false)
+  const [hasError, setError] = useState(false)
   const [users, setUsers] = useState<User[]>([])
+  const [pagination, setPagination] = useState<Pagination>({
+    ...PAGINATION_PRESET,
+  })
+  const [order, setOrder] = useState<Order>("desc")
+  const [orderBy, setOrderBy] = useState<keyof User>("inserted_at")
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,8 +109,18 @@ export const UsersPage = () => {
       setError(false)
 
       try {
-        const response = await usersApi.get()
+        const { page_size, page } = pagination
+        const response = await usersApi.get({
+          page_size,
+          page,
+          order,
+          orderBy,
+        })
         setUsers(response.data.data)
+        setPagination({
+          ...pagination,
+          ...response.data.meta,
+        })
       } catch {
         setError(true)
       }
@@ -78,12 +128,12 @@ export const UsersPage = () => {
       setLoading(false)
     }
     fetchData()
-  }, [])
+  }, [pagination.page_size, pagination.page, order, orderBy])
 
   const [modifyingUser, setModifyingUser] = useState<User | null>(null)
-  const [openedAddFormDialog, setOpenedAddFormDialog] = useState(false)
-  const [openedEditFormDialog, setOpenedEditFormDialog] = useState(false)
-  const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
+  const [isOpenedAddFormDialog, setOpenedAddFormDialog] = useState(false)
+  const [isOpenedEditFormDialog, setOpenedEditFormDialog] = useState(false)
+  const [isOpenedDeleteDialog, setOpenedDeleteDialog] = useState(false)
 
   const openAddFormDialog = useCallback(() => {
     setOpenedAddFormDialog(true)
@@ -111,8 +161,8 @@ export const UsersPage = () => {
   const editUser = useCallback(
     (modifedUser: User) => {
       setUsers(
-        users.reduce(
-          (users: User[], user) => [
+        users.reduce<User[]>(
+          (users, user) => [
             ...users,
             user.id !== modifedUser.id ? user : modifedUser,
           ],
@@ -151,6 +201,39 @@ export const UsersPage = () => {
     [setModifyingUser, setOpenedEditFormDialog],
   )
 
+  const handleTablePageChange = useCallback(
+    (
+      _event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+      page: number,
+    ) => {
+      setPagination({
+        ...pagination,
+        page: page + 1,
+      })
+    },
+    [pagination, setPagination],
+  )
+
+  const handleTableRowsPerPage = useCallback(
+    (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setPagination({
+        ...pagination,
+        page: 1,
+        page_size: parseInt(event.target.value, 10),
+      })
+    },
+    [pagination, setPagination],
+  )
+
+  const handleRequestSort = useCallback(
+    (property: keyof User) => {
+      const isAsc = orderBy === property && order === "asc"
+      setOrder(isAsc ? "desc" : "asc")
+      setOrderBy(property)
+    },
+    [order, orderBy],
+  )
+
   return (
     <Fragment>
       <Container maxWidth="lg">
@@ -166,10 +249,13 @@ export const UsersPage = () => {
             <AddBoxIcon color="primary" />
           </IconButton>
         </Toolbar>
-        {!error ? (
+        {!hasError ? (
           <UsersTable
             data={users}
-            loading={loading}
+            isDataLoading={isDataLoading}
+            pagination={pagination}
+            order={order}
+            orderBy={orderBy}
             renderRow={(user) => (
               <UsersTableRow
                 key={user.id}
@@ -178,29 +264,32 @@ export const UsersPage = () => {
                 onEdit={handleClickEditButton(user)}
               />
             )}
+            onRequestSort={handleRequestSort}
+            onChangePage={handleTablePageChange}
+            onChangeRowsPerPage={handleTableRowsPerPage}
           />
         ) : (
           <Alert color="error">Произошла ошибка</Alert>
         )}
       </Container>
-      {openedAddFormDialog && (
+      {isOpenedAddFormDialog && (
         <AddUserFormDialog
-          opened={openedAddFormDialog}
+          isOpened={isOpenedAddFormDialog}
           onClose={closeAddFormDialog}
           onAddUser={addUser}
         />
       )}
-      {openedDeleteDialog && (
+      {isOpenedDeleteDialog && (
         <DeleteDialog
-          opened={openedDeleteDialog}
+          isOpened={isOpenedDeleteDialog}
           onCancel={closeDeleteDialog}
           onConfirm={handleConfirmDelete}
         />
       )}
-      {modifyingUser && openedEditFormDialog && (
+      {modifyingUser && isOpenedEditFormDialog && (
         <EditUserFormDialog
           editableUser={modifyingUser}
-          opened={openedEditFormDialog}
+          isOpened={isOpenedEditFormDialog}
           onClose={closeEditFormDialog}
           onEditUser={editUser}
         />
@@ -209,55 +298,174 @@ export const UsersPage = () => {
   )
 }
 
+const head_cells: import("@features/core").HeadCell<User>[] = [
+  {
+    id: "first_name",
+    sort_field: "first_name",
+    label: "Имя",
+    width: "1%",
+  },
+  {
+    id: "last_name",
+    sort_field: "last_name",
+    label: "Фамилия",
+    width: "1%",
+  },
+  {
+    id: "role",
+    sort_field: "role",
+    label: "Роль",
+    width: "1%",
+  },
+  {
+    id: "job",
+    sort_field: "job",
+    label: "Должность",
+    width: "1%",
+  },
+  {
+    id: "phone",
+    label: "Телефон",
+    width: "1%",
+  },
+  {
+    id: "email",
+    label: "E-mail",
+    width: "1%",
+  },
+  {
+    id: "actions",
+    label: "Действия",
+    width: "1%",
+    align: "right",
+  },
+]
+
+type TablePageChangeAction = (
+  event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+  page: number,
+) => void
+
 type UsersTableProps = {
   data: User[]
-  loading: boolean
+  isDataLoading: boolean
+  order: Order
+  orderBy: keyof User
+  pagination: Pagination
   renderRow: (user: User) => ReactElement<UsersTableRowProps>
+  onChangePage: TablePageChangeAction
+  onChangeRowsPerPage: (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void
+  onRequestSort: (property: keyof User) => void
 }
 
-const UsersTable = ({ data, loading, renderRow }: UsersTableProps) => (
-  <TableContainer component={Paper}>
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell width="1%" component="th">
-            Имя
-          </TableCell>
-          <TableCell width="1%" component="th">
-            Фамилия
-          </TableCell>
-          <TableCell width="1%" component="th">
-            Роль
-          </TableCell>
-          <TableCell width="1%" component="th">
-            Должность
-          </TableCell>
-          <TableCell width="1%" component="th">
-            Телефон
-          </TableCell>
-          <TableCell width="1%" component="th">
-            E-mail
-          </TableCell>
-          <TableCell width="1%" component="th">
-            Действия
-          </TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {!loading ? (
-          <ConditionalList
-            list={data}
-            renderExists={(list) => (
-              <Fragment>{list.map((user) => renderRow(user))}</Fragment>
+const UsersTable = memo(function (props: UsersTableProps) {
+  const {
+    data,
+    isDataLoading,
+    order,
+    orderBy,
+    pagination,
+    renderRow,
+    onChangePage,
+    onChangeRowsPerPage,
+    onRequestSort,
+  } = props
+
+  const classes = useStyles()
+
+  const createSortHandler = useCallback(
+    (property: keyof User) => () => {
+      onRequestSort(property)
+    },
+    [onRequestSort],
+  )
+
+  return (
+    <Fragment>
+      <TableContainer component={Paper}>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              {head_cells.map((head_cell) =>
+                head_cell.sort_field ? (
+                  <TableCell
+                    key={head_cell.id}
+                    align={head_cell.align}
+                    sortDirection={
+                      orderBy === head_cell.sort_field ? order : false
+                    }
+                    style={{ width: head_cell.width }}
+                  >
+                    <TableSortLabel
+                      active={orderBy === head_cell.sort_field}
+                      direction={
+                        orderBy === head_cell.sort_field ? order : "asc"
+                      }
+                      onClick={createSortHandler(head_cell.sort_field)}
+                      classes={{
+                        root: classes.tableSortLabel,
+                        active: classes.tableSortLabelActive,
+                        icon: classes.tableSortLabelIcon,
+                      }}
+                    >
+                      {head_cell.label}
+                      {orderBy === head_cell.id ? (
+                        <span className={classes.visuallyHidden}>
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
+                        </span>
+                      ) : null}
+                    </TableSortLabel>
+                  </TableCell>
+                ) : (
+                  <TableCell
+                    key={head_cell.id}
+                    align={head_cell.align}
+                    style={{ width: head_cell.width }}
+                  >
+                    {head_cell.label}
+                  </TableCell>
+                ),
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {!isDataLoading ? (
+              <ConditionalList
+                list={data}
+                renderExists={(list) => (
+                  <Fragment>{list.map((user) => renderRow(user))}</Fragment>
+                )}
+              />
+            ) : (
+              <TableSkeleton
+                colSpan={7}
+                length={data.length || pagination.page_size}
+              />
             )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <ConditionalList
+        list={data}
+        renderExists={() => (
+          <TablePagination
+            rowsPerPageOptions={[20, 50, 100]}
+            component="div"
+            count={pagination.total_items}
+            rowsPerPage={Number(pagination.page_size)}
+            page={pagination.page - 1}
+            onChangePage={onChangePage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
           />
-        ) : (
-          <TableSkeleton colSpan={6} />
         )}
-      </TableBody>
-    </Table>
-  </TableContainer>
-)
+      />
+    </Fragment>
+  )
+})
 
 type UsersTableRowProps = {
   user: User
@@ -265,40 +473,41 @@ type UsersTableRowProps = {
   onEdit: () => void
 }
 
-const UsersTableRow = ({ user, onDetete, onEdit }: UsersTableRowProps) => (
-  <TableRow>
-    <TableCell>{user.first_name}</TableCell>
-    <TableCell>{user.last_name}</TableCell>
-    <TableCell>{user.role}</TableCell>
-    <TableCell>{user.job}</TableCell>
-    <TableCell>{user.phone}</TableCell>
-    <TableCell>{user.email}</TableCell>
-    <TableCell>
-      <ButtonGroup>
-        <IconButton onClick={onEdit}>
-          <EditIcon color="action" />
-        </IconButton>
-        <IconButton onClick={onDetete}>
-          <DeleteIcon color="error" />
-        </IconButton>
-      </ButtonGroup>
-    </TableCell>
-  </TableRow>
-)
+const UsersTableRow = memo(function (props: UsersTableRowProps) {
+  const { user, onDetete, onEdit } = props
+  return (
+    <TableRow>
+      <TableCell>{user.first_name}</TableCell>
+      <TableCell>{user.last_name}</TableCell>
+      <TableCell>{user.role}</TableCell>
+      <TableCell>{user.job}</TableCell>
+      <TableCell>{user.phone}</TableCell>
+      <TableCell>{user.email}</TableCell>
+      <TableCell align="right">
+        <Toolbar disableGutters={true}>
+          <IconButton onClick={onEdit}>
+            <EditIcon color="action" />
+          </IconButton>
+          <IconButton onClick={onDetete}>
+            <DeleteIcon color="error" />
+          </IconButton>
+        </Toolbar>
+      </TableCell>
+    </TableRow>
+  )
+})
 
 type AddUserFormDialogProps = {
-  opened: boolean
+  isOpened: boolean
   onClose: () => void
   onAddUser: (user: User) => void
 }
 
-const AddUserFormDialog = ({
-  opened,
-  onAddUser,
-  onClose,
-}: AddUserFormDialogProps) => {
+const AddUserFormDialog = memo(function (props: AddUserFormDialogProps) {
+  const { isOpened, onAddUser, onClose } = props
+
   const [user, setUser] = useState<
-    Omit<User, "created_at" | "updated_at" | "id">
+    Omit<User, "inserted_at" | "updated_at" | "inserted_at" | "id">
   >({
     first_name: "",
     last_name: "",
@@ -348,11 +557,11 @@ const AddUserFormDialog = ({
   return (
     <Dialog
       maxWidth="md"
-      open={opened}
+      open={isOpened}
       onClose={onClose}
       aria-labelledby="add-user-form-dialog"
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate={true}>
         <DialogTitle id="add-user-form-dialog">
           Создание нового пользователя
         </DialogTitle>
@@ -448,21 +657,17 @@ const AddUserFormDialog = ({
       </form>
     </Dialog>
   )
-}
+})
 
 type EditUserFormDialogProps = {
   editableUser: User
-  opened: boolean
+  isOpened: boolean
   onClose: () => void
   onEditUser: (user: User) => void
 }
 
-const EditUserFormDialog = ({
-  editableUser,
-  opened,
-  onEditUser,
-  onClose,
-}: EditUserFormDialogProps) => {
+const EditUserFormDialog = memo(function (props: EditUserFormDialogProps) {
+  const { editableUser, isOpened, onEditUser, onClose } = props
   const [user, setUser] = useState<User>({ ...editableUser })
 
   const labelRef: RefObject<HTMLLabelElement | null> = useRef(null)
@@ -503,11 +708,11 @@ const EditUserFormDialog = ({
   return (
     <Dialog
       maxWidth="md"
-      open={opened}
+      open={isOpened}
       onClose={onClose}
       aria-labelledby="add-user-form-dialog"
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate={true}>
         <DialogTitle id="add-user-form-dialog">
           Редактирование пользователя
         </DialogTitle>
@@ -599,7 +804,7 @@ const EditUserFormDialog = ({
       </form>
     </Dialog>
   )
-}
+})
 
 function setCustomValidity(event) {
   const { value } = event.target

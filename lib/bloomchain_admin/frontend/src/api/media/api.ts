@@ -2,10 +2,22 @@ import axios, { AxiosPromise } from "axios"
 import decamelize from "decamelize"
 import { httpConfig } from "@features/core"
 
+import { Pagination } from "../types"
+
 import { MediaFile, UploadableMediaFile, EditableMediaFile } from "./types"
 
-function get(type: string): AxiosPromise<{ data: MediaFile[] }> {
-  return axios.get(`${httpConfig.baseUrl}/media/?type=${type}`)
+interface Params {
+  type: MediaFile["type"]
+  page_size: number | "all"
+  page: number
+}
+
+function get(
+  params: Params,
+): AxiosPromise<{ data: MediaFile[]; meta: Pagination }> {
+  return axios.get(`${httpConfig.baseUrl}/media`, {
+    params,
+  })
 }
 
 function create(file: UploadableMediaFile): AxiosPromise<MediaFile> {

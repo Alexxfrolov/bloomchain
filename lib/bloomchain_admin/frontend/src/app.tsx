@@ -1,8 +1,10 @@
-import React, { Fragment } from "react"
+import React from "react"
 // import { hot } from "react-hot-loader"
 import { State } from "router5"
 import { useRoute } from "react-router5"
 import CssBaseline from "@material-ui/core/CssBaseline"
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles"
+import { ruRU } from "@material-ui/core/locale"
 import {
   ActicleCreatePage,
   ActicleEditPage,
@@ -17,6 +19,8 @@ import {
 } from "@pages"
 import { CommonTemplate, MainMenu } from "@features/core"
 import { AccountLoader } from "@features/account"
+
+const theme = createMuiTheme({}, ruRU)
 
 export const App = () => {
   const { route } = useRoute()
@@ -57,13 +61,13 @@ export const App = () => {
   }
 
   return (
-    <Fragment>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <AccountLoader>
         <CommonTemplate menu={<MainMenu />}>
           {setPageByRoute(route)}
         </CommonTemplate>
       </AccountLoader>
-    </Fragment>
+    </ThemeProvider>
   )
 }

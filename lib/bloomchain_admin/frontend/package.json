@@ -22,6 +22,7 @@
     "node": ">=10.16.0"
   },
   "scripts": {
+    "commit": "npx git-cz",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
@@ -66,7 +67,9 @@
     "babel-preset-react-app": "^9.1.1",
     "browserlist": "^1.0.1",
     "case-sensitive-paths-webpack-plugin": "^2.2.0",
+    "commitizen": "^4.0.4",
     "css-loader": "1.0.0",
+    "cz-conventional-changelog": "^3.1.0",
     "dotenv": "^8.1.0",
     "dotenv-expand": "^5.1.0",
     "eslint": "^6.5.0",
@@ -136,5 +139,10 @@
     "react-router5": "^8.0.0",
     "router5": "^8.0.0",
     "router5-plugin-browser": "^8.0.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }

@@ -1,9 +1,9 @@
 export interface Tag {
-  created_at: string
+  inserted_at: Date | string
   deletable: boolean
   editable: boolean
   id: number
   name: string
   slug: string
-  updated_at: string
+  updated_at: Date | string
 }

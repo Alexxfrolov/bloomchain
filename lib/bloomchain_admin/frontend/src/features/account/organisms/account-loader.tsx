@@ -34,7 +34,7 @@ export const AccountLoader = ({ children }: AccountLoaderProps) => {
   if (error) {
     return (
       <ErrorDialog
-        opened={openedErrorDialog}
+        isOpened={openedErrorDialog}
         onClose={() => setOpenedErrorDialog(false)}
       />
     )

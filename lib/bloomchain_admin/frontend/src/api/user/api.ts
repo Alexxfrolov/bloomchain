@@ -2,10 +2,26 @@ import axios, { AxiosPromise } from "axios"
 import decamelize from "decamelize"
 import { httpConfig } from "@features/core"
 
+import { Order, Pagination } from "../types"
+
 import { User } from "./types"
 
-function get(): AxiosPromise<{ data: User[] }> {
-  return axios.get(`${httpConfig.baseUrl}/users`)
+interface Params {
+  order: Order
+  orderBy: keyof User
+  page_size: number
+  page: number
+}
+
+function get(params: Params): AxiosPromise<{ data: User[]; meta: Pagination }> {
+  const { order, orderBy, ...restOptions } = params
+
+  return axios.get(`${httpConfig.baseUrl}/users`, {
+    params: {
+      ...restOptions,
+      sort_by: `${order}(${orderBy})`,
+    },
+  })
 }
 
 function getById(id: number): AxiosPromise<User> {

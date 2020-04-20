@@ -1,11 +1,11 @@
 import axios, { AxiosPromise } from "axios"
 import { httpConfig } from "@features/core"
 
+import { Order, Pagination } from "../types"
+
 import { Article } from "./types"
 
-type Order = "asc" | "desc"
-
-interface Options {
+interface Params {
   order: Order
   orderBy: keyof Article
   page_size: number
@@ -16,23 +16,20 @@ interface Options {
   until?: Date | null
 }
 
-interface Pagination {
-  page: number
-  page_size: number
-  total_items: number
-  total_pages: number
-}
-
 function get(
-  options: Options,
+  params: Params,
 ): AxiosPromise<{ data: Article[]; meta: Pagination }> {
-  const { order, orderBy, ...restOptions } = options
-  return axios(`${httpConfig.baseUrl}/articles`, {
-    params: {
-      ...restOptions,
-      sort_by: `${order}(${orderBy})`,
-    },
-  })
+  try {
+    const { order, orderBy, ...restOptions } = params
+    return axios(`${httpConfig.baseUrl}/articles`, {
+      params: {
+        ...restOptions,
+        sort_by: `${order}(${orderBy})`,
+      },
+    })
+  } catch (err) {
+    throw new Error(err)
+  }
 }
 
 function getById(id: number): AxiosPromise<Article> {
@@ -40,15 +37,27 @@ function getById(id: number): AxiosPromise<Article> {
 }
 
 function create(article: Omit<Article, "id">): AxiosPromise<Article> {
-  const { tags, authors, keywords, cover, ...rest } = article
-  const data = {
-    ...rest,
-    cover_id: cover?.id ?? null,
-    authors: authors.reduce((acc: number[], author) => [...acc, author.id], []),
-    tags: tags.reduce((acc: number[], tag) => [...acc, tag.id], []),
-    keywords: keywords.length ? keywords.split(/[ ,]+/) : [],
+  try {
+    const { tags, authors, seo_settings, cover, ...rest } = article
+    const data = {
+      ...rest,
+      cover_id: cover?.id ?? null,
+      authors: authors.reduce<number[]>(
+        (acc, author) => [...acc, author.id],
+        [],
+      ),
+      tags: tags.reduce<number[]>((acc, tag) => [...acc, tag.id], []),
+      seo_settings: {
+        ...seo_settings,
+        keywords: seo_settings.keywords.length
+          ? seo_settings.keywords.split(/[ ,]+/)
+          : [],
+      },
+    }
+    return axios.post(`${httpConfig.baseUrl}/articles`, data)
+  } catch (err) {
+    throw new Error(err)
   }
-  return axios.post(`${httpConfig.baseUrl}/articles`, data)
 }
 
 function update(
@@ -56,15 +65,27 @@ function update(
     keywords: string
   },
 ): AxiosPromise<Article> {
-  const { cover, tags, keywords, authors, ...rest } = article
-  const data = {
-    ...rest,
-    authors: authors.reduce((acc: number[], author) => [...acc, author.id], []),
-    tags: tags.reduce((acc: number[], tag) => [...acc, tag.id], []),
-    keywords: keywords.length ? keywords.split(/[ ,]+/) : [],
-    cover_id: cover?.id ?? null,
+  try {
+    const { cover, tags, seo_settings, authors, ...rest } = article
+    const data = {
+      ...rest,
+      authors: authors.reduce<number[]>(
+        (acc, author) => [...acc, author.id],
+        [],
+      ),
+      tags: tags.reduce<number[]>((acc, tag) => [...acc, tag.id], []),
+      cover_id: cover?.id ?? null,
+      seo_settings: {
+        ...seo_settings,
+        keywords: seo_settings.keywords.length
+          ? seo_settings.keywords.split(/[ ,]+/)
+          : [],
+      },
+    }
+    return axios.patch(`${httpConfig.baseUrl}/articles/${article.id}`, data)
+  } catch (err) {
+    throw new Error(err)
   }
-  return axios.patch(`${httpConfig.baseUrl}/articles/${article.id}`, data)
 }
 
 function remove(id: number): AxiosPromise {

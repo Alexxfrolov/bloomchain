@@ -40,8 +40,8 @@ import {
 import { Alert } from "@material-ui/lab"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
+import { Order, Pagination } from "@api/types"
 import { articlesApi, Article } from "@api/articles"
-import { Author } from "@api/authors"
 import { ConditionalList } from "@ui"
 import {
   RouterLink,
@@ -49,9 +49,10 @@ import {
   TableRow,
   TableCell,
   TableSkeleton,
+  debounce,
 } from "@features/core"
 
-const titles = {
+const mapTitleByStatus = {
   archive: "Архив",
   published: "Опубликовано",
   ready: "Готово к публикации",
@@ -94,15 +95,6 @@ const useStyles = makeStyles((theme) =>
   }),
 )
 
-type Order = "asc" | "desc"
-
-interface Pagination {
-  page: number
-  page_size: number
-  total_pages: number
-  total_items: number
-}
-
 const PAGINATION_PRESET = {
   page: 1,
   page_size: 5,
@@ -114,8 +106,8 @@ export const ArticlesViewPage = () => {
   const classes = useStyles()
 
   const { route } = useRoute()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+  const [isDataLoading, setDataLoading] = useState(false)
+  const [hasError, setHasError] = useState(false)
 
   const status = useMemo(() => route.name.split(".")[2], [route.name])
 
@@ -127,16 +119,16 @@ export const ArticlesViewPage = () => {
   const [type, setType] = useState<Article["type"]>("newsfeed")
   const [since, setSince] = useState<Date | null>(null)
   const [until, setUntil] = useState<Date | null>(null)
-  const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
+  const [isOpenedDeleteDialog, setOpenedDeleteDialog] = useState(false)
   const [currentArticle, setCurrentArticle] = useState<Article | null>(null)
-
   const [order, setOrder] = useState<Order>("desc")
   const [orderBy, setOrderBy] = useState<keyof Article>("published_at")
+  const [query, setQuery] = useState("")
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
-      setError(false)
+      setDataLoading(true)
+      setHasError(false)
       try {
         const { page_size, page } = pagination
         const response = await articlesApi.get({
@@ -153,12 +145,21 @@ export const ArticlesViewPage = () => {
           ...response.data.meta,
         })
       } catch {
-        setError(true)
+        setHasError(true)
       }
-      setLoading(false)
+      setDataLoading(false)
     }
     fetchData()
   }, [type, status, pagination.page_size, pagination.page, order, orderBy])
+
+  useEffect(() => {
+    setOrder("desc")
+    setOrderBy("published_at")
+    setTabIndex(0)
+    // setQuery("")
+    setSince(null)
+    setUntil(null)
+  }, [status])
 
   const handleDateStartChange = useMemo(
     () => (date: Date | null) => {
@@ -198,11 +199,11 @@ export const ArticlesViewPage = () => {
           setOpenedDeleteDialog(false)
           setArticles(articles.filter((item) => item.id !== currentArticle.id))
         } catch {
-          setError(true)
+          setHasError(true)
         }
       }
     },
-    [articles, currentArticle, setArticles, setOpenedDeleteDialog, setError],
+    [articles, currentArticle, setArticles, setOpenedDeleteDialog, setHasError],
   )
 
   const handleTablePageChange = useMemo(
@@ -232,8 +233,8 @@ export const ArticlesViewPage = () => {
   const handleFilterFormSubmit = useMemo(
     () => async (event: FormEvent) => {
       event.preventDefault()
-      setLoading(true)
-      setError(false)
+      setDataLoading(true)
+      setHasError(false)
       try {
         const { page_size, page } = pagination
         const response = await articlesApi.get({
@@ -248,9 +249,9 @@ export const ArticlesViewPage = () => {
         })
         setArticles([...response.data.data])
       } catch {
-        setError(true)
+        setHasError(true)
       }
-      setLoading(false)
+      setDataLoading(false)
     },
     [
       type,
@@ -258,8 +259,8 @@ export const ArticlesViewPage = () => {
       since,
       until,
       setArticles,
-      setLoading,
-      setError,
+      setDataLoading,
+      setHasError,
       order,
       orderBy,
       pagination,
@@ -270,8 +271,8 @@ export const ArticlesViewPage = () => {
     () => async () => {
       setSince(null)
       setUntil(null)
-      setLoading(true)
-      setError(false)
+      setDataLoading(true)
+      setHasError(false)
       try {
         const { page, page_size } = pagination
         const response = await articlesApi.get({
@@ -284,9 +285,9 @@ export const ArticlesViewPage = () => {
         })
         setArticles([...response.data.data])
       } catch {
-        setError(true)
+        setHasError(true)
       }
-      setLoading(false)
+      setDataLoading(false)
     },
     [
       status,
@@ -297,8 +298,8 @@ export const ArticlesViewPage = () => {
       setSince,
       setUntil,
       setArticles,
-      setError,
-      setLoading,
+      setHasError,
+      setDataLoading,
     ],
   )
 
@@ -311,23 +312,34 @@ export const ArticlesViewPage = () => {
     [order, orderBy],
   )
 
-  const handleInpuSearchChange = useMemo(
-    () => async (event: ChangeEvent<HTMLInputElement>) => {
-      try {
-        const params = {
-          status,
-          type,
-          query: encodeURIComponent(event.currentTarget.value),
-        }
-        const response = await articlesApi.search(params)
-      } catch {
-        setError(true)
+  const doSearch = async (query: string) => {
+    setDataLoading(true)
+    setHasError(false)
+    try {
+      const params = {
+        status,
+        type,
+        query,
       }
+      const response = await articlesApi.search(params)
+      setArticles([...response.data.data])
+    } catch {
+      setHasError(true)
+    }
+    setDataLoading(false)
+  }
+
+  const debounceOnChange = useCallback(debounce(doSearch, 500), [])
+
+  const handleChangeSearchInput = useMemo(
+    () => (event: ChangeEvent<HTMLInputElement>) => {
+      setQuery(event.target.value)
+      debounceOnChange(event.target.value)
     },
-    [status, type, setError],
+    [debounceOnChange, setQuery],
   )
 
-  const title = useMemo(() => titles[status], [status])
+  const title = useMemo(() => mapTitleByStatus[status], [status])
 
   return (
     <Fragment>
@@ -335,7 +347,7 @@ export const ArticlesViewPage = () => {
         <Typography component="h1" variant="h4" gutterBottom={true}>
           {title}
         </Typography>
-        <form onSubmit={handleFilterFormSubmit}>
+        <form onSubmit={handleFilterFormSubmit} noValidate={true}>
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
             <Toolbar disableGutters={true} className={classes.toolbar}>
               <FormControl margin="none" variant="outlined">
@@ -381,10 +393,11 @@ export const ArticlesViewPage = () => {
               </ButtonGroup>
               <TextField
                 autoComplete="off"
-                type="search"
+                type="text"
+                value={query}
                 variant="outlined"
                 size="small"
-                onChange={handleInpuSearchChange}
+                onChange={handleChangeSearchInput}
               />
             </Toolbar>
           </MuiPickersUtilsProvider>
@@ -406,12 +419,12 @@ export const ArticlesViewPage = () => {
             <Tab label="Биржевая аналитика" id="analysis" />
           </Tabs>
         </AppBar>
-        {error ? (
+        {hasError ? (
           <Alert color="error">Произошла ошибка</Alert>
         ) : (
           <ArticlesTable
             data={articles}
-            loading={loading}
+            isDataLoading={isDataLoading}
             order={order}
             orderBy={orderBy}
             pagination={pagination}
@@ -428,9 +441,9 @@ export const ArticlesViewPage = () => {
           />
         )}
       </Container>
-      {openedDeleteDialog && (
+      {isOpenedDeleteDialog && (
         <DeleteDialog
-          opened={openedDeleteDialog}
+          isOpened={isOpenedDeleteDialog}
           onCancel={() => setOpenedDeleteDialog(false)}
           onConfirm={handleConfirmDelete}
         />
@@ -439,15 +452,7 @@ export const ArticlesViewPage = () => {
   )
 }
 
-interface HeadCell {
-  align?: "left" | "right" | "inherit" | "center" | "justify"
-  id: string
-  label: string
-  sort_field?: keyof Article
-  width?: string
-}
-
-const head_cells: HeadCell[] = [
+const head_cells: import("@features/core").HeadCell<Article>[] = [
   {
     id: "title",
     sort_field: "title",
@@ -493,7 +498,7 @@ type TablePageChangeAction = (
 
 type ArticlesTableProps = {
   data: Article[]
-  loading: boolean
+  isDataLoading: boolean
   order: Order
   orderBy: keyof Article
   pagination: Pagination
@@ -508,7 +513,7 @@ type ArticlesTableProps = {
 const ArticlesTable = memo(function ArticlesTable(props: ArticlesTableProps) {
   const {
     data,
-    loading,
+    isDataLoading,
     order,
     orderBy,
     pagination,
@@ -517,6 +522,7 @@ const ArticlesTable = memo(function ArticlesTable(props: ArticlesTableProps) {
     onChangeRowsPerPage,
     onRequestSort,
   } = props
+
   const classes = useStyles()
 
   const createSortHandler = useCallback(
@@ -577,7 +583,7 @@ const ArticlesTable = memo(function ArticlesTable(props: ArticlesTableProps) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {loading ? (
+            {isDataLoading ? (
               <TableSkeleton colSpan={6} />
             ) : (
               <ConditionalList
@@ -592,15 +598,20 @@ const ArticlesTable = memo(function ArticlesTable(props: ArticlesTableProps) {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        colSpan={3}
-        count={pagination.total_items}
-        rowsPerPage={pagination.page_size}
-        page={pagination.page - 1}
-        onChangePage={onChangePage}
-        onChangeRowsPerPage={onChangeRowsPerPage}
+      <ConditionalList
+        list={data}
+        renderExists={() => (
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            colSpan={3}
+            count={pagination.total_items}
+            rowsPerPage={Number(pagination.page_size)}
+            page={pagination.page - 1}
+            onChangePage={onChangePage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
+          />
+        )}
       />
     </Fragment>
   )
@@ -629,10 +640,7 @@ const ArticlesTableRow = memo(function ArticlesTableRow(
       </TableCell>
       <TableCell>
         {article.authors
-          .reduce(
-            (names: string[], author: Author) => [...names, author.name],
-            [],
-          )
+          .reduce<string[]>((names, author) => [...names, author.name], [])
           .join(", ")}
       </TableCell>
       <TableCell nowrap="true">

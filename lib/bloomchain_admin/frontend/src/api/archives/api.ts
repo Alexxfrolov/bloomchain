@@ -1,11 +1,28 @@
 import axios, { AxiosPromise } from "axios"
-// import decamelize from "decamelize"
 import { httpConfig } from "@features/core"
+
+import { Order, Pagination } from "../types"
 
 import { Archive } from "./types"
 
-function get(): AxiosPromise<{ data: Archive[] }> {
-  return axios.get(`${httpConfig.baseUrl}/archives`)
+interface Params {
+  order: Order
+  orderBy: keyof Archive
+  page_size: number
+  page: number
+}
+
+function get(
+  params: Params,
+): AxiosPromise<{ data: Archive[]; meta: Pagination }> {
+  const { order, orderBy, ...restOptions } = params
+
+  return axios.get(`${httpConfig.baseUrl}/archives`, {
+    params: {
+      ...restOptions,
+      sort_by: `${order}(${orderBy})`,
+    },
+  })
 }
 
 function create(cover_id: number, pdf_id: number): AxiosPromise<Archive> {

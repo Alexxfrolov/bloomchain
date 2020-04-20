@@ -2,7 +2,7 @@ export interface Article {
   authors: import("../authors").Author[]
   body: string | null
   cover: import("../media").MediaFile | null
-  created_at: Date | null
+  inserted_at: Date | null
   id: number
   lead: string | null
   published_at: Date | null

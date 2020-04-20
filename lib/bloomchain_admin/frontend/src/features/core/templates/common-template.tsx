@@ -102,7 +102,7 @@ export const CommonTemplate = ({
   const theme = useTheme()
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("md"))
 
-  const [opened, setOpened] = useState(isSmallDevice)
+  const [isOpened, setOpened] = useState(isSmallDevice)
 
   useEffect(() => {
     isSmallDevice ? setOpened(false) : setOpened(true)
@@ -119,15 +119,18 @@ export const CommonTemplate = ({
   return (
     <div className={classes.root}>
       {cloneElement(header, {
-        openedDrawer: opened,
+        openedDrawer: isOpened,
         onDrawerClose: handleDrawerOpen,
       })}
       <Drawer
         variant="permanent"
         classes={{
-          paper: clsx(classes.drawerPaper, !opened && classes.drawerPaperClose),
+          paper: clsx(
+            classes.drawerPaper,
+            !isOpened && classes.drawerPaperClose,
+          ),
         }}
-        open={opened}
+        open={isOpened}
       >
         <div className={classes.toolbarIcon}>
           <IconButton onClick={handleDrawerClose}>

@@ -24,7 +24,6 @@ import lightBlue from "@material-ui/core/colors/lightBlue"
 import grey from "@material-ui/core/colors/grey"
 import { ConditionalList } from "@ui"
 import { mediaApi, MediaFile } from "@api/media"
-// import LinkOutlinedIcon from "@material-ui/icons/LinkOutlined"
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -106,38 +105,39 @@ export const MediaUploadForm = ({
     [onUpload],
   )
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
   })
 
   const [tabIndex, setTabIndex] = useState(0)
-  const [openedDialog, setOpenedDialog] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+  const [isOpenedDialog, setOpenedDialog] = useState(false)
+  const [isDataLoading, setDataLoading] = useState(false)
+  const [hasError, setError] = useState(false)
   const [media, setMedia] = useState<MediaFile[]>([])
 
   const inputFileRef: Ref<HTMLInputElement> = useRef(null)
 
   const handleChangeTab = useCallback(
-    (event: React.ChangeEvent<{ checked: boolean }>, value: number) => {
+    (_event: React.ChangeEvent<{ checked: boolean }>, _value: number) => {
       setTabIndex(0)
     },
     [setTabIndex],
   )
 
   const openDialog = useCallback(async () => {
-    setLoading(true)
+    setDataLoading(true)
     setError(false)
 
     try {
+      // FIX: add pagination
       const response = await mediaApi.get("image")
       setMedia(response.data.data)
     } catch {
       setError(true)
     }
-    setLoading(false)
+    setDataLoading(false)
     setOpenedDialog(true)
-  }, [setError, setLoading, setMedia, setOpenedDialog])
+  }, [setError, setDataLoading, setMedia, setOpenedDialog])
 
   const closeDialog = useCallback(() => {
     setOpenedDialog(false)
@@ -202,25 +202,11 @@ export const MediaUploadForm = ({
               </Fragment>
             </Box>
           </div>
-          {/* <label htmlFor="input-file" className={classes.label}>
-            <input
-              id="input-file"
-              accept="image/*"
-              ref={inputFileRef}
-              type="file"
-              className={classes.input}
-              onChange={inputFileChangeHandler}
-            />
-            <Typography variant="subtitle1" component="p">
-              <strong>Переместите сюда изображение</strong>
-            </Typography>
-            <Typography>(или нажмите)</Typography>
-          </label> */}
         </TabPanel>
       </Paper>
       <MediaLibraryDialog
         media={media}
-        opened={openedDialog}
+        isOpened={isOpenedDialog}
         onAdd={handleAddButtonClick}
         onClose={closeDialog}
       />
@@ -261,14 +247,14 @@ function TabPanel(props: TabPanelProps) {
 
 type MediaLibraryDialogProps = {
   media: MediaFile[]
-  opened: boolean
+  isOpened: boolean
   onAdd: (media: MediaFile) => void
   onClose: () => void
 }
 
 export const MediaLibraryDialog = ({
   media,
-  opened,
+  isOpened,
   onAdd,
   onClose,
 }: MediaLibraryDialogProps) => {
@@ -276,7 +262,7 @@ export const MediaLibraryDialog = ({
 
   return (
     <Dialog
-      open={opened}
+      open={isOpened}
       onClose={onClose}
       maxWidth="md"
       aria-labelledby="media-library-dialog-title"

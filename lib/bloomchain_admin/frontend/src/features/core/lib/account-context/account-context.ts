@@ -7,5 +7,5 @@ export const AccountContext = createContext<User>({
   role: "admin",
   updated_at: "",
   name: "",
-  created_at: "",
+  inserted_at: "",
 })

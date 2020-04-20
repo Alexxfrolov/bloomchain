@@ -1,4 +1,5 @@
 import React, {
+  memo,
   useMemo,
   useState,
   useEffect,
@@ -42,12 +43,11 @@ const useStyles = makeStyles(() =>
   }),
 )
 
-const INITIAL_ARTICLE: Omit<Article, "id"> & { id: null | number } = {
+const INITIAL_ARTICLE: Omit<Article, "id"> = {
   authors: [],
   body: null,
   cover: null,
-  created_at: null,
-  id: null,
+  inserted_at: null,
   lead: null,
   published_at: null,
   status: "draft",
@@ -68,25 +68,21 @@ const INITIAL_ARTICLE: Omit<Article, "id"> & { id: null | number } = {
 
 type ArticleFormProps = {
   authors: Author[]
-  initialArticle?: Omit<Article, "id"> & { id: null | number }
+  initialArticle?: Omit<Article, "id">
   tags: Tag[]
   onSubmit: (article: Article) => void
 }
 
 // TODO: add removeObjectURL
-export const ArticleForm = ({
-  authors,
-  initialArticle = INITIAL_ARTICLE,
-  tags,
-  onSubmit,
-}: ArticleFormProps) => {
+export const ArticleForm = memo(function (props: ArticleFormProps) {
+  const { authors, initialArticle = INITIAL_ARTICLE, tags, onSubmit } = props
   const classes = useStyles()
 
-  const [article, setArticle] = useState<
-    Omit<Article, "id"> & { id: null | number }
-  >({ ...initialArticle })
+  const [article, setArticle] = useState<Omit<Article, "id">>({
+    ...initialArticle,
+  })
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const [submitted, setSubmitted] = useState(false)
+  const [didSubmitted, setSubmitted] = useState(false)
 
   const inputTypeLabel: RefObject<HTMLLabelElement> = useRef(null)
   const inputStatusLabel: RefObject<HTMLLabelElement> = useRef(null)
@@ -100,11 +96,11 @@ export const ArticleForm = ({
   }, [inputTypeLabel, inputStatusLabel])
 
   useEffect(() => {
-    if (submitted) {
+    if (didSubmitted) {
       const { errors: fieldsErrors } = validateFormFields(article)
       setErrors(fieldsErrors)
     }
-  }, [submitted, article])
+  }, [didSubmitted, article])
 
   const handleChangeFormField = useCallback(
     (field: string) => (event: SyntheticEvent<{ value: string }>) => {
@@ -205,44 +201,51 @@ export const ArticleForm = ({
     [article, onSubmit],
   )
 
-  const tagsOptions = useMemo(
-    () =>
-      tags.reduce((acc: Tag[], tag) => {
-        const selected = article.tags.some(
+  const tagsOptions = useMemo(() => {
+    if (article.tags.length) {
+      return tags.reduce<Tag[]>((acc, tag) => {
+        const isAuthorSelected = article.tags.find(
           (articleTag) => articleTag.id === tag.id,
         )
-        if (!selected) {
-          return [...acc, tag]
+        if (isAuthorSelected) {
+          return acc
         }
 
-        return [...acc]
-      }, []),
-    [article.tags, tags],
-  )
+        return [...acc, tag]
+      }, [])
+    }
+    return tags
+  }, [article.tags, tags])
 
-  const authorsOptions = useMemo(
-    () =>
-      authors.reduce((acc: Author[], author) => {
-        const selected = article.authors.some(
+  const authorsOptions = useMemo(() => {
+    if (article.authors.length) {
+      return authors.reduce<Author[]>((acc, author) => {
+        const isTagSelected = article.authors.find(
           (articleAuthor) => articleAuthor.id === author.id,
         )
-        if (!selected) {
-          return [...acc, author]
+        if (isTagSelected) {
+          return acc
         }
 
-        return [...acc]
-      }, []),
-    [article.authors, authors],
+        return [...acc, author]
+      }, [])
+    }
+    return authors
+  }, [article.authors, authors])
+
+  const isEnabledDatePicker = useMemo(
+    () => !["ready"].includes(article.status),
+    [article.status],
   )
 
-  const enabledDatePicker = useMemo(() => !["ready"].includes(article.status), [
-    article.status,
-  ])
-
-  const disabledForm = useMemo(() => !!Object.keys(errors).length, [errors])
+  const isDisabledForm = useMemo(() => !!Object.keys(errors).length, [errors])
 
   return (
-    <form onSubmit={handleSubmitForm} className={classes.root}>
+    <form
+      onSubmit={handleSubmitForm}
+      className={classes.root}
+      noValidate={true}
+    >
       <Grid container={true} spacing={4}>
         <Grid item={true} md={12} lg={8}>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
@@ -367,7 +370,7 @@ export const ArticleForm = ({
                 ampm={false}
                 margin="none"
                 fullWidth={true}
-                disabled={enabledDatePicker}
+                disabled={isEnabledDatePicker}
                 inputVariant="outlined"
                 label="Дата публикации"
                 format="dd/MM/yyyy HH:mm"
@@ -498,7 +501,7 @@ export const ArticleForm = ({
           <Grid item={true}>
             <Button
               type="submit"
-              disabled={disabledForm}
+              disabled={isDisabledForm}
               variant="contained"
               color="primary"
             >
@@ -509,7 +512,7 @@ export const ArticleForm = ({
       </Grid>
     </form>
   )
-}
+})
 
 function validateFormFields(fields: Article) {
   const errors: { [key: string]: string } = {}

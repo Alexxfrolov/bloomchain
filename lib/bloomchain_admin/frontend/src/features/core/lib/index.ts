@@ -1,4 +1,6 @@
 export { AccountContext } from "./account-context"
+export { debounce } from "./debounce"
 export { httpRequest } from "./request"
-export { RouterLink } from "./router-link"
 export { router } from "./router"
+export { RouterLink } from "./router-link"
+export { throttle } from "./throttle"

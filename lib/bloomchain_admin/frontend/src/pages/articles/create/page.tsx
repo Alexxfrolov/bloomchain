@@ -1,4 +1,10 @@
-import React, { Fragment, useState, useEffect, useCallback } from "react"
+import React, {
+  Fragment,
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+} from "react"
 import {
   Container,
   Paper,
@@ -30,32 +36,33 @@ const useStyles = makeStyles((theme) =>
 export const ActicleCreatePage = () => {
   const classes = useStyles()
 
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+  const [isDataLoading, setLoading] = useState(false)
+  const [hasError, setError] = useState(false)
   const [tags, setTags] = useState<Tag[]>([])
   const [authors, setAuthors] = useState<Author[]>([])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      setError(false)
+  const fetchData = useCallback(async () => {
+    setLoading(true)
+    setError(false)
 
-      try {
-        const response = await tagsApi.get()
-        const { data } = await authorsApi.get()
-        setTags(response.data.data)
-        setAuthors(data.data)
-      } catch {
-        setError(true)
-      }
-
-      setLoading(false)
+    try {
+      const tagsResponse = await tagsApi.getAll()
+      const authorsResponse = await authorsApi.getAll()
+      setTags(tagsResponse.data.data)
+      setAuthors(authorsResponse.data.data)
+    } catch {
+      setError(true)
     }
-    fetchData()
+
+    setLoading(false)
   }, [])
 
-  const [openedSuccessDialog, setOpenedSuccessDialog] = useState(false)
-  const [openedErrorDialog, setOpenedErrorDialog] = useState(false)
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
+
+  const [isOpenedSuccessDialog, setOpenedSuccessDialog] = useState(false)
+  const [isOpenedErrorDialog, setOpenedErrorDialog] = useState(false)
 
   const handleSubmitForm = useCallback(
     async (article: Article) => {
@@ -85,11 +92,11 @@ export const ActicleCreatePage = () => {
         </Paper>
       </Container>
       <SuccessDialog
-        opened={openedSuccessDialog}
+        isOpened={isOpenedSuccessDialog}
         onClose={() => setOpenedSuccessDialog(false)}
       />
       <ErrorDialog
-        opened={openedErrorDialog}
+        isOpened={isOpenedErrorDialog}
         onClose={() => setOpenedErrorDialog(false)}
       />
     </Fragment>
@@ -97,12 +104,12 @@ export const ActicleCreatePage = () => {
 }
 
 type SuccessDialogProps = {
-  opened: boolean
+  isOpened: boolean
   onClose: () => void
 }
 
-const SuccessDialog = ({ opened, onClose }: SuccessDialogProps) => (
-  <Dialog open={opened} onClose={onClose}>
+const SuccessDialog = ({ isOpened, onClose }: SuccessDialogProps) => (
+  <Dialog open={isOpened} onClose={onClose}>
     <DialogTitle>Статья успешно сохранена</DialogTitle>
     <DialogActions>
       <Button onClick={onClose} color="primary" autoFocus>

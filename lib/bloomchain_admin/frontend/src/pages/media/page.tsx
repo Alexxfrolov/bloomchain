@@ -1,5 +1,6 @@
 import React, {
   Fragment,
+  memo,
   useState,
   useEffect,
   useCallback,
@@ -28,7 +29,9 @@ import {
 } from "@material-ui/core"
 import { Alert, Skeleton } from "@material-ui/lab"
 import AddBoxIcon from "@material-ui/icons/AddBox"
+import { Pagination } from "@api/types"
 import { mediaApi, MediaFile, UploadableMediaFile } from "@api/media"
+import { ConditionalList } from "@ui"
 import { DeleteDialog } from "@features/core"
 import { MediaList } from "@features/media"
 
@@ -54,35 +57,50 @@ const useStyles = makeStyles((theme) =>
   }),
 )
 
+const PAGINATION_PRESET = {
+  page: 1,
+  page_size: 9,
+  total_pages: 1,
+  total_items: 0,
+}
+
 export const MediaPage = () => {
   const classes = useStyles()
 
   const [type, setType] = useState<MediaFile["type"]>("image")
   const [tabIndex, setTabIndex] = useState(0)
-  const [loading, setLoading] = useState(false)
+  const [isDataLoading, setDataLoading] = useState(false)
+  const [hasError, setError] = useState(false)
   const [media, setMedia] = useState<MediaFile[]>([])
-  const [error, setError] = useState(false)
+  const [pagination, setPagination] = useState<Pagination>({
+    ...PAGINATION_PRESET,
+  })
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
+      setDataLoading(true)
       setError(false)
 
       try {
-        const response = await mediaApi.get(type)
+        const { page_size, page } = pagination
+        const response = await mediaApi.get({ type, page_size, page })
         setMedia(response.data.data)
+        setPagination({
+          ...pagination,
+          ...response.data.meta,
+        })
       } catch {
         setError(true)
       }
 
-      setLoading(false)
+      setDataLoading(false)
     }
     fetchData()
-  }, [type])
+  }, [type, pagination.page_size, pagination.page])
 
-  const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
-  const [openedAddFormDialog, setOpenedAddFormDialog] = useState(false)
-  const [openedEditFormDialog, setOpenedEditFormDialog] = useState(false)
+  const [isOpenedDeleteDialog, setOpenedDeleteDialog] = useState(false)
+  const [isOpenedAddFormDialog, setOpenedAddFormDialog] = useState(false)
+  const [isOpenedEditFormDialog, setOpenedEditFormDialog] = useState(false)
   const [
     modifyingMediaFile,
     setModifyingMediaFile,
@@ -98,8 +116,8 @@ export const MediaPage = () => {
   const editMediaFile = useCallback(
     (modifedMediaFile: MediaFile) => {
       setMedia(
-        media.reduce(
-          (media: MediaFile[], user) => [
+        media.reduce<MediaFile[]>(
+          (media, user) => [
             ...media,
             user.id !== modifedMediaFile.id ? user : modifedMediaFile,
           ],
@@ -146,6 +164,16 @@ export const MediaPage = () => {
     }
   }, [media, modifyingMediaFile, setMedia, setOpenedDeleteDialog])
 
+  const handleChangePaginationPage = useCallback(
+    (page: number) => {
+      setPagination({
+        ...pagination,
+        page,
+      })
+    },
+    [pagination, setPagination],
+  )
+
   return (
     <Container maxWidth="lg">
       <Toolbar disableGutters={true} className={classes.toolbar}>
@@ -160,7 +188,7 @@ export const MediaPage = () => {
           <AddBoxIcon color="primary" />
         </IconButton>
       </Toolbar>
-      {error ? (
+      {hasError ? (
         <Alert color="error">Произошла ошибка</Alert>
       ) : (
         <Fragment>
@@ -174,41 +202,47 @@ export const MediaPage = () => {
             >
               <Tab label="Изображения" id="image" className={classes.tab} />
               <Tab label="PDF" id="pdf" className={classes.tab} />
-              {/* <Tab label="Видео" id="video" /> */}
             </Tabs>
           </AppBar>
           <div className={classes.root}>
-            {loading ? (
+            {isDataLoading ? (
               <Skeleton width="100%" height="900px" />
             ) : (
-              <MediaList
-                media={media}
-                onDelete={deleteButtonHandler}
-                onEdit={editButtonHandler}
+              <ConditionalList
+                list={media}
+                renderExists={(list) => (
+                  <MediaList
+                    media={list}
+                    pagination={pagination}
+                    onChangePaginationPage={handleChangePaginationPage}
+                    onDelete={deleteButtonHandler}
+                    onEdit={editButtonHandler}
+                  />
+                )}
               />
             )}
           </div>
         </Fragment>
       )}
-      {openedDeleteDialog && (
+      {isOpenedDeleteDialog && (
         <DeleteDialog
-          opened={openedDeleteDialog}
+          isOpened={isOpenedDeleteDialog}
           onCancel={() => setOpenedDeleteDialog(false)}
           onConfirm={handleConfirmDelete}
         />
       )}
-      {openedAddFormDialog && (
+      {isOpenedAddFormDialog && (
         <AddFormDialog
-          opened={openedAddFormDialog}
+          isOpened={isOpenedAddFormDialog}
           type={type}
           onClose={() => setOpenedAddFormDialog(false)}
           onAddMedia={handleAddMedia}
         />
       )}
-      {modifyingMediaFile && openedEditFormDialog && (
+      {modifyingMediaFile && isOpenedEditFormDialog && (
         <EditFormDialog
           modifyingMediaFile={modifyingMediaFile}
-          opened={openedEditFormDialog}
+          isOpened={isOpenedEditFormDialog}
           onClose={() => setOpenedEditFormDialog(false)}
           onUpdateMedia={editMediaFile}
         />
@@ -218,18 +252,15 @@ export const MediaPage = () => {
 }
 
 type AddFormDialogProps = {
-  opened: boolean
+  isOpened: boolean
   type: MediaFile["type"]
   onClose: () => void
   onAddMedia: (file: MediaFile) => void
 }
 
-const AddFormDialog = ({
-  opened,
-  type,
-  onClose,
-  onAddMedia,
-}: AddFormDialogProps) => {
+const AddFormDialog = memo(function (props: AddFormDialogProps) {
+  const { isOpened, type, onClose, onAddMedia } = props
+
   const imageRef: RefObject<HTMLImageElement> = useRef(null)
   const fileInputRef: RefObject<HTMLInputElement> = useRef(null)
   const [media, setMedia] = useState<
@@ -281,16 +312,16 @@ const AddFormDialog = ({
 
   return (
     <Dialog
-      open={opened}
+      open={isOpened}
       onClose={onClose}
       aria-labelledby="upload-form-dialog"
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate={true}>
         <DialogTitle id="upload-form-dialog">Загрузка файла</DialogTitle>
         <DialogContent>
           {media.file && (
             <FormControl margin="normal" fullWidth={true} variant="outlined">
-              <img width="100%" ref={imageRef} />
+              <img width="100%" ref={imageRef} alt="" />
             </FormControl>
           )}
           <FormControl margin="normal" fullWidth={true} variant="outlined">
@@ -351,21 +382,18 @@ const AddFormDialog = ({
       </form>
     </Dialog>
   )
-}
+})
 
 type EditFormDialogProps = {
   modifyingMediaFile: MediaFile
-  opened: boolean
+  isOpened: boolean
   onClose: () => void
   onUpdateMedia: (file: MediaFile) => void
 }
 
-const EditFormDialog = ({
-  modifyingMediaFile,
-  opened,
-  onClose,
-  onUpdateMedia,
-}: EditFormDialogProps) => {
+const EditFormDialog = memo(function (props: EditFormDialogProps) {
+  const { modifyingMediaFile, isOpened, onClose, onUpdateMedia } = props
+
   const [media, setMedia] = useState<MediaFile>({ ...modifyingMediaFile })
 
   const handleChangeTextField = useCallback(
@@ -392,11 +420,11 @@ const EditFormDialog = ({
 
   return (
     <Dialog
-      open={opened}
+      open={isOpened}
       onClose={onClose}
       aria-labelledby="edit-media-file-form-dialog"
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate={true}>
         <DialogTitle id="edit-media-file-form-dialog">
           Обновление файла
         </DialogTitle>
@@ -447,4 +475,4 @@ const EditFormDialog = ({
       </form>
     </Dialog>
   )
-}
+})

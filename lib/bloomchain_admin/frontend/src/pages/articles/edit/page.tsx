@@ -32,20 +32,17 @@ export const ActicleEditPage = () => {
   const classes = useStyles()
   const { route } = useRoute()
 
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+  const [isDataLoading, setLoading] = useState(false)
+  const [hasError, setError] = useState(false)
 
   const [tags, setTags] = useState<Tag[]>([])
   const [authors, setAuthors] = useState<Author[]>([])
-  const [article, setArticle] = useState<
-    Omit<Article, "keywords" | "id"> & {
-      keywords: string | null
-    }
-  >({
+  const [article, setArticle] = useState<Omit<Article, "id">>({
     authors: [],
     body: null,
     cover: null,
-    created_at: null,
+    lead: null,
+    inserted_at: null,
     seo_settings: {
       description: "",
       keywords: [],
@@ -54,27 +51,27 @@ export const ActicleEditPage = () => {
       og_description: "",
       og_image: "",
     },
-    lead: null,
     published_at: null,
     status: "draft",
     tags: [],
     time: null,
     title: "",
+    total_views: 0,
     type: "newsfeed",
     updated_at: null,
   })
 
-  const [openedDialog, setOpenedDialog] = useState(false)
+  const [isOpenedDialog, setOpenedDialog] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
       setError(false)
 
       try {
-        const response = await tagsApi.get()
-        const { data } = await authorsApi.get()
-        setAuthors(data.data)
-        setTags(response.data.data)
+        const tagsResponse = await tagsApi.getAll()
+        const authorsResponse = await authorsApi.getAll()
+        setAuthors(authorsResponse.data.data)
+        setTags(tagsResponse.data.data)
       } catch {
         setError(true)
       }
@@ -90,11 +87,13 @@ export const ActicleEditPage = () => {
       try {
         const response = await articlesApi.getById(route.params.id)
         setArticle({
-          ...article,
           ...response.data,
-          keywords: response.data.keywords.length
-            ? response.data.keywords.join(", ")
-            : "",
+          seo_settings: {
+            ...response.data.seo_settings,
+            keywords: response.data.seo_settings.keywords.length
+              ? response.data.seo_settings.keywords.join(", ")
+              : "",
+          },
         })
       } catch {
         setError(true)
@@ -124,7 +123,7 @@ export const ActicleEditPage = () => {
           Редактирование статьи
         </Typography>
         <Paper className={classes.paper}>
-          {loading ? (
+          {isDataLoading ? (
             <Skeleton width="100%" height="900px" />
           ) : (
             <ArticleForm
@@ -137,7 +136,7 @@ export const ActicleEditPage = () => {
         </Paper>
       </Container>
       <SuccessDialog
-        opened={openedDialog}
+        isOpened={isOpenedDialog}
         onClose={() => setOpenedDialog(false)}
       />
     </Fragment>
@@ -145,12 +144,12 @@ export const ActicleEditPage = () => {
 }
 
 type SuccessDialogProps = {
-  opened: boolean
+  isOpened: boolean
   onClose: () => void
 }
 
-const SuccessDialog = ({ opened, onClose }: SuccessDialogProps) => (
-  <Dialog open={opened} onClose={onClose}>
+const SuccessDialog = ({ isOpened, onClose }: SuccessDialogProps) => (
+  <Dialog open={isOpened} onClose={onClose}>
     <DialogTitle>Статья успешно обновлена</DialogTitle>
     <DialogActions>
       <Button onClick={onClose} color="primary" autoFocus>

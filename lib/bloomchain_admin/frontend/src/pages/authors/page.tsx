@@ -1,12 +1,15 @@
 import React, {
   Fragment,
+  memo,
   useState,
   useEffect,
   useCallback,
+  useMemo,
   ReactElement,
   ChangeEvent,
   FormEvent,
 } from "react"
+import format from "date-fns/format"
 import {
   Container,
   Paper,
@@ -14,6 +17,8 @@ import {
   Table,
   TableHead,
   TableBody,
+  TableSortLabel,
+  TablePagination,
   Typography,
   Dialog,
   DialogTitle,
@@ -23,7 +28,6 @@ import {
   DialogActions,
   Button,
   IconButton,
-  ButtonGroup,
   makeStyles,
   createStyles,
 } from "@material-ui/core"
@@ -32,6 +36,7 @@ import AddBoxIcon from "@material-ui/icons/AddBox"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { ConditionalList } from "@ui"
+import { Order, Pagination } from "@api/types"
 import { authorsApi, Author } from "@api/authors"
 import {
   DeleteDialog,
@@ -48,15 +53,52 @@ const useStyles = makeStyles((theme) =>
     toolbar: {
       marginBottom: theme.spacing(2),
     },
+    table: {
+      tableLayout: "fixed",
+    },
+    visuallyHidden: {
+      border: 0,
+      clip: "rect(0 0 0 0)",
+      height: 1,
+      margin: -1,
+      overflow: "hidden",
+      padding: 0,
+      position: "absolute",
+      top: 20,
+      width: 1,
+    },
+    tableSortLabel: {
+      "&:hover": {
+        color: "rgba(255, 255, 255, 0.54) !important",
+      },
+    },
+    tableSortLabelActive: {
+      color: "#fff !important",
+    },
+    tableSortLabelIcon: {
+      color: "rgba(255, 255, 255, 0.54) !important",
+    },
   }),
 )
+
+const PAGINATION_PRESET = {
+  page: 1,
+  page_size: 20,
+  total_pages: 1,
+  total_items: 0,
+}
 
 export const AuthorsPage = () => {
   const classes = useStyles()
 
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+  const [isDataLoading, setLoading] = useState(false)
+  const [hasError, setError] = useState(false)
   const [authors, setAuthors] = useState<Author[]>([])
+  const [pagination, setPagination] = useState<Pagination>({
+    ...PAGINATION_PRESET,
+  })
+  const [order, setOrder] = useState<Order>("desc")
+  const [orderBy, setOrderBy] = useState<keyof Author>("inserted_at")
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,8 +106,18 @@ export const AuthorsPage = () => {
       setError(false)
 
       try {
-        const response = await authorsApi.get()
+        const { page_size, page } = pagination
+        const response = await authorsApi.get({
+          page_size,
+          page,
+          order,
+          orderBy,
+        })
         setAuthors(response.data.data)
+        setPagination({
+          ...pagination,
+          ...response.data.meta,
+        })
       } catch {
         setError(true)
       }
@@ -73,41 +125,53 @@ export const AuthorsPage = () => {
       setLoading(false)
     }
     fetchData()
-  }, [])
+  }, [pagination.page_size, pagination.page, order, orderBy])
 
   const [modifyingAuthor, setModifyingAuthor] = useState<Author | null>(null)
-  const [openedAddFormDialog, setOpenedAddFormDialog] = useState(false)
-  const [openedEditFormDialog, setOpenedEditFormDialog] = useState(false)
-  const [openedDeleteDialog, setOpenedDeleteDialog] = useState(false)
+  const [isOpenedAddFormDialog, setOpenedAddFormDialog] = useState(false)
+  const [isOpenedEditFormDialog, setOpenedEditFormDialog] = useState(false)
+  const [isOpenedDeleteDialog, setOpenedDeleteDialog] = useState(false)
 
-  const openAddFormDialog = useCallback(() => {
-    setOpenedAddFormDialog(true)
-  }, [setOpenedAddFormDialog])
+  const openAddFormDialog = useMemo(
+    () => () => {
+      setOpenedAddFormDialog(true)
+    },
+    [setOpenedAddFormDialog],
+  )
 
-  const closeAddFormDialog = useCallback(() => {
-    setOpenedAddFormDialog(false)
-  }, [setOpenedAddFormDialog])
+  const closeAddFormDialog = useMemo(
+    () => () => {
+      setOpenedAddFormDialog(false)
+    },
+    [setOpenedAddFormDialog],
+  )
 
-  const closeDeleteDialog = useCallback(() => {
-    setOpenedDeleteDialog(false)
-  }, [setOpenedDeleteDialog])
+  const closeDeleteDialog = useMemo(
+    () => () => {
+      setOpenedDeleteDialog(false)
+    },
+    [setOpenedDeleteDialog],
+  )
 
-  const closeEditFormDialog = useCallback(() => {
-    setOpenedEditFormDialog(false)
-  }, [setOpenedEditFormDialog])
+  const closeEditFormDialog = useMemo(
+    () => () => {
+      setOpenedEditFormDialog(false)
+    },
+    [setOpenedEditFormDialog],
+  )
 
-  const addAuthor = useCallback(
-    (author: Author) => {
+  const addAuthor = useMemo(
+    () => (author: Author) => {
       setAuthors([author, ...authors])
     },
     [authors, setAuthors],
   )
 
-  const editAuthor = useCallback(
-    (modifedAuthor: Author) => {
+  const editAuthor = useMemo(
+    () => (modifedAuthor: Author) => {
       setAuthors(
-        authors.reduce(
-          (authors: Author[], author) => [
+        authors.reduce<Author[]>(
+          (authors, author) => [
             ...authors,
             author.id !== modifedAuthor.id ? author : modifedAuthor,
           ],
@@ -118,32 +182,68 @@ export const AuthorsPage = () => {
     [authors, setAuthors],
   )
 
-  const handleConfirmDelete = useCallback(async () => {
-    if (modifyingAuthor) {
-      try {
-        await authorsApi.remove(modifyingAuthor.id)
-        setOpenedDeleteDialog(false)
-        setAuthors(authors.filter((item) => item.id !== modifyingAuthor.id))
-      } catch {
-        setError(true)
+  const handleConfirmDelete = useMemo(
+    () => async () => {
+      if (modifyingAuthor) {
+        try {
+          await authorsApi.remove(modifyingAuthor.id)
+          setOpenedDeleteDialog(false)
+          setAuthors(authors.filter((item) => item.id !== modifyingAuthor.id))
+        } catch {
+          setError(true)
+        }
       }
-    }
-  }, [authors, modifyingAuthor, setAuthors, setOpenedDeleteDialog])
+    },
+    [authors, modifyingAuthor, setAuthors, setOpenedDeleteDialog],
+  )
 
-  const handleDeleteButtonClick = useCallback(
-    (author: Author) => async () => {
+  const handleDeleteButtonClick = useMemo(
+    () => (author: Author) => async () => {
       setOpenedDeleteDialog(true)
       setModifyingAuthor(author)
     },
     [setModifyingAuthor, setOpenedDeleteDialog],
   )
 
-  const handleClickEditButton = useCallback(
-    (author: Author) => async () => {
+  const handleClickEditButton = useMemo(
+    () => (author: Author) => async () => {
       setOpenedEditFormDialog(true)
       setModifyingAuthor(author)
     },
     [setModifyingAuthor, setOpenedEditFormDialog],
+  )
+
+  const handleTablePageChange = useMemo(
+    () => (
+      _event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+      page: number,
+    ) => {
+      setPagination({
+        ...pagination,
+        page: page + 1,
+      })
+    },
+    [pagination, setPagination],
+  )
+
+  const handleTableRowsPerPage = useMemo(
+    () => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setPagination({
+        ...pagination,
+        page: 1,
+        page_size: parseInt(event.target.value, 10),
+      })
+    },
+    [pagination, setPagination],
+  )
+
+  const handleRequestSort = useMemo(
+    () => (property: keyof Author) => {
+      const isAsc = orderBy === property && order === "asc"
+      setOrder(isAsc ? "desc" : "asc")
+      setOrderBy(property)
+    },
+    [order, orderBy],
   )
 
   return (
@@ -161,10 +261,13 @@ export const AuthorsPage = () => {
             <AddBoxIcon color="primary" />
           </IconButton>
         </Toolbar>
-        {!error ? (
+        {!hasError ? (
           <AuthorsTable
             data={authors}
-            loading={loading}
+            isDataLoading={isDataLoading}
+            pagination={pagination}
+            order={order}
+            orderBy={orderBy}
             renderRow={(author) => (
               <AuthorsTableRow
                 key={author.id}
@@ -173,29 +276,32 @@ export const AuthorsPage = () => {
                 onEdit={handleClickEditButton(author)}
               />
             )}
+            onRequestSort={handleRequestSort}
+            onChangePage={handleTablePageChange}
+            onChangeRowsPerPage={handleTableRowsPerPage}
           />
         ) : (
           <Alert color="error">Произошла ошибка</Alert>
         )}
       </Container>
-      {openedAddFormDialog && (
+      {isOpenedAddFormDialog && (
         <AddAuthorFormDialog
-          opened={openedAddFormDialog}
+          isOpened={isOpenedAddFormDialog}
           onClose={closeAddFormDialog}
           onAddUser={addAuthor}
         />
       )}
-      {openedDeleteDialog && (
+      {isOpenedDeleteDialog && (
         <DeleteDialog
-          opened={openedDeleteDialog}
+          isOpened={isOpenedDeleteDialog}
           onCancel={closeDeleteDialog}
           onConfirm={handleConfirmDelete}
         />
       )}
-      {modifyingAuthor && openedEditFormDialog && (
+      {modifyingAuthor && isOpenedEditFormDialog && (
         <EditAuthorFormDialog
           editableUser={modifyingAuthor}
-          opened={openedEditFormDialog}
+          isOpened={isOpenedEditFormDialog}
           onClose={closeEditFormDialog}
           onEditUser={editAuthor}
         />
@@ -204,40 +310,140 @@ export const AuthorsPage = () => {
   )
 }
 
+type TablePageChangeAction = (
+  event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+  page: number,
+) => void
+
+const head_cells: import("@features/core").HeadCell<Author>[] = [
+  {
+    id: "name",
+    sort_field: "name",
+    label: "Имя",
+    width: "50%",
+  },
+  {
+    id: "inserted_at",
+    sort_field: "inserted_at",
+    label: "Дата создания",
+    width: "35%",
+  },
+  {
+    id: "actions",
+    label: "Действия",
+    width: "15%",
+  },
+]
+
 type AuthorsTableProps = {
   data: Author[]
-  loading: boolean
+  isDataLoading: boolean
+  order: Order
+  orderBy: keyof Author
+  pagination: Pagination
   renderRow: (author: Author) => ReactElement<AuthorsTableRowProps>
+  onChangePage: TablePageChangeAction
+  onChangeRowsPerPage: (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void
+  onRequestSort: (property: keyof Author) => void
 }
 
-const AuthorsTable = ({ data, loading, renderRow }: AuthorsTableProps) => (
-  <TableContainer component={Paper}>
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell width="80%" component="th">
-            Имя
-          </TableCell>
-          <TableCell width="20%" component="th">
-            Действия
-          </TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {!loading ? (
-          <ConditionalList
-            list={data}
-            renderExists={(list) => (
-              <Fragment>{list.map((author) => renderRow(author))}</Fragment>
+const AuthorsTable = memo(function (props: AuthorsTableProps) {
+  const classes = useStyles()
+  const {
+    order,
+    orderBy,
+    pagination,
+    data,
+    isDataLoading,
+    renderRow,
+    onChangePage,
+    onChangeRowsPerPage,
+    onRequestSort,
+  } = props
+
+  const createSortHandler = useMemo(
+    () => (property: keyof Author) => () => {
+      onRequestSort(property)
+    },
+    [onRequestSort],
+  )
+
+  return (
+    <Fragment>
+      <TableContainer component={Paper}>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              {head_cells.map((head_cell) => (
+                <TableCell
+                  key={head_cell.id}
+                  align={head_cell.align}
+                  sortDirection={
+                    orderBy === head_cell.sort_field ? order : false
+                  }
+                  style={{ width: head_cell.width }}
+                >
+                  <TableSortLabel
+                    active={orderBy === head_cell.sort_field}
+                    direction={orderBy === head_cell.sort_field ? order : "asc"}
+                    onClick={createSortHandler(
+                      head_cell.sort_field ?? "inserted_at",
+                    )}
+                    classes={{
+                      root: classes.tableSortLabel,
+                      active: classes.tableSortLabelActive,
+                      icon: classes.tableSortLabelIcon,
+                    }}
+                  >
+                    {head_cell.label}
+                    {orderBy === head_cell.id ? (
+                      <span className={classes.visuallyHidden}>
+                        {order === "desc"
+                          ? "sorted descending"
+                          : "sorted ascending"}
+                      </span>
+                    ) : null}
+                  </TableSortLabel>
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {!isDataLoading ? (
+              <ConditionalList
+                list={data}
+                renderExists={(list) => (
+                  <Fragment>{list.map((author) => renderRow(author))}</Fragment>
+                )}
+              />
+            ) : (
+              <TableSkeleton
+                colSpan={6}
+                length={data.length || pagination.page_size}
+              />
             )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <ConditionalList
+        list={data}
+        renderExists={() => (
+          <TablePagination
+            rowsPerPageOptions={[20, 50, 100]}
+            component="div"
+            count={pagination.total_items}
+            rowsPerPage={Number(pagination.page_size)}
+            page={pagination.page - 1}
+            onChangePage={onChangePage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
           />
-        ) : (
-          <TableSkeleton colSpan={6} />
         )}
-      </TableBody>
-    </Table>
-  </TableContainer>
-)
+      />
+    </Fragment>
+  )
+})
 
 type AuthorsTableRowProps = {
   author: Author
@@ -245,38 +451,43 @@ type AuthorsTableRowProps = {
   onEdit: () => void
 }
 
-const AuthorsTableRow = ({
+const AuthorsTableRow = memo(function ({
   author,
   onDetete,
   onEdit,
-}: AuthorsTableRowProps) => (
-  <TableRow>
-    <TableCell>{author.name}</TableCell>
-    <TableCell>
-      <ButtonGroup>
-        {author.editable && (
-          <IconButton onClick={onEdit}>
-            <EditIcon color="action" />
-          </IconButton>
-        )}
-        {author.deletable && (
-          <IconButton onClick={onDetete}>
-            <DeleteIcon color="error" />
-          </IconButton>
-        )}
-      </ButtonGroup>
-    </TableCell>
-  </TableRow>
-)
+}: AuthorsTableRowProps) {
+  return (
+    <TableRow>
+      <TableCell>{author.name}</TableCell>
+      <TableCell>
+        {format(new Date(author.inserted_at), "dd.mm.yyyy HH:mm")}
+      </TableCell>
+      <TableCell padding="none">
+        <Toolbar disableGutters={true}>
+          {author.editable && (
+            <IconButton onClick={onEdit}>
+              <EditIcon color="action" />
+            </IconButton>
+          )}
+          {author.deletable && (
+            <IconButton onClick={onDetete}>
+              <DeleteIcon color="error" />
+            </IconButton>
+          )}
+        </Toolbar>
+      </TableCell>
+    </TableRow>
+  )
+})
 
 type AddAuthorFormDialogProps = {
-  opened: boolean
+  isOpened: boolean
   onClose: () => void
   onAddUser: (author: Author) => void
 }
 
 const AddAuthorFormDialog = ({
-  opened,
+  isOpened,
   onAddUser,
   onClose,
 }: AddAuthorFormDialogProps) => {
@@ -304,11 +515,11 @@ const AddAuthorFormDialog = ({
   return (
     <Dialog
       maxWidth="md"
-      open={opened}
+      open={isOpened}
       onClose={onClose}
       aria-labelledby="add-author-form-dialog"
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate={true}>
         <DialogTitle id="add-author-form-dialog">
           Добавление нового автора
         </DialogTitle>
@@ -338,14 +549,14 @@ const AddAuthorFormDialog = ({
 
 type EditAuthorFormDialogProps = {
   editableUser: Author
-  opened: boolean
+  isOpened: boolean
   onClose: () => void
   onEditUser: (author: Author) => void
 }
 
 const EditAuthorFormDialog = ({
   editableUser,
-  opened,
+  isOpened,
   onEditUser,
   onClose,
 }: EditAuthorFormDialogProps) => {
@@ -373,11 +584,11 @@ const EditAuthorFormDialog = ({
   return (
     <Dialog
       maxWidth="md"
-      open={opened}
+      open={isOpened}
       onClose={onClose}
       aria-labelledby="edit-author-form-dialog"
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate={true} noValidate={true}>
         <DialogTitle id="edit-author-form-dialog">
           Редактирование автора
         </DialogTitle>

@@ -1,6 +1,6 @@
 export interface MediaFile {
   alt: string | null
-  created_at: string
+  inserted_at: string
   id: number
   url: string
   source: string | null
