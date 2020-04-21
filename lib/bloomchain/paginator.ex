@@ -4,11 +4,9 @@ defmodule Bloomchain.Paginator do
 
   defstruct [:entries, :metadata]
 
-  @page_size 20
-
-  def paginate(query, params) do
+  def paginate(query, %{page_size: _} = params) do
     page_number = params |> Map.get(:page, 1) |> to_int
-    page_size = params |> Map.get(:page_size, @page_size)
+    page_size = params |> Map.get(:page_size, @page_size) |> to_int
     total_items = total_items(query)
 
     %Paginator{
@@ -22,13 +20,15 @@ defmodule Bloomchain.Paginator do
     }
   end
 
-  defp entries(query, _page_number, "all") do
-    query
-    |> Repo.all()
+  def paginate(query, _params) do
+    %{
+      entries: query |> Repo.all(),
+      metadata: %{}
+    }
   end
 
   defp entries(query, page_number, page_size) do
-    offset = to_int(page_size) * (page_number - 1)
+    offset = page_size * (page_number - 1)
 
     query
     |> limit([_], ^page_size)
@@ -54,12 +54,8 @@ defmodule Bloomchain.Paginator do
     |> Repo.one()
   end
 
-  defp total_pages(_total_items, "all") do
-    1
-  end
-
   defp total_pages(total_items, page_size) do
-    ceiling(total_items / to_int(page_size))
+    ceiling(total_items / page_size)
   end
 
   defp ceiling(float) do
