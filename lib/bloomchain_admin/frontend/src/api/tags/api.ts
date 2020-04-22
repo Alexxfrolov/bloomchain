@@ -1,20 +1,14 @@
-import axios, { AxiosPromise } from "axios"
-import { httpConfig } from "@features/core"
+import { request } from "@features/core"
 
-import { Order, Pagination } from "../types"
+import { OrderParams, Pagination, PaginationParams } from "../common"
 
 import { Tag } from "./types"
 
-interface Params {
-  order: Order
-  orderBy: keyof Tag
-  page_size: number
-  page: number
-}
+type Params = OrderParams<Tag> & PaginationParams
 
-function get(params: Params): AxiosPromise<{ data: Tag[]; meta: Pagination }> {
+function get(params: Params) {
   const { order, orderBy, ...restOptions } = params
-  return axios.get(`${httpConfig.baseUrl}/tags`, {
+  return request<{ data: Tag[]; meta: Pagination }>("GET", "/tags", {
     params: {
       ...restOptions,
       sort_by: `${order}(${orderBy})`,
@@ -22,20 +16,18 @@ function get(params: Params): AxiosPromise<{ data: Tag[]; meta: Pagination }> {
   })
 }
 
-function getAll(): AxiosPromise<{ data: Tag[] }> {
-  return axios.get(`${httpConfig.baseUrl}/tags`, {
-    params: {
-      page_size: "all",
-    },
+function getAll() {
+  return request<{ data: Tag[] }>("GET", "/tags")
+}
+
+function create(name: string) {
+  return request<Tag>("POST", "/tags", {
+    data: { name },
   })
 }
 
-function create(name: string): AxiosPromise<Tag> {
-  return axios.post(`${httpConfig.baseUrl}/tags`, { name })
-}
-
-function remove(id: number): AxiosPromise {
-  return axios.delete(`${httpConfig.baseUrl}/tags/${id}`)
+function remove(id: number) {
+  return request("DELETE", `/tags/${id}`)
 }
 
 export const tagsApi = {

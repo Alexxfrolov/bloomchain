@@ -1,42 +1,32 @@
-import axios, { AxiosPromise } from "axios"
-import { httpConfig } from "@features/core"
+import { request } from "@features/core"
 
-import { Order, Pagination } from "../types"
+import { OrderParams, Pagination, PaginationParams } from "../common"
 
 import { Article } from "./types"
 
-interface Params {
-  order: Order
-  orderBy: keyof Article
-  page_size: number
-  page: number
-  status: Article["status"]
-  type: Article["type"]
-  since?: Date | null
-  until?: Date | null
-}
-
-function get(
-  params: Params,
-): AxiosPromise<{ data: Article[]; meta: Pagination }> {
-  try {
-    const { order, orderBy, ...restOptions } = params
-    return axios(`${httpConfig.baseUrl}/articles`, {
-      params: {
-        ...restOptions,
-        sort_by: `${order}(${orderBy})`,
-      },
-    })
-  } catch (err) {
-    throw new Error(err)
+type Params = OrderParams<Article> &
+  PaginationParams & {
+    status: Article["status"]
+    type: Article["type"]
+    since?: Date | null
+    until?: Date | null
   }
+
+function get(params: Params) {
+  const { order, orderBy, ...restOptions } = params
+  return request<{ data: Article[]; meta: Pagination }>("GET", "/articles", {
+    params: {
+      ...restOptions,
+      sort_by: `${order}(${orderBy})`,
+    },
+  })
 }
 
-function getById(id: number): AxiosPromise<Article> {
-  return axios(`${httpConfig.baseUrl}/articles/${id}`)
+function getById(id: number) {
+  return request<Article>("GET", `articles/${id}`)
 }
 
-function create(article: Omit<Article, "id">): AxiosPromise<Article> {
+function create(article: Omit<Article, "id">) {
   try {
     const { tags, authors, seo_settings, cover, ...rest } = article
     const data = {
@@ -54,7 +44,7 @@ function create(article: Omit<Article, "id">): AxiosPromise<Article> {
           : [],
       },
     }
-    return axios.post(`${httpConfig.baseUrl}/articles`, data)
+    return request<Article>("POST", "/articles", { data })
   } catch (err) {
     throw new Error(err)
   }
@@ -64,7 +54,7 @@ function update(
   article: Omit<Article, "keywords"> & {
     keywords: string
   },
-): AxiosPromise<Article> {
+) {
   try {
     const { cover, tags, seo_settings, authors, ...rest } = article
     const data = {
@@ -82,14 +72,14 @@ function update(
           : [],
       },
     }
-    return axios.patch(`${httpConfig.baseUrl}/articles/${article.id}`, data)
+    return request<Article>("PATCH", `/articles/${article.id}`, { data })
   } catch (err) {
     throw new Error(err)
   }
 }
 
-function remove(id: number): AxiosPromise {
-  return axios.delete(`${httpConfig.baseUrl}/articles/${id}`)
+function remove(id: number) {
+  return request("DELETE", `/articles/${id}`)
 }
 
 interface SearchParams {
@@ -99,7 +89,7 @@ interface SearchParams {
 }
 
 function search(options: SearchParams) {
-  return axios.get(`${httpConfig.baseUrl}/articles/search`, {
+  return request("GET", "/articles/search", {
     params: {
       ...options,
     },

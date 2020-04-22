@@ -1,1 +1,1 @@
-export { httpRequest } from "./request"
+export { request } from "./request"

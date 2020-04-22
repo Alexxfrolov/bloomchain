@@ -1,23 +1,15 @@
-import axios, { AxiosPromise } from "axios"
-import { httpConfig } from "@features/core"
+import { request } from "@features/core"
 
-import { Order, Pagination } from "../types"
+import { OrderParams, Pagination, PaginationParams } from "../common"
 
 import { Author } from "./types"
 
-interface Params {
-  order: Order
-  orderBy: keyof Author
-  page_size: number
-  page: number
-}
+type Params = OrderParams<Author> & PaginationParams
 
-function get(
-  params: Params,
-): AxiosPromise<{ data: Author[]; meta: Pagination }> {
+function get(params: Params) {
   const { order, orderBy, ...restOptions } = params
 
-  return axios.get(`${httpConfig.baseUrl}/authors`, {
+  return request<{ data: Author[]; meta: Pagination }>("GET", "/authors", {
     params: {
       ...restOptions,
       sort_by: `${order}(${orderBy})`,
@@ -25,24 +17,26 @@ function get(
   })
 }
 
-function getAll(): AxiosPromise<{ data: Author[] }> {
-  return axios.get(`${httpConfig.baseUrl}/authors`, {
-    params: {
-      page_size: "all",
+function getAll() {
+  return request<{ data: Author[] }>("GET", "/authors")
+}
+
+function create(name: string) {
+  return request("POST", "/authors", {
+    data: { name },
+  })
+}
+
+function update(author: Author) {
+  return request<Author>("PATCH", `/authors/${author.id}`, {
+    data: {
+      ...author,
     },
   })
 }
 
-function create(name: string) {
-  return axios.post(`${httpConfig.baseUrl}/authors`, { name })
-}
-
-function update(author: Author): AxiosPromise<Author> {
-  return axios.patch(`${httpConfig.baseUrl}/authors/${author.id}`, author)
-}
-
-function remove(id: number): AxiosPromise<Author> {
-  return axios.delete(`${httpConfig.baseUrl}/authors/${id}`)
+function remove(id: number) {
+  return request<Author>("DELETE", `/authors/${id}`)
 }
 
 export const authorsApi = {

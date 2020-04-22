@@ -1,39 +1,38 @@
-import axios, { AxiosPromise } from "axios"
 import decamelize from "decamelize"
-import { httpConfig } from "@features/core"
+import { request } from "@features/core"
 
-import { Pagination } from "../types"
+import { Pagination, PaginationParams } from "../common"
 
 import { MediaFile, UploadableMediaFile, EditableMediaFile } from "./types"
 
-interface Params {
+interface Params extends PaginationParams {
   type: MediaFile["type"]
-  page_size: number | "all"
-  page: number
 }
 
-function get(
-  params: Params,
-): AxiosPromise<{ data: MediaFile[]; meta: Pagination }> {
-  return axios.get(`${httpConfig.baseUrl}/media`, {
+function get(params: Params) {
+  return request<{ data: MediaFile[]; meta: Pagination }>("GET", "/media", {
     params,
   })
 }
 
-function create(file: UploadableMediaFile): AxiosPromise<MediaFile> {
+function create(file: UploadableMediaFile) {
   const formData = new FormData()
   Object.keys(file).forEach((key) =>
     formData.append(decamelize(key), file[key]),
   )
-  return axios.post(`${httpConfig.baseUrl}/media`, formData)
+  return request<MediaFile>("POST", "/media", { data: formData })
 }
 
-function update(media: EditableMediaFile): AxiosPromise<MediaFile> {
-  return axios.patch(`${httpConfig.baseUrl}/media/${media.id}`, media)
+function update(media: EditableMediaFile) {
+  return request<MediaFile>("PATCH", `/media/${media.id}`, {
+    data: {
+      ...media,
+    },
+  })
 }
 
-function remove(id: number): AxiosPromise<MediaFile> {
-  return axios.delete(`${httpConfig.baseUrl}/media/${id}`)
+function remove(id: number) {
+  return request<MediaFile>("DELETE", `/media/${id}`)
 }
 
 export const mediaApi = {

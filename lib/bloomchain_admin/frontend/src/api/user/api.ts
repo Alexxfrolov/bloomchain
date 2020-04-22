@@ -1,22 +1,16 @@
-import axios, { AxiosPromise } from "axios"
 import decamelize from "decamelize"
-import { httpConfig } from "@features/core"
+import { request } from "@features/core"
 
-import { Order, Pagination } from "../types"
+import { OrderParams, Pagination, PaginationParams } from "../common"
 
 import { User } from "./types"
 
-interface Params {
-  order: Order
-  orderBy: keyof User
-  page_size: number
-  page: number
-}
+type Params = OrderParams<User> & PaginationParams
 
-function get(params: Params): AxiosPromise<{ data: User[]; meta: Pagination }> {
+function get(params: Params) {
   const { order, orderBy, ...restOptions } = params
 
-  return axios.get(`${httpConfig.baseUrl}/users`, {
+  return request<{ data: User[]; meta: Pagination }>("GET", "/users", {
     params: {
       ...restOptions,
       sort_by: `${order}(${orderBy})`,
@@ -24,8 +18,8 @@ function get(params: Params): AxiosPromise<{ data: User[]; meta: Pagination }> {
   })
 }
 
-function getById(id: number): AxiosPromise<User> {
-  return axios.get(`${httpConfig.baseUrl}/users/${id}`)
+function getById(id: number) {
+  return request<User>("GET", `/users/${id}`)
 }
 
 function create(user: Partial<User>) {
@@ -34,15 +28,19 @@ function create(user: Partial<User>) {
     formData.append(decamelize(key), user[key]),
   )
 
-  return axios.post(`${httpConfig.baseUrl}/users`, { ...user })
+  return request("POST", "/users", {
+    data: {
+      ...user,
+    },
+  })
 }
 
-function update(user: User): AxiosPromise<User> {
-  return axios.patch(`${httpConfig.baseUrl}/users/${user.id}`, user)
+function update(user: User) {
+  return request<User>("PATCH", `/users/${user.id}`)
 }
 
-function remove(id: number): AxiosPromise {
-  return axios.delete(`${httpConfig.baseUrl}/users/${id}`)
+function remove(id: number) {
+  return request("DELETE", `/users/${id}`)
 }
 
 export const usersApi = {

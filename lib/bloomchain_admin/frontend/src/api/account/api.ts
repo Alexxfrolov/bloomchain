@@ -1,8 +1,6 @@
-import axios, { AxiosPromise } from "axios"
-import { httpConfig } from "@features/core"
+import { request } from "@features/core"
 
-const getSettings = (): AxiosPromise =>
-  axios.get(`${httpConfig.baseUrl}/users/current`)
+const getSettings = () => request("GET", "/users/current")
 
 export const accountApi = {
   getSettings,

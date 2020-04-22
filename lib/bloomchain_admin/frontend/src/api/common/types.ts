@@ -6,3 +6,13 @@ export interface Pagination {
 }
 
 export type Order = "asc" | "desc"
+
+export interface OrderParams<T> {
+  order: Order
+  orderBy: keyof T
+}
+
+export interface PaginationParams {
+  page_size: number
+  page: number
+}

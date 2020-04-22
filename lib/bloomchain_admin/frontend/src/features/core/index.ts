@@ -1,6 +1,5 @@
 export * from "./molecules"
 export { CommonTemplate } from "./templates"
-export { httpConfig } from "./http-client.config"
 export * from "./lib"
 export { routes } from "./config"
 export { HeadCell } from "./types"

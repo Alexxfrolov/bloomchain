@@ -1,28 +1,24 @@
-import axois, { AxiosPromise } from "axios"
-import { httpConfig } from "@features/core"
+import { request } from "@features/core"
 
-import { Order, Pagination } from "../types"
+import { OrderParams, Pagination, PaginationParams } from "../common"
 
 import { Subscriber } from "./types"
 
-interface Params {
-  order: Order
-  orderBy: keyof Subscriber
-  page_size: number
-  page: number
-}
+type Params = OrderParams<Subscriber> & PaginationParams
 
-function get(
-  params: Params,
-): AxiosPromise<{ data: Subscriber[]; meta: Pagination }> {
+function get(params: Params) {
   const { order, orderBy, ...restOptions } = params
 
-  return axois.get(`${httpConfig.baseUrl}/subscribers`, {
-    params: {
-      ...restOptions,
-      sort_by: `${order}(${orderBy})`,
+  return request<{ data: Subscriber[]; meta: Pagination }>(
+    "GET",
+    "/subscribers",
+    {
+      params: {
+        ...restOptions,
+        sort_by: `${order}(${orderBy})`,
+      },
     },
-  })
+  )
 }
 
 export const subscribersApi = {
