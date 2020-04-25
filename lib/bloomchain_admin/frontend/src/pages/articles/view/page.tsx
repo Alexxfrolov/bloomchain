@@ -156,10 +156,18 @@ export const ArticlesViewPage = () => {
     setOrder("desc")
     setOrderBy("published_at")
     setTabIndex(0)
-    // setQuery("")
+    setQuery("")
     setSince(null)
     setUntil(null)
   }, [status])
+
+  useEffect(() => {
+    setOrder("desc")
+    setOrderBy("published_at")
+    setQuery("")
+    setSince(null)
+    setUntil(null)
+  }, [type])
 
   const handleDateStartChange = useMemo(
     () => (date: Date | null) => {
@@ -313,6 +321,7 @@ export const ArticlesViewPage = () => {
   )
 
   const doSearch = async (query: string) => {
+    console.log(status, type)
     setDataLoading(true)
     setHasError(false)
     try {
@@ -329,7 +338,7 @@ export const ArticlesViewPage = () => {
     setDataLoading(false)
   }
 
-  const debounceOnChange = useCallback(debounce(doSearch, 500), [])
+  const debounceOnChange = useCallback(debounce(doSearch, 500), [status, type])
 
   const handleChangeSearchInput = useMemo(
     () => (event: ChangeEvent<HTMLInputElement>) => {
