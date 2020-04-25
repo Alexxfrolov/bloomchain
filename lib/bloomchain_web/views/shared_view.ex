@@ -43,7 +43,9 @@ defmodule BloomchainWeb.SharedView do
           to: href_path(item),
           class: "bc-article__heading bc-article__heading__h2 line-clamp line-clamp__size_2"
         ),
-        content_tag(:p, item.lead, class: "bc-article__paragraph mt-2 line-clamp line-clamp__size_3"),
+        content_tag(:p, item.lead,
+          class: "bc-article__paragraph mt-2 line-clamp line-clamp__size_3"
+        ),
         content_tag(:div, class: "d-flex align-items-center mt-3") do
           do_article_attrs(item)
         end
@@ -57,8 +59,13 @@ defmodule BloomchainWeb.SharedView do
     content_tag(:div, class: "col-xl-6") do
       [
         content_tag(:hr, nil, class: "bc-article__separator mx-0 my-3"),
-        link(item.title, to: href_path(item), class: "bc-article__heading line-clamp line-clamp__size_2"),
-        content_tag(:p, item.lead, class: "bc-article__paragraph mt-1 line-clamp line-clamp__size_3"),
+        link(item.title,
+          to: href_path(item),
+          class: "bc-article__heading line-clamp line-clamp__size_2"
+        ),
+        content_tag(:p, item.lead,
+          class: "bc-article__paragraph mt-1 line-clamp line-clamp__size_3"
+        ),
         content_tag(:div, class: "d-flex align-items-center mt-3") do
           do_article_attrs(item)
         end
@@ -93,6 +100,8 @@ defmodule BloomchainWeb.SharedView do
   defp time_from(datetime) do
     Timex.lformat!(datetime, "{relative}", "ru", :relative)
   end
+
+  defp timestamp(nil), do: "00.00.0000 00:00"
 
   defp timestamp(datetime) do
     datetime
