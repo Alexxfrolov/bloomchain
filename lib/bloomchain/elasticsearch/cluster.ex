@@ -16,6 +16,10 @@ defmodule Bloomchain.ElasticsearchCluster do
     {:ok, post}
   end
 
+  def update_by_query(query) do
+    Elasticsearch.post(ES, "/posts/_doc/_update_by_query/", query)
+  end
+
   def delete(struct) do
     # make it async
     Elasticsearch.delete_document(ES, struct, "posts")
