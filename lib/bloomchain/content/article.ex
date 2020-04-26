@@ -1,9 +1,9 @@
 defmodule Bloomchain.Content.Article do
-  alias Bloomchain.Content.Post
-  alias Bloomchain.Repo
-  alias Bloomchain.ElasticsearchCluster, as: ES
-
   import Ecto.Query
+
+  alias Bloomchain.Repo
+  alias Bloomchain.Content.Post
+  alias Bloomchain.ElasticsearchCluster, as: ES
 
   def paginate(type) do
     from(

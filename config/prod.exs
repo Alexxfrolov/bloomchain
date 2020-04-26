@@ -47,6 +47,8 @@ config :bloomchain, Bloomchain.ElasticsearchCluster,
   username: System.get_env("ES_USER"),
   password: System.get_env("ES_PASSWORD")
 
+import_config "scheduler.exs"
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
@@ -84,7 +86,3 @@ config :bloomchain, Bloomchain.ElasticsearchCluster,
 #
 #     config :bloomchain, BloomchainWeb.Endpoint, server: true
 #
-
-# Finally import the config/prod.secret.exs
-# which should be versioned separately.
-# import_config "prod.secret.exs"
