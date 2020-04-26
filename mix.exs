@@ -5,7 +5,7 @@ defmodule Bloomchain.Mixfile do
     [
       app: :bloomchain,
       version: "0.0.1",
-      elixir: "~> 1.7.0",
+      elixir: "~> 1.8.2",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -46,6 +46,9 @@ defmodule Bloomchain.Mixfile do
       # json serializer
       {:httpoison, "~> 1.6"},
       {:jason, "~> 1.1"},
+
+      # scheduler for cronjobs
+      {:quantum, "~> 3.0-rc"},
 
       # User authentication
       {:guardian, "~> 1.0"},

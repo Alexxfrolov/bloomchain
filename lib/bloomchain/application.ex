@@ -15,7 +15,10 @@ defmodule Bloomchain.Application do
       supervisor(BloomchainWeb.Endpoint, []),
 
       # Start the ES when the application starts
-      supervisor(Bloomchain.ElasticsearchCluster, [])
+      supervisor(Bloomchain.ElasticsearchCluster, []),
+
+      # Start scheduler for cron jobs
+      Bloomchain.Scheduler
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

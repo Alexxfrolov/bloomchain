@@ -10,18 +10,17 @@ defmodule Mix.Tasks.Bloomchain.PublishPost do
   @shortdoc "Проставляет статус \"Опубликовано\" для отложенных публикаций"
   def run(_) do
     # start the Repo for interacting with data
-    Mix.Task.run("app.start")
-
+    # Mix.Task.run("app.start")
     time_now = Timex.now()
 
-    from(
-      p in Post,
-      where: p.status == "ready" and field(p, :published_at) <= ^time_now
-    )
-    |> Repo.update_all(set: [status: "published"])
+    {count, _} =
+      from(
+        p in Post,
+        where: p.status == "ready" and field(p, :published_at) <= ^time_now
+      )
+      |> Repo.update_all(set: [status: "published"])
 
-    {status, _} = do_query(time_now) |> ES.update_by_query()
-    IO.puts(status)
+    if count > 0, do: do_query(time_now) |> ES.update_by_query()
   end
 
   defp do_query(time_now) do
