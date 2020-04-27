@@ -25,6 +25,17 @@ defmodule Bloomchain.Content.Index do
     |> Repo.all()
   end
 
+  def last(type) do
+    from(
+      i in Index,
+      where: i.type == ^type,
+      order_by: [desc: i.time],
+      select: %{value: i.value},
+      limit: 1
+    )
+    |> Repo.one()
+  end
+
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:value, :type, :time])
