@@ -1,4 +1,4 @@
-defmodule Bloomchain.Index.Bitcoin do
+defmodule Bloomchain.Service.Index.Bitcoin do
   @binance_url "https://www.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT"
   @bitstamp_url "https://www.bitstamp.net/api/v2/ticker/btcusd"
 
