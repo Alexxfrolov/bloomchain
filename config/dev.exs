@@ -15,6 +15,7 @@ config :bloomchain, BloomchainWeb.Endpoint,
     yarn: ["watch", cd: Path.expand("../lib/bloomchain_web/client", __DIR__)]
   ]
 
+import_config "scheduler.exs"
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

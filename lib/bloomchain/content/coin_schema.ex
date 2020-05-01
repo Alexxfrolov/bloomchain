@@ -27,6 +27,16 @@ defmodule Bloomchain.Content.Coin do
     |> clear_rank()
   end
 
+  def top_10 do
+    from(
+      c in Coin,
+      select: %{id: c.id},
+      where: c.rank >= 1,
+      where: c.rank <= 10
+    )
+    |> Repo.all()
+  end
+
   def all_ids do
     from(
       i in Coin,

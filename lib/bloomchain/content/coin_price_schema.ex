@@ -4,7 +4,7 @@ defmodule Bloomchain.Content.CoinPrice do
   import Ecto.{Query, Changeset}
 
   alias Bloomchain.Repo
-  alias Bloomchain.Content.Coin
+  alias Bloomchain.Content.{Coin, CoinPrice}
 
   schema "coin_prices" do
     field(:currency, :string, null: false)
@@ -27,5 +27,26 @@ defmodule Bloomchain.Content.CoinPrice do
     struct
     |> cast(params, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
+  end
+
+  def current(%{id: coin_id}) do
+    from(
+      p in CoinPrice,
+      where: p.coin_id == ^coin_id,
+      order_by: [desc: :id],
+      limit: 1
+    )
+    |> Repo.one()
+  end
+
+  def previous(%{id: coin_id}) do
+    from(
+      p in CoinPrice,
+      where: p.coin_id == ^coin_id,
+      order_by: [desc: :id],
+      limit: 2
+    )
+    |> Repo.all()
+    |> List.last()
   end
 end
