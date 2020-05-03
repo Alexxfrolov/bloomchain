@@ -8,9 +8,10 @@ defmodule Bloomchain.Repo.Migrations.AddCoinPricesTable do
       add(:price, :float, null: false)
       add(:volume_24h, :float, null: false)
       add(:market_cap, :float, null: false)
-      add(:percent_change_1h, :float, null: false)
-      add(:percent_change_24h, :float, null: false)
-      add(:percent_change_7d, :float, null: false)
+      add(:percent_change_1h, :float)
+      add(:percent_change_24h, :float)
+      add(:percent_change_7d, :float)
+      add(:rank, :integer, null: false)
 
       timestamps()
     end

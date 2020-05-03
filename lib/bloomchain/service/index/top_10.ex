@@ -10,8 +10,6 @@ defmodule Bloomchain.Service.Index.Top10 do
   end
 
   defp request_data() do
-    timestamp = Timex.now() |> Timex.to_unix()
-
     url =
       Application.get_env(:bloomchain, :coinmarket)[:url] <> "/v1/global-metrics/quotes/latest"
 
@@ -28,16 +26,14 @@ defmodule Bloomchain.Service.Index.Top10 do
          total_market_cap: Poison.decode!(body) |> get_in(~w(data quote USD total_market_cap))
        }}
     else
-      {:error, _} -> {:error, %{message: "Service Unavailable", time: timestamp, type: "bitcoin"}}
+      {:error, _} -> {:error, %{message: "Service Unavailable"}}
     end
   end
 
   defp calculate_index({:ok, %{total_market_cap: total_market_cap}}) do
     value =
-      (previous_index(Index.last("top_10")) *
-         (1 + Enum.sum(current_coin_indices(total_market_cap))))
-      |> abs
-      |> Float.ceil(2)
+      previous_index(Index.last("top_10")) *
+        (1 + Enum.sum(current_coin_indices(total_market_cap)))
 
     {:ok, value}
   end
@@ -47,16 +43,26 @@ defmodule Bloomchain.Service.Index.Top10 do
   defp current_coin_indices(total_market_cap) do
     Coin.top_10()
     |> Enum.map(fn coin ->
-      current = CoinPrice.current(coin)
-      previous = CoinPrice.previous(coin)
-
-      (current.market_cap * (current.price - previous.price) / previous.price * total_market_cap)
-      |> Float.ceil(2)
+      current_index(CoinPrice.current(coin), CoinPrice.previous(coin), total_market_cap)
     end)
   end
 
+  defp current_index(
+         %{market_cap: market_cap, price: current_price},
+         %{price: previous_price},
+         total_market_cap
+       ) do
+    current_quote = market_cap / total_market_cap
+    current_quote * (current_price - previous_price) / previous_price
+  end
+
+  defp current_index(%{market_cap: market_cap, price: current_price}, _, total_market_cap) do
+    current_quote = market_cap / total_market_cap
+    current_quote * current_price
+  end
+
   defp previous_index(nil) do
-    100
+    100.0
   end
 
   defp previous_index(index) do
@@ -67,5 +73,7 @@ defmodule Bloomchain.Service.Index.Top10 do
     {:ok, %{value: value, time: time, type: "top_10"}}
   end
 
-  defp response({:error, _} = error, _), do: error
+  defp response({:error, _} = error, time) do
+    {:error, %{time: time, type: "top_10", message: error.message}}
+  end
 end

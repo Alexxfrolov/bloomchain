@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Bloomchain.Index do
+defmodule Mix.Tasks.Bloomchain.UpdateIndex do
   use Mix.Task
 
   alias Bloomchain.Repo
@@ -17,11 +17,15 @@ defmodule Mix.Tasks.Bloomchain.Index do
 
   defp insert_value({:ok, data}) do
     Repo.insert!(Index.changeset(%Index{}, data))
+
+    {:ok, data}
   end
 
   defp insert_value({:error, %{type: type, time: time, message: msg}}) do
-    # %{value: value} = Index.last(type)
-    # Repo.insert!(Index.changeset(%Index{}, %{type: type, time: time, value: value}))
+    %{value: value} = Index.last(type)
+    Repo.insert!(Index.changeset(%Index{}, %{type: type, time: time, value: value}))
+
     IO.puts(msg)
+    {:error, msg}
   end
 end

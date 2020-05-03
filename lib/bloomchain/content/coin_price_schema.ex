@@ -14,13 +14,14 @@ defmodule Bloomchain.Content.CoinPrice do
     field(:percent_change_1h, :float, null: false)
     field(:percent_change_24h, :float, null: false)
     field(:percent_change_7d, :float, null: false)
+    field(:rank, :integer, null: false)
 
     belongs_to(:coin, Coin)
 
     timestamps()
   end
 
-  @required_fields ~w(coin_id currency price volume_24h market_cap)a
+  @required_fields ~w(coin_id currency price volume_24h market_cap rank)a
   @optional_fields ~w(updated_at percent_change_1h percent_change_24h percent_change_7d)a
 
   def changeset(struct, params \\ %{}) do
@@ -40,13 +41,15 @@ defmodule Bloomchain.Content.CoinPrice do
   end
 
   def previous(%{id: coin_id}) do
-    from(
-      p in CoinPrice,
-      where: p.coin_id == ^coin_id,
-      order_by: [desc: :id],
-      limit: 2
-    )
-    |> Repo.all()
-    |> List.last()
+    [_ | tail] =
+      from(
+        p in CoinPrice,
+        where: p.coin_id == ^coin_id,
+        order_by: [desc: :id],
+        limit: 2
+      )
+      |> Repo.all()
+
+    List.first(tail)
   end
 end

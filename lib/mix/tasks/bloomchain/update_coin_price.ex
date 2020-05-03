@@ -5,7 +5,7 @@ defmodule Mix.Tasks.Bloomchain.UpdateCoinPrice do
   alias Bloomchain.Content.{Coin, CoinPrice}
   alias Bloomchain.Service.CoinPrice, as: Service
 
-  @shortdoc "Обновляет список всех монет"
+  @shortdoc "Обновляет цену монет"
   def run(_) do
     # start the Repo for interacting with data
     Mix.Task.run("app.start")

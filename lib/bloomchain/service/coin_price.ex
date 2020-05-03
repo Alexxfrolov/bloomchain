@@ -13,7 +13,7 @@ defmodule Bloomchain.Service.CoinPrice do
       Accept: "application/json"
     ]
 
-    params = [start: 1, limit: 100, convert: "USD"]
+    params = [start: 1, limit: 10, convert: "USD"]
 
     HTTPoison.get(url, headers, params)
   end
@@ -32,7 +32,8 @@ defmodule Bloomchain.Service.CoinPrice do
             market_cap: get_in(item, ["quote", "USD", "market_cap"]),
             percent_change_1h: get_in(item, ["quote", "USD", "percent_change_1h"]),
             percent_change_24h: get_in(item, ["quote", "USD", "percent_change_24h"]),
-            percent_change_7d: get_in(item, ["quote", "USD", "percent_change_7d"])
+            percent_change_7d: get_in(item, ["quote", "USD", "percent_change_7d"]),
+            rank: item["cmc_rank"]
           },
           coin: %{
             id: item["id"],
