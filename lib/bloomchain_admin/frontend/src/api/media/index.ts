@@ -1,2 +1,2 @@
 export { mediaApi } from "./api"
-export * from "./types"
+export type { MediaFile, UploadableMediaFile, EditableMediaFile } from "./api"

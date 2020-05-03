@@ -1,4 +1,5 @@
 import React, {
+  memo,
   Fragment,
   useState,
   useMemo,
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const UserAccountPage = () => {
+export const UserAccountPage = memo(function UserAccountPage() {
   const account = useContext(AccountContext)
   const classes = useStyles()
 
@@ -159,20 +160,23 @@ export const UserAccountPage = () => {
       />
     </Fragment>
   )
-}
+})
 
 type SuccessDialogProps = {
   isOpened: boolean
   onClose: () => void
 }
 
-const SuccessDialog = ({ isOpened, onClose }: SuccessDialogProps) => (
-  <Dialog open={isOpened} onClose={onClose}>
-    <DialogTitle>Статья успешно сохранена</DialogTitle>
-    <DialogActions>
-      <Button onClick={onClose} color="primary" autoFocus>
-        Закрыть
-      </Button>
-    </DialogActions>
-  </Dialog>
-)
+const SuccessDialog = memo(function SuccessDialog(props: SuccessDialogProps) {
+  const { isOpened, onClose } = props
+  return (
+    <Dialog open={isOpened} onClose={onClose}>
+      <DialogTitle>Статья успешно сохранена</DialogTitle>
+      <DialogActions>
+        <Button onClick={onClose} color="primary" autoFocus>
+          Закрыть
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+})

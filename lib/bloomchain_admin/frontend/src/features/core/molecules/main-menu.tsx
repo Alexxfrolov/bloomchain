@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useCallback } from "react"
+import React, { Fragment, memo, useContext, useCallback } from "react"
 import { useRoute } from "react-router5"
 import {
   List,
@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const MainMenu = () => {
+export const MainMenu = memo(function MainMenu() {
   const account = useContext(AccountContext)
   const { router } = useRoute()
   const classes = useStyles()
@@ -293,4 +293,4 @@ export const MainMenu = () => {
       </List>
     </Fragment>
   )
-}
+})

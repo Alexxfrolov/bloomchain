@@ -23,7 +23,7 @@ import {
 } from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
 import { ConditionalList } from "@ui"
-import { Order, Pagination } from "@api/types"
+import { Order, Pagination } from "@api/common/types"
 import { subscribersApi, Subscriber } from "@api/subscribers"
 import { TableRow, TableCell, TableSkeleton } from "@features/core"
 

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo } from "react"
 import clsx from "clsx"
 import {
   AppBar,
@@ -57,7 +57,8 @@ type HeaderProps = {
   onDrawerClose: () => void
 }
 
-export const Header = ({ openedDrawer, onDrawerClose }: HeaderProps) => {
+export const Header = memo(function Header(props: HeaderProps) {
+  const { openedDrawer, onDrawerClose } = props
   const classes = useStyles()
 
   return (
@@ -102,4 +103,4 @@ export const Header = ({ openedDrawer, onDrawerClose }: HeaderProps) => {
       </Toolbar>
     </AppBar>
   )
-}
+})

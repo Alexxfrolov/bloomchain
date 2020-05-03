@@ -29,7 +29,7 @@ import {
 } from "@material-ui/core"
 import { Alert, Skeleton } from "@material-ui/lab"
 import AddBoxIcon from "@material-ui/icons/AddBox"
-import { Pagination } from "@api/types"
+import { Pagination } from "@api/common/types"
 import { mediaApi, MediaFile, UploadableMediaFile } from "@api/media"
 import { ConditionalList } from "@ui"
 import { DeleteDialog } from "@features/core"

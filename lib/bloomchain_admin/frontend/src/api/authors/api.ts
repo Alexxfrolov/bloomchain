@@ -2,7 +2,14 @@ import { request } from "@features/core"
 
 import { OrderParams, Pagination, PaginationParams } from "../common"
 
-import { Author } from "./types"
+export interface Author {
+  inserted_at: Date
+  deletable: boolean
+  editable: boolean
+  id: number
+  name: string
+  updated_at: Date
+}
 
 type Params = OrderParams<Author> & PaginationParams
 

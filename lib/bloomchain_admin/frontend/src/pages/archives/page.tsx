@@ -36,7 +36,7 @@ import { Alert } from "@material-ui/lab"
 import AddBoxIcon from "@material-ui/icons/AddBox"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { ConditionalList } from "@ui"
-import { Order, Pagination } from "@api/types"
+import { Order, Pagination } from "@api/common/types"
 import { archivesApi, Archive } from "@api/archives"
 import { mediaApi, MediaFile } from "@api/media"
 import {
