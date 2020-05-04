@@ -3,14 +3,13 @@ defmodule Mix.Tasks.Bloomchain.PublishPost do
 
   import Ecto.Query
 
-  alias Bloomchain.Repo
-  alias Bloomchain.Content.Post
+  alias Bloomchain.{Repo, Content.Post}
   alias Bloomchain.ElasticsearchCluster, as: ES
 
   @shortdoc "Проставляет статус \"Опубликовано\" для отложенных публикаций"
   def run(_) do
     # start the Repo for interacting with data
-    # Mix.Task.run("app.start")
+    Mix.Task.run("app.start")
     time_now = Timex.now()
 
     {count, _} =
