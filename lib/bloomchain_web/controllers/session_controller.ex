@@ -24,7 +24,7 @@ defmodule BloomchainWeb.SessionController do
   def delete(conn, _) do
     conn
     |> Account.logout()
-    |> redirect(to: page_path(conn, :index))
+    |> send_resp(:no_content, "")
   end
 
   # Private

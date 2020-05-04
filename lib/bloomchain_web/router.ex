@@ -54,7 +54,8 @@ defmodule BloomchainWeb.Router do
   scope "/session", BloomchainWeb do
     pipe_through([:browser, :sign_in])
 
-    resources("/", SessionController, only: [:create, :new, :delete])
+    delete("/", SessionController, :delete)
+    resources("/", SessionController, only: [:create, :new])
   end
 
   scope "/", BloomchainWeb do
