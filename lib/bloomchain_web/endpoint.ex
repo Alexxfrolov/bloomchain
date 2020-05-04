@@ -22,6 +22,7 @@ defmodule BloomchainWeb.Endpoint do
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
     json_decoder: Poison,
+    xml_decoder: :xmerl_scan,
     length: 50_000_000
 
   # Code reloading can be explicitly enabled under the

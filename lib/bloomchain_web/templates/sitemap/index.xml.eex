@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc><%= page_url(@conn, :index) %></loc>
+    <lastmod><%= last_date(Post) %></lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
+  </url>
+  <url>
+    <loc><%= sitemap_url(@conn, :show, "resources.xml") %></loc>
+    <lastmod><%= last_date(Post) %></lastmod>
+  </url>
+  <url>
+    <loc><%= sitemap_url(@conn, :show, "tags.xml") %></loc>
+    <lastmod><%= last_date(Tag) %></lastmod>
+  </url>
+  <%= for [item, lastmod] <- @posts do %>
+    <url>
+      <loc><%= sitemap_url(@conn, :show, "posts-#{item}.xml") %></loc>
+      <lastmod><%= format_date(lastmod) %></lastmod>
+    </url>
+  <% end %>
+</urlset>

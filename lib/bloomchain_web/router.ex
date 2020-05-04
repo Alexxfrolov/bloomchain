@@ -23,6 +23,11 @@ defmodule BloomchainWeb.Router do
     plug(:accepts, ["json", "multipart/form-data"])
   end
 
+  pipeline :xml do
+    plug(:accepts, ["text/xml"])
+    plug(:put_layout, false)
+  end
+
   scope "/admin", BloomchainWeb, as: :admin do
     pipe_through([:browser, :admin])
 
@@ -56,6 +61,14 @@ defmodule BloomchainWeb.Router do
 
     delete("/", SessionController, :delete)
     resources("/", SessionController, only: [:create, :new])
+  end
+
+  get("/sitemap.xml", BloomchainWeb.SitemapController, :index)
+
+  scope "/sitemap", BloomchainWeb do
+    pipe_through([:xml])
+
+    resources("/", SitemapController, only: [:show], param: "property")
   end
 
   scope "/", BloomchainWeb do
