@@ -1,4 +1,4 @@
-defmodule BloomchainWeb.Api.CurrencyIndexView do
+defmodule BloomchainWeb.Api.IndexView do
   use BloomchainWeb, :view
 
   def render("index.json", %{data: data}) do

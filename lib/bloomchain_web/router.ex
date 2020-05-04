@@ -77,7 +77,7 @@ defmodule BloomchainWeb.Router do
     scope "/api" do
       pipe_through [:api]
 
-      resources("/currency_index", Api.CurrencyIndexController, only: [:index])
+      resources("/index", Api.IndexController, only: [:index])
     end
   end
 end
