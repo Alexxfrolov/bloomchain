@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "module": "esnext",
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+    ],
+    "allowJs": true,
+    "jsx": "react",
+    "moduleResolution": "node",
+    "baseUrl": "src",
+    "paths": {
+      "@ui": ["ui"],
+      "@ui/*": ["ui/*"],
+      "@lib": ["lib"],
+      "@lib/*": ["lib/*"],
+      "@features/*": ["features/*"],
+      "@api/*": ["api/*"],
+      "@pages": ["pages"],
+      "@pages/*": ["pages/*"],
+      "@tests": ["tests"],
+      "@tests/*": ["tests/*"],
+    },
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "downlevelIteration": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noErrorTruncation": true,
+    "noEmitOnError": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+  },
+  "exclude": [
+    "node_modules",
+    "scripts",
+    "config",
+    "public"
+  ]
+}
