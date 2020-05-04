@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useContext, useCallback } from "react"
+import React, { Fragment, memo, useCallback } from "react"
 import { useRoute } from "react-router5"
 import {
   List,
@@ -20,7 +20,7 @@ import InsertDriveFileRoundedIcon from "@material-ui/icons/InsertDriveFileRounde
 import ImportContactsRoundedIcon from "@material-ui/icons/ImportContactsRounded"
 import AlternateEmailIcon from "@material-ui/icons/AlternateEmail"
 import FaceRoundedIcon from "@material-ui/icons/FaceRounded"
-import { RouterLink, AccountContext } from "@features/core"
+import { RouterLink, useCurrentUser } from "@features/core"
 
 const useStyles = makeStyles((theme) => ({
   listitem: {
@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const MainMenu = memo(function MainMenu() {
-  const account = useContext(AccountContext)
+  const { user } = useCurrentUser()
   const { router } = useRoute()
   const classes = useStyles()
 
@@ -205,7 +205,7 @@ export const MainMenu = memo(function MainMenu() {
         </ListItem>
       </List>
       <Divider />
-      {account.role === "admin" && (
+      {user.role === "admin" && (
         <List>
           <ListSubheader inset={true}>Управление</ListSubheader>
           <ListItem

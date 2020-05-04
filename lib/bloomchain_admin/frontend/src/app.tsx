@@ -1,6 +1,4 @@
-import React from "react"
-// import { hot } from "react-hot-loader"
-import { State } from "router5"
+import React, { useCallback } from "react"
 import { useRoute } from "react-router5"
 import CssBaseline from "@material-ui/core/CssBaseline"
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles"
@@ -17,19 +15,14 @@ import {
   UserAccountPage,
   UsersPage,
 } from "@pages"
-import { CommonTemplate, MainMenu } from "@features/core"
-import { AccountLoader } from "@features/account"
+import { CommonTemplate, UserProvider, MainMenu } from "@features/core"
 
 const theme = createMuiTheme({}, ruRU)
 
 export const App = () => {
   const { route } = useRoute()
 
-  const setPageByRoute = (route: State) => {
-    if (typeof route === "undefined" || route === null || !("name" in route)) {
-      return null
-    }
-
+  const setPageByRoute = useCallback(() => {
     switch (route.name) {
       case "admin.account":
         return <UserAccountPage />
@@ -58,16 +51,14 @@ export const App = () => {
       default:
         return null
     }
-  }
+  }, [route.name])
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AccountLoader>
-        <CommonTemplate menu={<MainMenu />}>
-          {setPageByRoute(route)}
-        </CommonTemplate>
-      </AccountLoader>
+      <UserProvider>
+        <CommonTemplate menu={<MainMenu />}>{setPageByRoute()}</CommonTemplate>
+      </UserProvider>
     </ThemeProvider>
   )
 }

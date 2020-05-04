@@ -16,6 +16,8 @@ export interface User {
   updated_at: Date | string
 }
 
+const getCurrentUser = () => request<User>("GET", "/users/current")
+
 type Params = OrderParams<User> & PaginationParams
 
 function get(params: Params) {
@@ -47,7 +49,11 @@ function create(user: Partial<User>) {
 }
 
 function update(user: User) {
-  return request<User>("PATCH", `/users/${user.id}`)
+  return request<User>("PATCH", `/users/${user.id}`, {
+    data: {
+      ...user,
+    },
+  })
 }
 
 function remove(id: number) {
@@ -55,6 +61,7 @@ function remove(id: number) {
 }
 
 export const usersApi = {
+  getCurrentUser,
   get,
   getById,
   create,
