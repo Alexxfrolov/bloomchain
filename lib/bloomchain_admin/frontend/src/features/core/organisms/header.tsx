@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo, useCallback } from "react"
 import clsx from "clsx"
 import {
   AppBar,
@@ -12,13 +12,15 @@ import {
 import MenuRoundedIcon from "@material-ui/icons/MenuRounded"
 import AccountCircleRoundedIcon from "@material-ui/icons/AccountCircleRounded"
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded"
+import ExitToAppRoundedIcon from "@material-ui/icons/ExitToAppRounded"
+import { sessionApi } from "@api/session"
 import { RouterLink } from "@features/core"
 
 const drawerWidth = 260
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
-    paddingRight: 24, // keep right padding when drawer closed
+    paddingRight: 24,
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -57,8 +59,16 @@ type HeaderProps = {
   onDrawerClose: () => void
 }
 
-export const Header = ({ openedDrawer, onDrawerClose }: HeaderProps) => {
+export const Header = memo(function Header(props: HeaderProps) {
+  const { openedDrawer, onDrawerClose } = props
   const classes = useStyles()
+
+  const signOut = useCallback(async () => {
+    const response = await sessionApi.drop()
+    if (response.status === 204) {
+      window.location.assign("/session/new")
+    }
+  }, [])
 
   return (
     <AppBar
@@ -81,25 +91,37 @@ export const Header = ({ openedDrawer, onDrawerClose }: HeaderProps) => {
               <MenuRoundedIcon />
             </IconButton>
           </Grid>
-          <Grid item={true} container={true} justify="space-between">
-            <Link href="/" target="_blank" className={classes.link}>
-              <HomeRoundedIcon color="inherit" />
-              <Typography
-                variant="subtitle2"
-                component="h6"
-                gutterBottom={false}
-              >
-                На сайт
-              </Typography>
-            </Link>
-            <RouterLink routeName="admin.account">
-              <IconButton color="inherit">
-                <AccountCircleRoundedIcon htmlColor="white" />
+          <Grid
+            item={true}
+            container={true}
+            justify="space-between"
+            alignItems="center"
+          >
+            <Grid item={true}>
+              <Link href="/" target="_blank" className={classes.link}>
+                <HomeRoundedIcon color="inherit" />
+                <Typography
+                  variant="subtitle2"
+                  component="h6"
+                  gutterBottom={false}
+                >
+                  На сайт
+                </Typography>
+              </Link>
+            </Grid>
+            <Grid item={true}>
+              <RouterLink routeName="admin.account">
+                <IconButton color="inherit">
+                  <AccountCircleRoundedIcon htmlColor="white" />
+                </IconButton>
+              </RouterLink>
+              <IconButton color="inherit" onClick={signOut}>
+                <ExitToAppRoundedIcon htmlColor="white" />
               </IconButton>
-            </RouterLink>
+            </Grid>
           </Grid>
         </Grid>
       </Toolbar>
     </AppBar>
   )
-}
+})

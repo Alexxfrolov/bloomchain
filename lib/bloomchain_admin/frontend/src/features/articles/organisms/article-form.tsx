@@ -74,7 +74,7 @@ type ArticleFormProps = {
 }
 
 // TODO: add removeObjectURL
-export const ArticleForm = memo(function (props: ArticleFormProps) {
+export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
   const { authors, initialArticle = INITIAL_ARTICLE, tags, onSubmit } = props
   const classes = useStyles()
 

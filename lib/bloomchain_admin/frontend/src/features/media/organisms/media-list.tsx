@@ -12,7 +12,7 @@ import {
 import DeleteIcon from "@material-ui/icons/Delete"
 import EditIcon from "@material-ui/icons/Edit"
 import Pagination from "@material-ui/lab/Pagination"
-import { Pagination as IPagination } from "@api/types"
+import { Pagination as IPagination } from "@api/common/types"
 import { MediaFile } from "@api/media"
 
 const useStyles = makeStyles((theme) =>

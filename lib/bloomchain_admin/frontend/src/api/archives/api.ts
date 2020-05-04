@@ -2,7 +2,13 @@ import { request } from "@features/core"
 
 import { OrderParams, Pagination, PaginationParams } from "../common"
 
-import { Archive } from "./types"
+export interface Archive {
+  cover: import("../media").MediaFile
+  inserted_at: string
+  id: number
+  pdf: import("../media").MediaFile
+  update_at: string | null
+}
 
 type Params = OrderParams<Archive> & PaginationParams
 

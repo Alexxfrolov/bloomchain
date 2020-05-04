@@ -1,4 +1,11 @@
-import React, { Fragment, useState, useCallback, useRef, Ref } from "react"
+import React, {
+  memo,
+  Fragment,
+  useState,
+  useCallback,
+  useRef,
+  Ref,
+} from "react"
 import { useDropzone } from "react-dropzone"
 import {
   Box,
@@ -84,10 +91,10 @@ type ImagesUploadFormProps = {
   onUpload: (image: MediaFile) => void
 }
 
-export const MediaUploadForm = ({
-  accept,
-  onUpload,
-}: ImagesUploadFormProps) => {
+export const MediaUploadForm = memo(function MediaUploadForm(
+  props: ImagesUploadFormProps,
+) {
+  const { accept, onUpload } = props
   const classes = useStyles()
 
   const onDrop = useCallback(
@@ -212,7 +219,7 @@ export const MediaUploadForm = ({
       />
     </Fragment>
   )
-}
+})
 
 function a11yProps(index: number) {
   return {
@@ -252,12 +259,10 @@ type MediaLibraryDialogProps = {
   onClose: () => void
 }
 
-export const MediaLibraryDialog = ({
-  media,
-  isOpened,
-  onAdd,
-  onClose,
-}: MediaLibraryDialogProps) => {
+export const MediaLibraryDialog = memo(function MediaLibraryDialog(
+  props: MediaLibraryDialogProps,
+) {
+  const { media, isOpened, onAdd, onClose } = props
   const classes = useStyles()
 
   return (
@@ -309,4 +314,4 @@ export const MediaLibraryDialog = ({
       />
     </Dialog>
   )
-}
+})

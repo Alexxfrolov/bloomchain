@@ -2,7 +2,15 @@ import { request } from "@features/core"
 
 import { OrderParams, Pagination, PaginationParams } from "../common"
 
-import { Tag } from "./types"
+export interface Tag {
+  inserted_at: Date | string
+  deletable: boolean
+  editable: boolean
+  id: number
+  name: string
+  slug: string
+  updated_at: Date | string
+}
 
 type Params = OrderParams<Tag> & PaginationParams
 

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo } from "react"
 import { Dialog, DialogActions, DialogTitle, Button } from "@material-ui/core"
 
 type ErrorDialogProps = {
@@ -6,17 +6,20 @@ type ErrorDialogProps = {
   onClose: () => void
 }
 
-export const ErrorDialog = ({ isOpened, onClose }: ErrorDialogProps) => (
-  <Dialog
-    open={isOpened}
-    onClose={onClose}
-    aria-labelledby="error-dialog-title"
-  >
-    <DialogTitle id="error-dialog-title">Произошла ошибка</DialogTitle>
-    <DialogActions>
-      <Button onClick={onClose} color="primary">
-        Закрыть
-      </Button>
-    </DialogActions>
-  </Dialog>
-)
+export const ErrorDialog = memo(function ErrorDialog(props: ErrorDialogProps) {
+  const { isOpened, onClose } = props
+  return (
+    <Dialog
+      open={isOpened}
+      onClose={onClose}
+      aria-labelledby="error-dialog-title"
+    >
+      <DialogTitle id="error-dialog-title">Произошла ошибка</DialogTitle>
+      <DialogActions>
+        <Button onClick={onClose} color="primary">
+          Закрыть
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+})

@@ -40,7 +40,7 @@ import {
 import { Alert } from "@material-ui/lab"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
-import { Order, Pagination } from "@api/types"
+import { Order, Pagination } from "@api/common/types"
 import { articlesApi, Article } from "@api/articles"
 import { ConditionalList } from "@ui"
 import {

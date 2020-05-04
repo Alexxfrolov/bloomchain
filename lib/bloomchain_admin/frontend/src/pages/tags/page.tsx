@@ -37,7 +37,7 @@ import DeleteIcon from "@material-ui/icons/Delete"
 import EditIcon from "@material-ui/icons/Edit"
 import AddBoxIcon from "@material-ui/icons/AddBox"
 import { ConditionalList } from "@ui"
-import { Order, Pagination } from "@api/types"
+import { Order, Pagination } from "@api/common/types"
 import { tagsApi, Tag } from "@api/tags"
 import {
   DeleteDialog,

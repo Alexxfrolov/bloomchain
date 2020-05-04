@@ -2,7 +2,11 @@ import { request } from "@features/core"
 
 import { OrderParams, Pagination, PaginationParams } from "../common"
 
-import { Subscriber } from "./types"
+export interface Subscriber {
+  id: number
+  email: string
+  inserted_at: Date | string
+}
 
 type Params = OrderParams<Subscriber> & PaginationParams
 

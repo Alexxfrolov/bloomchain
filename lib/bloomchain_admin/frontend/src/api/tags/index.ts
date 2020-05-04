@@ -1,2 +1,2 @@
 export { tagsApi } from "./api"
-export * from "./types"
+export type { Tag } from "./api"
