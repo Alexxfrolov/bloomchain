@@ -1,4 +1,4 @@
-defmodule BloomchainWeb.Content.PostTest do
+defmodule Bloomchain.Content.PostTest do
   import Bloomchain.Factory.Post
 
   use ExUnit.Case
@@ -8,13 +8,13 @@ defmodule BloomchainWeb.Content.PostTest do
 
   describe "Post Schema" do
     test "valid changeset" do
-      %{valid?: valid} = Post.create_changeset(%Post{}, valid_attrs())
+      %{valid?: valid} = Post.changeset(%Post{}, valid_attrs())
       assert valid
     end
 
     test "invalid changeset" do
       Enum.each(invalid_attrs(), fn attr ->
-        %{valid?: valid} = Post.create_changeset(%Post{}, attr)
+        %{valid?: valid} = Post.changeset(%Post{}, attr)
         assert valid === false
       end)
     end

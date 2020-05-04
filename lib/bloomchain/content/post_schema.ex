@@ -115,6 +115,8 @@ defmodule Bloomchain.Content.Post do
     changeset |> put_assoc(:tags, tags)
   end
 
+  defp process_tags(changeset, _), do: changeset
+
   defp process_authors(%Ecto.Changeset{valid?: true} = changeset, [%Author{} | _] = authors) do
     changeset
     |> put_assoc(:authors, Enum.map(authors, authors))
@@ -130,4 +132,6 @@ defmodule Bloomchain.Content.Post do
 
     changeset |> put_assoc(:authors, authors)
   end
+
+  defp process_authors(changeset, _), do: changeset
 end

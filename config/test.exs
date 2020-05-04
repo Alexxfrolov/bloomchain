@@ -22,3 +22,5 @@ config :bloomchain, Bloomchain.Repo,
 # Arc Image Upload
 config :arc,
   storage: Arc.Storage.Local
+
+config :bloomchain, Bloomchain.ElasticsearchCluster, url: "http://example.com"

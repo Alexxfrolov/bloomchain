@@ -1,28 +1,28 @@
 defmodule Bloomchain.Factory.User do
   def valid_attrs do
     %{
-      name: "Raman Sah",
-      email: "raman.17.sah@gmail.com",
-      password: "password"
+      first_name: "Алексей",
+      last_name: "Фролов",
+      email: "admin@app.com",
+      password: "admin123"
     }
   end
 
   def invalid_attrs do
     [
       %{
-        name: "R",
-        email: "ramansah@live.com",
-        password: "password"
+        first_name: "Алексей",
+        last_name: "Фролов",
+        email: "admin@app.com",
+        password: "1",
+        role: "admin"
       },
       %{
-        name: "Raman Sah",
-        email: "rcom",
-        password: "password"
-      },
-      %{
-        name: "Raman Sah",
-        email: "ramansah@live.com",
-        password: "pd"
+        first_name: "Алексей",
+        last_name: "Фролов",
+        email: nil,
+        password: "admin123",
+        role: "admin"
       }
     ]
   end
