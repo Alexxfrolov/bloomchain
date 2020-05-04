@@ -33,7 +33,9 @@ defmodule Bloomchain.Content.CoinPrice do
   def current(%{id: coin_id}) do
     from(
       p in CoinPrice,
-      where: p.coin_id == ^coin_id,
+      where:
+        p.coin_id == ^coin_id and
+          p.inserted_at > ^Timex.shift(Timex.now(), minutes: -20),
       order_by: [desc: :id],
       limit: 1
     )
@@ -44,7 +46,9 @@ defmodule Bloomchain.Content.CoinPrice do
     [_ | tail] =
       from(
         p in CoinPrice,
-        where: p.coin_id == ^coin_id,
+        where:
+          p.coin_id == ^coin_id and
+            p.inserted_at > ^Timex.shift(Timex.now(), minutes: -20),
         order_by: [desc: :id],
         limit: 2
       )
