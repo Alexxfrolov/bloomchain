@@ -3,7 +3,7 @@ defmodule BloomchainWeb.InRussiaController do
   alias Bloomchain.Content.Article
 
   def index(conn, %{scroll: scroll}) do
-    %{entries: articles, metadata: meta} = Article.paginate("in_russia", scroll)
+    %{entries: articles, metadata: meta} = Article.paginate("in-russia", scroll)
 
     conn
     |> put_resp_header("x-pagination-scroll", to_string(meta.after))
@@ -13,7 +13,7 @@ defmodule BloomchainWeb.InRussiaController do
   end
 
   def index(conn, _params) do
-    %{entries: articles, metadata: meta} = Article.paginate("in_russia")
+    %{entries: articles, metadata: meta} = Article.paginate("in-russia")
 
     render(conn, "index.html",
       articles: articles,
@@ -27,7 +27,7 @@ defmodule BloomchainWeb.InRussiaController do
   def show(conn, %{slug: slug}) do
     article =
       slug
-      |> Article.get(type: "in_russia")
+      |> Article.get(type: "in-russia")
       |> Article.inc_total_views()
 
     render(conn, "show.html",

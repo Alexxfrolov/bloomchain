@@ -21,4 +21,12 @@ defmodule BloomchainWeb.SitemapController do
     conn
     |> render("index.xml", posts: posts)
   end
+
+  def show(conn, %{property: "resources.xml"}) do
+    conn
+    |> render("show.xml",
+      resources:
+        ~w[newsfeed detailed analysis people in-russia calendar research research-archive]
+    )
+  end
 end

@@ -28,6 +28,8 @@ defmodule BloomchainWeb.SitemapView do
     |> format_date
   end
 
+  def format_date(nil), do: ""
+
   def format_date(datetime) do
     Timex.format!(datetime, "{ISO:Extended:Z}")
   end
