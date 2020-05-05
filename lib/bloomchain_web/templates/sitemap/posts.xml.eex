@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <%= for item <- @posts do %>
+    <url>
+      <loc><%= page_url(@conn, :index) <> item.type <> "/" <> item.slug %></loc>
+      <lastmod><%= format_date(item.updated_at) %></lastmod>
+      <changefreq>daily</changefreq>
+      <priority>1</priority>
+    </url>
+  <% end %>
+</urlset>
