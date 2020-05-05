@@ -3,7 +3,7 @@ defmodule BloomchainWeb.SitemapController do
   import Ecto.Query
 
   alias Bloomchain.Repo
-  alias Bloomchain.Content.Post
+  alias Bloomchain.Content.{Post, Tag}
 
   plug(:accepts, ["text/xml"])
   plug(:put_layout, false)
@@ -24,9 +24,20 @@ defmodule BloomchainWeb.SitemapController do
 
   def show(conn, %{property: "resources.xml"}) do
     conn
-    |> render("show.xml",
+    |> render("resources.xml",
       resources:
         ~w[newsfeed detailed analysis people in-russia calendar research research-archive]
     )
+  end
+
+  def show(conn, %{property: "tags.xml"}) do
+    tags =
+      from(t in Tag,
+        select: %{slug: t.slug, updated_at: t.updated_at}
+      )
+      |> Repo.all()
+
+    conn
+    |> render("tags.xml", tags: tags)
   end
 end
