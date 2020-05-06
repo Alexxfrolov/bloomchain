@@ -5,6 +5,12 @@ defmodule Bloomchain.Content.Archive do
 
   alias Bloomchain.Content.{Media}
 
+  def fetch(term, key) do
+    term
+    |> Map.from_struct()
+    |> Map.fetch(key)
+  end
+
   schema "archives" do
     belongs_to(:cover, Media, foreign_key: :cover_id)
     belongs_to(:pdf, Media, foreign_key: :pdf_id)

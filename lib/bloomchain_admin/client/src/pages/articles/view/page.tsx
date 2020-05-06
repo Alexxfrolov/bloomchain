@@ -421,9 +421,9 @@ export const ArticlesViewPage = () => {
           >
             <Tab label="Коротко" id="newsfeed" />
             <Tab label="В Деталях" id="detailed" />
-            <Tab label="Что в России" id="in_russia" />
+            <Tab label="Что в России" id="in-russia" />
             <Tab label="События" id="calendar" />
-            <Tab label="Персона" id="person" />
+            <Tab label="Персона" id="people" />
             <Tab label="Исследования" id="research" />
             <Tab label="Биржевая аналитика" id="analysis" />
           </Tabs>

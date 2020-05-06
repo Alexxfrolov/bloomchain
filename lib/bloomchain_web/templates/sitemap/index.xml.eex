@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc><%= sitemap_url(@conn, :show, "main.xml") %></loc>
+    <lastmod><%= last_date(Post) %></lastmod>
+  </sitemap>
+  <sitemap>
+    <loc><%= sitemap_url(@conn, :show, "resources.xml") %></loc>
+    <lastmod><%= last_date(Post) %></lastmod>
+  </sitemap>
+  <sitemap>
+    <loc><%= sitemap_url(@conn, :show, "tags.xml") %></loc>
+    <lastmod><%= last_date(Tag) %></lastmod>
+  </sitemap>
+  <%= for post <- @posts do %>
+    <sitemap>
+      <loc><%= sitemap_url(@conn, :show, "posts-#{post.slug}.xml") %></loc>
+      <lastmod><%= format_date(post.updated_at) %></lastmod>
+    </sitemap>
+  <% end %>
+</sitemapindex>

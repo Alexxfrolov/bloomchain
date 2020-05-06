@@ -5,6 +5,12 @@ defmodule Bloomchain.Content.Tag do
 
   use Ecto.Schema
 
+  def fetch(term, key) do
+    term
+    |> Map.from_struct()
+    |> Map.fetch(key)
+  end
+
   schema "tags" do
     field(:name, :string)
     field(:slug, :string, unique: true)

@@ -20,9 +20,9 @@ export interface Article {
     | "newsfeed"
     | "detailed"
     | "analysis"
-    | "in_russia"
+    | "in-russia"
     | "calendar"
-    | "person"
+    | "people"
     | "research"
   updated_at: Date | null
   url?: string | null

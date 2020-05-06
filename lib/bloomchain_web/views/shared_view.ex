@@ -89,13 +89,7 @@ defmodule BloomchainWeb.SharedView do
     ]
   end
 
-  defp href_path(item) do
-    case item.type do
-      "person" -> "/people/#{item.slug}"
-      "in_russia" -> "/in-russia/#{item.slug}"
-      _ -> "/#{item.type}/#{item.slug}"
-    end
-  end
+  defp href_path(item), do: "/#{item.type}/#{item.slug}"
 
   defp time_from(datetime) do
     Timex.lformat!(datetime, "{relative}", "ru", :relative)

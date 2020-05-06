@@ -56,21 +56,9 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
     }
   end
 
-  defp href_path(%{status: "published"} = item) do
-    case item.type do
-      "person" -> "/people/#{item.slug}"
-      "in_russia" -> "/in-russia/#{item.slug}"
-      _ -> "/#{item.type}/#{item.slug}"
-    end
-  end
+  defp href_path(%{status: "published"} = item), do: "/#{item.type}/#{item.slug}"
 
-  defp href_path(item) do
-    case item.type do
-      "person" -> "/admin/preview/articles/people/#{item.slug}"
-      "in_russia" -> "/admin/preview/articles/in-russia/#{item.slug}"
-      _ -> "/admin/preview/articles/#{item.type}/#{item.slug}"
-    end
-  end
+  defp href_path(item), do: "/admin/preview/articles/#{item.type}/#{item.slug}"
 
   defp do_published_at(%{published_at: nil}) do
   end

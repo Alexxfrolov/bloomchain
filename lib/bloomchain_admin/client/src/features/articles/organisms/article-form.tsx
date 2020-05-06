@@ -262,9 +262,9 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               <MenuItem value="newsfeed">Коротко</MenuItem>
               <MenuItem value="detailed">В Деталях</MenuItem>
               <MenuItem value="analysis">Биржевая аналитика</MenuItem>
-              <MenuItem value="in_russia">Что в России</MenuItem>
+              <MenuItem value="in-russia">Что в России</MenuItem>
               <MenuItem value="calendar">События</MenuItem>
-              <MenuItem value="person">Персона</MenuItem>
+              <MenuItem value="people">Персона</MenuItem>
               <MenuItem value="research">Исследования</MenuItem>
             </Select>
           </FormControl>
