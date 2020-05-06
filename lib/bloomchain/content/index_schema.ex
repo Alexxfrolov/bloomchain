@@ -15,27 +15,7 @@ defmodule Bloomchain.Content.Index do
     timestamps()
   end
 
-  def list(type, %{since: since, until: until}) do
-    from(
-      i in Index,
-      where: i.type == ^type and i.time > ^since and i.time <= ^until,
-      order_by: [asc: i.time],
-      select: %{time: i.time, value: i.value}
-    )
-    |> Repo.all()
-  end
-
-  def list(type, %{since: since}) do
-    from(
-      i in Index,
-      where: i.type == ^type and i.time > ^since,
-      order_by: [asc: i.time],
-      select: %{time: i.time, value: i.value}
-    )
-    |> Repo.all()
-  end
-
-  def list(type, _) do
+  def list(type) do
     from(
       i in Index,
       where: i.type == ^type,
