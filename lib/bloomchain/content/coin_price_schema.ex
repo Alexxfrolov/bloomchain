@@ -48,7 +48,7 @@ defmodule Bloomchain.Content.CoinPrice do
         p in CoinPrice,
         where:
           p.coin_id == ^coin_id and
-            p.inserted_at > ^Timex.shift(Timex.now(), minutes: -20),
+            p.inserted_at > ^Timex.shift(Timex.now(), minutes: -30),
         order_by: [desc: :id],
         limit: 2
       )
