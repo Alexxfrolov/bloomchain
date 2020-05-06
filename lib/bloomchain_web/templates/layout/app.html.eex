@@ -38,7 +38,7 @@
     <meta name="format-detection" content="telephone=no">
   </head>
   <body class="bg-light">
-    <%= render "_marquee.html", conn: @conn %>
+    <%#= render "_marquee.html", conn: @conn %>
     <%= render "_header.html", conn: @conn %>
 
     <main class="main js-main">
