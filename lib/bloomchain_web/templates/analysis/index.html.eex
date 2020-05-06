@@ -1,22 +1,21 @@
 <div class="container pt-4 pb-5">
   <a name="indexes"></a>
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-9">
       <h1 class="bc-analitics__h1">Индексы</h1>
       <div class="d-flex justify-content-center justify-content-md-start mt-4 mb-5">
-        <button onclick="window.open('https://bloomchain.ru/wp-content/plugins/bloomchain-bitcoin-price-index/pdf/%D0%91%D0%B8%D1%80%D0%B6%D0%B5%D0%B2%D1%8B%D0%B5%20%D0%B8%D0%BD%D0%B4%D0%B5%D0%BA%D1%81%D1%8B%20%20bloomchain.ru.pdf')" class="bc-article__btn-xs-w-100 btn btn-dark d-flex align-items-center justify-content-center" type="button">Скачать Методику</button>
+        <button class="bc-article__btn-xs-w-100 btn btn-dark d-flex align-items-center justify-content-center" type="button">Скачать Методику</button>
       </div>
-
-      <div class="js-chart" id="js-chart-1" style="min-width: 300px; max-width: 800px"></div>
+      <div class="js-chart"id="js-chart-bitcoin" style="min-width: 300px; max-width: 800px;"></div>
       <small>BloomChain Bitcoin Price Index</small>
       <p class="bc-article__paragraph mt-3 mb-5">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении падающего тренда. </p>
 
-      <div class="js-chart" id="js-chart-2" style="min-width: 300px; max-width: 800px"></div>
+      <div class="js-chart" id="js-chart-top10-cryptocurrency" style="min-width: 300px; max-width: 800px"></div>
       <small>BloomChain Top 10 Cryptocurrency Index</small>
       <p class="bc-article__paragraph mt-3">Рынок криптовалют продолжает оставаться очень техничным. Мы говорили о возможном преодолении  падающего тренда. </p>
     </div>
 
-    <div class="col-md-4 mt-5 mt-md-0">
+    <div class="col-md-3 mt-5 mt-md-0">
       <nav class="nav flex-column bc-analitics__page-nav d-md-block d-none">
         <a class="bc-analitics__text-link nav-link" href="#indexes">
           <span class="text-primary">—</span><span class="ml-2">Индексы</span>
@@ -40,156 +39,3 @@
   </div>
   <%= SharedView.load_more_button(@meta) %>
 </div>
-
-<script src="https://code.highcharts.com/stock/highstock.js"></script>
-
-<script type="text/javascript">
-
-fetch("/api/currency_index?currency=all")
-  .then(response => response.json())
-  .then(json => {
-    const chart1 = createChart('js-chart-1', json, 40, 'BloomChain Bitcoin Price Index (BCBTC Index)', 'BCBTC')
-  })
-
-fetch("/api/currency_index?currency=bitcoin")
-  .then(response => response.json())
-  .then(json => {
-    const chart2 = createChart('js-chart-2', json, 25, 'BloomChain Top 10 Cryptocurrency Index (BC10 Index)', 'BC10')
-  })
-
-function createChart(container, data, yAxisOffset, title, seriesName) {
-  return Highcharts.stockChart(container, {
-  chart: {
-    height: 800,
-    backgroundColor: "#f8f9fa",
-  },
-  title: {
-    text: title,
-    align: "left"
-  },
-  yAxis: {
-    offset: yAxisOffset
-  },
-  rangeSelector: {
-    allButtonsEnabled: true,
-    buttons: [
-      {
-        type: "hour",
-        count: 1,
-        text: "1h",
-        dataGrouping: {
-          forced: false,
-          units: [["minute", [1]]],
-        }
-      },
-      {
-        type: "hour",
-        count: 12,
-        text: "12h",
-        dataGrouping: {
-          forced: false,
-          units: [["minute", [1]]],
-        }
-      },
-      {
-        type: "day",
-        count: 1,
-        text: "1d",
-        dataGrouping: {
-          forced: false,
-          units: [["minute", [1]]],
-        }
-      },
-      {
-        type: "week",
-        count: 1,
-        text: "1w",
-        dataGrouping: {
-          forced: false,
-          units: [["minute", [1]]],
-        }
-      },
-      {
-        type: "month",
-        count: 1,
-        text: "1m",
-        dataGrouping: {
-          forced: false,
-          units: [["minute", [1]]],
-        }
-      },
-      {
-        type: "month",
-        count: 3,
-        text: "3m",
-        dataGrouping: {
-          forced: false,
-          units: [["minute", [1]]],
-        }
-      },
-      {
-        type: "year",
-        text: "1y",
-        dataGrouping: {
-          forced: false,
-          units: [["minute", [1]]],
-        }
-      },
-      {
-        type: "all",
-        text: "All",
-        dataGrouping: {
-          forced: false,
-          units: [["minute", [1]]],
-        }
-      }
-    ],
-    selected: 2,
-  },
-  tooltip: {
-    formatter: function() {
-      var point = this.points[0];
-      var date_time = new Date(point.x - 10800 * 1000);
-      return date_time + "<br /><b>" + point.series.name + ": $" + Highcharts.numberFormat(point.y) + "</b><br/>"
-    },
-    shared: true
-  },
-  navigator: {
-    enabled: false
-  },
-  series: [{
-    name: seriesName,
-    data,
-    type: "line",
-    tooltip: {
-      valueDecimals: 2
-    }
-  }],
-  responsive: {
-      rules: [{
-          condition: {
-              maxWidth: 800
-          },
-          chartOptions: {
-              chart: {
-                  height: 400
-              },
-              subtitle: {
-                  text: null
-              },
-              navigator: {
-                  enabled: false
-              }
-          }
-      }]
-  }
-});}
-
-
-const chart1 = createChart('js-chart-1')
-chart1.setSize(800);
-const chart2 = createChart('js-chart-2')
-chart2.setSize(800);
-
-
-</script>

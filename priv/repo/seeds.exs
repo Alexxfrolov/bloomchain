@@ -3,15 +3,15 @@ alias Bloomchain.Repo
 alias Bloomchain.Content.{Article, Tag, User, Subscriber, Media, Archive, Author, Index}
 
 # Seed Indices
-first = Timex.shift(Timex.now(), days: -2) |> Timex.to_unix()
+first = Timex.shift(Timex.now(), days: -7) |> Timex.to_unix()
 last = Timex.now() |> Timex.to_unix()
 # 15 minutes
 step = 900
 
 for time <- :lists.seq(first, last, step), time > 0 do
-  Repo.insert!(Index.changeset(%Index{}, %{value: 5400, type: "bitcoin", time: time}))
+  Repo.insert!(Index.changeset(%Index{}, %{value: Enum.random(8000..9000), type: "bitcoin", time: time}))
 
-  Repo.insert!(Index.changeset(%Index{}, %{value: 160, type: "top_10", time: time}))
+  Repo.insert!(Index.changeset(%Index{}, %{value: Enum.random(100..180), type: "top_10", time: time}))
 end
 
 # # Seed Archive
