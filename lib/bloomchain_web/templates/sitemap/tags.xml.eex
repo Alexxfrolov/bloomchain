@@ -4,8 +4,8 @@
     <url>
       <loc><%= tag_url(@conn, :show, item.slug) %></loc>
       <lastmod><%= format_date(item.updated_at) %></lastmod>
-      <changefreq>daily</changefreq>
-      <priority>1</priority>
+      <changefreq>hourly</changefreq>
+      <priority>0.7</priority>
     </url>
   <% end %>
 </urlset>

@@ -3,9 +3,9 @@
   <%= for item <- @resources do %>
     <url>
       <loc><%= page_url(@conn, :index) <> item  %></loc>
-      <lastmod><%= last_date(Post, item) %></lastmod>
-      <changefreq>daily</changefreq>
-      <priority>1</priority>
+      <lastmod><%= last_date(item) %></lastmod>
+      <changefreq>hourly</changefreq>
+      <priority>0.7</priority>
     </url>
   <% end %>
 </urlset>

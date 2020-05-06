@@ -11,15 +11,23 @@ defmodule BloomchainWeb.SitemapController do
   def index(conn, _) do
     posts =
       from(p in Post,
-        select: [fragment("TO_CHAR(published_at :: DATE, 'yyyy-mm')"), p.updated_at],
+        select: %{
+          slug: fragment("TO_CHAR(published_at :: DATE, 'yyyy-mm')"),
+          updated_at: p.published_at
+        },
         where: p.status == "published",
-        order_by: [desc: :updated_at]
+        order_by: [desc: :published_at]
       )
       |> Repo.all()
-      |> Enum.uniq_by(&List.first(&1))
+      |> Enum.uniq_by(& &1.slug)
 
     conn
     |> render("index.xml", posts: posts)
+  end
+
+  def show(conn, %{property: "main.xml"}) do
+    conn
+    |> render("main.xml")
   end
 
   def show(conn, %{property: "resources.xml"}) do
@@ -43,18 +51,22 @@ defmodule BloomchainWeb.SitemapController do
 
   def show(conn, %{property: property}) do
     [year | [month, _]] = String.split(property, ["posts-", "-", ".xml"]) |> tl()
-
     year = String.to_integer(year)
     month = String.to_integer(month)
 
     date_start = Timex.to_datetime({year, month, 1})
-    date_end = Timex.to_datetime({year, month, :calendar.last_day_of_the_month(year, month)})
+
+    date_end =
+      Timex.to_datetime(
+        {{year, month, :calendar.last_day_of_the_month(year, month)}, {23, 59, 59}}
+      )
 
     posts =
       from(p in Post,
-        select: %{slug: p.slug, type: p.type, updated_at: p.updated_at},
+        select: %{slug: p.slug, type: p.type, updated_at: p.published_at},
         where:
-          p.status == "published" and p.published_at >= ^date_start and p.published_at < ^date_end,
+          p.status == "published" and p.published_at >= ^date_start and
+            p.published_at <= ^date_end,
         limit: 10_000
       )
       |> Repo.all()
