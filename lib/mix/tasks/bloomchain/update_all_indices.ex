@@ -5,6 +5,6 @@ defmodule Mix.Tasks.Bloomchain.UpdateAllIndices do
   def run(_) do
     Mix.Task.run("bloomchain.update_coin_price")
     Mix.Task.run("bloomchain.update_index", [Bloomchain.Service.Index.Top10])
-    Mix.Task.run("bloomchain.update_index", [Bloomchain.Service.Index.Bitcoin])
+    Mix.Task.rerun("bloomchain.update_index", [Bloomchain.Service.Index.Bitcoin])
   end
 end
