@@ -25,7 +25,7 @@ defmodule BloomchainWeb.SharedView do
       content_tag(:div, class: "bc-article__image") do
         [
           do_image_tag(item),
-          content_tag(:p, item.title),
+          content_tag(:p, item.title, class: "line-clamp line-clamp__size_2"),
           content_tag(:div, class: "d-flex align-items-center") do
             do_article_attrs(item)
           end
