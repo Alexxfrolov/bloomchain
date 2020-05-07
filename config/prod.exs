@@ -47,7 +47,7 @@ config :bloomchain, Bloomchain.ElasticsearchCluster,
   username: System.get_env("ES_USER"),
   password: System.get_env("ES_PASSWORD")
 
-# import_config "scheduler.exs"
+import_config "scheduler.exs"
 
 # ## SSL Support
 #
