@@ -93,6 +93,12 @@ defmodule Bloomchain.Content.Post do
     )
   end
 
+  defp process_published(
+         %Ecto.Changeset{valid?: true, changes: %{status: "ready"} = changes} = changeset
+       ) do
+    put_change(changeset, :published_at, changes[:published_at])
+  end
+
   defp process_published(%Ecto.Changeset{valid?: true, changes: %{status: _}} = changeset) do
     put_change(changeset, :published_at, nil)
   end
