@@ -53,7 +53,7 @@ defmodule Bloomchain.Content.Post do
   end
 
   @required_fields ~w(title type)a
-  @optional_fields ~w( body lead type status time cover_id published_at seo_settings)a
+  @optional_fields ~w(id slug body lead type status time cover_id published_at seo_settings)a
 
   def changeset(post, attrs) do
     post
@@ -74,11 +74,8 @@ defmodule Bloomchain.Content.Post do
 
   # Private
 
-  defp process_slug(%Ecto.Changeset{valid?: validity, changes: %{title: title}} = changeset) do
-    case validity do
-      true -> put_change(changeset, :slug, Slugger.slugify_downcase(title))
-      false -> changeset
-    end
+  defp process_slug(%Ecto.Changeset{valid?: true, changes: %{title: title} = changes} = changeset) do
+    put_change(changeset, :slug, changes[:slug] || Slugger.slugify_downcase(title))
   end
 
   defp process_slug(changeset), do: changeset
