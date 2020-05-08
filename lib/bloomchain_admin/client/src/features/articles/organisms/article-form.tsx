@@ -195,7 +195,10 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
       setSubmitted(true)
       const { isValid } = validateFormFields(article)
       if (isValid) {
-        onSubmit(article)
+        const { body } = article
+        const [_item, _groups, index] = body?.match('data-f-id="pbf"')
+        const reducedBody = body.slice(0, Number(index) - 3)
+        onSubmit({ ...article, body: reducedBody })
       }
     },
     [article, onSubmit],

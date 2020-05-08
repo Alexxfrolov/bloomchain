@@ -11,7 +11,7 @@ import React, {
 } from "react"
 import { useRoute } from "react-router5"
 import DateFnsUtils from "@date-io/date-fns"
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import format from "date-fns/format"
 import { ru } from "date-fns/locale"
 import {
@@ -52,7 +52,7 @@ import {
   debounce,
 } from "@features/core"
 
-const mapTitleByStatus = {
+const mapStatusToTitle = {
   archive: "Архив",
   published: "Опубликовано",
   ready: "Готово к публикации",
@@ -348,7 +348,7 @@ export const ArticlesViewPage = () => {
     [debounceOnChange, setQuery],
   )
 
-  const title = useMemo(() => mapTitleByStatus[status], [status])
+  const title = useMemo(() => mapStatusToTitle[status], [status])
 
   return (
     <Fragment>
@@ -360,28 +360,28 @@ export const ArticlesViewPage = () => {
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
             <Toolbar disableGutters={true} className={classes.toolbar}>
               <FormControl margin="none" variant="outlined">
-                <DateTimePicker
+                <DatePicker
                   id="date-start"
                   ampm={false}
                   variant="dialog"
                   margin="none"
                   inputVariant="outlined"
                   label="Дата начала"
-                  format="dd/MM/yyyy HH:mm"
+                  format="dd/MM/yyyy"
                   size="small"
                   value={since}
                   onChange={handleDateStartChange}
                 />
               </FormControl>
               <FormControl margin="none" variant="outlined">
-                <DateTimePicker
+                <DatePicker
                   id="date-end"
                   ampm={false}
                   variant="dialog"
                   margin="none"
                   inputVariant="outlined"
                   label="Дата окончания"
-                  format="dd/MM/yyyy HH:mm"
+                  format="dd/MM/yyyy"
                   size="small"
                   value={until}
                   onChange={handleDateEndChange}
