@@ -27,6 +27,7 @@
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-local-resolve": "^1.0.7",
     "rollup-plugin-node-globals": "^1.4.0",
+    "rollup-plugin-postcss": "^3.1.1",
     "rollup-plugin-terser": "^5.3.0",
     "uglify-js-brunch": "^2.10.0"
   }
