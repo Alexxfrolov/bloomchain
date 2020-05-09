@@ -1,10 +1,14 @@
 alias Bloomchain.Repo
 alias Bloomchain.Content.{Post, Article}
 
-replace_span = fn item ->
+make_paragraphs = fn item ->
   item
-  |> String.replace("<blockquote><span style=\"font-weight: 400;\">", "<blockquote><p>")
-  |> String.replace("</span></blockquote>", "</p></blockquot")
+  |> String.split("\r\n")
+  |> Enum.reject(&(String.trim(&1) == ""))
+  |> Enum.map(&("<p>" <> &1 <> "</p>"))
+  |> Enum.join()
+  |> String.replace("<p><blockquote>", "<blockquote><p>")
+  |> String.replace("</blockquote></p>", "</p></blockquote>")
 end
 
 replace_embedly_urls = fn item ->
@@ -25,7 +29,7 @@ end
 |> Enum.map(fn item ->
   body =
     item.body
-    |> replace_span.()
+    |> make_paragraphs.()
     |> replace_embedly_urls.()
 
   Map.replace!(item, :body, body)
