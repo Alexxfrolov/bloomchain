@@ -8,7 +8,7 @@ import React, {
 } from "react"
 import { usersApi, User } from "@api/user"
 
-import { FullPageLoadScreen } from "../../molecules"
+import { FullPageLoadScreen, FullPageErrorScreen } from "../../molecules"
 
 type NetworkStatus = "pending" | "success" | "error"
 
@@ -68,13 +68,8 @@ const UserProvider = ({ children }: UserProviderProps) => {
     <UserContext.Provider value={{ ...state, update, remove }}>
       {state.status === "pending" ? (
         <FullPageLoadScreen />
-      ) : state.status === "error" ? (
-        <div>
-          Oh no
-          <div>
-            <pre>{state.error?.message}</pre>
-          </div>
-        </div>
+      ) : state.status === "error" && state.error ? (
+        <FullPageErrorScreen errorMessage={state.error.message} />
       ) : (
         children
       )}

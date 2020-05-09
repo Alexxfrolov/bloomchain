@@ -1,6 +1,5 @@
-import React, { memo } from "react"
+import React, { ReactNode } from "react"
 import { makeStyles, createStyles } from "@material-ui/core/styles"
-import CircularProgress from "@material-ui/core/CircularProgress"
 import Grid from "@material-ui/core/Grid"
 
 const useStyles = makeStyles(() =>
@@ -11,7 +10,11 @@ const useStyles = makeStyles(() =>
   }),
 )
 
-export const FullPageLoadScreen = memo(() => {
+type CenteredTemplateProps = {
+  children: ReactNode | ReactNode[]
+}
+
+export const CenteredTemplate = ({ children }: CenteredTemplateProps) => {
   const classes = useStyles()
 
   return (
@@ -21,7 +24,7 @@ export const FullPageLoadScreen = memo(() => {
       alignItems="center"
       justify="center"
     >
-      <CircularProgress color="primary" size={60} />
+      {children}
     </Grid>
   )
-})
+}
