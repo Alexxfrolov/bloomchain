@@ -1,5 +1,6 @@
 export { DeleteDialog } from "./delete-dialog"
 export { ErrorDialog } from "./error-dialog"
+export { FullPageLoadScreen } from "./full-page-load-screen"
 export { MainMenu } from "./main-menu"
 export { StyledTableCell as TableCell } from "./table-cell"
 export { StyledTableRow as TableRow } from "./table-row"
