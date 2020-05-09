@@ -23,6 +23,11 @@ replace_embedly_urls = fn item ->
   )
 end
 
+replace_bloomchain_urls = fn item ->
+  item
+  |> String.replace("https://bloomchain.ru/", "/")
+end
+
 "#{File.cwd!()}/priv/repo/data_files/posts.json"
 |> File.read!()
 |> Poison.decode!(keys: :atoms)
@@ -31,6 +36,7 @@ end
     item.body
     |> make_paragraphs.()
     |> replace_embedly_urls.()
+    |> replace_bloomchain_urls.()
 
   Map.replace!(item, :body, body)
 end)
