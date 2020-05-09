@@ -23,3 +23,17 @@ alias Bloomchain.Content.{User, Author}
     })
   )
 end)
+
+# update uniq primary id sequence after raw id insert
+Ecto.Adapters.SQL.query!(Repo, "SELECT setval('users_id_seq', (SELECT MAX(id) from users))")
+
+# Seed ADMIN acc
+Repo.insert!(
+  User.changeset(%User{}, %{
+    first_name: "Admin",
+    last_name: "Admin",
+    email: "admin@app.com",
+    password: "admin123",
+    role: "admin"
+  })
+)

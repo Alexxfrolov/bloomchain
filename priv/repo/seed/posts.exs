@@ -50,3 +50,6 @@ end)
     })
   )
 end)
+
+# update uniq primary id sequence after raw id insert
+Ecto.Adapters.SQL.query!(Repo, "SELECT setval('posts_id_seq', (SELECT MAX(id) from posts))")

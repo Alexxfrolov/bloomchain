@@ -7,3 +7,6 @@ data =
   |> Poison.decode!(keys: :atoms)
 
 Repo.insert_all(Tag, data)
+
+# update uniq primary id sequence after raw id insert
+Ecto.Adapters.SQL.query!(Repo, "SELECT setval('tags_id_seq', (SELECT MAX(id) from tags))")
