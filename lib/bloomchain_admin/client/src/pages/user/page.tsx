@@ -161,7 +161,7 @@ const SuccessDialog = memo(function SuccessDialog(props: SuccessDialogProps) {
   const { isOpened, onClose } = props
   return (
     <Dialog open={isOpened} onClose={onClose}>
-      <DialogTitle>Статья успешно сохранена</DialogTitle>
+      <DialogTitle>Данные успешно сохранены</DialogTitle>
       <DialogActions>
         <Button onClick={onClose} color="primary" autoFocus>
           Закрыть
