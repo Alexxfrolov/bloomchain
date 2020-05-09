@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme) =>
 
 const PAGINATION_PRESET = {
   page: 1,
-  page_size: 20,
+  page_size: 25,
   total_pages: 1,
   total_items: 0,
 }
@@ -431,7 +431,7 @@ const AuthorsTable = memo(function (props: AuthorsTableProps) {
         list={data}
         renderExists={() => (
           <TablePagination
-            rowsPerPageOptions={[20, 50, 100]}
+            rowsPerPageOptions={[25, 50, 100]}
             component="div"
             count={pagination.total_items}
             rowsPerPage={Number(pagination.page_size)}
