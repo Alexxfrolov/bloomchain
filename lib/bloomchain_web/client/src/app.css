@@ -10125,6 +10125,10 @@ margin-bottom: 0;
 display: block;
 }
 
+.article img + p {
+margin-top: 1rem;
+}
+
 .article ul {
 padding-left: 2em;
 list-style: none;
@@ -10148,15 +10152,17 @@ color: #4d67ec;
 }
 
 .article blockquote {
-  position: relative;
-  margin: 0;
-  padding: 1.875rem 0;
+position: relative;
+margin: 0;
+padding: 1.875rem 0;
 background-color: #fff;
 }
 
 .article blockquote p {
-  position: relative;
-  margin-bottom: 0;
+position: relative;
+margin-bottom: 0;
+margin-left: 25px;
+padding-right: 30px;
 }
 
 .article blockquote:before {
