@@ -1,5 +1,5 @@
 alias Bloomchain.Repo
-alias Bloomchain.Content.{Post, Article}
+alias Bloomchain.Content.{Post, Media}
 
 make_paragraphs = fn item ->
   item
@@ -26,6 +26,29 @@ end
 replace_bloomchain_urls = fn item ->
   item
   |> String.replace("https://bloomchain.ru/", "/")
+  |> String.replace("/wp-content/uploads/", "/uploads/wp-content/")
+end
+
+persist_cover = fn cover ->
+  path =
+    File.cwd!() <>
+      "/uploads/wp-content/" <>
+      (Regex.run(~r/(?<=wp-content\/uploads\/)(.*?)$/, cover, capture: :first)
+       |> List.first())
+
+  case Repo.insert(
+         Media.changeset(%Media{}, %{
+           type: "image",
+           file: %Plug.Upload{
+             content_type: MIME.from_path(path),
+             filename: Path.basename(path),
+             path: path
+           }
+         })
+       ) do
+    {:ok, item} -> item
+    {:error, _} -> %{id: nil}
+  end
 end
 
 replace_caption = fn item ->
@@ -61,7 +84,7 @@ end
     item.body
     |> make_paragraphs.()
     |> replace_embedly_urls.()
-    # |> replace_bloomchain_urls.()
+    |> replace_bloomchain_urls.()
     |> replace_caption.()
 
   Map.replace!(item, :body, body)
@@ -78,10 +101,10 @@ end)
       status: "published",
       published_at: item.published_at,
       time: nil,
-      cover_id: nil,
       tags: String.split(item.tags, ","),
       authors: [item.author_id],
       total_views: item.total_views,
+      cover_id: persist_cover.(item.cover).id,
       seo_settings: %{}
     })
   )
