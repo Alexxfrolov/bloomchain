@@ -28,6 +28,31 @@ replace_bloomchain_urls = fn item ->
   |> String.replace("https://bloomchain.ru/", "/")
 end
 
+replace_caption = fn item ->
+  Regex.replace(
+    ~r/\[caption(.*?)\[\/caption\]/,
+    item,
+    fn tag, x ->
+      src = Regex.run(~r/(?<=src=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
+      alt = Regex.run(~r/(?<=alt=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
+      width = Regex.run(~r/(?<=width=\")(.*?)(?=\"])/, tag, capture: :first) |> List.first()
+      height = Regex.run(~r/(?<=height=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
+      capture = Regex.run(~r/[^>]*$/, tag) |> List.first() |> String.replace("[/caption]", "")
+
+      "<div class=\"fr-img-space-wrap\">\
+          <span class=\"fr-img-caption fr-fic fr-dib\">\
+             <span class=\"fr-img-wrap\">\
+               <img class=\"size-full wp-image-74087\" src=#{src} alt=#{alt} width=#{width} height=#{
+        height
+      } />\
+               <span class=\"fr-inner\">#{capture}</span>\
+             </span>\
+           </span>\
+        </div>"
+    end
+  )
+end
+
 "#{File.cwd!()}/priv/repo/data_files/posts.json"
 |> File.read!()
 |> Poison.decode!(keys: :atoms)
@@ -36,7 +61,8 @@ end
     item.body
     |> make_paragraphs.()
     |> replace_embedly_urls.()
-    |> replace_bloomchain_urls.()
+    # |> replace_bloomchain_urls.()
+    |> replace_caption.()
 
   Map.replace!(item, :body, body)
 end)
