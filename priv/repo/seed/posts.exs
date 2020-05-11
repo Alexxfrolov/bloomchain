@@ -29,7 +29,7 @@ replace_bloomchain_urls = fn item ->
   |> String.replace("/wp-content/uploads/", "/uploads/wp-content/")
 end
 
-persist_cover = fn cover ->
+persist_cover = fn cover, alt ->
   path =
     File.cwd!() <>
       "/uploads/wp-content/" <>
@@ -39,6 +39,7 @@ persist_cover = fn cover ->
   case Repo.insert(
          Media.changeset(%Media{}, %{
            type: "image",
+           alt: alt,
            file: %Plug.Upload{
              content_type: MIME.from_path(path),
              filename: Path.basename(path),
@@ -55,7 +56,7 @@ replace_caption = fn item ->
   Regex.replace(
     ~r/\[caption(.*?)\[\/caption\]/,
     item,
-    fn tag, x ->
+    fn tag, _ ->
       src = Regex.run(~r/(?<=src=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
       alt = Regex.run(~r/(?<=alt=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
       width = Regex.run(~r/(?<=width=\")(.*?)(?=\"])/, tag, capture: :first) |> List.first()
@@ -104,8 +105,8 @@ end)
       tags: String.split(item.tags, ","),
       authors: [item.author_id],
       total_views: item.total_views,
-      cover_id: persist_cover.(item.cover).id,
-      seo_settings: %{}
+      cover_id: persist_cover.(item.cover, item.cover_alt).id,
+      seo_settings: %{description: item.description}
     })
   )
 end)

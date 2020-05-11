@@ -8,6 +8,7 @@ defmodule Bloomchain.Content.Post do
   use Arc.Ecto.Schema
 
   alias Bloomchain.Content.{Tag, Media, Author}
+  alias BloomchainWeb.Uploaders.File
   alias Bloomchain.Repo
 
   @derive {Phoenix.Param, key: :slug}
@@ -69,6 +70,7 @@ defmodule Bloomchain.Content.Post do
     |> unique_constraint(:uniq_slug_with_type, name: :uniq_slug_with_type)
     |> process_tags(attrs[:tags])
     |> process_authors(attrs[:authors])
+    |> process_seo()
     |> process_published()
   end
 
@@ -137,4 +139,42 @@ defmodule Bloomchain.Content.Post do
   end
 
   defp process_authors(changeset, _), do: changeset
+
+  defp process_seo(
+         %Ecto.Changeset{valid?: true, changes: %{title: title, seo_settings: seo} = changes} =
+           changeset
+       ) do
+    default_description =
+      "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
+
+    cover_url =
+      if changes[:cover_id] do
+        cover = Repo.get(Media, changes[:cover_id])
+        File.url({cover.file, cover})
+      else
+        nil
+      end
+
+    default = %{
+      # base seo tags
+      description: seo[:description] || default_description,
+      keywords: seo[:keywords] || [],
+      # twitter fields
+      twitter_card: seo[:twitter_card] || "summary_large_image",
+      twitter_description: seo[:twitter_description] || seo[:description] || default_description,
+      twitter_title: seo[:twitter_title] || title,
+      twitter_creator: seo[:twitter_creator] || "@BloomChainNews",
+      twitter_site: seo[:twitter_site] || "@BloomChainNews",
+      twitter_image: seo[:twitter_image] || cover_url,
+      # open graph fields
+      og_title: seo[:og_title] || title,
+      og_description: seo[:og_description] || seo[:description] || default_description,
+      og_image: seo[:og_image] || cover_url,
+      og_type: seo[:og_type] || "article"
+    }
+
+    put_change(changeset, :seo_settings, default)
+  end
+
+  defp process_seo(changeset), do: changeset
 end
