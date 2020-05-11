@@ -3,7 +3,7 @@ defmodule BloomchainWeb.NewsfeedController do
   alias Bloomchain.Content.Article
 
   def index(conn, %{scroll: scroll, last_date: last_date}) do
-    %{entries: articles, metadata: meta} = Article.paginate("newsfeed", scroll)
+    %{entries: articles, metadata: meta} = Article.paginate("newsfeed", scroll, size: 12)
 
     conn
     |> put_resp_header("x-pagination-scroll", to_string(meta.after))
@@ -13,7 +13,7 @@ defmodule BloomchainWeb.NewsfeedController do
   end
 
   def index(conn, _params) do
-    %{entries: articles, metadata: meta} = Article.paginate("newsfeed")
+    %{entries: articles, metadata: meta} = Article.paginate("newsfeed", size: 12)
 
     render(conn, "index.html",
       articles: group(articles),
