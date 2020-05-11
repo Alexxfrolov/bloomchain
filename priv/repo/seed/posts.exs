@@ -7,8 +7,7 @@ make_paragraphs = fn item ->
   |> Enum.reject(&(String.trim(&1) == ""))
   |> Enum.map(&("<p>" <> &1 <> "</p>"))
   |> Enum.join()
-  |> String.replace("<p><blockquote>", "<blockquote><p>")
-  |> String.replace("</blockquote></p>", "</p></blockquote>")
+  |> String.replace(["[embed]", "[/embed]", "<p></p>"], "")
 end
 
 replace_embedly_urls = fn item ->
@@ -25,31 +24,9 @@ end
 
 replace_bloomchain_urls = fn item ->
   item
+  |> String.replace("http://bloomchain.ru/", "/")
   |> String.replace("https://bloomchain.ru/", "/")
   |> String.replace("/wp-content/uploads/", "/uploads/wp-content/")
-end
-
-persist_cover = fn cover, alt ->
-  path =
-    File.cwd!() <>
-      "/uploads/wp-content/" <>
-      (Regex.run(~r/(?<=wp-content\/uploads\/)(.*?)$/, cover, capture: :first)
-       |> List.first())
-
-  case Repo.insert(
-         Media.changeset(%Media{}, %{
-           type: "image",
-           alt: alt,
-           file: %Plug.Upload{
-             content_type: MIME.from_path(path),
-             filename: Path.basename(path),
-             path: path
-           }
-         })
-       ) do
-    {:ok, item} -> item
-    {:error, _} -> %{id: nil}
-  end
 end
 
 replace_caption = fn item ->
@@ -77,6 +54,51 @@ replace_caption = fn item ->
   )
 end
 
+replace_strong_tags = fn item ->
+  item
+  |> String.replace("<h3><strong>", "<h3>")
+  |> String.replace("</strong></h3>", "</h3>")
+  |> String.replace("<h2><strong>", "<h2>")
+  |> String.replace("</strong></h2>", "</h2>")
+  |> String.replace("<h1><strong>", "<h1>")
+  |> String.replace("</strong></h1>", "</h1>")
+end
+
+replace_blockquote = fn item ->
+  Regex.replace(
+    ~r/<blockquote>(.*?)<\/blockquote>/,
+    item,
+    fn tag, _ ->
+      data = String.replace(tag, ["<blockquote>", "</blockquote>"], "")
+
+      "<blockquote><div class=\"blockqoute__inner\">#{data}</div></blockquote>"
+    end
+  )
+end
+
+persist_cover = fn cover, alt ->
+  path =
+    File.cwd!() <>
+      "/uploads/wp-content/" <>
+      (Regex.run(~r/(?<=wp-content\/uploads\/)(.*?)$/, cover, capture: :first)
+       |> List.first())
+
+  case Repo.insert(
+         Media.changeset(%Media{}, %{
+           type: "image",
+           alt: alt,
+           file: %Plug.Upload{
+             content_type: MIME.from_path(path),
+             filename: Path.basename(path),
+             path: path
+           }
+         })
+       ) do
+    {:ok, item} -> item
+    {:error, _} -> %{id: nil}
+  end
+end
+
 "#{File.cwd!()}/priv/repo/data_files/posts.json"
 |> File.read!()
 |> Poison.decode!(keys: :atoms)
@@ -87,6 +109,8 @@ end
     |> replace_embedly_urls.()
     |> replace_bloomchain_urls.()
     |> replace_caption.()
+    |> replace_strong_tags.()
+    |> replace_blockquote.()
 
   Map.replace!(item, :body, body)
 end)
