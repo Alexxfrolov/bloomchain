@@ -13,7 +13,7 @@ defmodule BloomchainWeb.PageView do
           do_image_tag(item),
           content_tag(:p, item.title),
           content_tag(:div, class: "d-flex align-items-center") do
-            do_article_attrs(item)
+            SharedView.article_attrs(item)
           end
         ]
       end
@@ -28,7 +28,7 @@ defmodule BloomchainWeb.PageView do
           class: "bc-article__paragraph mt-1 line-clamp line-clamp__size_3"
         ),
         content_tag(:div, class: "d-flex align-items-center mt-3") do
-          do_article_attrs(item)
+          SharedView.article_attrs(item)
         end
       ]
     end
@@ -58,18 +58,6 @@ defmodule BloomchainWeb.PageView do
     img_tag(File.url({cover.file, cover}))
   end
 
-  defp do_article_attrs(item) do
-    [
-      content_tag(
-        :span,
-        time_from(item),
-        class: "small mr-sm-4 mr-2"
-      ),
-      content_tag(:i, nil, class: "mr-1 icon-clock-white"),
-      content_tag(:span, "#{item.time} мин", class: "small")
-    ]
-  end
-
   defp date_time_format(datetime) do
     time = datetime |> Timex.local() |> Timex.format!("%H:%m", :strftime)
 
@@ -90,9 +78,5 @@ defmodule BloomchainWeb.PageView do
       end
 
     "#{datetime.day} #{month} #{time}"
-  end
-
-  defp time_from(%{published_at: published_at}) do
-    Timex.lformat!(published_at, "{relative}", "ru", :relative)
   end
 end

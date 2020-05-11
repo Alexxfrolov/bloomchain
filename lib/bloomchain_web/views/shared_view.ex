@@ -27,7 +27,7 @@ defmodule BloomchainWeb.SharedView do
           do_image_tag(item),
           content_tag(:p, item.title, class: "line-clamp line-clamp__size_2"),
           content_tag(:div, class: "d-flex align-items-center") do
-            do_article_attrs(item)
+            article_attrs(item)
           end
         ]
       end
@@ -47,7 +47,7 @@ defmodule BloomchainWeb.SharedView do
           class: "bc-article__paragraph mt-2 line-clamp line-clamp__size_3"
         ),
         content_tag(:div, class: "d-flex align-items-center mt-3") do
-          do_article_attrs(item)
+          article_attrs(item)
         end
       ]
     end
@@ -67,10 +67,28 @@ defmodule BloomchainWeb.SharedView do
           class: "bc-article__paragraph mt-1 line-clamp line-clamp__size_3"
         ),
         content_tag(:div, class: "d-flex align-items-center mt-3") do
-          do_article_attrs(item)
+          article_attrs(item)
         end
       ]
     end
+  end
+
+  def article_attrs(%{time: nil} = item) do
+    [
+      content_tag(:span, time_from(item.published_at), class: "small mr-sm-4 mr-2"),
+      content_tag(:i, nil, class: "mr-1 icon-user-white"),
+      content_tag(:span, author(item), class: "small mr-sm-4 mr-3")
+    ]
+  end
+
+  def article_attrs(%{time: time} = item) do
+    [
+      content_tag(:span, time_from(item.published_at), class: "small mr-sm-4 mr-2"),
+      content_tag(:i, nil, class: "mr-1 icon-user-white"),
+      content_tag(:span, author(item), class: "small mr-sm-4 mr-3"),
+      content_tag(:i, nil, class: "mr-1 icon-clock-white"),
+      content_tag(:span, "#{time} мин", class: "small")
+    ]
   end
 
   defp do_image_tag(%{cover: nil}), do: ""
@@ -79,23 +97,13 @@ defmodule BloomchainWeb.SharedView do
     img_tag(File.url({cover.file, cover}))
   end
 
-  defp do_article_attrs(item) do
-    [
-      content_tag(:span, time_from(item.published_at), class: "small mr-sm-4 mr-2"),
-      content_tag(:i, nil, class: "mr-1 icon-user-white"),
-      content_tag(:span, author(item), class: "small mr-sm-4 mr-3"),
-      content_tag(:i, nil, class: "mr-1 icon-clock-white"),
-      content_tag(:span, "#{item.time} мин", class: "small")
-    ]
-  end
-
   defp href_path(item), do: "/#{item.type}/#{item.slug}"
 
   defp time_from(datetime) do
     Timex.lformat!(datetime, "{relative}", "ru", :relative)
   end
 
-  defp timestamp(nil), do: "00.00.0000 00:00"
+  defp timestamp(nil), do: ""
 
   defp timestamp(datetime) do
     datetime
