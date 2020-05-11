@@ -24,7 +24,7 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
 
     Author.changeset(%Author{}, %{
       user_id: user.id,
-      name: user.last_name <> " " <> user.first_name
+      name: user.first_name <> " " <> user.last_name
     })
     |> Repo.insert!()
 
@@ -56,7 +56,7 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
     user = Repo.get!(User, id) |> User.changeset(params) |> Repo.update!()
 
     Author.changeset((user |> Repo.preload(:author)).author, %{
-      name: params[:last_name] <> " " <> params[:first_name]
+      name: params[:first_name] <> " " <> params[:last_name]
     })
     |> Repo.update!()
 

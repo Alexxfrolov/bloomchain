@@ -3,7 +3,7 @@ defmodule BloomchainWeb.AnalysisController do
   alias Bloomchain.Content.Article
 
   def index(conn, %{scroll: scroll}) do
-    %{entries: articles, metadata: meta} = Article.paginate("analysis", scroll)
+    %{entries: articles, metadata: meta} = Article.paginate("analysis", scroll, size: 6)
 
     conn
     |> put_resp_header("x-pagination-scroll", to_string(meta.after))
@@ -13,7 +13,7 @@ defmodule BloomchainWeb.AnalysisController do
   end
 
   def index(conn, _params) do
-    %{entries: articles, metadata: meta} = Article.paginate("analysis")
+    %{entries: articles, metadata: meta} = Article.paginate("analysis", size: 6)
 
     render(conn, "index.html",
       articles: articles,

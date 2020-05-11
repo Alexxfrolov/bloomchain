@@ -16,7 +16,7 @@ defmodule Bloomchain.Content.Author do
   end
 
   @required_fields ~w(name)a
-  @optional_fields ~w(user_id)a
+  @optional_fields ~w(id user_id)a
 
   def changeset(struct, params \\ %{}) do
     struct

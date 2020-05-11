@@ -19,7 +19,7 @@ defmodule Bloomchain.Content.User do
   end
 
   @required_fields ~w(first_name last_name email)a
-  @optional_fields ~w(role password phone job)a
+  @optional_fields ~w(id role password phone job)a
 
   def changeset(user, params \\ %{}) do
     user
