@@ -33,7 +33,7 @@
       </article>
 
       <div class="d-flex align-items-center mt-4">
-        <a class="btn btn-link font-weight-medium pl-0" onClick="window.history.back()">&larr; Назад</a>
+        <a class="btn btn-link font-weight-medium pl-0" onClick="window.history.back()" style="color: #4d67ec">&larr; Назад</a>
         <span class="small ml-auto mr-1">Поделиться:</span>
         <a data-social-share="vk" class="icon-vk-round-primary mx-1"></a>
         <a data-social-share="facebook" class="icon-fb-round-primary mx-1"></a>

@@ -10125,7 +10125,10 @@ html.lb-disable-scrolling {
   display: block;
 }
 
-.article img + p {
+.article img + p,
+.article blockquote + p,
+.article blockquote + img,
+.article blockquote + a {
   margin-top: 1rem;
 }
 
@@ -10158,7 +10161,7 @@ html.lb-disable-scrolling {
   background-color: #fff;
 }
 
-.article blockquote p {
+.article blockquote > p {
   position: relative;
   margin-bottom: 0;
   margin-left: 25px;
@@ -10204,8 +10207,8 @@ html.lb-disable-scrolling {
   color: #000;
 }
 
-
-.article blockquote p:before {
+.article blockquote > div:before,
+.article blockquote > p:before {
   content: '';
   position: absolute;
   left: -25px;
@@ -10215,7 +10218,8 @@ html.lb-disable-scrolling {
   background: transparent url("data:image/svg+xml,%3Csvg width='18px' height='30px' viewBox='0 0 18 30' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Artboard-11' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' font-family='Montserrat-Regular, Montserrat' font-size='45' font-weight='normal' letter-spacing='0.5625' line-spacing='30' opacity='0.734771286'%3E%3Ctext id='“' fill='%233763EA'%3E%3Ctspan x='0' y='40'%3E“%3C/tspan%3E%3C/text%3E%3C/g%3E%3C/svg%3E") center/18px 30px no-repeat;
 }
 
-.article blockquote p:after {
+.article blockquote > div:after,
+.article blockquote > p:after {
   content: '';
   margin-left: 8px;
   position: absolute;
@@ -10223,6 +10227,23 @@ html.lb-disable-scrolling {
   width: 18px;
   height: 30px;
   background: transparent url("data:image/svg+xml,%3Csvg width='18px' height='30px' viewBox='0 0 18 30' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Artboard-12' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' font-family='Montserrat-Regular, Montserrat' font-size='45' font-weight='normal' letter-spacing='0.5625' line-spacing='30' opacity='0.734771286'%3E%3Ctext id='”' fill='%233763EA'%3E%3Ctspan x='0' y='40'%3E”%3C/tspan%3E%3C/text%3E%3C/g%3E%3C/svg%3E") center/18px 30px no-repeat;
+}
+
+.article table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+  margin-bottom: 2rem;
+}
+
+.article table td,
+.article table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+article table tr:nth-child(even) {
+  background-color: #f2f2f2;
 }
 
 .article .fr-img-wrap {
