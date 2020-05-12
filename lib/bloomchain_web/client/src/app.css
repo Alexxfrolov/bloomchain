@@ -7152,7 +7152,7 @@ button.bg-dark:focus {
       padding: 0 10px;
       display: inline-flex;
       width: 100%;
-      max-width: 80px;
+      max-width: 120px;
       text-align: right;
       border: none;
       transition: none;
