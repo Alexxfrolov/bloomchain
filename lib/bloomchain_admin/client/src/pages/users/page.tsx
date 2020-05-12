@@ -40,7 +40,7 @@ import AddBoxIcon from "@material-ui/icons/AddBox"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { ConditionalList } from "@ui"
-import { Order, Pagination } from "@api/common/types"
+import { OrderDirection, Pagination } from "@api/common/types"
 import { usersApi, User } from "@api/user"
 import {
   DeleteDialog,
@@ -85,22 +85,19 @@ const useStyles = makeStyles((theme) =>
   }),
 )
 
-const PAGINATION_PRESET = {
-  page: 1,
-  page_size: 25,
-  total_pages: 1,
-  total_items: 0,
-}
-
 export const UsersPage = () => {
   const classes = useStyles()
   const [isDataLoading, setLoading] = useState(false)
   const [hasError, setError] = useState(false)
   const [users, setUsers] = useState<User[]>([])
   const [pagination, setPagination] = useState<Pagination>({
-    ...PAGINATION_PRESET,
+    page: 1,
+    page_size: 25,
+    page_size_options: [25, 50, 100],
+    total_pages: 1,
+    total_items: 0,
   })
-  const [order, setOrder] = useState<Order>("desc")
+  const [orderDirection, setOrderDirection] = useState<OrderDirection>("desc")
   const [orderBy, setOrderBy] = useState<keyof User>("inserted_at")
 
   useEffect(() => {
@@ -113,7 +110,7 @@ export const UsersPage = () => {
         const response = await usersApi.get({
           page_size,
           page,
-          order,
+          orderDirection,
           orderBy,
         })
         setUsers(response.data.data)
@@ -128,7 +125,7 @@ export const UsersPage = () => {
       setLoading(false)
     }
     fetchData()
-  }, [pagination.page_size, pagination.page, order, orderBy])
+  }, [pagination.page_size, pagination.page, orderDirection, orderBy])
 
   const [modifyingUser, setModifyingUser] = useState<User | null>(null)
   const [isOpenedAddFormDialog, setOpenedAddFormDialog] = useState(false)
@@ -227,11 +224,11 @@ export const UsersPage = () => {
 
   const handleRequestSort = useCallback(
     (property: keyof User) => {
-      const isAsc = orderBy === property && order === "asc"
-      setOrder(isAsc ? "desc" : "asc")
+      const isAsc = orderBy === property && orderDirection === "asc"
+      setOrderDirection(isAsc ? "desc" : "asc")
       setOrderBy(property)
     },
-    [order, orderBy],
+    [orderDirection, orderBy],
   )
 
   return (
@@ -254,7 +251,7 @@ export const UsersPage = () => {
             data={users}
             isDataLoading={isDataLoading}
             pagination={pagination}
-            order={order}
+            orderDirection={orderDirection}
             orderBy={orderBy}
             renderRow={(user) => (
               <UsersTableRow
@@ -349,7 +346,7 @@ type TablePageChangeAction = (
 type UsersTableProps = {
   data: User[]
   isDataLoading: boolean
-  order: Order
+  orderDirection: OrderDirection
   orderBy: keyof User
   pagination: Pagination
   renderRow: (user: User) => ReactElement<UsersTableRowProps>
@@ -364,7 +361,7 @@ const UsersTable = memo(function (props: UsersTableProps) {
   const {
     data,
     isDataLoading,
-    order,
+    orderDirection,
     orderBy,
     pagination,
     renderRow,
@@ -394,14 +391,16 @@ const UsersTable = memo(function (props: UsersTableProps) {
                     key={head_cell.id}
                     align={head_cell.align}
                     sortDirection={
-                      orderBy === head_cell.sort_field ? order : false
+                      orderBy === head_cell.sort_field ? orderDirection : false
                     }
                     style={{ width: head_cell.width }}
                   >
                     <TableSortLabel
                       active={orderBy === head_cell.sort_field}
                       direction={
-                        orderBy === head_cell.sort_field ? order : "asc"
+                        orderBy === head_cell.sort_field
+                          ? orderDirection
+                          : "asc"
                       }
                       onClick={createSortHandler(head_cell.sort_field)}
                       classes={{
@@ -413,7 +412,7 @@ const UsersTable = memo(function (props: UsersTableProps) {
                       {head_cell.label}
                       {orderBy === head_cell.id ? (
                         <span className={classes.visuallyHidden}>
-                          {order === "desc"
+                          {orderDirection === "desc"
                             ? "sorted descending"
                             : "sorted ascending"}
                         </span>

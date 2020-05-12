@@ -20,13 +20,17 @@ const getCurrentUser = () => request<User>("GET", "/users/current")
 
 type Params = OrderParams<User> & PaginationParams
 
-function get(params: Params) {
-  const { order, orderBy, ...restOptions } = params
-
+function get({
+  orderDirection = "desc",
+  orderBy = "inserted_at",
+  page_size = 25,
+  page = 1,
+}: Params) {
   return request<{ data: User[]; meta: Pagination }>("GET", "/users", {
     params: {
-      ...restOptions,
-      sort_by: `${order}(${orderBy})`,
+      page_size,
+      page,
+      sort_by: `${orderDirection}(${orderBy})`,
     },
   })
 }

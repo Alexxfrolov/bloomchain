@@ -36,7 +36,7 @@ import { Alert } from "@material-ui/lab"
 import AddBoxIcon from "@material-ui/icons/AddBox"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { ConditionalList } from "@ui"
-import { Order, Pagination } from "@api/common/types"
+import { OrderDirection, Pagination } from "@api/common/types"
 import { archivesApi, Archive } from "@api/archives"
 import { mediaApi, MediaFile } from "@api/media"
 import {
@@ -84,9 +84,10 @@ const useStyles = makeStyles((theme) =>
   }),
 )
 
-const PAGINATION_PRESET = {
+const paginationPreset = {
   page: 1,
   page_size: 25,
+  page_size_options: [25, 50, 100],
   total_pages: 1,
   total_items: 0,
 }
@@ -98,9 +99,9 @@ export const ArchivesPage = () => {
   const [hasError, setError] = useState(false)
   const [archives, setArchives] = useState<Archive[]>([])
   const [pagination, setPagination] = useState<Pagination>({
-    ...PAGINATION_PRESET,
+    ...paginationPreset,
   })
-  const [order, setOrder] = useState<Order>("desc")
+  const [orderDirection, setOrderDirection] = useState<OrderDirection>("desc")
   const [orderBy, setOrderBy] = useState<keyof Archive>("inserted_at")
 
   useEffect(() => {
@@ -113,7 +114,7 @@ export const ArchivesPage = () => {
         const response = await archivesApi.get({
           page_size,
           page,
-          order,
+          orderDirection,
           orderBy,
         })
         setArchives(response.data.data)
@@ -127,7 +128,7 @@ export const ArchivesPage = () => {
       setDataLoading(false)
     }
     fetchData()
-  }, [pagination.page_size, pagination.page, order, orderBy])
+  }, [pagination.page_size, pagination.page, orderDirection, orderBy])
 
   const [modifyingArchive, setModifyingArchive] = useState<Archive | null>(null)
   const [isOpenedAddFormDialog, seOpenedAddFormDialog] = useState(false)
@@ -189,11 +190,11 @@ export const ArchivesPage = () => {
 
   const handleRequestSort = useCallback(
     (property: keyof Archive) => {
-      const isAsc = orderBy === property && order === "asc"
-      setOrder(isAsc ? "desc" : "asc")
+      const isAsc = orderBy === property && orderDirection === "asc"
+      setOrderDirection(isAsc ? "desc" : "asc")
       setOrderBy(property)
     },
-    [order, orderBy],
+    [orderDirection, orderBy],
   )
 
   return (
@@ -216,7 +217,7 @@ export const ArchivesPage = () => {
             isDataLoading={isDataLoading}
             data={archives}
             pagination={pagination}
-            order={order}
+            orderDirection={orderDirection}
             orderBy={orderBy}
             renderRow={(archive) => (
               <ArchivesTableRow
@@ -287,7 +288,7 @@ const head_cells: import("@features/core").HeadCell<Archive>[] = [
 type ArchivesTableProps = {
   isDataLoading: boolean
   data: Archive[]
-  order: Order
+  orderDirection: OrderDirection
   orderBy: keyof Archive
   pagination: Pagination
   renderRow: (item: Archive) => ReactElement
@@ -301,7 +302,7 @@ type ArchivesTableProps = {
 const ArchivesTable = memo(function (props: ArchivesTableProps) {
   const classes = useStyles()
   const {
-    order,
+    orderDirection,
     orderBy,
     pagination,
     data,
@@ -330,13 +331,15 @@ const ArchivesTable = memo(function (props: ArchivesTableProps) {
                   key={head_cell.id}
                   align={head_cell.align}
                   sortDirection={
-                    orderBy === head_cell.sort_field ? order : false
+                    orderBy === head_cell.sort_field ? orderDirection : false
                   }
                   style={{ width: head_cell.width }}
                 >
                   <TableSortLabel
                     active={orderBy === head_cell.sort_field}
-                    direction={orderBy === head_cell.sort_field ? order : "asc"}
+                    direction={
+                      orderBy === head_cell.sort_field ? orderDirection : "asc"
+                    }
                     onClick={createSortHandler(
                       head_cell.sort_field ?? "inserted_at",
                     )}
@@ -349,7 +352,7 @@ const ArchivesTable = memo(function (props: ArchivesTableProps) {
                     {head_cell.label}
                     {orderBy === head_cell.id ? (
                       <span className={classes.visuallyHidden}>
-                        {order === "desc"
+                        {orderDirection === "desc"
                           ? "sorted descending"
                           : "sorted ascending"}
                       </span>

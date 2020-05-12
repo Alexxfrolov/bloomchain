@@ -12,14 +12,19 @@ export interface Tag {
   updated_at: Date | string
 }
 
-type Params = OrderParams<Tag> & PaginationParams
+type Params = Partial<OrderParams<Tag>> & Partial<PaginationParams>
 
-function get(params: Params) {
-  const { order, orderBy, ...restOptions } = params
+function get({
+  orderDirection = "desc",
+  orderBy = "inserted_at",
+  page_size = 25,
+  page = 1,
+}: Params) {
   return request<{ data: Tag[]; meta: Pagination }>("GET", "/tags", {
     params: {
-      ...restOptions,
-      sort_by: `${order}(${orderBy})`,
+      page_size,
+      page,
+      sort_by: `${orderDirection}(${orderBy})`,
     },
   })
 }

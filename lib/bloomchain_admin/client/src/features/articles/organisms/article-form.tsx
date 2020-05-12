@@ -27,6 +27,7 @@ import DateFnsUtils from "@date-io/date-fns"
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import { ru } from "date-fns/locale"
 import Autocomplete from "@material-ui/lab/Autocomplete"
+import { useFormik } from "formik"
 import { Editor } from "@lib/editor"
 import { Article } from "@api/articles"
 import { Author } from "@api/authors"
@@ -43,7 +44,7 @@ const useStyles = makeStyles(() =>
   }),
 )
 
-const INITIAL_ARTICLE: Omit<Article, "id"> = {
+const articlePreset: Omit<Article, "id"> = {
   authors: [],
   body: null,
   cover: null,
@@ -75,14 +76,12 @@ type ArticleFormProps = {
 
 // TODO: add removeObjectURL
 export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
-  const { authors, initialArticle = INITIAL_ARTICLE, tags, onSubmit } = props
+  const { authors, initialArticle = articlePreset, tags, onSubmit } = props
   const classes = useStyles()
 
-  const [article, setArticle] = useState<Omit<Article, "id">>({
-    ...initialArticle,
-  })
-  const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const [didSubmitted, setSubmitted] = useState(false)
+  // const [article, setArticle] = useState<Omit<Article, "id">>({
+  //   ...initialArticle,
+  // })
 
   const inputTypeLabel: RefObject<HTMLLabelElement> = useRef(null)
   const inputStatusLabel: RefObject<HTMLLabelElement> = useRef(null)
@@ -95,119 +94,61 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
     setStatusLabelWidth(inputStatusLabel.current?.offsetWidth ?? 0)
   }, [inputTypeLabel, inputStatusLabel])
 
-  useEffect(() => {
-    if (didSubmitted) {
-      const { errors: fieldsErrors } = validateFormFields(article)
-      setErrors(fieldsErrors)
-    }
-  }, [didSubmitted, article])
+  // const handleChangeFormField = useCallback(
+  //   (field: string) => (event: SyntheticEvent<{ value: string }>) => {
+  //     setArticle({ ...article, ...{ [field]: event.currentTarget.value } })
+  //   },
+  //   [article, setArticle],
+  // )
 
-  const handleChangeFormField = useCallback(
-    (field: string) => (event: SyntheticEvent<{ value: string }>) => {
-      setArticle({ ...article, ...{ [field]: event.currentTarget.value } })
-    },
-    [article, setArticle],
-  )
+  // const seoSettingsChangeHandler = useCallback(
+  //   (field: keyof Article["seo_settings"]) => (
+  //     event: SyntheticEvent<{ value: string }>,
+  //   ) => {
+  //     setArticle({
+  //       ...article,
+  //       seo_settings: {
+  //         ...article.seo_settings,
+  //         [field]: event.currentTarget.value,
+  //       },
+  //     })
+  //   },
+  //   [article, setArticle],
+  // )
 
-  const handleChangeEditor = useCallback(
-    (value: string) => {
-      setArticle({ ...article, ...{ body: value } })
-    },
-    [article, setArticle],
-  )
+  // const handleChangeSelect = useCallback(
+  //   (name: keyof Pick<Article, "type" | "status">) => (
+  //     event: ChangeEvent<{ value: unknown }>,
+  //   ) => {
+  //     setArticle({
+  //       ...article,
+  //       [name]: event.target.value,
+  //     })
+  //   },
+  //   [article, setArticle],
+  // )
 
-  const handleDateChange = useCallback(
-    (date: Date | null) => {
-      setArticle({
-        ...article,
-        published_at: date,
-      })
-    },
-    [article, setArticle],
-  )
+  // const handleClearButtonClick = useCallback(() => {
+  //   setArticle({
+  //     ...articlePreset,
+  //   })
+  // }, [setArticle])
 
-  const seoSettingsChangeHandler = useCallback(
-    (field: keyof Article["seo_settings"]) => (
-      event: SyntheticEvent<{ value: string }>,
-    ) => {
-      setArticle({
-        ...article,
-        seo_settings: {
-          ...article.seo_settings,
-          [field]: event.currentTarget.value,
-        },
-      })
-    },
-    [article, setArticle],
-  )
-
-  const handleUpload = useCallback(
-    (image: MediaFile) => {
-      setArticle({
-        ...article,
-        cover: image,
-      })
-    },
-    [article, setArticle],
-  )
-
-  const handleChangeSelect = useCallback(
-    (name: keyof Pick<Article, "type" | "status">) => (
-      event: ChangeEvent<{ value: unknown }>,
-    ) => {
-      setArticle({
-        ...article,
-        [name]: event.target.value,
-      })
-    },
-    [article, setArticle],
-  )
-
-  const handleChangeTagsSelect = useCallback(
-    (_event: ChangeEvent<{}>, tags: Tag[]) => {
-      setArticle({
-        ...article,
-        tags,
-      })
-    },
-    [article, setArticle],
-  )
-
-  const handleChangeAuthorsSelect = useCallback(
-    (_event: ChangeEvent<{}>, authors: Author[]) => {
-      setArticle({
-        ...article,
-        authors,
-      })
-    },
-    [article, setArticle],
-  )
-
-  const handleClearButtonClick = useCallback(() => {
-    setArticle({
-      ...INITIAL_ARTICLE,
-    })
-  }, [setArticle])
-
-  const handleSubmitForm = useCallback(
-    (event: FormEvent) => {
-      event.preventDefault()
-      setSubmitted(true)
-      const { isValid } = validateFormFields(article)
-      if (isValid) {
-        onSubmit(article)
-        // const { body, ...rest } = article
-        // const [_item, _groups, index] = body?.match('data-f-id="pbf"')
-        // onSubmit({ ...rest, body: body.slice(0, Number(index) - 3) })
-      }
-    },
-    [article, onSubmit],
-  )
+  // const handleSubmitForm = useCallback(
+  //   (event: FormEvent) => {
+  //     event.preventDefault()
+  //     onSubmit(article)
+  //     // const { body, ...rest } = article
+  //     // const [_item, _groups, index] = body?.match('data-f-id="pbf"')
+  //     // onSubmit({ ...rest, body: body.slice(0, Number(index) - 3) })
+  //   },
+  //   [article, onSubmit],
+  // )
 
   const tagsOptions = useMemo(() => {
-    if (article.tags.length) {
+    if (initialArticle.tags.length) {
       return tags.reduce<Tag[]>((acc, tag) => {
-        const isAuthorSelected = article.tags.find(
+        const isAuthorSelected = initialArticle.tags.find(
           (articleTag) => articleTag.id === tag.id,
         )
         if (isAuthorSelected) {
@@ -218,12 +159,12 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
       }, [])
     }
     return tags
-  }, [article.tags, tags])
+  }, [initialArticle.tags, tags])
 
   const authorsOptions = useMemo(() => {
-    if (article.authors.length) {
+    if (initialArticle.authors.length) {
       return authors.reduce<Author[]>((acc, author) => {
-        const isTagSelected = article.authors.find(
+        const isTagSelected = initialArticle.authors.find(
           (articleAuthor) => articleAuthor.id === author.id,
         )
         if (isTagSelected) {
@@ -234,21 +175,73 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
       }, [])
     }
     return authors
-  }, [article.authors, authors])
+  }, [initialArticle.authors, authors])
+
+  const {
+    values,
+    errors,
+    isSubmitting,
+    isValid,
+    handleSubmit,
+    handleChange,
+    handleReset,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      ...initialArticle,
+    },
+    onSubmit: (values, actions) => {
+      console.log(values)
+    },
+    onReset: (values) => {
+      console.log(values)
+    },
+  })
 
   const isEnabledDatePicker = useMemo(
-    () => !["ready"].includes(article.status),
-    [article.status],
+    () => !["ready"].includes(values.status),
+    [values.status],
   )
 
-  const isDisabledForm = useMemo(() => !!Object.keys(errors).length, [errors])
+  const handleChangeEditor = useCallback(
+    (value: string) => {
+      setFieldValue("body", value)
+    },
+    [setFieldValue],
+  )
+
+  const handleDateChange = useCallback(
+    (date: Date | null) => {
+      setFieldValue("published_at", date)
+    },
+    [setFieldValue],
+  )
+
+  const handleChangeTagsSelect = useCallback(
+    (_event: ChangeEvent<{}>, tags: Tag[]) => {
+      setFieldValue("tags", tags)
+    },
+    [setFieldValue],
+  )
+
+  const handleChangeAuthorsSelect = useCallback(
+    (_event: ChangeEvent<{}>, authors: Author[]) => {
+      setFieldValue("authors", authors)
+    },
+    [setFieldValue],
+  )
+
+  const handleUpload = useCallback(
+    (image: MediaFile) => {
+      setFieldValue("cover", image)
+    },
+    [setFieldValue],
+  )
+
+  console.log({ values, errors })
 
   return (
-    <form
-      onSubmit={handleSubmitForm}
-      className={classes.root}
-      noValidate={true}
-    >
+    <form onSubmit={handleSubmit} className={classes.root} noValidate={true}>
       <Grid container={true} spacing={4}>
         <Grid item={true} md={12} lg={8}>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
@@ -258,9 +251,10 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
             <Select
               labelId="type"
               id="type"
+              name="name"
               labelWidth={typeLabelWidth}
-              value={article.type}
-              onChange={handleChangeSelect("type")}
+              value={values.type}
+              onChange={handleChange}
             >
               <MenuItem value="newsfeed">Коротко</MenuItem>
               <MenuItem value="detailed">В Деталях</MenuItem>
@@ -273,23 +267,25 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
           </FormControl>
           <TextField
             id="title"
+            name="title"
             label="Заголовок *"
-            value={article.title}
-            error={!!errors.title}
-            helperText={errors.title}
+            value={values.title}
+            // error={!!errors.title}
+            // helperText={errors.title}
             fullWidth={true}
             margin="normal"
             variant="outlined"
-            onChange={handleChangeFormField("title")}
+            onChange={handleChange}
           />
           <TextField
             id="lead"
+            name="lead"
             label="Лид"
-            value={article.lead ?? ""}
+            value={values.lead ?? ""}
             fullWidth={true}
             margin="normal"
             variant="outlined"
-            onChange={handleChangeFormField("lead")}
+            onChange={handleChange}
           />
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <Autocomplete<Author>
@@ -297,7 +293,7 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               multiple={true}
               options={authorsOptions}
               noOptionsText="Пусто"
-              value={article.authors}
+              value={values.authors}
               disableCloseOnSelect={true}
               getOptionLabel={(option) => option.name}
               onChange={handleChangeAuthorsSelect}
@@ -312,7 +308,7 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               multiple={true}
               options={tagsOptions}
               noOptionsText="Пусто"
-              value={article.tags}
+              value={values.tags}
               disableCloseOnSelect={true}
               getOptionLabel={(option) => option.name}
               onChange={handleChangeTagsSelect}
@@ -322,7 +318,7 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
             />
           </FormControl>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
-            <Editor value={article.body ?? ""} onChange={handleChangeEditor} />
+            <Editor value={values.body ?? ""} onChange={handleChangeEditor} />
           </FormControl>
         </Grid>
         <Grid item={true} md={12} lg={4}>
@@ -339,12 +335,12 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <MediaUploadForm onUpload={handleUpload} />
           </FormControl>
-          {article.cover && (
+          {values.cover && (
             <FormControl margin="normal" fullWidth={true} variant="outlined">
               <img
                 width="100%"
-                src={article.cover.url}
-                alt={article.cover.alt ?? ""}
+                src={values.cover.url}
+                alt={values.cover.alt ?? ""}
               />
             </FormControl>
           )}
@@ -355,9 +351,10 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
             <Select
               labelId="status"
               id="status"
+              name="status"
               labelWidth={statusLabelWidth}
-              value={article.status}
-              onChange={handleChangeSelect("status")}
+              value={values.status}
+              onChange={handleChange}
             >
               <MenuItem value="draft">Черновик</MenuItem>
               <MenuItem value="ready">Готово к публикации</MenuItem>
@@ -377,7 +374,7 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
                 inputVariant="outlined"
                 label="Дата публикации"
                 format="dd/MM/yyyy HH:mm"
-                value={article.published_at}
+                value={values.published_at}
                 onChange={handleDateChange}
               />
               <FormHelperText variant="filled">
@@ -386,15 +383,16 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
             </FormControl>
           </MuiPickersUtilsProvider>
           <TextField
-            id="description"
+            id="time"
+            name="time"
             label="Время прочтения"
             type="number"
-            value={article.time ?? ""}
+            value={values.time ?? ""}
             fullWidth={true}
             margin="normal"
             variant="outlined"
             autoComplete="new-article-time"
-            onChange={handleChangeFormField("time")}
+            onChange={handleChange}
           />
         </Grid>
         <Grid item={true} xs={12}>
@@ -405,12 +403,13 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
           </FormControl>
           <FormControl margin="dense" fullWidth={true}>
             <TextField
-              id="keywords"
+              id="seo_settings.keywords"
+              name="seo_settings.keywords"
               label="Keywords"
-              value={article.seo_settings.keywords}
+              value={values.seo_settings.keywords}
               fullWidth={true}
               variant="outlined"
-              onChange={seoSettingsChangeHandler("keywords")}
+              onChange={handleChange}
             />
             <FormHelperText variant="filled">
               Разделяйте слова запятыми или пробелами. По умолчанию тэги статьи.
@@ -418,13 +417,14 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
           </FormControl>
           <FormControl margin="dense" fullWidth={true}>
             <TextField
-              id="description"
+              id="seo_settings.description"
+              name="seo_settings.description"
               label="Description"
-              value={article.seo_settings.description ?? ""}
+              value={values.seo_settings.description ?? ""}
               inputProps={{ maxLength: 200 }}
               fullWidth={true}
               variant="outlined"
-              onChange={seoSettingsChangeHandler("description")}
+              onChange={handleChange}
             />
             <FormHelperText variant="filled">
               Не более 200 символов. По умолчанию лид статьи.
@@ -432,25 +432,27 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
           </FormControl>
           <FormControl margin="dense" fullWidth={true}>
             <TextField
-              id="description"
+              id="seo_settings.og_type"
+              name="seo_settings.og_type"
               label="og:type"
-              value={article.seo_settings.og_type}
+              value={values.seo_settings.og_type}
               fullWidth={true}
               variant="outlined"
-              onChange={seoSettingsChangeHandler("og_type")}
+              onChange={handleChange}
             />
             <FormHelperText variant="filled">
-              По умолчанию article.
+              По умолчанию article
             </FormHelperText>
           </FormControl>
           <FormControl margin="dense" fullWidth={true}>
             <TextField
-              id="description"
+              id="seo_settings.og_title"
+              name="seo_settings.og_title"
               label="og:title"
-              value={article.seo_settings.og_title ?? ""}
+              value={values.seo_settings.og_title ?? ""}
               fullWidth={true}
               variant="outlined"
-              onChange={seoSettingsChangeHandler("og_title")}
+              onChange={handleChange}
             />
             <FormHelperText variant="filled">
               По умолчанию заголовок статьи.
@@ -458,29 +460,17 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
           </FormControl>
           <FormControl margin="dense" fullWidth={true}>
             <TextField
-              id="description"
+              id="seo_settings.og_description"
+              name="seo_settings.og_description"
               label="og:description"
-              value={article.seo_settings.og_description ?? ""}
+              value={values.seo_settings.og_description ?? ""}
               inputProps={{ maxLength: 200 }}
               fullWidth={true}
               variant="outlined"
-              onChange={seoSettingsChangeHandler("og_description")}
+              onChange={handleChange}
             />
             <FormHelperText variant="filled">
               Не более 200 символов. По умолчанию лид статьи.
-            </FormHelperText>
-          </FormControl>
-          <FormControl margin="dense" fullWidth={true}>
-            <TextField
-              id="description"
-              label="og:image"
-              value={article.seo_settings.og_image ?? ""}
-              fullWidth={true}
-              variant="outlined"
-              onChange={seoSettingsChangeHandler("og_image")}
-            />
-            <FormHelperText variant="filled">
-              По умолчанию превью статьи.
             </FormHelperText>
           </FormControl>
         </Grid>
@@ -496,7 +486,7 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               variant="contained"
               color="primary"
               type="button"
-              onClick={handleClearButtonClick}
+              onClick={handleReset}
             >
               Очистить поля
             </Button>
@@ -504,7 +494,7 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
           <Grid item={true}>
             <Button
               type="submit"
-              disabled={isDisabledForm}
+              disabled={!isValid || isSubmitting}
               variant="contained"
               color="primary"
             >
@@ -516,16 +506,3 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
     </form>
   )
 })
-
-function validateFormFields(fields: Article) {
-  const errors: { [key: string]: string } = {}
-
-  if (!fields.title.length) {
-    errors["title"] = "Укажите заголовок"
-  }
-
-  return {
-    isValid: !Object.keys(errors).length,
-    errors,
-  }
-}

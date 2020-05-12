@@ -40,7 +40,7 @@ import {
 import { Alert } from "@material-ui/lab"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
-import { Order, Pagination } from "@api/common/types"
+import { OrderDirection, Pagination } from "@api/common/types"
 import { articlesApi, Article } from "@api/articles"
 import { ConditionalList } from "@ui"
 import {
@@ -121,7 +121,7 @@ export const ArticlesViewPage = () => {
   const [until, setUntil] = useState<Date | null>(null)
   const [isOpenedDeleteDialog, setOpenedDeleteDialog] = useState(false)
   const [currentArticle, setCurrentArticle] = useState<Article | null>(null)
-  const [order, setOrder] = useState<Order>("desc")
+  const [orderDirection, setOrderDirection] = useState<OrderDirection>("desc")
   const [orderBy, setOrderBy] = useState<keyof Article>("published_at")
   const [query, setQuery] = useState("")
 
@@ -136,7 +136,7 @@ export const ArticlesViewPage = () => {
           type,
           page_size,
           page,
-          order,
+          orderDirection,
           orderBy,
         })
         setArticles([...response.data.data])
@@ -150,10 +150,17 @@ export const ArticlesViewPage = () => {
       setDataLoading(false)
     }
     fetchData()
-  }, [type, status, pagination.page_size, pagination.page, order, orderBy])
+  }, [
+    type,
+    status,
+    pagination.page_size,
+    pagination.page,
+    orderDirection,
+    orderBy,
+  ])
 
   useEffect(() => {
-    setOrder("desc")
+    setOrderDirection("desc")
     setOrderBy("published_at")
     setTabIndex(0)
     setQuery("")
@@ -162,7 +169,7 @@ export const ArticlesViewPage = () => {
   }, [status])
 
   useEffect(() => {
-    setOrder("desc")
+    setOrderDirection("desc")
     setOrderBy("published_at")
     setQuery("")
     setSince(null)
@@ -250,7 +257,7 @@ export const ArticlesViewPage = () => {
           type,
           page_size,
           page,
-          order,
+          orderDirection,
           orderBy,
           since,
           until,
@@ -269,7 +276,7 @@ export const ArticlesViewPage = () => {
       setArticles,
       setDataLoading,
       setHasError,
-      order,
+      orderDirection,
       orderBy,
       pagination,
     ],
@@ -288,7 +295,7 @@ export const ArticlesViewPage = () => {
           type,
           page_size,
           page,
-          order,
+          orderDirection,
           orderBy,
         })
         setArticles([...response.data.data])
@@ -300,7 +307,7 @@ export const ArticlesViewPage = () => {
     [
       status,
       type,
-      order,
+      orderDirection,
       orderBy,
       pagination,
       setSince,
@@ -313,15 +320,14 @@ export const ArticlesViewPage = () => {
 
   const handleRequestSort = useMemo(
     () => (property: keyof Article) => {
-      const isAsc = orderBy === property && order === "asc"
-      setOrder(isAsc ? "desc" : "asc")
+      const isAsc = orderBy === property && orderDirection === "asc"
+      setOrderDirection(isAsc ? "desc" : "asc")
       setOrderBy(property)
     },
-    [order, orderBy],
+    [orderDirection, orderBy],
   )
 
   const doSearch = async (query: string) => {
-    console.log(status, type)
     setDataLoading(true)
     setHasError(false)
     try {
@@ -362,7 +368,6 @@ export const ArticlesViewPage = () => {
               <FormControl margin="none" variant="outlined">
                 <DatePicker
                   id="date-start"
-                  ampm={false}
                   variant="dialog"
                   margin="none"
                   inputVariant="outlined"
@@ -376,7 +381,6 @@ export const ArticlesViewPage = () => {
               <FormControl margin="none" variant="outlined">
                 <DatePicker
                   id="date-end"
-                  ampm={false}
                   variant="dialog"
                   margin="none"
                   inputVariant="outlined"
@@ -434,7 +438,7 @@ export const ArticlesViewPage = () => {
           <ArticlesTable
             data={articles}
             isDataLoading={isDataLoading}
-            order={order}
+            orderDirection={orderDirection}
             orderBy={orderBy}
             pagination={pagination}
             renderRow={(article) => (
@@ -508,7 +512,7 @@ type TablePageChangeAction = (
 type ArticlesTableProps = {
   data: Article[]
   isDataLoading: boolean
-  order: Order
+  orderDirection: OrderDirection
   orderBy: keyof Article
   pagination: Pagination
   renderRow: (article: Article) => ReactElement
@@ -523,7 +527,7 @@ const ArticlesTable = memo(function ArticlesTable(props: ArticlesTableProps) {
   const {
     data,
     isDataLoading,
-    order,
+    orderDirection,
     orderBy,
     pagination,
     renderRow,
@@ -553,14 +557,16 @@ const ArticlesTable = memo(function ArticlesTable(props: ArticlesTableProps) {
                     key={head_cell.id}
                     align={head_cell.align}
                     sortDirection={
-                      orderBy === head_cell.sort_field ? order : false
+                      orderBy === head_cell.sort_field ? orderDirection : false
                     }
                     style={{ width: head_cell.width }}
                   >
                     <TableSortLabel
                       active={orderBy === head_cell.sort_field}
                       direction={
-                        orderBy === head_cell.sort_field ? order : "asc"
+                        orderBy === head_cell.sort_field
+                          ? orderDirection
+                          : "asc"
                       }
                       onClick={createSortHandler(head_cell.sort_field)}
                       classes={{
@@ -572,7 +578,7 @@ const ArticlesTable = memo(function ArticlesTable(props: ArticlesTableProps) {
                       {head_cell.label}
                       {orderBy === head_cell.id ? (
                         <span className={classes.visuallyHidden}>
-                          {order === "desc"
+                          {orderDirection === "desc"
                             ? "sorted descending"
                             : "sorted ascending"}
                         </span>

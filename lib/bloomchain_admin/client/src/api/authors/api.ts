@@ -11,15 +11,19 @@ export interface Author {
   updated_at: Date
 }
 
-type Params = OrderParams<Author> & PaginationParams
+type Params = Partial<OrderParams<Author>> & Partial<PaginationParams>
 
-function get(params: Params) {
-  const { order, orderBy, ...restOptions } = params
-
+function get({
+  orderDirection = "desc",
+  orderBy = "inserted_at",
+  page_size = 25,
+  page = 1,
+}: Params) {
   return request<{ data: Author[]; meta: Pagination }>("GET", "/authors", {
     params: {
-      ...restOptions,
-      sort_by: `${order}(${orderBy})`,
+      page_size,
+      page,
+      sort_by: `${orderDirection}(${orderBy})`,
     },
   })
 }

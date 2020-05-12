@@ -95,7 +95,7 @@ type CommonTemplateProps = {
 
 export const CommonTemplate = ({
   children,
-  header = <Header />,
+  header = <Header openedDrawer={false} onDrawerClose={() => {}} />,
   menu,
 }: CommonTemplateProps) => {
   const classes = useStyles()
@@ -137,7 +137,9 @@ export const CommonTemplate = ({
             <MenuOpenRoundedIcon />
           </IconButton>
         </div>
-        {menu}
+        {cloneElement(menu, {
+          openedDrawer: isOpened,
+        })}
       </Drawer>
       <main className={classes.content}>{children}</main>
     </div>

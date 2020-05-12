@@ -23,7 +23,7 @@ import {
 } from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
 import { ConditionalList } from "@ui"
-import { Order, Pagination } from "@api/common/types"
+import { OrderDirection, Pagination } from "@api/common/types"
 import { subscribersApi, Subscriber } from "@api/subscribers"
 import { TableRow, TableCell, TableSkeleton } from "@features/core"
 
@@ -60,13 +60,6 @@ const useStyles = makeStyles((theme) =>
   }),
 )
 
-const PAGINATION_PRESET = {
-  page: 1,
-  page_size: 25,
-  total_pages: 1,
-  total_items: 0,
-}
-
 export const SubscribersPage = () => {
   const classes = useStyles()
 
@@ -74,9 +67,13 @@ export const SubscribersPage = () => {
   const [hasError, setError] = useState(false)
   const [subscribers, setSubscribers] = useState<Subscriber[]>([])
   const [pagination, setPagination] = useState<Pagination>({
-    ...PAGINATION_PRESET,
+    page: 1,
+    page_size: 25,
+    page_size_options: [25, 50, 100],
+    total_pages: 1,
+    total_items: 0,
   })
-  const [order, setOrder] = useState<Order>("desc")
+  const [orderDirection, setOrderDirection] = useState<OrderDirection>("desc")
   const [orderBy, setOrderBy] = useState<keyof Subscriber>("inserted_at")
 
   useEffect(() => {
@@ -89,7 +86,7 @@ export const SubscribersPage = () => {
         const response = await subscribersApi.get({
           page_size,
           page,
-          order,
+          orderDirection,
           orderBy,
         })
         setSubscribers(response.data.data)
@@ -103,7 +100,7 @@ export const SubscribersPage = () => {
       setLoading(false)
     }
     fetchData()
-  }, [pagination.page_size, pagination.page, order, orderBy])
+  }, [pagination.page_size, pagination.page, orderDirection, orderBy])
 
   const handleTablePageChange = useMemo(
     () => (
@@ -131,11 +128,11 @@ export const SubscribersPage = () => {
 
   const handleRequestSort = useMemo(
     () => (property: keyof Subscriber) => {
-      const isAsc = orderBy === property && order === "asc"
-      setOrder(isAsc ? "desc" : "asc")
+      const isAsc = orderBy === property && orderDirection === "asc"
+      setOrderDirection(isAsc ? "desc" : "asc")
       setOrderBy(property)
     },
-    [order, orderBy],
+    [orderDirection, orderBy],
   )
 
   return (
@@ -148,7 +145,7 @@ export const SubscribersPage = () => {
           data={subscribers}
           isDataLoading={isDataLoading}
           pagination={pagination}
-          order={order}
+          orderDirection={orderDirection}
           orderBy={orderBy}
           renderRow={(subscriber) => (
             <SubscribersTableRow key={subscriber.id} subscriber={subscriber} />
@@ -187,7 +184,7 @@ const head_cells: import("@features/core").HeadCell<Subscriber>[] = [
 type SubscribersTableProps = {
   data: Subscriber[]
   isDataLoading: boolean
-  order: Order
+  orderDirection: OrderDirection
   orderBy: keyof Subscriber
   pagination: Pagination
   renderRow: (subscriber: Subscriber) => ReactElement<SubscribersTableRowProps>
@@ -201,7 +198,7 @@ type SubscribersTableProps = {
 const SubscribersTable = memo(function (props: SubscribersTableProps) {
   const classes = useStyles()
   const {
-    order,
+    orderDirection,
     orderBy,
     pagination,
     data,
@@ -230,13 +227,15 @@ const SubscribersTable = memo(function (props: SubscribersTableProps) {
                   key={head_cell.id}
                   align={head_cell.align}
                   sortDirection={
-                    orderBy === head_cell.sort_field ? order : false
+                    orderBy === head_cell.sort_field ? orderDirection : false
                   }
                   style={{ width: head_cell.width }}
                 >
                   <TableSortLabel
                     active={orderBy === head_cell.sort_field}
-                    direction={orderBy === head_cell.sort_field ? order : "asc"}
+                    direction={
+                      orderBy === head_cell.sort_field ? orderDirection : "asc"
+                    }
                     onClick={createSortHandler(
                       head_cell.sort_field ?? "inserted_at",
                     )}
@@ -249,7 +248,7 @@ const SubscribersTable = memo(function (props: SubscribersTableProps) {
                     {head_cell.label}
                     {orderBy === head_cell.id ? (
                       <span className={classes.visuallyHidden}>
-                        {order === "desc"
+                        {orderDirection === "desc"
                           ? "sorted descending"
                           : "sorted ascending"}
                       </span>

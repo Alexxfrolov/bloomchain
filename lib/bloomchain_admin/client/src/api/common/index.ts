@@ -1,1 +1,6 @@
-export type { Pagination, Order, OrderParams, PaginationParams } from "./types"
+export type {
+  Pagination,
+  OrderDirection,
+  OrderParams,
+  PaginationParams,
+} from "./types"

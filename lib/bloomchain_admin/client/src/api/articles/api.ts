@@ -74,20 +74,27 @@ export interface SeoSettings {
   twitter_image?: string
 }
 
-type Params = OrderParams<Article> &
-  PaginationParams & {
+type Params = Partial<OrderParams<Article>> &
+  Partial<PaginationParams> & {
     status: Article["status"]
     type: Article["type"]
     since?: Date | string | null
     until?: Date | string | null
   }
 
-function get(params: Params) {
-  const { order, orderBy, ...restOptions } = params
+function get({
+  orderDirection = "desc",
+  orderBy = "published_at",
+  page_size = 25,
+  page = 1,
+  ...otherOptions
+}: Params) {
   return request<{ data: Article[]; meta: Pagination }>("GET", "/articles", {
     params: {
-      ...restOptions,
-      sort_by: `${order}(${orderBy})`,
+      page_size,
+      page,
+      sort_by: `${orderDirection}(${orderBy})`,
+      ...otherOptions,
     },
   })
 }

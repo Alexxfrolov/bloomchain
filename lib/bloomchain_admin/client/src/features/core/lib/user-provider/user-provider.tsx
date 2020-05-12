@@ -9,8 +9,7 @@ import React, {
 import { usersApi, User } from "@api/user"
 
 import { FullPageLoadScreen, FullPageErrorScreen } from "../../molecules"
-
-type NetworkStatus = "pending" | "success" | "error"
+import { RequestStatus } from "../../types"
 
 type UserProviderProps = {
   children: ReactChild | ReactChild[]
@@ -19,7 +18,7 @@ type UserProviderProps = {
 type UserProviderState = {
   user: User | null
   error: Error | null
-  status: NetworkStatus
+  status: RequestStatus
 }
 
 const initialState: UserProviderState = {
@@ -50,17 +49,16 @@ const UserProvider = ({ children }: UserProviderProps) => {
       .catch((error: Error) => setState({ status: "error", error, user: null }))
   }, [])
 
-  const update = useCallback(
-    (user: User) => {
-      usersApi
-        .update(user)
-        .then(({ data }) =>
-          setState({ error: null, status: "success", user: data }),
-        )
-        .catch((error) => setState({ ...state, error, status: "error" }))
-    },
-    [state],
-  )
+  const update = useCallback((user: User) => {
+    usersApi
+      .update(user)
+      .then(({ data }) =>
+        setState({ error: null, status: "success", user: data }),
+      )
+      .catch((error) =>
+        setState((state) => ({ ...state, error, status: "error" })),
+      )
+  }, [])
 
   const remove = useCallback(() => setState(initialState), [])
 

@@ -7,6 +7,7 @@ import {
   IconButton,
   Link,
   Typography,
+  Tooltip,
   makeStyles,
 } from "@material-ui/core"
 import MenuRoundedIcon from "@material-ui/icons/MenuRounded"
@@ -99,25 +100,26 @@ export const Header = memo(function Header(props: HeaderProps) {
           >
             <Grid item={true}>
               <Link href="/" target="_blank" className={classes.link}>
-                <HomeRoundedIcon color="inherit" />
-                <Typography
-                  variant="subtitle2"
-                  component="h6"
-                  gutterBottom={false}
-                >
-                  На сайт
-                </Typography>
+                <Tooltip title="Вернуться на сайт">
+                  <IconButton color="inherit">
+                    <HomeRoundedIcon color="inherit" />
+                  </IconButton>
+                </Tooltip>
               </Link>
             </Grid>
             <Grid item={true}>
               <RouterLink routeName="admin.account">
-                <IconButton color="inherit">
-                  <AccountCircleRoundedIcon htmlColor="white" />
-                </IconButton>
+                <Tooltip title="Личный кабинет">
+                  <IconButton color="inherit">
+                    <AccountCircleRoundedIcon htmlColor="white" />
+                  </IconButton>
+                </Tooltip>
               </RouterLink>
-              <IconButton color="inherit" onClick={signOut}>
-                <ExitToAppRoundedIcon htmlColor="white" />
-              </IconButton>
+              <Tooltip title="Выйти">
+                <IconButton color="inherit" onClick={signOut}>
+                  <ExitToAppRoundedIcon htmlColor="white" />
+                </IconButton>
+              </Tooltip>
             </Grid>
           </Grid>
         </Grid>

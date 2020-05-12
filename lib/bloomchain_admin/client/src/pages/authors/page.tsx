@@ -36,7 +36,7 @@ import AddBoxIcon from "@material-ui/icons/AddBox"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { ConditionalList } from "@ui"
-import { Order, Pagination } from "@api/common/types"
+import { OrderDirection, Pagination } from "@api/common/types"
 import { authorsApi, Author } from "@api/authors"
 import {
   DeleteDialog,
@@ -81,13 +81,6 @@ const useStyles = makeStyles((theme) =>
   }),
 )
 
-const PAGINATION_PRESET = {
-  page: 1,
-  page_size: 25,
-  total_pages: 1,
-  total_items: 0,
-}
-
 export const AuthorsPage = () => {
   const classes = useStyles()
 
@@ -95,9 +88,13 @@ export const AuthorsPage = () => {
   const [hasError, setError] = useState(false)
   const [authors, setAuthors] = useState<Author[]>([])
   const [pagination, setPagination] = useState<Pagination>({
-    ...PAGINATION_PRESET,
+    page: 1,
+    page_size: 25,
+    page_size_options: [25, 50, 100],
+    total_pages: 1,
+    total_items: 0,
   })
-  const [order, setOrder] = useState<Order>("desc")
+  const [orderDirection, setOrderDirection] = useState<OrderDirection>("desc")
   const [orderBy, setOrderBy] = useState<keyof Author>("inserted_at")
 
   useEffect(() => {
@@ -110,7 +107,7 @@ export const AuthorsPage = () => {
         const response = await authorsApi.get({
           page_size,
           page,
-          order,
+          orderDirection,
           orderBy,
         })
         setAuthors(response.data.data)
@@ -125,7 +122,7 @@ export const AuthorsPage = () => {
       setLoading(false)
     }
     fetchData()
-  }, [pagination.page_size, pagination.page, order, orderBy])
+  }, [pagination.page_size, pagination.page, orderDirection, orderBy])
 
   const [modifyingAuthor, setModifyingAuthor] = useState<Author | null>(null)
   const [isOpenedAddFormDialog, setOpenedAddFormDialog] = useState(false)
@@ -239,11 +236,11 @@ export const AuthorsPage = () => {
 
   const handleRequestSort = useMemo(
     () => (property: keyof Author) => {
-      const isAsc = orderBy === property && order === "asc"
-      setOrder(isAsc ? "desc" : "asc")
+      const isAsc = orderBy === property && orderDirection === "asc"
+      setOrderDirection(isAsc ? "desc" : "asc")
       setOrderBy(property)
     },
-    [order, orderBy],
+    [orderDirection, orderBy],
   )
 
   return (
@@ -266,7 +263,7 @@ export const AuthorsPage = () => {
             data={authors}
             isDataLoading={isDataLoading}
             pagination={pagination}
-            order={order}
+            orderDirection={orderDirection}
             orderBy={orderBy}
             renderRow={(author) => (
               <AuthorsTableRow
@@ -338,7 +335,7 @@ const head_cells: import("@features/core").HeadCell<Author>[] = [
 type AuthorsTableProps = {
   data: Author[]
   isDataLoading: boolean
-  order: Order
+  orderDirection: OrderDirection
   orderBy: keyof Author
   pagination: Pagination
   renderRow: (author: Author) => ReactElement<AuthorsTableRowProps>
@@ -352,7 +349,7 @@ type AuthorsTableProps = {
 const AuthorsTable = memo(function (props: AuthorsTableProps) {
   const classes = useStyles()
   const {
-    order,
+    orderDirection,
     orderBy,
     pagination,
     data,
@@ -381,13 +378,15 @@ const AuthorsTable = memo(function (props: AuthorsTableProps) {
                   key={head_cell.id}
                   align={head_cell.align}
                   sortDirection={
-                    orderBy === head_cell.sort_field ? order : false
+                    orderBy === head_cell.sort_field ? orderDirection : false
                   }
                   style={{ width: head_cell.width }}
                 >
                   <TableSortLabel
                     active={orderBy === head_cell.sort_field}
-                    direction={orderBy === head_cell.sort_field ? order : "asc"}
+                    direction={
+                      orderBy === head_cell.sort_field ? orderDirection : "asc"
+                    }
                     onClick={createSortHandler(
                       head_cell.sort_field ?? "inserted_at",
                     )}
@@ -400,7 +399,7 @@ const AuthorsTable = memo(function (props: AuthorsTableProps) {
                     {head_cell.label}
                     {orderBy === head_cell.id ? (
                       <span className={classes.visuallyHidden}>
-                        {order === "desc"
+                        {orderDirection === "desc"
                           ? "sorted descending"
                           : "sorted ascending"}
                       </span>
@@ -588,7 +587,7 @@ const EditAuthorFormDialog = ({
       onClose={onClose}
       aria-labelledby="edit-author-form-dialog"
     >
-      <form onSubmit={handleSubmit} noValidate={true} noValidate={true}>
+      <form onSubmit={handleSubmit} noValidate={true}>
         <DialogTitle id="edit-author-form-dialog">
           Редактирование автора
         </DialogTitle>
