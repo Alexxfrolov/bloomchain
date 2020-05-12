@@ -12,7 +12,7 @@ end
 
 replace_embedly_urls = fn item ->
   Regex.replace(
-    ~r/(https:\/\/twitter.com\/.*s=20)|(https:\/\/www.youtube.com\/watch\?v=[a-zA-Z0-9]*)/,
+    ~r/(https:\/\/twitter.com\/(.*?)s=20)|(https:\/\/www.youtube.com\/watch\?v=[a-zA-Z0-9]*)/,
     item,
     fn url, _ ->
       "<div class=\"fr-embedly\" data-original-embed=\"<a href='#{url}\" data-card-branding=\"0\" class=\"embedly-card\"></a><a href=\"#{
@@ -41,7 +41,7 @@ replace_caption = fn item ->
       capture = Regex.run(~r/[^>]*$/, tag) |> List.first() |> String.replace("[/caption]", "")
 
       "<div class=\"fr-img-space-wrap\">\
-          <span class=\"fr-img-caption fr-fic fr-dib\">\
+          <span contenteditable=\"false\" class=\"fr-img-caption fr-fic fr-dib\" draggable=\"false\">\
              <span class=\"fr-img-wrap\">\
                <img class=\"size-full wp-image-74087\" src=#{src} alt=#{alt} width=#{width} height=#{
         height
@@ -56,12 +56,12 @@ end
 
 replace_strong_tags = fn item ->
   item
-  |> String.replace("<h3><strong>", "<h3>")
-  |> String.replace("</strong></h3>", "</h3>")
-  |> String.replace("<h2><strong>", "<h2>")
-  |> String.replace("</strong></h2>", "</h2>")
-  |> String.replace("<h1><strong>", "<h1>")
-  |> String.replace("</strong></h1>", "</h1>")
+  |> String.replace(["<h3><strong>", "<h3><b>"], "<h3>")
+  |> String.replace(["</strong></h3>", "</b></h3>"], "</h3>")
+  |> String.replace(["<h2><strong>", "<h2><b>"], "<h2>")
+  |> String.replace(["</strong></h2>", "</b></h2>"], "</h2>")
+  |> String.replace(["<h1><strong>", "<h1><b>"], "<h1>")
+  |> String.replace(["</strong></h1>", "</b></h1>"], "</h1>")
 end
 
 replace_blockquote = fn item ->
@@ -72,6 +72,16 @@ replace_blockquote = fn item ->
       data = String.replace(tag, ["<blockquote>", "</blockquote>"], "")
 
       "<blockquote><div class=\"blockqoute__inner\">#{data}</div></blockquote>"
+    end
+  )
+end
+
+replace_pdfs = fn item ->
+  Regex.replace(
+    ~r/http(s)?:\/\/bloomchain.ru\/(.*?)\.pdf/,
+    item,
+    fn url, _ ->
+      "/uploads/wp-content/pdf/" <> (Regex.run(~r/[^\/]*$/, url) |> List.first())
     end
   )
 end
@@ -99,6 +109,14 @@ persist_cover = fn cover, alt ->
   end
 end
 
+s3_urls = fn item ->
+  item
+  |> String.replace(
+    "/uploads/wp-content/",
+    "https://bloomchain.s3.amazonaws.com/uploads/wp-content/"
+  )
+end
+
 "#{File.cwd!()}/priv/repo/data_files/posts.json"
 |> File.read!()
 |> Poison.decode!(keys: :atoms)
@@ -106,11 +124,13 @@ end
   body =
     item.body
     |> make_paragraphs.()
+    |> replace_pdfs.()
     |> replace_embedly_urls.()
     |> replace_bloomchain_urls.()
     |> replace_caption.()
     |> replace_strong_tags.()
     |> replace_blockquote.()
+    |> s3_urls.()
 
   Map.replace!(item, :body, body)
 end)
