@@ -41,15 +41,15 @@ replace_caption = fn item ->
       capture = Regex.run(~r/[^>]*$/, tag) |> List.first() |> String.replace("[/caption]", "")
 
       "<div class=\"fr-img-space-wrap\">\
-          <span contenteditable=\"false\" class=\"fr-img-caption fr-fic fr-dib\" draggable=\"false\">\
-             <span class=\"fr-img-wrap\">\
-               <img class=\"size-full wp-image-74087\" src=#{src} alt=#{alt} width=#{width} height=#{
+<span contenteditable=\"false\" class=\"fr-img-caption fr-fic fr-dib\" draggable=\"false\">\
+<span class=\"fr-img-wrap\">\
+<img class=\"size-full wp-image-74087\" src=\"#{src}\" alt=\"#{alt}\" width=\"#{width}\" height=\"#{
         height
-      } />\
-               <span class=\"fr-inner\">#{capture}</span>\
-             </span>\
-           </span>\
-        </div>"
+      }\" />\
+<span class=\"fr-inner\">#{capture}</span>\
+</span>\
+</span>\
+</div>"
     end
   )
 end
@@ -78,7 +78,7 @@ end
 
 replace_pdfs = fn item ->
   Regex.replace(
-    ~r/http(s)?:\/\/bloomchain.ru\/(.*?)\.pdf/,
+    ~r/http(s)?:\/\/bloomchain.ru\/([a-zа-я\d\.-]+)\.pdf/i,
     item,
     fn url, _ ->
       "/uploads/wp-content/pdf/" <> (Regex.run(~r/[^\/]*$/, url) |> List.first())
