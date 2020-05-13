@@ -190,12 +190,8 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
     initialValues: {
       ...initialArticle,
     },
-    onSubmit: (values, actions) => {
-      console.log(values)
-    },
-    onReset: (values) => {
-      console.log(values)
-    },
+    onSubmit: (values, actions) => {},
+    onReset: (values) => {},
   })
 
   const isEnabledDatePicker = useMemo(
@@ -237,8 +233,6 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
     },
     [setFieldValue],
   )
-
-  console.log({ values, errors })
 
   return (
     <form onSubmit={handleSubmit} className={classes.root} noValidate={true}>

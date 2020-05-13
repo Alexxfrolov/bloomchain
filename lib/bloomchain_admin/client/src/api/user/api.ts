@@ -14,6 +14,8 @@ export interface User {
   phone: string | null
   role: "admin" | "writer"
   updated_at: Date | string
+  editable: boolean
+  deletable: boolean
 }
 
 const getCurrentUser = () => request<User>("GET", "/users/current")
@@ -45,7 +47,7 @@ function create(user: Partial<User>) {
     formData.append(decamelize(key), user[key]),
   )
 
-  return request("POST", "/users", {
+  return request<User>("POST", "/users", {
     data: {
       ...user,
     },

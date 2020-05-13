@@ -87,41 +87,39 @@ export const TagsPage = memo(() => {
     [],
   )
 
-  const createTag = useCallback(
-    (tag: Tag) =>
-      tagsApi
-        .create(tag.name)
-        .then((response) =>
-          setState((state) => ({
-            ...state,
-            error: null,
-            status: "success",
-            data: [response.data, ...state.data],
-          })),
-        )
-        .catch((error) =>
-          setState((state) => ({ ...state, error, status: "error" })),
-        ),
-    [],
-  )
+  const addTag = useCallback((tag: Tag) => {
+    setState((state) => ({ ...state, status: "pending" }))
+    return tagsApi
+      .create(tag.name)
+      .then((response) =>
+        setState((state) => ({
+          ...state,
+          error: null,
+          status: "success",
+          data: [response.data, ...state.data],
+        })),
+      )
+      .catch((error) =>
+        setState((state) => ({ ...state, error, status: "error" })),
+      )
+  }, [])
 
-  const deleteTag = useCallback(
-    (tag: Tag) =>
-      tagsApi
-        .remove(tag.id)
-        .then(() =>
-          setState((state) => ({
-            ...state,
-            error: null,
-            status: "success",
-            data: state.data.filter((item) => item.id !== tag.id),
-          })),
-        )
-        .catch((error) =>
-          setState((state) => ({ ...state, error, status: "error" })),
-        ),
-    [],
-  )
+  const deleteTag = useCallback((tag: Tag) => {
+    setState((state) => ({ ...state, status: "pending" }))
+    return tagsApi
+      .remove(tag.id)
+      .then(() =>
+        setState((state) => ({
+          ...state,
+          error: null,
+          status: "success",
+          data: state.data.filter((item) => item.id !== tag.id),
+        })),
+      )
+      .catch((error) =>
+        setState((state) => ({ ...state, error, status: "error" })),
+      )
+  }, [])
 
   return (
     <Container maxWidth="md">
@@ -132,7 +130,7 @@ export const TagsPage = memo(() => {
         onChangePage={handleTablePageChange}
         onChangeRowsPerPage={handleChangeTableRowsPerPage}
         onOrderChange={handleTableOrderChange}
-        onRowAdd={createTag}
+        onRowAdd={addTag}
         onRowDelete={deleteTag}
       />
     </Container>

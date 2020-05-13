@@ -14,7 +14,7 @@ import IconCheck from "@material-ui/icons/Check"
 import IconClear from "@material-ui/icons/Clear"
 import { Pagination, OrderDirection } from "@api/common"
 import { Tag } from "@api/tags"
-import { Table } from "@features/core"
+import { Table, TableRowActionMode } from "@features/core"
 
 type TagsTableProps = {
   isLoading: boolean
@@ -47,9 +47,11 @@ export const TagsTable = memo(function TagsTable(props: TagsTableProps) {
     [onOrderChange],
   )
 
-  const handleRowAdd = useCallback((tag) => onRowAdd(tag), [onRowAdd])
+  const handleRowAdd = useCallback((tag: Tag) => onRowAdd(tag), [onRowAdd])
 
-  const handleRowDelete = useCallback((tag) => onRowDelete(tag), [onRowDelete])
+  const handleRowDelete = useCallback((tag: Tag) => onRowDelete(tag), [
+    onRowDelete,
+  ])
 
   return (
     <Table
@@ -63,14 +65,8 @@ export const TagsTable = memo(function TagsTable(props: TagsTableProps) {
         EditRow: TagsTableEditRow,
       }}
       options={{
-        addRowPosition: "first",
-        search: false,
-        sorting: true,
-        thirdSortClick: false,
-        paginationType: "stepped",
         pageSize: pagination.page_size,
         pageSizeOptions: pagination.page_size_options,
-        emptyRowsWhenPaging: false,
       }}
       editable={{
         isDeletable: (tag) => tag.deletable,
@@ -107,8 +103,6 @@ const columns: Column<Tag>[] = [
       format(new Date(rowData.inserted_at), "dd.MM.yyyy HH:mm"),
   },
 ]
-
-type TableRowActionMode = "add" | "delete" | "update"
 
 type TagsTableEditRowProps = {
   data?: Tag

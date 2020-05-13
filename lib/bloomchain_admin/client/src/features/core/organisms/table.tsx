@@ -3,6 +3,7 @@ import MaterialTable, {
   MaterialTableProps,
   Icons,
   Localization,
+  Options,
 } from "material-table"
 import AddBox from "@material-ui/icons/AddBox"
 import ArrowDownward from "@material-ui/icons/ArrowDownward"
@@ -20,9 +21,31 @@ import SaveAlt from "@material-ui/icons/SaveAlt"
 import Search from "@material-ui/icons/Search"
 import ViewColumn from "@material-ui/icons/ViewColumn"
 
-export const Table = <T extends object>(props: MaterialTableProps<T>) => (
-  <MaterialTable {...props} icons={tableIcons} localization={localization} />
-)
+export const Table = <T extends object>(props: MaterialTableProps<T>) => {
+  const { options = {}, ...otherProps } = props
+
+  const extendedOptions: Options = {
+    addRowPosition: "first",
+    showEmptyDataSourceMessage: true,
+    search: false,
+    sorting: true,
+    thirdSortClick: false,
+    paginationType: "stepped",
+    emptyRowsWhenPaging: false,
+    ...options,
+  }
+
+  return (
+    <MaterialTable
+      options={extendedOptions}
+      icons={tableIcons}
+      localization={localization}
+      {...otherProps}
+    />
+  )
+}
+
+export type TableRowActionMode = "add" | "delete" | "update"
 
 const tableIcons: Icons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),

@@ -3,12 +3,12 @@ import { request } from "@features/core"
 import { OrderParams, Pagination, PaginationParams } from "../common"
 
 export interface Author {
-  inserted_at: Date
+  inserted_at: Date | string
   deletable: boolean
   editable: boolean
   id: number
   name: string
-  updated_at: Date
+  updated_at: Date | string
 }
 
 type Params = Partial<OrderParams<Author>> & Partial<PaginationParams>
@@ -33,7 +33,7 @@ function getAll() {
 }
 
 function create(name: string) {
-  return request("POST", "/authors", {
+  return request<Author>("POST", "/authors", {
     data: { name },
   })
 }

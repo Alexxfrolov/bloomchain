@@ -1,21 +1,21 @@
 import React, { memo, useEffect, useState, useCallback } from "react"
 import Container from "@material-ui/core/Container"
 import { OrderDirection, Pagination } from "@api/common/types"
-import { authorsApi, Author } from "@api/authors"
+import { usersApi, User } from "@api/user"
 import { RequestStatus } from "@features/core"
-import { AuthorsTable } from "@features/authors"
+import { UsersTable } from "@features/users"
 
-type AuthorsPageState = {
+type UsersPageState = {
   status: RequestStatus
   error: string | null
-  data: Author[]
+  data: User[]
   pagination: Pagination
   orderDirection: OrderDirection
-  orderBy: keyof Author
+  orderBy: keyof User
 }
 
-export const AuthorsPage = memo(() => {
-  const [state, setState] = useState<AuthorsPageState>({
+export const UsersPage = memo(() => {
+  const [state, setState] = useState<UsersPageState>({
     status: "pending",
     error: null,
     data: [],
@@ -37,7 +37,7 @@ export const AuthorsPage = memo(() => {
       orderDirection: state.orderDirection,
       orderBy: state.orderBy,
     }
-    authorsApi
+    usersApi
       .get(params)
       .then(({ data: { data, meta } }) =>
         setState((state) => ({
@@ -81,75 +81,71 @@ export const AuthorsPage = memo(() => {
   )
 
   const handleTableOrderChange = useCallback(
-    (orderBy: keyof Author, orderDirection: OrderDirection) => {
+    (orderBy: keyof User, orderDirection: OrderDirection) => {
       setState((state) => ({ ...state, orderDirection, orderBy }))
     },
     [],
   )
 
-  const addAuthor = useCallback((authorName: string) => {
+  const addUser = useCallback(async (user: Partial<User>) => {
     setState((state) => ({ ...state, status: "pending" }))
-    return authorsApi
-      .create(authorName)
-      .then((response) =>
-        setState((state) => ({
-          ...state,
-          error: null,
-          status: "success",
-          data: [response.data, ...state.data],
-        })),
-      )
-      .catch((error) =>
-        setState((state) => ({ ...state, error, status: "error" })),
-      )
+    try {
+      const response = await usersApi.create(user)
+      setState((state) => ({
+        ...state,
+        error: null,
+        status: "success",
+        data: [response.data, ...state.data],
+      }))
+    } catch (error) {
+      setState((state) => ({ ...state, error, status: "error" }))
+    }
   }, [])
 
-  const updateAuthor = useCallback((author: Author) => {
+  const updateUser = useCallback(async (author: User) => {
     setState((state) => ({ ...state, status: "pending" }))
-    return authorsApi
-      .update(author)
-      .then(({ data }) =>
-        setState((state) => ({
-          ...state,
-          error: null,
-          status: "success",
-          data: state.data.map((item) => (item.id !== data.id ? item : data)),
-        })),
-      )
-      .catch((error) =>
-        setState((state) => ({ ...state, error, status: "error" })),
-      )
+    try {
+      const { data: updatedUser } = await usersApi.update(author)
+      setState((state) => ({
+        ...state,
+        error: null,
+        status: "success",
+        data: state.data.map((item) =>
+          item.id !== updatedUser.id ? item : updatedUser,
+        ),
+      }))
+    } catch (error) {
+      setState((state) => ({ ...state, error, status: "error" }))
+    }
   }, [])
 
-  const deleteAuthor = useCallback((author: Author) => {
+  const deleteUser = useCallback(async (author: User) => {
     setState((state) => ({ ...state, status: "pending" }))
-    return authorsApi
-      .remove(author.id)
-      .then(() =>
-        setState((state) => ({
-          ...state,
-          error: null,
-          status: "success",
-          data: state.data.filter((item) => item.id !== author.id),
-        })),
-      )
-      .catch((error) =>
-        setState((state) => ({ ...state, error, status: "error" })),
-      )
+    try {
+      const response = await usersApi.remove(author.id)
+      setState((state) => ({
+        ...state,
+        error: null,
+        status: "success",
+        data: state.data.filter((item) => item.id !== author.id),
+      }))
+    } catch (error) {
+      setState((state) => ({ ...state, error, status: "error" }))
+    }
   }, [])
 
   return (
     <Container maxWidth="lg">
-      <AuthorsTable
+      <UsersTable
         data={state.data}
         isLoading={state.status === "pending"}
         pagination={state.pagination}
         onChangePage={handleTablePageChange}
         onChangeRowsPerPage={handleChangeTableRowsPerPage}
         onOrderChange={handleTableOrderChange}
-        onRowAdd={addAuthor}
-        onRowDelete={deleteAuthor}
-        onRowUpdate={updateAuthor}
+        onRowAdd={addUser}
+        onRowDelete={deleteUser}
+        onRowUpdate={updateUser}
       />
     </Container>
   )
