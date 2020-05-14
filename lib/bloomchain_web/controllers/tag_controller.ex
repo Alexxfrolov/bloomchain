@@ -7,8 +7,6 @@ defmodule BloomchainWeb.TagController do
   def show(conn, %{scroll: scroll}) do
     %{entries: articles, metadata: meta} = ES.scroll(scroll)
 
-    name = Repo.find_by()
-
     conn
     |> put_resp_header("x-pagination-scroll", to_string(meta.after))
     |> put_layout(false)

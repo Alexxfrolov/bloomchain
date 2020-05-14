@@ -1,4 +1,5 @@
 alias Bloomchain.Repo
+alias BloomchainWeb.Uploaders.File, as: Upload
 alias Bloomchain.Content.{Post, Media}
 
 make_paragraphs = fn item ->
@@ -135,6 +136,15 @@ end
   Map.replace!(item, :body, body)
 end)
 |> Enum.each(fn item ->
+  cover = persist_cover.(item.cover, item.cover_alt)
+
+  cover_url =
+    if cover.id do
+      "https://bloomchain.s3.amazonaws.com" <> Upload.url({cover.file, cover})
+    else
+      ""
+    end
+
   Repo.insert!(
     Post.changeset(%Post{}, %{
       id: item.id,
@@ -149,8 +159,12 @@ end)
       tags: String.split(item.tags, ","),
       authors: [item.author_id],
       total_views: item.total_views,
-      cover_id: persist_cover.(item.cover, item.cover_alt).id,
-      seo_settings: %{description: item.description}
+      cover_id: cover.id,
+      seo_settings: %{
+        description: item.description,
+        twitter_image: cover_url,
+        og_image: cover_url
+      }
     })
   )
 end)
