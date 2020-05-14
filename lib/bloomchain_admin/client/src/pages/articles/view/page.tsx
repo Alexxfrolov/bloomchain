@@ -1,29 +1,6 @@
-import React, {
-  Fragment,
-  memo,
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  ChangeEvent,
-} from "react"
+import React, { memo, useState, useEffect, useCallback, useMemo } from "react"
 import { useRoute } from "react-router5"
-import DateFnsUtils from "@date-io/date-fns"
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
-import { ru } from "date-fns/locale"
-import {
-  Container,
-  AppBar,
-  Tabs,
-  Tab,
-  FormControl,
-  TextField,
-  ButtonGroup,
-  Button,
-  makeStyles,
-  createStyles,
-  Toolbar,
-} from "@material-ui/core"
+import { Container } from "@material-ui/core"
 import { OrderDirection, Pagination } from "@api/common/types"
 import { articlesApi, Article } from "@api/articles"
 import { RequestStatus } from "@features/core"
@@ -38,18 +15,13 @@ type ArticlesViewPageState = {
   query: string
   request_status: RequestStatus
   since: Date | null
-  status: Article["status"]
-  tabIndex: number
+  status: Article["status"] | null
   type: Article["type"]
   until: Date | null
 }
 
 export const ArticlesViewPage = memo(() => {
   const { route, router } = useRoute()
-
-  const status = useMemo(() => route.name.split(".")[2] as Article["status"], [
-    route.name,
-  ])
 
   const [state, setState] = useState<ArticlesViewPageState>({
     data: [],
@@ -65,59 +37,65 @@ export const ArticlesViewPage = memo(() => {
     },
     query: "",
     since: null,
-    status,
+    status: null,
     request_status: "pending",
-    tabIndex: 0,
     type: "newsfeed",
     until: null,
   })
 
   useEffect(() => {
-    if (state.query.length === 0) {
-      const params = {
-        status: state.status,
-        type: state.type,
-        page_size: state.pagination.page_size,
-        page: state.pagination.page,
-        orderDirection: state.orderDirection,
-        orderBy: state.orderBy,
-      }
-      articlesApi
-        .get(params)
-        .then(({ data: { data, meta } }) =>
-          setState((state) => ({
-            ...state,
-            data,
-            pagination: { ...state.pagination, ...meta },
-            error: null,
-            request_status: "success",
-          })),
-        )
-        .catch((error) =>
-          setState((state) => ({ ...state, error, request_status: "error" })),
-        )
-    }
+    const status = route.name.split(".")[2] as Article["status"]
+    setState((state) => ({ ...state, status }))
+  }, [route.name])
 
-    if (state.query.length > 0) {
-      setState((state) => ({ ...state, request_status: "pending" }))
-      const params = {
-        status: state.status,
-        type: state.type,
-        query: state.query,
+  useEffect(() => {
+    if (state.status) {
+      if (state.query.length === 0) {
+        const params = {
+          status: state.status,
+          type: state.type,
+          page_size: state.pagination.page_size,
+          page: state.pagination.page,
+          orderDirection: state.orderDirection,
+          orderBy: state.orderBy,
+        }
+        articlesApi
+          .get(params)
+          .then(({ data: { data, meta } }) =>
+            setState((state) => ({
+              ...state,
+              data,
+              pagination: { ...state.pagination, ...meta },
+              error: null,
+              request_status: "success",
+            })),
+          )
+          .catch((error) =>
+            setState((state) => ({ ...state, error, request_status: "error" })),
+          )
       }
-      articlesApi
-        .search(params)
-        .then(({ data: { data } }) =>
-          setState((state) => ({
-            ...state,
-            data,
-            error: null,
-            request_status: "success",
-          })),
-        )
-        .catch((error) =>
-          setState((state) => ({ ...state, error, request_status: "error" })),
-        )
+
+      if (state.query.length > 0) {
+        setState((state) => ({ ...state, request_status: "pending" }))
+        const params = {
+          status: state.status,
+          type: state.type,
+          query: state.query,
+        }
+        articlesApi
+          .search(params)
+          .then(({ data: { data } }) =>
+            setState((state) => ({
+              ...state,
+              data,
+              error: null,
+              request_status: "success",
+            })),
+          )
+          .catch((error) =>
+            setState((state) => ({ ...state, error, request_status: "error" })),
+          )
+      }
     }
   }, [
     state.orderBy,
@@ -127,6 +105,7 @@ export const ArticlesViewPage = memo(() => {
     state.query,
     state.status,
     state.type,
+    route.name,
   ])
 
   useEffect(() => {
@@ -160,85 +139,6 @@ export const ArticlesViewPage = memo(() => {
   // const handleDateEndChange = useCallback(
   //   (date: Date | null) => setState((state) => ({ ...state, until: date })),
   //   [],
-  // )
-
-  const handleChangeTab = useCallback(
-    (_event: ChangeEvent<{}>, tabIndex: number) =>
-      setState((state) => ({
-        ...state,
-        type: mapTabIdToArticleType[tabIndex],
-        tabIndex,
-      })),
-    [],
-  )
-
-  // const handleFilterFormSubmit = useCallback(
-  //   async (event: FormEvent) => {
-  //     event.preventDefault()
-  //     try {
-  //       const { page_size, page } = pagination
-  //       const response = await articlesApi.get({
-  //         status,
-  //         type,
-  //         page_size,
-  //         page,
-  //         orderDirection,
-  //         orderBy,
-  //         since,
-  //         until,
-  //       })
-  //       setArticles([...response.data.data])
-  //     } catch {}
-  //   },
-  //   [
-  //     type,
-  //     status,
-  //     since,
-  //     until,
-  //     setArticles,
-  //     orderDirection,
-  //     orderBy,
-  //     pagination,
-  //   ],
-  // )
-
-  // const handleResetFilterFormButtonClick = useCallback(
-  //   async () => {
-  //     setSince(null)
-  //     setUntil(null)
-  //     try {
-  //       const { page, page_size } = pagination
-  //       const response = await articlesApi.get({
-  //         status,
-  //         type,
-  //         page_size,
-  //         page,
-  //         orderDirection,
-  //         orderBy,
-  //       })
-  //       setArticles([...response.data.data])
-  //     } catch {}
-  //   },
-  //   [
-  //     status,
-  //     type,
-  //     orderDirection,
-  //     orderBy,
-  //     pagination,
-  //     setSince,
-  //     setUntil,
-  //     setArticles,
-  //   ],
-  // )
-
-  // const debounceOnChange = useCallback(debounce(doSearch, 500), [status, type])
-
-  // const handleChangeSearchInput = useCallback(
-  //   (event: ChangeEvent<HTMLInputElement>) => {
-  //     setQuery(event.target.value)
-  //     debounceOnChange(event.target.value)
-  //   },
-  //   [debounceOnChange, setQuery],
   // )
 
   const handleTablePageChange = useCallback(
@@ -283,6 +183,11 @@ export const ArticlesViewPage = memo(() => {
     [router],
   )
 
+  const handleTableSelectFilterChange = useCallback(
+    (type: Article["type"]) => setState((state) => ({ ...state, type })),
+    [],
+  )
+
   const deleteArticle = useCallback((article: Article) => {
     setState((state) => ({ ...state, request_status: "pending" }))
     return articlesApi
@@ -304,85 +209,16 @@ export const ArticlesViewPage = memo(() => {
 
   return (
     <Container maxWidth="lg">
-      {/* <form onSubmit={handleFilterFormSubmit} noValidate={true}> */}
-      {/* <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}> */}
-      {/* <Toolbar disableGutters={true} className={classes.toolbar}> */}
-      {/* <FormControl margin="none" variant="outlined">
-              <DatePicker
-                id="date-start"
-                variant="dialog"
-                margin="none"
-                inputVariant="outlined"
-                label="Дата начала"
-                format="dd/MM/yyyy"
-                size="small"
-                value={state.since}
-                onChange={handleDateStartChange}
-              />
-            </FormControl>
-            <FormControl margin="none" variant="outlined">
-              <DatePicker
-                id="date-end"
-                variant="dialog"
-                margin="none"
-                inputVariant="outlined"
-                label="Дата окончания"
-                format="dd/MM/yyyy"
-                size="small"
-                value={state.until}
-                onChange={handleDateEndChange}
-              />
-            </FormControl>
-            <ButtonGroup>
-              <Button type="submit" variant="contained" color="primary">
-                Показать
-              </Button>
-              <Button
-                type="button"
-                variant="contained"
-                color="primary"
-                onClick={handleResetFilterFormButtonClick}
-              >
-                Сбросить даты
-              </Button>
-            </ButtonGroup> */}
-      {/* <TextField
-                autoComplete="off"
-                type="text"
-                value={query}
-                variant="outlined"
-                size="small"
-                onChange={handleChangeSearchInput}
-              /> */}
-      {/* </Toolbar>
-        </MuiPickersUtilsProvider>
-      </form> */}
-      <AppBar position="static" color="default">
-        <Tabs
-          value={state.tabIndex}
-          onChange={handleChangeTab}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
-        >
-          <Tab label="Коротко" />
-          <Tab label="В Деталях" />
-          <Tab label="Что в России" />
-          <Tab label="События" />
-          <Tab label="Персона" />
-          <Tab label="Исследования" />
-          <Tab label="Биржевая аналитика" />
-        </Tabs>
-      </AppBar>
-
       <ArticlesTable
         data={state.data}
-        searchText={state.query}
         isLoading={state.request_status === "pending"}
         pagination={state.pagination}
+        searchText={state.query}
         title={tableTitle}
+        type={state.type}
         onChangePage={handleTablePageChange}
         onChangeRowsPerPage={handleChangeTableRowsPerPage}
+        onChangeSelectFilter={handleTableSelectFilterChange}
         onClickEditArticle={handleClickEditArticle}
         onOrderChange={handleTableOrderChange}
         onRowDelete={deleteArticle}
@@ -397,14 +233,4 @@ const mapStatusToTableTitle = {
   published: "Опубликовано",
   ready: "Готово к публикации",
   draft: "Черновик",
-}
-
-const mapTabIdToArticleType = {
-  0: "newsfeed",
-  1: "detailed",
-  2: "in-russia",
-  3: "calendar",
-  4: "people",
-  5: "research",
-  6: "analysis",
 }

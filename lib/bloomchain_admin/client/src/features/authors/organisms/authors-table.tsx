@@ -128,7 +128,7 @@ type AuthorsTableEditRowProps = {
   ) => Promise<void>
 }
 
-const AuthorsTableEditRow = (props: AuthorsTableEditRowProps) => {
+const AuthorsTableEditRow = memo((props: AuthorsTableEditRowProps) => {
   const {
     data,
     mode,
@@ -211,4 +211,4 @@ const AuthorsTableEditRow = (props: AuthorsTableEditRowProps) => {
       )}
     </TableRow>
   )
-}
+})

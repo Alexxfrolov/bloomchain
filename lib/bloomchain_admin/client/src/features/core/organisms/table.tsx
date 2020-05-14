@@ -5,7 +5,7 @@ import MaterialTable, {
   Localization,
   Options,
 } from "material-table"
-import { grey } from "@material-ui/core/colors"
+import { grey, indigo } from "@material-ui/core/colors"
 import AddBox from "@material-ui/icons/AddBox"
 import ArrowDownward from "@material-ui/icons/ArrowDownward"
 import Check from "@material-ui/icons/Check"
@@ -34,10 +34,18 @@ export const Table = <T extends object>(props: MaterialTableProps<T>) => {
     paginationType: "stepped",
     emptyRowsWhenPaging: false,
     headerStyle: {
-      backgroundColor: "white",
+      backgroundColor: indigo[600],
+      color: "#fff",
     },
-    rowStyle: {
-      backgroundColor: grey[100],
+    rowStyle: (_data: unknown, index: number, _level: number) => {
+      if (index % 2 > 0) {
+        return {
+          backgroundColor: grey[150],
+        }
+      }
+      return {
+        backgroundColor: grey[50],
+      }
     },
     ...options,
   }
