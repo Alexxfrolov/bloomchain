@@ -6,10 +6,10 @@ export interface Article {
   authors: import("../authors").Author[]
   body: string | null
   cover: import("../media").MediaFile | null
-  inserted_at: Date | null
+  inserted_at: Date | string | null
   id: number
   lead: string | null
-  published_at: Date | null
+  published_at: Date | string | null
   seo_settings: SeoSettings
   status: "published" | "draft" | "archive" | "ready"
   tags: import("../tags").Tag[]
@@ -24,7 +24,7 @@ export interface Article {
     | "calendar"
     | "people"
     | "research"
-  updated_at: Date | null
+  updated_at: Date | string | null
   url?: string | null
 }
 
@@ -166,7 +166,7 @@ interface SearchParams {
 }
 
 function search(options: SearchParams) {
-  return request("GET", "/articles/search", {
+  return request<{ data: Article[] }>("GET", "/articles/search", {
     params: {
       ...options,
     },

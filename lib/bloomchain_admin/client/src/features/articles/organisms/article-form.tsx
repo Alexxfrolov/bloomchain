@@ -83,8 +83,8 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
   //   ...initialArticle,
   // })
 
-  const inputTypeLabel: RefObject<HTMLLabelElement> = useRef(null)
-  const inputStatusLabel: RefObject<HTMLLabelElement> = useRef(null)
+  const inputTypeLabel = useRef<HTMLLabelElement>(null)
+  const inputStatusLabel = useRef<HTMLLabelElement>(null)
 
   const [typeLabelWidth, setTypeLabelWidth] = useState(0)
   const [statusLabelWidth, setStatusLabelWidth] = useState(0)

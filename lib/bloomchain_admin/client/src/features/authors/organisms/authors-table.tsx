@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from "react"
-import { useFormik, FormikErrors } from "formik"
+import { useFormik } from "formik"
 import format from "date-fns/format"
 import {
   Grid,
@@ -15,6 +15,8 @@ import IconClear from "@material-ui/icons/Clear"
 import { Pagination, OrderDirection } from "@api/common"
 import { Author } from "@api/authors"
 import { Table, TableRowActionMode } from "@features/core"
+
+import { AuthorCreationSchema } from "../schemes"
 
 type AuthorsTableProps = {
   isLoading: boolean
@@ -103,8 +105,7 @@ const columns: Column<Author>[] = [
     title: "Дата создания",
     field: "inserted_at",
     defaultSort: "desc",
-    render: (rowData) =>
-      format(new Date(rowData.inserted_at), "dd.MM.yyyy HH:mm"),
+    render: (author) => format(new Date(author.inserted_at), "dd.MM.yyyy"),
   },
 ]
 
@@ -118,7 +119,7 @@ type AuthorsTableEditRowProps = {
   }
   onEditingCanceled: (
     mode: TableRowActionMode,
-    rowData?: Author,
+    author?: Author,
   ) => Promise<void>
   onEditingApproved: (
     mode: TableRowActionMode,
@@ -142,7 +143,7 @@ const AuthorsTableEditRow = (props: AuthorsTableEditRowProps) => {
     initialValues: {
       name: data?.name ?? "",
     },
-    validate: authorValidation,
+    validationSchema: AuthorCreationSchema,
     validateOnChange: true,
     onSubmit: async (values, actions) => {
       await onEditingApproved(mode, values, data)
@@ -201,10 +202,7 @@ const AuthorsTableEditRow = (props: AuthorsTableEditRowProps) => {
           <TextField
             type="text"
             name="inserted_at"
-            defaultValue={format(
-              new Date(data.inserted_at),
-              "dd.MM.yyyy HH:mm",
-            )}
+            defaultValue={format(new Date(data.inserted_at), "dd.MM.yyyy")}
             fullWidth={true}
             variant="standard"
             disabled={true}
@@ -213,14 +211,4 @@ const AuthorsTableEditRow = (props: AuthorsTableEditRowProps) => {
       )}
     </TableRow>
   )
-}
-
-function authorValidation(values: Partial<Author>) {
-  const errors: FormikErrors<Author> = {}
-
-  if (!values.name) {
-    errors.name = "Имя автора не указано"
-  }
-
-  return errors
 }

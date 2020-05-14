@@ -6,7 +6,6 @@ import React, {
   useCallback,
   useRef,
   ChangeEvent,
-  RefObject,
   FormEvent,
 } from "react"
 import {
@@ -261,8 +260,8 @@ type AddFormDialogProps = {
 const AddFormDialog = memo(function (props: AddFormDialogProps) {
   const { isOpened, type, onClose, onAddMedia } = props
 
-  const imageRef: RefObject<HTMLImageElement> = useRef(null)
-  const fileInputRef: RefObject<HTMLInputElement> = useRef(null)
+  const imageRef = useRef<HTMLImageElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [media, setMedia] = useState<
     Pick<UploadableMediaFile, "title" | "alt" | "source" | "type"> & {
       file: File | null

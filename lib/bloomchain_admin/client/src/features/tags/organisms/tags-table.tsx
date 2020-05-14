@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from "react"
-import { useFormik, FormikErrors } from "formik"
+import { useFormik } from "formik"
 import format from "date-fns/format"
 import {
   Grid,
@@ -15,6 +15,8 @@ import IconClear from "@material-ui/icons/Clear"
 import { Pagination, OrderDirection } from "@api/common"
 import { Tag } from "@api/tags"
 import { Table, TableRowActionMode } from "@features/core"
+
+import { TagCreationSchema } from "../schemes"
 
 type TagsTableProps = {
   isLoading: boolean
@@ -93,14 +95,12 @@ const columns: Column<Tag>[] = [
     title: "Дата создания",
     field: "inserted_at",
     defaultSort: "desc",
-    render: (rowData) =>
-      format(new Date(rowData.inserted_at), "dd.MM.yyyy HH:mm"),
+    render: (tag) => format(new Date(tag.inserted_at), "dd.MM.yyyy"),
   },
   {
     title: "Дата обновления",
     field: "updated_at",
-    render: (rowData) =>
-      format(new Date(rowData.inserted_at), "dd.MM.yyyy HH:mm"),
+    render: (tag) => format(new Date(tag.inserted_at), "dd.MM.yyyy"),
   },
 ]
 
@@ -112,7 +112,7 @@ type TagsTableEditRowProps = {
     cancelTooltip: string
     deleteText: string
   }
-  onEditingCanceled: (mode: TableRowActionMode, rowData?: Tag) => Promise<void>
+  onEditingCanceled: (mode: TableRowActionMode, tag?: Tag) => Promise<void>
   onEditingApproved: (
     mode: TableRowActionMode,
     newData: Partial<Tag>,
@@ -133,7 +133,7 @@ const TagsTableEditRow = (props: TagsTableEditRowProps) => {
     initialValues: {
       name: data?.name ?? "",
     },
-    validate: tagValidation,
+    validationSchema: TagCreationSchema,
     validateOnChange: true,
     onSubmit: async (values, actions) => {
       await onEditingApproved(mode, values, data)
@@ -189,14 +189,4 @@ const TagsTableEditRow = (props: TagsTableEditRowProps) => {
       </TableCell>
     </TableRow>
   )
-}
-
-function tagValidation(values: Partial<Tag>) {
-  const errors: FormikErrors<Tag> = {}
-
-  if (!values.name) {
-    errors.name = "Имя тэга не указано"
-  }
-
-  return errors
 }

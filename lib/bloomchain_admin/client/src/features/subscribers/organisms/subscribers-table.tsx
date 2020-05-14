@@ -65,7 +65,7 @@ const columns: Column<Subscriber>[] = [
     field: "inserted_at",
     title: "Дата подписки",
     defaultSort: "desc",
-    render: (rowData) =>
-      format(new Date(rowData.inserted_at), "dd.MM.yyyy HH:mm"),
+    render: (subscriber) =>
+      format(new Date(subscriber.inserted_at), "dd.MM.yyyy HH:mm"),
   },
 ]

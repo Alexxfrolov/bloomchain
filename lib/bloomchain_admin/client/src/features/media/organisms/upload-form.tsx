@@ -1,11 +1,4 @@
-import React, {
-  memo,
-  Fragment,
-  useState,
-  useCallback,
-  useRef,
-  Ref,
-} from "react"
+import React, { memo, Fragment, useState, useCallback, useRef } from "react"
 import { useDropzone } from "react-dropzone"
 import {
   Box,
@@ -122,7 +115,7 @@ export const MediaUploadForm = memo(function MediaUploadForm(
   const [hasError, setError] = useState(false)
   const [media, setMedia] = useState<MediaFile[]>([])
 
-  const inputFileRef: Ref<HTMLInputElement> = useRef(null)
+  const inputFileRef = useRef<HTMLInputElement>(null)
 
   const handleChangeTab = useCallback(
     (_event: React.ChangeEvent<{ checked: boolean }>, _value: number) => {

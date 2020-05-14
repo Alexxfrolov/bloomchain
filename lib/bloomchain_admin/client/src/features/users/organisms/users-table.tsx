@@ -18,7 +18,7 @@ import { Pagination, OrderDirection } from "@api/common"
 import { User } from "@api/user"
 import { Table, TableRowActionMode } from "@features/core"
 
-import { CreateUserSchema } from "../schemes"
+import { UserCreationSchema } from "../schemes"
 
 type UsersTableProps = {
   isLoading: boolean
@@ -122,7 +122,7 @@ const columns: Column<User>[] = [
     title: "Дата создания",
     field: "inserted_at",
     defaultSort: "desc",
-    render: (rowData) => format(new Date(rowData.inserted_at), "dd.MM.yyyy"),
+    render: (user) => format(new Date(user.inserted_at), "dd.MM.yyyy"),
   },
 ]
 
@@ -134,7 +134,7 @@ type UsersTableEditRowProps = {
     cancelTooltip: string
     deleteText: string
   }
-  onEditingCanceled: (mode: TableRowActionMode, rowData?: User) => Promise<void>
+  onEditingCanceled: (mode: TableRowActionMode, user?: User) => Promise<void>
   onEditingApproved: (
     mode: TableRowActionMode,
     newData: Partial<User>,
@@ -162,7 +162,7 @@ const UsersTableEditRow = (props: UsersTableEditRowProps) => {
         phone: data?.phone ?? "",
         inserted_at: data?.inserted_at ?? new Date(),
       },
-      validationSchema: CreateUserSchema,
+      validationSchema: UserCreationSchema,
       validateOnChange: true,
       onSubmit: async (values, actions) => {
         await onEditingApproved(mode, values, data)
@@ -275,7 +275,7 @@ const UsersTableEditRow = (props: UsersTableEditRowProps) => {
               type="text"
               name="inserted_at"
               defaultValue={format(
-                new Date(String(values.inserted_at)),
+                new Date(values.inserted_at ?? ""),
                 "dd.MM.yyyy",
               )}
               fullWidth={true}

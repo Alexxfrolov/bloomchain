@@ -3,7 +3,7 @@ import { object, string } from "yup"
 const EMPTY_FIELD_ERROR = "Поле не заполнено"
 const INVALID_EMAIL_ERROR = "Неправильный email"
 
-export const CreateUserSchema = object().shape({
+export const UserCreationSchema = object().shape({
   first_name: string().required(EMPTY_FIELD_ERROR),
   last_name: string().required(EMPTY_FIELD_ERROR),
   role: string(),
