@@ -35,15 +35,6 @@ defmodule BloomchainWeb.LayoutView do
     assigns[:og_image] || get_in(assigns, [:article, :seo_settings, :og_image]) || ""
   end
 
-  def meta(:og_image_width, assigns) do
-    assigns[:og_image_width] || get_in(assigns, [:article, :seo_settings, :og_image_width]) || ""
-  end
-
-  def meta(:og_image_height, assigns) do
-    assigns[:og_image_height] || get_in(assigns, [:article, :seo_settings, :og_image_height]) ||
-      ""
-  end
-
   def active_navlink_class(conn, path) do
     current_path = Path.join(["/" | conn.path_info])
 
