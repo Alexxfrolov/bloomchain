@@ -1,9 +1,13 @@
 defmodule BloomchainWeb.TagController do
   use BloomchainWeb, :controller
+
+  alias Bloomchain.{Repo, Content.Tag}
   alias Bloomchain.ElasticsearchCluster, as: ES
 
   def show(conn, %{scroll: scroll}) do
     %{entries: articles, metadata: meta} = ES.scroll(scroll)
+
+    name = Repo.find_by()
 
     conn
     |> put_resp_header("x-pagination-scroll", to_string(meta.after))
@@ -13,9 +17,10 @@ defmodule BloomchainWeb.TagController do
   end
 
   def show(conn, %{tag: tag}) do
+    name = Repo.get_by!(Tag, slug: tag).name
     %{entries: articles, metadata: meta} = do_query(tag) |> ES.search(scroll: "5m")
 
-    render(conn, "show.html", articles: articles, meta: meta, tag: tag)
+    render(conn, "show.html", articles: articles, meta: meta, tag: name)
   end
 
   defp do_query(tag) do
