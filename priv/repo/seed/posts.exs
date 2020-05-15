@@ -8,12 +8,12 @@ make_paragraphs = fn item ->
   |> Enum.reject(&(String.trim(&1) == ""))
   |> Enum.map(&("<p>" <> &1 <> "</p>"))
   |> Enum.join()
-  |> String.replace(["[embed]", "[/embed]", "<p></p>"], "")
+  |> String.replace(["[embed]", "[/embed]", "<p></p>", "style=\"font-weight: 400;\""], "")
 end
 
 replace_embedly_urls = fn item ->
   Regex.replace(
-    ~r/<p>((https:\/\/twitter.com\/[a-z0-9_\?\/=]+)|(https:\/\/www.youtube.com\/watch\?v=[a-zA-Z0-9]+))<\/p>/,
+    ~r/<p>((https:\/\/twitter.com\/[a-z0-9_&=;\?\/]+)|(https:\/\/www.youtube.com\/watch\?v=[a-z0-9_&=;\?\/]+))<\/p>/i,
     item,
     fn tag, _ ->
       url = Regex.run(~r/(?<=<p>)(.*?)(?=<\/p>)/, tag, capture: :first) |> List.first()
@@ -38,7 +38,17 @@ replace_caption = fn item ->
       alt = Regex.run(~r/(?<=alt=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
       width = Regex.run(~r/(?<=width=\")(.*?)(?=\"])/, tag, capture: :first) |> List.first()
       height = Regex.run(~r/(?<=height=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
-      capture = Regex.run(~r/[^>]*$/, tag) |> List.first() |> String.replace("[/caption]", "")
+
+      capture =
+        case Regex.run(~r/[^>]*(?=\[\/caption\])/, tag, capture: :first)
+             |> List.first()
+             |> String.trim() do
+          "" ->
+            Regex.run(~r/Источник:(.*?)(?=\[\/caption\])/, tag, capture: :first)
+
+          str ->
+            str
+        end
 
       "<div class=\"fr-img-space-wrap\">\
 <span contenteditable=\"false\" class=\"fr-img-caption fr-fic fr-dib\" draggable=\"false\">\
