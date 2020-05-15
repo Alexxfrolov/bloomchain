@@ -13,12 +13,11 @@ end
 
 replace_embedly_urls = fn item ->
   Regex.replace(
-    ~r/(https:\/\/twitter.com\/(.*?)s=20)|(https:\/\/www.youtube.com\/watch\?v=[a-zA-Z0-9]*)/,
+    ~r/<p>((https:\/\/twitter.com\/[a-z0-9_\?\/=]+)|(https:\/\/www.youtube.com\/watch\?v=[a-zA-Z0-9]+))<\/p>/,
     item,
-    fn url, _ ->
-      "<div class=\"fr-embedly\" data-original-embed=\"<a href='#{url}\" data-card-branding=\"0\" class=\"embedly-card\"></a><a href=\"#{
-        url
-      }\" data-card-branding=\"0\" class=\"embedly-card\"></a></div>"
+    fn tag, _ ->
+      url = Regex.run(~r/(?<=<p>)(.*?)(?=<\/p>)/, tag, capture: :first) |> List.first()
+      "<a href=\"#{url}\" data-card-branding=\"0\" class=\"embedly-card\"></a>"
     end
   )
 end
