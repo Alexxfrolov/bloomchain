@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from "react"
+import React, { memo, useMemo, useCallback } from "react"
 import format from "date-fns/format"
 import { Column } from "material-table"
 import { Pagination, OrderDirection } from "@api/common"
@@ -37,6 +37,8 @@ export const SubscribersTable = memo(function SubscribersTable(
     [onOrderChange],
   )
 
+  const notEmptyData = useMemo(() => !!data.length, [data])
+
   return (
     <Table
       title="Подписчики"
@@ -46,6 +48,8 @@ export const SubscribersTable = memo(function SubscribersTable(
       page={pagination.page - 1}
       totalCount={pagination.total_items}
       options={{
+        sorting: notEmptyData,
+        paging: notEmptyData,
         pageSize: pagination.page_size,
         pageSizeOptions: pagination.page_size_options,
       }}

@@ -205,7 +205,9 @@ export const ArticlesViewPage = memo(() => {
       )
   }, [])
 
-  const tableTitle = useMemo(() => mapStatusToTableTitle[status], [status])
+  const tableTitle = useMemo(() => mapStatusToTableTitle[state.status], [
+    state.status,
+  ])
 
   return (
     <Container maxWidth="lg">

@@ -1,4 +1,4 @@
-import React, { memo, useCallback, ChangeEvent } from "react"
+import React, { memo, useMemo, useCallback, ChangeEvent } from "react"
 import format from "date-fns/format"
 import { Column } from "material-table"
 import { Link, Select, MenuItem, TableRow, TableCell } from "@material-ui/core"
@@ -9,6 +9,8 @@ import { ru } from "date-fns/locale"
 import { Pagination, OrderDirection } from "@api/common"
 import { Article } from "@api/articles"
 import { Table } from "@features/core"
+
+import { ARTICLE_TYPES_RECORD } from "../lib"
 
 type ArticlesTableProps = {
   data: Article[]
@@ -70,6 +72,8 @@ export const ArticlesTable = memo(function ArticlesTable(
     [onClickEditArticle],
   )
 
+  const notEmptyData = useMemo(() => !!data.length, [data])
+
   return (
     <Table
       title={title}
@@ -78,7 +82,7 @@ export const ArticlesTable = memo(function ArticlesTable(
       isLoading={isLoading}
       components={{
         FilterRow: () =>
-          data.length ? (
+          notEmptyData ? (
             <ArticlesTableFilterSelect
               type={type}
               onFilterChanged={onChangeSelectFilter}
@@ -89,13 +93,15 @@ export const ArticlesTable = memo(function ArticlesTable(
       totalCount={pagination.total_items}
       options={{
         tableLayout: "fixed",
-        search: true,
+        search: notEmptyData,
+        sorting: notEmptyData,
         searchText,
         searchFieldStyle: {
           width: "400px",
         },
         debounceInterval: 250,
         filtering: true,
+        paging: notEmptyData,
         pageSize: pagination.page_size,
         pageSizeOptions: pagination.page_size_options,
       }}
@@ -142,19 +148,17 @@ const ArticlesTableFilterSelect = memo(
             fullWidth={true}
             onChange={handleSelectChange}
           >
-            <MenuItem value="newsfeed"> Коротко</MenuItem>
-            <MenuItem value="detailed">В Деталях</MenuItem>
-            <MenuItem value="in-russia">Что в России</MenuItem>
-            <MenuItem value="calendar"> События</MenuItem>
-            <MenuItem value="people">Персона</MenuItem>
-            <MenuItem value="research"> Исследования</MenuItem>
-            <MenuItem value="analysis">Биржевая аналитика</MenuItem>
+            {Object.keys(ARTICLE_TYPES_RECORD).map((type) => (
+              <MenuItem key={type} value={type}>
+                {ARTICLE_TYPES_RECORD[type]}
+              </MenuItem>
+            ))}
           </Select>
         </TableCell>
         <TableCell />
         <TableCell />
         <TableCell>
-          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
+          {/* <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
             <DatePicker
               variant="dialog"
               margin="none"
@@ -162,8 +166,8 @@ const ArticlesTableFilterSelect = memo(
               label="Дата начала"
               format="dd/MM/yyyy"
               size="small"
-              value={state.since}
-              // onChange={handleDateStartChange}
+              value={values.since}
+              onChange={handleDateStartChange}
             />
             <DatePicker
               variant="dialog"
@@ -172,10 +176,10 @@ const ArticlesTableFilterSelect = memo(
               label="Дата окончания"
               format="dd/MM/yyyy"
               size="small"
-              value={state.until}
-              // onChange={handleDateEndChange}
+              value={values.until}
+              onChange={handleDateEndChange}
             />
-          </MuiPickersUtilsProvider>
+          </MuiPickersUtilsProvider> */}
         </TableCell>
         <TableCell />
         <TableCell />
@@ -189,7 +193,7 @@ const columns: Column<Article>[] = [
     field: "type",
     title: "Раздел",
     sorting: false,
-    render: (article) => mapArticleTypeToTranslation[article.type],
+    render: (article) => ARTICLE_TYPES_RECORD[article.type],
   },
   {
     field: "title",
@@ -221,7 +225,9 @@ const columns: Column<Article>[] = [
     filtering: false,
     type: "numeric",
     render: (article) =>
-      format(new Date(article.published_at ?? ""), "dd.MM.yyyy HH:mm"),
+      article.published_at
+        ? format(new Date(article.published_at), "dd.MM.yyyy HH:mm")
+        : null,
   },
   {
     field: "updated_at",
@@ -229,7 +235,9 @@ const columns: Column<Article>[] = [
     filtering: false,
     type: "numeric",
     render: (article) =>
-      format(new Date(article.updated_at ?? ""), "dd.MM.yyyy HH:mm"),
+      article.updated_at
+        ? format(new Date(article.updated_at), "dd.MM.yyyy HH:mm")
+        : null,
   },
   {
     field: "total_views",
@@ -238,13 +246,3 @@ const columns: Column<Article>[] = [
     filtering: false,
   },
 ]
-
-const mapArticleTypeToTranslation = {
-  newsfeed: "Коротко",
-  detailed: "В Деталях",
-  "in-russia": "Что в России",
-  calendar: "События",
-  people: "Персона",
-  research: "Исследования",
-  analysis: "Биржевая аналитика",
-}

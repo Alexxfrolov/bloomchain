@@ -1,21 +1,8 @@
-import React, {
-  memo,
-  useMemo,
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  RefObject,
-  FormEvent,
-  SyntheticEvent,
-  ChangeEvent,
-} from "react"
+import React, { memo, useMemo, useCallback, ChangeEvent } from "react"
 import {
   Grid,
   TextField,
-  InputLabel,
   Typography,
-  Select,
   FormControl,
   FormHelperText,
   MenuItem,
@@ -27,6 +14,7 @@ import DateFnsUtils from "@date-io/date-fns"
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import { ru } from "date-fns/locale"
 import Autocomplete from "@material-ui/lab/Autocomplete"
+import { array, object, string, number } from "yup"
 import { useFormik } from "formik"
 import { Editor } from "@lib/editor"
 import { Article } from "@api/articles"
@@ -35,147 +23,58 @@ import { MediaFile } from "@api/media"
 import { Tag } from "@api/tags"
 import { MediaUploadForm } from "@features/media"
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    root: {
-      display: "block",
-      flexGrow: 1,
-    },
-  }),
-)
+import { article, ArticleStore } from "../model/article.store"
+import {
+  computedUnusedOptionsByInitialOptionsList,
+  ARTICLE_STATUSES_RECORD,
+  ARTICLE_TYPES_RECORD,
+} from "../lib"
 
-const articlePreset: Omit<Article, "id"> = {
-  authors: [],
-  body: null,
-  cover: null,
-  inserted_at: null,
-  lead: null,
-  published_at: null,
-  status: "draft",
-  tags: [],
-  seo_settings: {
-    description: "",
-    keywords: [],
-    og_type: "article",
-    og_title: "",
-    og_description: "",
-    og_image: "",
-  },
-  time: null,
-  title: "",
-  type: "newsfeed",
-  updated_at: null,
-}
+const ArticleStatusSchema = string().oneOf(["male", "female", "other"], "")
+const ArticleTypeSchema = string().oneOf(["male", "female", "other"], "")
+
+export const ArticleCreationSchema = object().shape({
+  authors: array().of(string()).required("Авторы не заполнены"),
+  body: string().required("Тело статьи не заполнено"),
+  // cover: object()
+  //   .shape({
+  //     alt: string().required("Alt текст не может быть пустым"),
+  //     url: string().required("Обложка обязательна"),
+  //     title: string(),
+  //     type: string(),
+  //   })
+  //   .required("Обложка не заполнена"),
+  // lead: string().max(250, "Максимум 250 символов"),
+  // status: string().required(),
+  // tags: array().of(string()).required("Тэги не заполнены"),
+  // seo_settings: object().shape({
+  //   description: string().required("Описание статьи не заполнено"),
+  //   keywords: array()
+  //     .of(string())
+  //     .required("Ключевые слова обязательны к заполнению"),
+  //   og_type: string(),
+  //   og_title: string(),
+  //   og_description: string().required(),
+  // }),
+  // time: number()
+  //   .min(1, "Время прочтения статьи не может быть меньше 1 минуты")
+  //   .max(60, "Время прочтения статьи не может быть более 60 минут"),
+  // title: string().required("Заголовок статьи не указан"),
+  // type: string().required("Раздел не указан"),
+})
+
+// .oneOf([Yup.ref("password"), null], "Пароли не совпадают"),
 
 type ArticleFormProps = {
   authors: Author[]
-  initialArticle?: Omit<Article, "id">
+  initialArticle?: ArticleStore
   tags: Tag[]
-  onSubmit: (article: Article) => void
+  onSubmit: (article: Article) => Promise<void>
 }
 
-// TODO: add removeObjectURL
 export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
-  const { authors, initialArticle = articlePreset, tags, onSubmit } = props
+  const { authors, initialArticle = article, tags, onSubmit } = props
   const classes = useStyles()
-
-  // const [article, setArticle] = useState<Omit<Article, "id">>({
-  //   ...initialArticle,
-  // })
-
-  const inputTypeLabel = useRef<HTMLLabelElement>(null)
-  const inputStatusLabel = useRef<HTMLLabelElement>(null)
-
-  const [typeLabelWidth, setTypeLabelWidth] = useState(0)
-  const [statusLabelWidth, setStatusLabelWidth] = useState(0)
-
-  useEffect(() => {
-    setTypeLabelWidth(inputTypeLabel.current?.offsetWidth ?? 0)
-    setStatusLabelWidth(inputStatusLabel.current?.offsetWidth ?? 0)
-  }, [inputTypeLabel, inputStatusLabel])
-
-  // const handleChangeFormField = useCallback(
-  //   (field: string) => (event: SyntheticEvent<{ value: string }>) => {
-  //     setArticle({ ...article, ...{ [field]: event.currentTarget.value } })
-  //   },
-  //   [article, setArticle],
-  // )
-
-  // const seoSettingsChangeHandler = useCallback(
-  //   (field: keyof Article["seo_settings"]) => (
-  //     event: SyntheticEvent<{ value: string }>,
-  //   ) => {
-  //     setArticle({
-  //       ...article,
-  //       seo_settings: {
-  //         ...article.seo_settings,
-  //         [field]: event.currentTarget.value,
-  //       },
-  //     })
-  //   },
-  //   [article, setArticle],
-  // )
-
-  // const handleChangeSelect = useCallback(
-  //   (name: keyof Pick<Article, "type" | "status">) => (
-  //     event: ChangeEvent<{ value: unknown }>,
-  //   ) => {
-  //     setArticle({
-  //       ...article,
-  //       [name]: event.target.value,
-  //     })
-  //   },
-  //   [article, setArticle],
-  // )
-
-  // const handleClearButtonClick = useCallback(() => {
-  //   setArticle({
-  //     ...articlePreset,
-  //   })
-  // }, [setArticle])
-
-  // const handleSubmitForm = useCallback(
-  //   (event: FormEvent) => {
-  //     event.preventDefault()
-  //     onSubmit(article)
-  //     // const { body, ...rest } = article
-  //     // const [_item, _groups, index] = body?.match('data-f-id="pbf"')
-  //     // onSubmit({ ...rest, body: body.slice(0, Number(index) - 3) })
-  //   },
-  //   [article, onSubmit],
-  // )
-
-  const tagsOptions = useMemo(() => {
-    if (initialArticle.tags.length) {
-      return tags.reduce<Tag[]>((acc, tag) => {
-        const isAuthorSelected = initialArticle.tags.find(
-          (articleTag) => articleTag.id === tag.id,
-        )
-        if (isAuthorSelected) {
-          return acc
-        }
-
-        return [...acc, tag]
-      }, [])
-    }
-    return tags
-  }, [initialArticle.tags, tags])
-
-  const authorsOptions = useMemo(() => {
-    if (initialArticle.authors.length) {
-      return authors.reduce<Author[]>((acc, author) => {
-        const isTagSelected = initialArticle.authors.find(
-          (articleAuthor) => articleAuthor.id === author.id,
-        )
-        if (isTagSelected) {
-          return acc
-        }
-
-        return [...acc, author]
-      }, [])
-    }
-    return authors
-  }, [initialArticle.authors, authors])
 
   const {
     values,
@@ -186,13 +85,20 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
     handleChange,
     handleReset,
     setFieldValue,
-  } = useFormik({
+  } = useFormik<ArticleStore>({
     initialValues: {
       ...initialArticle,
     },
-    onSubmit: (values, actions) => {},
+    // validationSchema: ArticleCreationSchema,
+    // validateOnChange: true,
+    onSubmit: async (values, { setSubmitting }) => {
+      // await onSubmit(values)
+      setSubmitting(false)
+    },
     onReset: (values) => {},
   })
+
+  console.log(errors)
 
   const isEnabledDatePicker = useMemo(
     () => !["ready"].includes(values.status),
@@ -234,38 +140,50 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
     [setFieldValue],
   )
 
+  const tagsOptions = useMemo(
+    () => computedUnusedOptionsByInitialOptionsList(tags, initialArticle.tags),
+    [initialArticle.tags, tags],
+  )
+
+  const authorsOptions = useMemo(
+    () =>
+      computedUnusedOptionsByInitialOptionsList(
+        authors,
+        initialArticle.authors,
+      ),
+    [initialArticle.authors, authors],
+  )
+
   return (
     <form onSubmit={handleSubmit} className={classes.root} noValidate={true}>
       <Grid container={true} spacing={4}>
         <Grid item={true} md={12} lg={8}>
-          <FormControl margin="normal" fullWidth={true} variant="outlined">
-            <InputLabel ref={inputTypeLabel} id="type">
-              Раздел
-            </InputLabel>
-            <Select
-              labelId="type"
+          <FormControl margin="normal" fullWidth={true}>
+            <TextField
               id="type"
-              name="name"
-              labelWidth={typeLabelWidth}
-              value={values.type}
+              name="type"
+              select={true}
+              label="Раздел"
+              required={true}
+              value={values.type ?? ""}
               onChange={handleChange}
+              variant="outlined"
             >
-              <MenuItem value="newsfeed">Коротко</MenuItem>
-              <MenuItem value="detailed">В Деталях</MenuItem>
-              <MenuItem value="analysis">Биржевая аналитика</MenuItem>
-              <MenuItem value="in-russia">Что в России</MenuItem>
-              <MenuItem value="calendar">События</MenuItem>
-              <MenuItem value="people">Персона</MenuItem>
-              <MenuItem value="research">Исследования</MenuItem>
-            </Select>
+              {Object.keys(ARTICLE_TYPES_RECORD).map((type) => (
+                <MenuItem key={type} value={type as Article["type"]}>
+                  {ARTICLE_TYPES_RECORD[type]}
+                </MenuItem>
+              ))}
+            </TextField>
           </FormControl>
           <TextField
             id="title"
             name="title"
-            label="Заголовок *"
+            label="Заголовок"
             value={values.title}
+            required={true}
             // error={!!errors.title}
-            // helperText={errors.title}
+            helperText="Не более 200 символов"
             fullWidth={true}
             margin="normal"
             variant="outlined"
@@ -275,7 +193,7 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
             id="lead"
             name="lead"
             label="Лид"
-            value={values.lead ?? ""}
+            value={values.lead}
             fullWidth={true}
             margin="normal"
             variant="outlined"
@@ -292,7 +210,11 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               getOptionLabel={(option) => option.name}
               onChange={handleChangeAuthorsSelect}
               renderInput={(params) => (
-                <TextField {...params} label="Авторы" variant="outlined" />
+                <TextField
+                  {...params}
+                  label="Авторы &#42;"
+                  variant="outlined"
+                />
               )}
             />
           </FormControl>
@@ -307,12 +229,12 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               getOptionLabel={(option) => option.name}
               onChange={handleChangeTagsSelect}
               renderInput={(params) => (
-                <TextField {...params} label="Тэги" variant="outlined" />
+                <TextField {...params} label="Тэги &#42;" variant="outlined" />
               )}
             />
           </FormControl>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
-            <Editor value={values.body ?? ""} onChange={handleChangeEditor} />
+            <Editor value={values.body} onChange={handleChangeEditor} />
           </FormControl>
         </Grid>
         <Grid item={true} md={12} lg={4}>
@@ -338,28 +260,29 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               />
             </FormControl>
           )}
-          <FormControl margin="normal" variant="outlined" fullWidth={true}>
-            <InputLabel ref={inputStatusLabel} id="type">
-              Статус
-            </InputLabel>
-            <Select
-              labelId="status"
+          <FormControl margin="normal" fullWidth={true}>
+            <TextField
               id="status"
               name="status"
-              labelWidth={statusLabelWidth}
-              value={values.status}
+              select={true}
+              label="Статус"
+              required={true}
+              value={values.status ?? ""}
               onChange={handleChange}
+              variant="outlined"
             >
-              <MenuItem value="draft">Черновик</MenuItem>
-              <MenuItem value="ready">Готово к публикации</MenuItem>
-              <MenuItem value="published">Опубликовано</MenuItem>
-              <MenuItem value="archive">Архив</MenuItem>
-            </Select>
+              {Object.keys(ARTICLE_STATUSES_RECORD).map((status) => (
+                <MenuItem key={status} value={status as Article["status"]}>
+                  {ARTICLE_STATUSES_RECORD[status]}
+                </MenuItem>
+              ))}
+            </TextField>
           </FormControl>
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
             <FormControl margin="normal" fullWidth={true} variant="outlined">
               <DateTimePicker
                 id="published_at"
+                name="published_at"
                 variant="dialog"
                 ampm={false}
                 margin="none"
@@ -500,3 +423,12 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
     </form>
   )
 })
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    root: {
+      display: "block",
+      flexGrow: 1,
+    },
+  }),
+)

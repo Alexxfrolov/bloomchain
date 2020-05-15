@@ -87,38 +87,34 @@ export const TagsPage = memo(() => {
     [],
   )
 
-  const addTag = useCallback((tag: Tag) => {
+  const addTag = useCallback(async (tag: Tag) => {
     setState((state) => ({ ...state, status: "pending" }))
-    return tagsApi
-      .create(tag.name)
-      .then((response) =>
-        setState((state) => ({
-          ...state,
-          error: null,
-          status: "success",
-          data: [response.data, ...state.data],
-        })),
-      )
-      .catch((error) =>
-        setState((state) => ({ ...state, error, status: "error" })),
-      )
+    try {
+      const response = await tagsApi.create(tag.name)
+      setState((state) => ({
+        ...state,
+        error: null,
+        status: "success",
+        data: [response.data, ...state.data],
+      }))
+    } catch (error) {
+      setState((state) => ({ ...state, error, status: "error" }))
+    }
   }, [])
 
-  const deleteTag = useCallback((tag: Tag) => {
+  const deleteTag = useCallback(async (tag: Tag) => {
     setState((state) => ({ ...state, status: "pending" }))
-    return tagsApi
-      .remove(tag.id)
-      .then(() =>
-        setState((state) => ({
-          ...state,
-          error: null,
-          status: "success",
-          data: state.data.filter((item) => item.id !== tag.id),
-        })),
-      )
-      .catch((error) =>
-        setState((state) => ({ ...state, error, status: "error" })),
-      )
+    try {
+      await tagsApi.remove(tag.id)
+      setState((state) => ({
+        ...state,
+        error: null,
+        status: "success",
+        data: state.data.filter((item) => item.id !== tag.id),
+      }))
+    } catch (error) {
+      setState((state) => ({ ...state, error, status: "error" }))
+    }
   }, [])
 
   return (

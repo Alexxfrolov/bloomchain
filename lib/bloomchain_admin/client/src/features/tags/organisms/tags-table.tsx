@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from "react"
+import React, { memo, useMemo, useCallback } from "react"
 import { useFormik } from "formik"
 import format from "date-fns/format"
 import {
@@ -55,6 +55,8 @@ export const TagsTable = memo(function TagsTable(props: TagsTableProps) {
     onRowDelete,
   ])
 
+  const notEmptyData = useMemo(() => !!data.length, [data])
+
   return (
     <Table
       title="Тэги"
@@ -67,6 +69,8 @@ export const TagsTable = memo(function TagsTable(props: TagsTableProps) {
         EditRow: TagsTableEditRow,
       }}
       options={{
+        sorting: notEmptyData,
+        paging: notEmptyData,
         pageSize: pagination.page_size,
         pageSizeOptions: pagination.page_size_options,
       }}

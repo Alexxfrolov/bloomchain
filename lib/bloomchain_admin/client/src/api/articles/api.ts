@@ -4,7 +4,7 @@ import { OrderParams, Pagination, PaginationParams } from "../common"
 
 export interface Article {
   authors: import("../authors").Author[]
-  body: string | null
+  body: string
   cover: import("../media").MediaFile | null
   inserted_at: Date | string | null
   id: number

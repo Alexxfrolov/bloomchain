@@ -1,4 +1,4 @@
-import React, { memo, useCallback, Fragment } from "react"
+import React, { memo, useMemo, useCallback, Fragment } from "react"
 import { useFormik } from "formik"
 import format from "date-fns/format"
 import {
@@ -64,6 +64,8 @@ export const UsersTable = memo(function UsersTable(props: UsersTableProps) {
     onRowDelete,
   ])
 
+  const notEmptyData = useMemo(() => !!data.length, [data])
+
   return (
     <Table
       title="Пользователи"
@@ -76,6 +78,8 @@ export const UsersTable = memo(function UsersTable(props: UsersTableProps) {
         EditRow: UsersTableEditRow,
       }}
       options={{
+        sorting: notEmptyData,
+        paging: notEmptyData,
         pageSize: pagination.page_size,
         pageSizeOptions: pagination.page_size_options,
       }}

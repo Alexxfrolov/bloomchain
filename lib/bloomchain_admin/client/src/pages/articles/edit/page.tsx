@@ -39,7 +39,7 @@ export const ActicleEditPage = () => {
   const [authors, setAuthors] = useState<Author[]>([])
   const [article, setArticle] = useState<Omit<Article, "id">>({
     authors: [],
-    body: null,
+    body: "",
     cover: null,
     lead: null,
     inserted_at: null,

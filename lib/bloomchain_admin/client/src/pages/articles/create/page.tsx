@@ -1,101 +1,106 @@
-import React, { Fragment, useState, useEffect, useCallback } from "react"
+import React, { memo, useState, useEffect, useCallback } from "react"
 import {
   Container,
   Paper,
   Typography,
   Button,
-  makeStyles,
-  createStyles,
   Dialog,
   DialogActions,
   DialogTitle,
+  Toolbar,
+  Box,
 } from "@material-ui/core"
 import { articlesApi, Article } from "@api/articles"
 import { tagsApi, Tag } from "@api/tags"
 import { authorsApi, Author } from "@api/authors"
-import { ErrorDialog } from "@features/core"
+import { ErrorDialog, RequestStatus } from "@features/core"
 import { ArticleForm } from "@features/articles"
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(3),
-    },
-  }),
-)
+type ActicleCreatePageState = {
+  request_status: RequestStatus
+  error: string | null
+  tags: Tag[]
+  authors: Author[]
+  isOpenedSuccessDialog: boolean
+  isOpenedErrorDialog: boolean
+}
 
-export const ActicleCreatePage = () => {
-  const classes = useStyles()
-
-  const [isDataLoading, setLoading] = useState(false)
-  const [hasError, setError] = useState(false)
-  const [tags, setTags] = useState<Tag[]>([])
-  const [authors, setAuthors] = useState<Author[]>([])
-
-  const fetchData = useCallback(async () => {
-    setLoading(true)
-    setError(false)
-
-    try {
-      const tagsResponse = await tagsApi.getAll()
-      const authorsResponse = await authorsApi.getAll()
-      setTags(tagsResponse.data.data)
-      setAuthors(authorsResponse.data.data)
-    } catch {
-      setError(true)
-    }
-
-    setLoading(false)
-  }, [])
+export const ActicleCreatePage = memo(() => {
+  const [state, setState] = useState<ActicleCreatePageState>({
+    request_status: "pending",
+    error: null,
+    tags: [],
+    authors: [],
+    isOpenedSuccessDialog: false,
+    isOpenedErrorDialog: false,
+  })
 
   useEffect(() => {
-    fetchData()
-  }, [fetchData])
+    Promise.all([tagsApi.getAll(), authorsApi.getAll()])
+      .then(([tagsResponse, authorsResponse]) =>
+        setState((state) => ({
+          ...state,
+          request_status: "success",
+          error: null,
+          tags: tagsResponse.data.data,
+          authors: authorsResponse.data.data,
+        })),
+      )
+      .catch((error) =>
+        setState((state) => ({ ...state, request_status: "error", error })),
+      )
+  }, [])
 
-  const [isOpenedSuccessDialog, setOpenedSuccessDialog] = useState(false)
-  const [isOpenedErrorDialog, setOpenedErrorDialog] = useState(false)
-
-  const handleSubmitForm = useCallback(
-    async (article: Article) => {
-      try {
-        await articlesApi.create(article)
-        setOpenedSuccessDialog(true)
-      } catch {
-        setError(true)
-        setOpenedErrorDialog(true)
-      }
-    },
-    [setOpenedSuccessDialog, setError, setOpenedErrorDialog],
-  )
+  const createArticle = useCallback(async (article: Article) => {
+    try {
+      await articlesApi.create(article)
+      setState((state) => ({
+        ...state,
+        request_status: "success",
+        error: null,
+        isOpenedSuccessDialog: true,
+      }))
+    } catch (error) {
+      setState((state) => ({
+        ...state,
+        request_status: "error",
+        error,
+        isOpenedErrorDialog: true,
+      }))
+    }
+  }, [])
 
   return (
-    <Fragment>
-      <Container maxWidth="lg" className={classes.root}>
-        <Typography component="h1" variant="h4" gutterBottom={true}>
-          Создать
-        </Typography>
-        <Paper className={classes.paper}>
+    <Container maxWidth="lg">
+      <Paper>
+        <Toolbar>
+          <Typography color="inherit" variant="h6" component="h6">
+            Создать статью
+          </Typography>
+        </Toolbar>
+        <Box marginLeft={3} marginRight={3}>
           <ArticleForm
-            tags={tags}
-            authors={authors}
-            onSubmit={handleSubmitForm}
+            tags={state.tags}
+            authors={state.authors}
+            onSubmit={createArticle}
           />
-        </Paper>
-      </Container>
+        </Box>
+      </Paper>
       <SuccessDialog
-        isOpened={isOpenedSuccessDialog}
-        onClose={() => setOpenedSuccessDialog(false)}
+        isOpened={state.isOpenedSuccessDialog}
+        onClose={() =>
+          setState((state) => ({ ...state, isOpenedSuccessDialog: false }))
+        }
       />
       <ErrorDialog
-        isOpened={isOpenedErrorDialog}
-        onClose={() => setOpenedErrorDialog(false)}
+        isOpened={state.isOpenedErrorDialog}
+        onClose={() =>
+          setState((state) => ({ ...state, isOpenedErrorDialog: false }))
+        }
       />
-    </Fragment>
+    </Container>
   )
-}
+})
 
 type SuccessDialogProps = {
   isOpened: boolean
