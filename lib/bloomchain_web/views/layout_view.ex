@@ -35,6 +35,18 @@ defmodule BloomchainWeb.LayoutView do
     assigns[:og_image] || get_in(assigns, [:article, :seo_settings, "og_image"]) || ""
   end
 
+  def meta(:twitter_title, assigns) do
+    assigns[:twitter_title] || get_in(assigns, [:article, :seo_settings, "twitter_title"]) || ""
+  end
+
+  def meta(:twitter_description, assigns) do
+    assigns[:twitter_description] || get_in(assigns, [:article, :seo_settings, "twitter_description"]) || ""
+  end
+
+  def meta(:twitter_image, assigns) do
+    assigns[:twitter_image] || get_in(assigns, [:article, :seo_settings, "twitter_image"]) || ""
+  end
+
   def active_navlink_class(conn, path) do
     current_path = Path.join(["/" | conn.path_info])
 
