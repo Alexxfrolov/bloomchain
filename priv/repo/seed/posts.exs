@@ -29,26 +29,23 @@ replace_bloomchain_urls = fn item ->
   |> String.replace("/wp-content/uploads/", "/uploads/wp-content/")
 end
 
-replace_caption = fn item ->
+replace_caption = fn item, images ->
   Regex.replace(
     ~r/\[caption(.*?)\[\/caption\]/,
     item,
     fn tag, _ ->
+      id =
+        Regex.run(~r/(?<=id=\")(.*?)(?=\" )/, tag, capture: :first)
+        |> List.first()
+        |> String.replace("attachment_", "")
+        |> String.to_integer()
+
       src = Regex.run(~r/(?<=src=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
-      alt = Regex.run(~r/(?<=alt=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
       width = Regex.run(~r/(?<=width=\")(.*?)(?=\"])/, tag, capture: :first) |> List.first()
       height = Regex.run(~r/(?<=height=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
 
-      capture =
-        case Regex.run(~r/[^>]*(?=\[\/caption\])/, tag, capture: :first)
-             |> List.first()
-             |> String.trim() do
-          "" ->
-            Regex.run(~r/Источник:(.*?)(?=\[\/caption\])/, tag, capture: :first)
-
-          str ->
-            str
-        end
+      alt = (Enum.find(images, &(&1.id == id)) || %{})[:alt]
+      capture = (Enum.find(images, &(&1.id == id)) || %{})[:capture]
 
       "<div class=\"fr-img-space-wrap\">\
 <span contenteditable=\"false\" class=\"fr-img-caption fr-fic fr-dib\" draggable=\"false\">\
@@ -127,17 +124,23 @@ s3_urls = fn item ->
   )
 end
 
+attachments =
+  File.read!("#{File.cwd!()}/priv/repo/data_files/attachments.json")
+  |> Poison.decode!(keys: :atoms)
+
 "#{File.cwd!()}/priv/repo/data_files/posts.json"
 |> File.read!()
 |> Poison.decode!(keys: :atoms)
 |> Enum.map(fn item ->
+  images = Enum.filter(attachments, &(&1.post_id == item.id))
+
   body =
     item.body
     |> make_paragraphs.()
     |> replace_pdfs.()
     |> replace_embedly_urls.()
     |> replace_bloomchain_urls.()
-    |> replace_caption.()
+    |> replace_caption.(images)
     |> replace_strong_tags.()
     |> replace_blockquote.()
     |> s3_urls.()
