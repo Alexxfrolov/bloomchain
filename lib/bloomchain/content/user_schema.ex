@@ -27,7 +27,7 @@ defmodule Bloomchain.Content.User do
     |> validate_required(@required_fields)
     |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)
-    |> validate_length(:password, min: 6)
+    |> validate_length(:password, min: 3)
     |> put_password_hash()
   end
 

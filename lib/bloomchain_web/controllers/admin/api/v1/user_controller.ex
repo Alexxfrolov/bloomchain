@@ -19,6 +19,10 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
     render(conn, "index.json", users: users |> Repo.preload(author: :post_ids), meta: meta)
   end
 
+  def create(conn, %{password: "", email: email} = params) do
+    create(conn, Map.merge(params, %{password: email}))
+  end
+
   def create(conn, params) do
     user = User.changeset(%User{}, params) |> Repo.insert!()
 
