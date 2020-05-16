@@ -17,7 +17,7 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorView do
       id: author.id,
       name: author.name,
       editable: true,
-      deletable: true,
+      deletable: !(Ecto.assoc_loaded?(author.post_ids) && Enum.any?(author.post_ids)),
       inserted_at: author.inserted_at |> Timex.local(),
       updated_at: author.updated_at |> Timex.local()
     }

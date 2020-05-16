@@ -3,7 +3,7 @@ defmodule Bloomchain.Content.Author do
 
   import Ecto.Changeset
 
-  alias Bloomchain.Content.{Post, User}
+  alias Bloomchain.Content.{Post, User, PostAuthor}
 
   schema "authors" do
     field(:name, :string, unique: true)
@@ -11,6 +11,7 @@ defmodule Bloomchain.Content.Author do
     belongs_to(:user, User)
 
     many_to_many(:posts, Post, join_through: "posts_authors")
+    has_many(:post_ids, PostAuthor)
 
     timestamps()
   end

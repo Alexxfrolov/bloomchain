@@ -41,7 +41,7 @@ defmodule BloomchainWeb.Router do
       get "/users/current", Admin.Api.V1.UserController, :current
       resources("/users", Admin.Api.V1.UserController)
 
-      resources("/tags", Admin.Api.V1.TagController, only: [:index, :create, :delete])
+      resources("/tags", Admin.Api.V1.TagController)
       resources("/media", Admin.Api.V1.MediaController)
       resources("/subscribers", Admin.Api.V1.SubscriberController, only: [:index])
       resources("/archives", Admin.Api.V1.ArchiveController)

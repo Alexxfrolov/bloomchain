@@ -26,6 +26,7 @@ end)
 
 # update uniq primary id sequence after raw id insert
 Ecto.Adapters.SQL.query!(Repo, "SELECT setval('users_id_seq', (SELECT MAX(id) from users))")
+Ecto.Adapters.SQL.query!(Repo, "SELECT setval('authors_id_seq', (SELECT MAX(id) from authors))")
 
 # Seed ADMIN acc
 Repo.insert!(

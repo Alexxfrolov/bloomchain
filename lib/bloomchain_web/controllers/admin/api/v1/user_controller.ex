@@ -16,7 +16,7 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
       |> Repo.q_sort_by(conn.assigns.sort_params)
       |> paginate(params)
 
-    render(conn, "index.json", users: users, meta: meta)
+    render(conn, "index.json", users: users |> Repo.preload(author: :post_ids), meta: meta)
   end
 
   def create(conn, params) do
@@ -26,11 +26,11 @@ defmodule BloomchainWeb.Admin.Api.V1.UserController do
       user_id: user.id,
       name: user.first_name <> " " <> user.last_name
     })
-    |> Repo.insert!()
+    |> Repo.insert()
 
     conn
     |> put_status(201)
-    |> render("show.json", user: user)
+    |> render("show.json", user: user |> Repo.preload(author: :post_ids))
   end
 
   def show(conn, %{id: id}) do

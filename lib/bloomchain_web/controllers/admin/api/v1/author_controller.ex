@@ -16,7 +16,7 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorController do
       |> Repo.q_sort_by(conn.assigns.sort_params)
       |> paginate(params)
 
-    render(conn, "index.json", authors: authors, meta: meta)
+    render(conn, "index.json", authors: authors |> Repo.preload([:post_ids]), meta: meta)
   end
 
   def create(conn, params) do
@@ -24,7 +24,7 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorController do
 
     conn
     |> put_status(201)
-    |> render("show.json", author: author)
+    |> render("show.json", author: author |> Repo.preload([:post_ids]))
   end
 
   def show(conn, %{id: id}) do

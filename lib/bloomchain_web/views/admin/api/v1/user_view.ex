@@ -21,6 +21,9 @@ defmodule BloomchainWeb.Admin.Api.V1.UserView do
       role: user.role,
       job: user.job,
       phone: user.phone,
+      deletable:
+        !(Ecto.assoc_loaded?(user.author) && user.author &&
+            Enum.any?(user.author.post_ids)),
       inserted_at: user.inserted_at |> Timex.local(),
       updated_at: user.updated_at |> Timex.local()
     }

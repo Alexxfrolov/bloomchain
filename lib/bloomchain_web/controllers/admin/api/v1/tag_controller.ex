@@ -16,7 +16,7 @@ defmodule BloomchainWeb.Admin.Api.V1.TagController do
       |> Repo.q_sort_by(conn.assigns.sort_params)
       |> paginate(params)
 
-    render(conn, "index.json", tags: tags, meta: meta)
+    render(conn, "index.json", tags: tags |> Repo.preload([:post_ids]), meta: meta)
   end
 
   def create(conn, params) do
@@ -24,7 +24,13 @@ defmodule BloomchainWeb.Admin.Api.V1.TagController do
 
     conn
     |> put_status(201)
-    |> render("show.json", tag: tag)
+    |> render("show.json", tag: tag |> Repo.preload([:post_ids]))
+  end
+
+  def update(conn, %{id: id} = params) do
+    tag = Repo.get!(Tag, id) |> Tag.changeset(params) |> Repo.update!()
+
+    render(conn, "show.json", tag: tag)
   end
 
   def delete(conn, %{id: id}) do

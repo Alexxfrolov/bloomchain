@@ -17,9 +17,8 @@ defmodule BloomchainWeb.Admin.Api.V1.TagView do
       id: tag.id,
       name: tag.name,
       slug: tag.slug,
-      editable: false,
-      # TO DO: check if any record in posts_tags to set correct deletable
-      deletable: true,
+      editable: !(Ecto.assoc_loaded?(tag.post_ids) && Enum.any?(tag.post_ids)),
+      deletable: !(Ecto.assoc_loaded?(tag.post_ids) && Enum.any?(tag.post_ids)),
       inserted_at: tag.inserted_at |> Timex.local(),
       updated_at: tag.updated_at |> Timex.local()
     }

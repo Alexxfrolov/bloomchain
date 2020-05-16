@@ -1,7 +1,7 @@
 defmodule Bloomchain.Content.Tag do
   import Ecto.Changeset
 
-  alias Bloomchain.Content.Post
+  alias Bloomchain.Content.{Post, PostTag}
 
   use Ecto.Schema
 
@@ -16,6 +16,7 @@ defmodule Bloomchain.Content.Tag do
     field(:slug, :string, unique: true)
 
     many_to_many(:posts, Post, join_through: "posts_tags")
+    has_many(:post_ids, PostTag)
 
     timestamps()
   end
