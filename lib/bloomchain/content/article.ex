@@ -53,29 +53,17 @@ defmodule Bloomchain.Content.Article do
   end
 
   def create(%{} = params) do
-    changeset = Post.changeset(%Post{}, params)
-
-    case changeset.valid? do
-      true ->
-        {:ok, article} = Repo.insert(changeset)
-        ES.reindex(article)
-
-      false ->
-        {:error, changeset}
-    end
+    %Post{}
+    |> Post.changeset(params)
+    |> Repo.insert!()
+    |> ES.reindex()
   end
 
   def update(%Post{} = post, %{} = params) do
-    changeset = Post.common_changeset(post, params)
-
-    case changeset.valid? do
-      true ->
-        {:ok, article} = Repo.update(changeset)
-        ES.reindex(article)
-
-      false ->
-        {:error, changeset}
-    end
+    post
+    |> Post.common_changeset(params)
+    |> Repo.update!()
+    |> ES.reindex()
   end
 
   def delete!(id) do
