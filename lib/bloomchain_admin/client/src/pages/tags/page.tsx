@@ -6,7 +6,7 @@ import { RequestStatus } from "@features/core"
 import { TagsTable } from "@features/tags"
 
 type TagsPageState = {
-  status: RequestStatus
+  request_status: RequestStatus
   error: string | null
   data: Tag[]
   pagination: Pagination
@@ -16,7 +16,7 @@ type TagsPageState = {
 
 export const TagsPage = memo(() => {
   const [state, setState] = useState<TagsPageState>({
-    status: "pending",
+    request_status: "pending",
     error: null,
     data: [],
     pagination: {
@@ -36,7 +36,8 @@ export const TagsPage = memo(() => {
       page: state.pagination.page,
       orderDirection: state.orderDirection,
       orderBy: state.orderBy,
-    }
+    } as const
+
     tagsApi
       .get(params)
       .then(({ data: { data, meta } }) =>
@@ -45,11 +46,11 @@ export const TagsPage = memo(() => {
           data,
           pagination: { ...state.pagination, ...meta },
           error: null,
-          status: "success",
+          request_status: "success",
         })),
       )
       .catch((error) =>
-        setState((state) => ({ ...state, error, status: "error" })),
+        setState((state) => ({ ...state, error, request_status: "error" })),
       )
   }, [
     state.pagination.page_size,
@@ -88,32 +89,32 @@ export const TagsPage = memo(() => {
   )
 
   const addTag = useCallback(async (tag: Tag) => {
-    setState((state) => ({ ...state, status: "pending" }))
+    setState((state) => ({ ...state, request_status: "pending" }))
     try {
       const response = await tagsApi.create(tag.name)
       setState((state) => ({
         ...state,
         error: null,
-        status: "success",
+        request_status: "success",
         data: [response.data, ...state.data],
       }))
     } catch (error) {
-      setState((state) => ({ ...state, error, status: "error" }))
+      setState((state) => ({ ...state, error, request_status: "error" }))
     }
   }, [])
 
   const deleteTag = useCallback(async (tag: Tag) => {
-    setState((state) => ({ ...state, status: "pending" }))
+    setState((state) => ({ ...state, request_status: "pending" }))
     try {
       await tagsApi.remove(tag.id)
       setState((state) => ({
         ...state,
         error: null,
-        status: "success",
+        request_status: "success",
         data: state.data.filter((item) => item.id !== tag.id),
       }))
     } catch (error) {
-      setState((state) => ({ ...state, error, status: "error" }))
+      setState((state) => ({ ...state, error, request_status: "error" }))
     }
   }, [])
 
@@ -121,7 +122,7 @@ export const TagsPage = memo(() => {
     <Container maxWidth="md">
       <TagsTable
         data={state.data}
-        isLoading={state.status === "pending"}
+        isLoading={state.request_status === "pending"}
         pagination={state.pagination}
         onChangePage={handleTablePageChange}
         onChangeRowsPerPage={handleChangeTableRowsPerPage}

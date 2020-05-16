@@ -6,7 +6,7 @@ import { RequestStatus } from "@features/core"
 import { AuthorsTable } from "@features/authors"
 
 type AuthorsPageState = {
-  status: RequestStatus
+  request_status: RequestStatus
   error: string | null
   data: Author[]
   pagination: Pagination
@@ -16,7 +16,7 @@ type AuthorsPageState = {
 
 export const AuthorsPage = memo(() => {
   const [state, setState] = useState<AuthorsPageState>({
-    status: "pending",
+    request_status: "pending",
     error: null,
     data: [],
     pagination: {
@@ -36,7 +36,8 @@ export const AuthorsPage = memo(() => {
       page: state.pagination.page,
       orderDirection: state.orderDirection,
       orderBy: state.orderBy,
-    }
+    } as const
+
     authorsApi
       .get(params)
       .then(({ data: { data, meta } }) =>
@@ -45,11 +46,11 @@ export const AuthorsPage = memo(() => {
           data,
           pagination: { ...state.pagination, ...meta },
           error: null,
-          status: "success",
+          request_status: "success",
         })),
       )
       .catch((error) =>
-        setState((state) => ({ ...state, error, status: "error" })),
+        setState((state) => ({ ...state, error, request_status: "error" })),
       )
   }, [
     state.pagination.page_size,
@@ -88,53 +89,53 @@ export const AuthorsPage = memo(() => {
   )
 
   const addAuthor = useCallback((authorName: string) => {
-    setState((state) => ({ ...state, status: "pending" }))
+    setState((state) => ({ ...state, request_status: "pending" }))
     return authorsApi
       .create(authorName)
       .then((response) =>
         setState((state) => ({
           ...state,
           error: null,
-          status: "success",
+          request_status: "success",
           data: [response.data, ...state.data],
         })),
       )
       .catch((error) =>
-        setState((state) => ({ ...state, error, status: "error" })),
+        setState((state) => ({ ...state, error, request_status: "error" })),
       )
   }, [])
 
   const updateAuthor = useCallback((author: Author) => {
-    setState((state) => ({ ...state, status: "pending" }))
+    setState((state) => ({ ...state, request_status: "pending" }))
     return authorsApi
       .update(author)
       .then(({ data }) =>
         setState((state) => ({
           ...state,
           error: null,
-          status: "success",
+          request_status: "success",
           data: state.data.map((item) => (item.id !== data.id ? item : data)),
         })),
       )
       .catch((error) =>
-        setState((state) => ({ ...state, error, status: "error" })),
+        setState((state) => ({ ...state, error, request_status: "error" })),
       )
   }, [])
 
   const deleteAuthor = useCallback((author: Author) => {
-    setState((state) => ({ ...state, status: "pending" }))
+    setState((state) => ({ ...state, request_status: "pending" }))
     return authorsApi
       .remove(author.id)
       .then(() =>
         setState((state) => ({
           ...state,
           error: null,
-          status: "success",
+          request_status: "success",
           data: state.data.filter((item) => item.id !== author.id),
         })),
       )
       .catch((error) =>
-        setState((state) => ({ ...state, error, status: "error" })),
+        setState((state) => ({ ...state, error, request_status: "error" })),
       )
   }, [])
 
@@ -142,7 +143,7 @@ export const AuthorsPage = memo(() => {
     <Container maxWidth="lg">
       <AuthorsTable
         data={state.data}
-        isLoading={state.status === "pending"}
+        isLoading={state.request_status === "pending"}
         pagination={state.pagination}
         onChangePage={handleTablePageChange}
         onChangeRowsPerPage={handleChangeTableRowsPerPage}

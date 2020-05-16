@@ -6,7 +6,7 @@ import { RequestStatus } from "@features/core"
 import { ArchivesTable, AddArchiveFormDialog } from "@features/archives"
 
 type ArchivesPageState = {
-  status: RequestStatus
+  request_status: RequestStatus
   error: string | null
   data: Archive[]
   pagination: Pagination
@@ -16,7 +16,7 @@ type ArchivesPageState = {
 
 export const ArchivesPage = memo(() => {
   const [state, setState] = useState<ArchivesPageState>({
-    status: "pending",
+    request_status: "pending",
     error: null,
     data: [],
     pagination: {
@@ -36,7 +36,8 @@ export const ArchivesPage = memo(() => {
       page: state.pagination.page,
       orderDirection: state.orderDirection,
       orderBy: state.orderBy,
-    }
+    } as const
+
     archivesApi
       .get(params)
       .then(({ data: { data, meta } }) =>
@@ -45,11 +46,11 @@ export const ArchivesPage = memo(() => {
           data,
           pagination: { ...state.pagination, ...meta },
           error: null,
-          status: "success",
+          request_status: "success",
         })),
       )
       .catch((error) =>
-        setState((state) => ({ ...state, error, status: "error" })),
+        setState((state) => ({ ...state, error, request_status: "error" })),
       )
   }, [
     state.pagination.page_size,
@@ -88,36 +89,36 @@ export const ArchivesPage = memo(() => {
   )
 
   const addArchive = useCallback((cover_id: number, pdf_id: number) => {
-    setState((state) => ({ ...state, status: "pending" }))
+    setState((state) => ({ ...state, request_status: "pending" }))
     return archivesApi
       .create(cover_id, pdf_id)
       .then((response) =>
         setState((state) => ({
           ...state,
           error: null,
-          status: "success",
+          request_status: "success",
           data: [response.data, ...state.data],
         })),
       )
       .catch((error) =>
-        setState((state) => ({ ...state, error, status: "error" })),
+        setState((state) => ({ ...state, error, request_status: "error" })),
       )
   }, [])
 
   const deleteArchive = useCallback((archive: Archive) => {
-    setState((state) => ({ ...state, status: "pending" }))
+    setState((state) => ({ ...state, request_status: "pending" }))
     return archivesApi
       .remove(archive.id)
       .then(() =>
         setState((state) => ({
           ...state,
           error: null,
-          status: "success",
+          request_status: "success",
           data: state.data.filter((item) => item.id !== archive.id),
         })),
       )
       .catch((error) =>
-        setState((state) => ({ ...state, error, status: "error" })),
+        setState((state) => ({ ...state, error, request_status: "error" })),
       )
   }, [])
 
@@ -125,7 +126,7 @@ export const ArchivesPage = memo(() => {
     <Container maxWidth="md">
       <ArchivesTable
         data={state.data}
-        isLoading={state.status === "pending"}
+        isLoading={state.request_status === "pending"}
         pagination={state.pagination}
         onChangePage={handleTablePageChange}
         onChangeRowsPerPage={handleChangeTableRowsPerPage}

@@ -58,7 +58,8 @@ export const ArticlesViewPage = memo(() => {
           page: state.pagination.page,
           orderDirection: state.orderDirection,
           orderBy: state.orderBy,
-        }
+        } as const
+
         articlesApi
           .get(params)
           .then(({ data: { data, meta } }) =>
@@ -73,15 +74,14 @@ export const ArticlesViewPage = memo(() => {
           .catch((error) =>
             setState((state) => ({ ...state, error, request_status: "error" })),
           )
-      }
-
-      if (state.query.length > 0) {
+      } else {
         setState((state) => ({ ...state, request_status: "pending" }))
         const params = {
           status: state.status,
           type: state.type,
           query: state.query,
-        }
+        } as const
+
         articlesApi
           .search(params)
           .then(({ data: { data } }) =>
@@ -176,10 +176,7 @@ export const ArticlesViewPage = memo(() => {
   )
 
   const handleClickEditArticle = useCallback(
-    (id: number) => {
-      console.log(id)
-      return router.navigate("admin.articles.edit", { id })
-    },
+    (id: number) => router.navigate("admin.articles.edit", { id }),
     [router],
   )
 
@@ -205,9 +202,13 @@ export const ArticlesViewPage = memo(() => {
       )
   }, [])
 
-  const tableTitle = useMemo(() => mapStatusToTableTitle[state.status], [
-    state.status,
-  ])
+  const tableTitle = useMemo(
+    () =>
+      state.status
+        ? mapStatusToTableTitle[state.status]
+        : "Не известный раздел",
+    [state.status],
+  )
 
   return (
     <Container maxWidth="lg">

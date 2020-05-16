@@ -14,7 +14,6 @@ import DateFnsUtils from "@date-io/date-fns"
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import { ru } from "date-fns/locale"
 import Autocomplete from "@material-ui/lab/Autocomplete"
-import { array, object, string, number } from "yup"
 import { useFormik } from "formik"
 import { Editor } from "@lib/editor"
 import { Article } from "@api/articles"
@@ -24,46 +23,12 @@ import { Tag } from "@api/tags"
 import { MediaUploadForm } from "@features/media"
 
 import { article, ArticleStore } from "../model/article.store"
+import { ArticleCreationSchema } from "../schemes"
 import {
   computedUnusedOptionsByInitialOptionsList,
   ARTICLE_STATUSES_RECORD,
   ARTICLE_TYPES_RECORD,
 } from "../lib"
-
-const ArticleStatusSchema = string().oneOf(["male", "female", "other"], "")
-const ArticleTypeSchema = string().oneOf(["male", "female", "other"], "")
-
-export const ArticleCreationSchema = object().shape({
-  authors: array().of(string()).required("Авторы не заполнены"),
-  body: string().required("Тело статьи не заполнено"),
-  // cover: object()
-  //   .shape({
-  //     alt: string().required("Alt текст не может быть пустым"),
-  //     url: string().required("Обложка обязательна"),
-  //     title: string(),
-  //     type: string(),
-  //   })
-  //   .required("Обложка не заполнена"),
-  // lead: string().max(250, "Максимум 250 символов"),
-  // status: string().required(),
-  // tags: array().of(string()).required("Тэги не заполнены"),
-  // seo_settings: object().shape({
-  //   description: string().required("Описание статьи не заполнено"),
-  //   keywords: array()
-  //     .of(string())
-  //     .required("Ключевые слова обязательны к заполнению"),
-  //   og_type: string(),
-  //   og_title: string(),
-  //   og_description: string().required(),
-  // }),
-  // time: number()
-  //   .min(1, "Время прочтения статьи не может быть меньше 1 минуты")
-  //   .max(60, "Время прочтения статьи не может быть более 60 минут"),
-  // title: string().required("Заголовок статьи не указан"),
-  // type: string().required("Раздел не указан"),
-})
-
-// .oneOf([Yup.ref("password"), null], "Пароли не совпадают"),
 
 type ArticleFormProps = {
   authors: Author[]
@@ -79,31 +44,25 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
   const {
     values,
     errors,
+    touched,
     isSubmitting,
-    isValid,
     handleSubmit,
     handleChange,
     handleReset,
     setFieldValue,
   } = useFormik<ArticleStore>({
+    enableReinitialize: true,
     initialValues: {
       ...initialArticle,
     },
-    // validationSchema: ArticleCreationSchema,
-    // validateOnChange: true,
+    validateOnChange: true,
+    validationSchema: ArticleCreationSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      // await onSubmit(values)
+      await onSubmit(values)
       setSubmitting(false)
     },
     onReset: (values) => {},
   })
-
-  console.log(errors)
-
-  const isEnabledDatePicker = useMemo(
-    () => !["ready"].includes(values.status),
-    [values.status],
-  )
 
   const handleChangeEditor = useCallback(
     (value: string) => {
@@ -165,7 +124,10 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               select={true}
               label="Раздел"
               required={true}
+              disabled={isSubmitting}
               value={values.type ?? ""}
+              error={!!errors.type && touched.type}
+              helperText={errors.type}
               onChange={handleChange}
               variant="outlined"
             >
@@ -182,8 +144,9 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
             label="Заголовок"
             value={values.title}
             required={true}
-            // error={!!errors.title}
-            helperText="Не более 200 символов"
+            disabled={isSubmitting}
+            error={!!errors.title && touched.title}
+            helperText={errors.title}
             fullWidth={true}
             margin="normal"
             variant="outlined"
@@ -194,7 +157,11 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
             name="lead"
             label="Лид"
             value={values.lead}
+            error={!!errors.lead && touched.lead}
+            helperText={errors.lead ?? "Не более 255 символов"}
+            disabled={isSubmitting}
             fullWidth={true}
+            inputProps={{ maxLength: 255 }}
             margin="normal"
             variant="outlined"
             onChange={handleChange}
@@ -212,7 +179,10 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Авторы &#42;"
+                  required={true}
+                  label="Авторы"
+                  error={!!errors.authors && !!touched.authors?.length}
+                  helperText={errors.authors}
                   variant="outlined"
                 />
               )}
@@ -229,7 +199,14 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               getOptionLabel={(option) => option.name}
               onChange={handleChangeTagsSelect}
               renderInput={(params) => (
-                <TextField {...params} label="Тэги &#42;" variant="outlined" />
+                <TextField
+                  {...params}
+                  label="Тэги"
+                  required={true}
+                  error={!!errors.tags && !!touched.tags?.length}
+                  helperText={errors.tags}
+                  variant="outlined"
+                />
               )}
             />
           </FormControl>
@@ -249,7 +226,14 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
             </Typography>
           </FormControl>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
-            <MediaUploadForm onUpload={handleUpload} />
+            <MediaUploadForm
+              accept={["image/jpeg", "image/png"]}
+              disabled={isSubmitting}
+              onUpload={handleUpload}
+            />
+            {errors.cover && (
+              <FormHelperText error={true}>{errors.cover}</FormHelperText>
+            )}
           </FormControl>
           {values.cover && (
             <FormControl margin="normal" fullWidth={true} variant="outlined">
@@ -267,7 +251,10 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               select={true}
               label="Статус"
               required={true}
+              disabled={isSubmitting}
               value={values.status ?? ""}
+              error={!!errors.status && touched.status}
+              helperText={errors.status}
               onChange={handleChange}
               variant="outlined"
             >
@@ -287,16 +274,18 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
                 ampm={false}
                 margin="none"
                 fullWidth={true}
-                disabled={isEnabledDatePicker}
+                disabled={values.status !== "ready" || isSubmitting}
+                error={!!errors.published_at && touched.published_at}
+                helperText={
+                  errors.published_at ??
+                  "Доступно при статусе Готово к публикации"
+                }
                 inputVariant="outlined"
                 label="Дата публикации"
                 format="dd/MM/yyyy HH:mm"
                 value={values.published_at}
                 onChange={handleDateChange}
               />
-              <FormHelperText variant="filled">
-                Доступно при статусе &laquo;Готово к публикации&raquo;
-              </FormHelperText>
             </FormControl>
           </MuiPickersUtilsProvider>
           <TextField
@@ -305,6 +294,9 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
             label="Время прочтения"
             type="number"
             value={values.time ?? ""}
+            error={!!errors.time && touched.time}
+            helperText={errors.time}
+            disabled={isSubmitting}
             fullWidth={true}
             margin="normal"
             variant="outlined"
@@ -324,7 +316,13 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               name="seo_settings.keywords"
               label="Keywords"
               value={values.seo_settings.keywords}
+              error={
+                !!errors.seo_settings?.keywords &&
+                touched.seo_settings?.keywords
+              }
+              helperText={errors.seo_settings?.keywords}
               fullWidth={true}
+              disabled={isSubmitting}
               variant="outlined"
               onChange={handleChange}
             />
@@ -338,13 +336,19 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               name="seo_settings.description"
               label="Description"
               value={values.seo_settings.description ?? ""}
-              inputProps={{ maxLength: 200 }}
+              error={
+                !!errors.seo_settings?.description &&
+                touched.seo_settings?.description
+              }
+              helperText={errors.seo_settings?.description}
+              inputProps={{ maxLength: 255 }}
+              disabled={isSubmitting}
               fullWidth={true}
               variant="outlined"
               onChange={handleChange}
             />
             <FormHelperText variant="filled">
-              Не более 200 символов. По умолчанию лид статьи.
+              Не более 255 символов. По умолчанию лид статьи.
             </FormHelperText>
           </FormControl>
           <FormControl margin="dense" fullWidth={true}>
@@ -353,6 +357,11 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               name="seo_settings.og_type"
               label="og:type"
               value={values.seo_settings.og_type}
+              error={
+                !!errors.seo_settings?.og_type && touched.seo_settings?.og_type
+              }
+              helperText={errors.seo_settings?.og_type}
+              disabled={isSubmitting}
               fullWidth={true}
               variant="outlined"
               onChange={handleChange}
@@ -367,6 +376,12 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               name="seo_settings.og_title"
               label="og:title"
               value={values.seo_settings.og_title ?? ""}
+              error={
+                !!errors.seo_settings?.og_title &&
+                touched.seo_settings?.og_title
+              }
+              helperText={errors.seo_settings?.og_title}
+              disabled={isSubmitting}
               fullWidth={true}
               variant="outlined"
               onChange={handleChange}
@@ -381,13 +396,19 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               name="seo_settings.og_description"
               label="og:description"
               value={values.seo_settings.og_description ?? ""}
-              inputProps={{ maxLength: 200 }}
+              inputProps={{ maxLength: 255 }}
+              disabled={isSubmitting}
+              error={
+                !!errors.seo_settings?.og_description &&
+                touched.seo_settings?.og_description
+              }
+              helperText={errors.seo_settings?.og_description}
               fullWidth={true}
               variant="outlined"
               onChange={handleChange}
             />
             <FormHelperText variant="filled">
-              Не более 200 символов. По умолчанию лид статьи.
+              Не более 255 символов. По умолчанию лид статьи.
             </FormHelperText>
           </FormControl>
         </Grid>
@@ -403,6 +424,7 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               variant="contained"
               color="primary"
               type="button"
+              disabled={isSubmitting}
               onClick={handleReset}
             >
               Очистить поля
@@ -411,7 +433,7 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
           <Grid item={true}>
             <Button
               type="submit"
-              disabled={!isValid || isSubmitting}
+              disabled={isSubmitting}
               variant="contained"
               color="primary"
             >

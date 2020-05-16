@@ -81,13 +81,12 @@ export const ArticlesTable = memo(function ArticlesTable(
       columns={columns}
       isLoading={isLoading}
       components={{
-        FilterRow: () =>
-          notEmptyData ? (
-            <ArticlesTableFilterSelect
-              type={type}
-              onFilterChanged={onChangeSelectFilter}
-            />
-          ) : null,
+        FilterRow: () => (
+          <ArticlesTableFilterSelect
+            type={type}
+            onFilterChanged={onChangeSelectFilter}
+          />
+        ),
       }}
       page={pagination.page - 1}
       totalCount={pagination.total_items}

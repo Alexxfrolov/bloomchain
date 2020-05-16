@@ -14,7 +14,7 @@ export interface MediaFile {
   updated_at: string
 }
 
-interface Params extends PaginationParams {
+interface Params extends Partial<PaginationParams> {
   type: MediaFile["type"]
 }
 

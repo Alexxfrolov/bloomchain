@@ -6,7 +6,7 @@ import { RequestStatus } from "@features/core"
 import { SubscribersTable } from "@features/subscribers"
 
 type SubscribersPageState = {
-  status: RequestStatus
+  request_status: RequestStatus
   error: string | null
   data: Subscriber[]
   pagination: Pagination
@@ -16,7 +16,7 @@ type SubscribersPageState = {
 
 export const SubscribersPage = memo(() => {
   const [state, setState] = useState<SubscribersPageState>({
-    status: "pending",
+    request_status: "pending",
     error: null,
     data: [],
     pagination: {
@@ -36,7 +36,8 @@ export const SubscribersPage = memo(() => {
       page: state.pagination.page,
       orderDirection: state.orderDirection,
       orderBy: state.orderBy,
-    }
+    } as const
+
     subscribersApi
       .get(params)
       .then(({ data: { data, meta } }) =>
@@ -45,11 +46,11 @@ export const SubscribersPage = memo(() => {
           data,
           pagination: { ...state.pagination, ...meta },
           error: null,
-          status: "success",
+          request_status: "success",
         })),
       )
       .catch((error) =>
-        setState((state) => ({ ...state, error, status: "error" })),
+        setState((state) => ({ ...state, error, request_status: "error" })),
       )
   }, [
     state.pagination.page_size,
@@ -91,7 +92,7 @@ export const SubscribersPage = memo(() => {
     <Container maxWidth="md">
       <SubscribersTable
         data={state.data}
-        isLoading={state.status === "pending"}
+        isLoading={state.request_status === "pending"}
         pagination={state.pagination}
         onChangePage={handleTablePageChange}
         onChangeRowsPerPage={handleChangeTableRowsPerPage}

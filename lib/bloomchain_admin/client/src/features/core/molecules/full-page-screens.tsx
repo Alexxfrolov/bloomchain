@@ -19,11 +19,16 @@ export const FullPageErrorScreen = memo(
   ({ errorMessage }: FullPageErrorScreenProps) => (
     <CenteredTemplate>
       <Box>
-        <Typography align="center" component="h1" variant="h3">
+        <Typography
+          align="center"
+          component="h1"
+          variant="h3"
+          gutterBottom={true}
+        >
           Oh no! Something went wrong...
         </Typography>
-        <Typography align="center" variant="body1">
-          <pre>{errorMessage}</pre>
+        <Typography align="center" variant="body1" component="pre">
+          {errorMessage}
         </Typography>
       </Box>
     </CenteredTemplate>

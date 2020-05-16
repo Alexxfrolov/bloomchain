@@ -6,7 +6,7 @@ import { RequestStatus } from "@features/core"
 import { UsersTable } from "@features/users"
 
 type UsersPageState = {
-  status: RequestStatus
+  request_status: RequestStatus
   error: string | null
   data: User[]
   pagination: Pagination
@@ -16,7 +16,7 @@ type UsersPageState = {
 
 export const UsersPage = memo(() => {
   const [state, setState] = useState<UsersPageState>({
-    status: "pending",
+    request_status: "pending",
     error: null,
     data: [],
     pagination: {
@@ -36,7 +36,8 @@ export const UsersPage = memo(() => {
       page: state.pagination.page,
       orderDirection: state.orderDirection,
       orderBy: state.orderBy,
-    }
+    } as const
+
     usersApi
       .get(params)
       .then(({ data: { data, meta } }) =>
@@ -45,11 +46,11 @@ export const UsersPage = memo(() => {
           data,
           pagination: { ...state.pagination, ...meta },
           error: null,
-          status: "success",
+          request_status: "success",
         })),
       )
       .catch((error) =>
-        setState((state) => ({ ...state, error, status: "error" })),
+        setState((state) => ({ ...state, error, request_status: "error" })),
       )
   }, [
     state.pagination.page_size,
@@ -88,49 +89,49 @@ export const UsersPage = memo(() => {
   )
 
   const addUser = useCallback(async (user: Partial<User>) => {
-    setState((state) => ({ ...state, status: "pending" }))
+    setState((state) => ({ ...state, request_status: "pending" }))
     try {
       const response = await usersApi.create(user)
       setState((state) => ({
         ...state,
         error: null,
-        status: "success",
+        request_status: "success",
         data: [response.data, ...state.data],
       }))
     } catch (error) {
-      setState((state) => ({ ...state, error, status: "error" }))
+      setState((state) => ({ ...state, error, request_status: "error" }))
     }
   }, [])
 
   const updateUser = useCallback(async (author: User) => {
-    setState((state) => ({ ...state, status: "pending" }))
+    setState((state) => ({ ...state, request_status: "pending" }))
     try {
       const { data: updatedUser } = await usersApi.update(author)
       setState((state) => ({
         ...state,
         error: null,
-        status: "success",
+        request_status: "success",
         data: state.data.map((item) =>
           item.id !== updatedUser.id ? item : updatedUser,
         ),
       }))
     } catch (error) {
-      setState((state) => ({ ...state, error, status: "error" }))
+      setState((state) => ({ ...state, error, request_status: "error" }))
     }
   }, [])
 
   const deleteUser = useCallback(async (author: User) => {
-    setState((state) => ({ ...state, status: "pending" }))
+    setState((state) => ({ ...state, request_status: "pending" }))
     try {
-      const response = await usersApi.remove(author.id)
+      await usersApi.remove(author.id)
       setState((state) => ({
         ...state,
         error: null,
-        status: "success",
+        request_status: "success",
         data: state.data.filter((item) => item.id !== author.id),
       }))
     } catch (error) {
-      setState((state) => ({ ...state, error, status: "error" }))
+      setState((state) => ({ ...state, error, request_status: "error" }))
     }
   }, [])
 
@@ -138,7 +139,7 @@ export const UsersPage = memo(() => {
     <Container maxWidth="lg">
       <UsersTable
         data={state.data}
-        isLoading={state.status === "pending"}
+        isLoading={state.request_status === "pending"}
         pagination={state.pagination}
         onChangePage={handleTablePageChange}
         onChangeRowsPerPage={handleChangeTableRowsPerPage}

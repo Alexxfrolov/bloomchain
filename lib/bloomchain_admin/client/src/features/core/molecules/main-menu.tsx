@@ -11,6 +11,7 @@ import {
   makeStyles,
 } from "@material-ui/core"
 import { indigo } from "@material-ui/core/colors"
+import CreateRoundedIcon from "@material-ui/icons/CreateRounded"
 import DescriptionRoundedIcon from "@material-ui/icons/DescriptionRounded"
 import GroupRoundedIcon from "@material-ui/icons/GroupRounded"
 import ArchiveRoundedIcon from "@material-ui/icons/ArchiveRounded"
@@ -99,7 +100,7 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
       <Divider />
       <List>
         {openedDrawer && <ListSubheader inset={true}>Публикации</ListSubheader>}
-        <Tooltip title="Создать статью">
+        <Tooltip title={openedDrawer ? "" : "Создать статью"}>
           <ListItem
             aria-current={
               isCurrentMenu("admin.articles.create") ||
@@ -111,7 +112,7 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
           >
             <RouterLink routeName="admin.articles" className={classes.link}>
               <ListItemIcon style={{ paddingLeft: "7px" }}>
-                <DescriptionRoundedIcon
+                <CreateRoundedIcon
                   style={{ color: indigo[500] }}
                   titleAccess="Создать"
                 />
@@ -120,43 +121,7 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
             </RouterLink>
           </ListItem>
         </Tooltip>
-        <Tooltip title="Черновик">
-          <ListItem
-            aria-current={
-              isCurrentMenu("admin.articles.draft") ? "page" : undefined
-            }
-            className={classes.listitem}
-          >
-            <RouterLink
-              routeName="admin.articles.draft"
-              className={classes.link}
-            >
-              <ListItemIcon style={{ paddingLeft: "7px" }}>
-                <DraftsRoundedIcon style={{ color: indigo[500] }} />
-              </ListItemIcon>
-              <ListItemText primary="Черновик" />
-            </RouterLink>
-          </ListItem>
-        </Tooltip>
-        <Tooltip title="Готово к публикации">
-          <ListItem
-            aria-current={
-              isCurrentMenu("admin.articles.ready") ? "page" : undefined
-            }
-            className={classes.listitem}
-          >
-            <RouterLink
-              routeName="admin.articles.ready"
-              className={classes.link}
-            >
-              <ListItemIcon style={{ paddingLeft: "7px" }}>
-                <InsertDriveFileRoundedIcon style={{ color: indigo[500] }} />
-              </ListItemIcon>
-              <ListItemText primary="Готово к публикации" />
-            </RouterLink>
-          </ListItem>
-        </Tooltip>
-        <Tooltip title="Опубликовано">
+        <Tooltip title={openedDrawer ? "" : "Опубликовано"}>
           <ListItem
             aria-current={
               isCurrentMenu("admin.articles.published") ? "page" : undefined
@@ -174,7 +139,43 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
             </RouterLink>
           </ListItem>
         </Tooltip>
-        <Tooltip title="Архив">
+        <Tooltip title={openedDrawer ? "" : "Готово к публикации"}>
+          <ListItem
+            aria-current={
+              isCurrentMenu("admin.articles.ready") ? "page" : undefined
+            }
+            className={classes.listitem}
+          >
+            <RouterLink
+              routeName="admin.articles.ready"
+              className={classes.link}
+            >
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <InsertDriveFileRoundedIcon style={{ color: indigo[500] }} />
+              </ListItemIcon>
+              <ListItemText primary="Готово к публикации" />
+            </RouterLink>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title={openedDrawer ? "" : "Черновик"}>
+          <ListItem
+            aria-current={
+              isCurrentMenu("admin.articles.draft") ? "page" : undefined
+            }
+            className={classes.listitem}
+          >
+            <RouterLink
+              routeName="admin.articles.draft"
+              className={classes.link}
+            >
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <DraftsRoundedIcon style={{ color: indigo[500] }} />
+              </ListItemIcon>
+              <ListItemText primary="Черновик" />
+            </RouterLink>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title={openedDrawer ? "" : "Архив"}>
           <ListItem
             aria-current={
               isCurrentMenu("admin.articles.archive") ? "page" : undefined
@@ -196,7 +197,7 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
       <Divider />
       <List>
         {openedDrawer && <ListSubheader inset={true}>Страницы</ListSubheader>}
-        <Tooltip title="Исследования Архив">
+        <Tooltip title={openedDrawer ? "" : "Исследования Архив"}>
           <ListItem
             aria-current={isCurrentMenu("admin.archives") ? "page" : undefined}
             className={classes.listitem}
@@ -216,7 +217,7 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
           {openedDrawer && (
             <ListSubheader inset={true}>Управление</ListSubheader>
           )}
-          <Tooltip title="Пользователи">
+          <Tooltip title={openedDrawer ? "" : "Пользователи"}>
             <ListItem
               aria-current={isCurrentMenu("admin.users") ? "page" : undefined}
               className={classes.listitem}
@@ -229,7 +230,7 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
               </RouterLink>
             </ListItem>
           </Tooltip>
-          <Tooltip title="Подписчики">
+          <Tooltip title={openedDrawer ? "" : "Подписчики"}>
             <ListItem
               aria-current={
                 isCurrentMenu("admin.subscribers") ? "page" : undefined
@@ -252,7 +253,7 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
       <Divider />
       <List>
         {openedDrawer && <ListSubheader inset={true}>Словари</ListSubheader>}
-        <Tooltip title="Авторы">
+        <Tooltip title={openedDrawer ? "" : "Авторы"}>
           <ListItem
             aria-current={isCurrentMenu("admin.authors") ? "page" : undefined}
             className={classes.listitem}
@@ -265,7 +266,7 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
             </RouterLink>
           </ListItem>
         </Tooltip>
-        <Tooltip title="Тэги">
+        <Tooltip title={openedDrawer ? "" : "Тэги"}>
           <ListItem
             aria-current={isCurrentMenu("admin.tags") ? "page" : undefined}
             className={classes.listitem}
@@ -278,7 +279,7 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
             </RouterLink>
           </ListItem>
         </Tooltip>
-        <Tooltip title="Медиа">
+        <Tooltip title={openedDrawer ? "" : "Медиа"}>
           <ListItem
             aria-current={isCurrentMenu("admin.media") ? "page" : undefined}
             className={classes.listitem}
