@@ -77,18 +77,11 @@ const UserProvider = ({ children }: UserProviderProps) => {
 
 function useCurrentUser() {
   const { user, error, status, update, remove } = useContext(UserContext)
-  const isPending = status === "pending"
-  const isError = status === "error"
-  const isSuccess = status === "success"
-  const isAuthenticated = user && isSuccess
+
   return {
     user,
     error,
     status,
-    isPending,
-    isError,
-    isSuccess,
-    isAuthenticated,
     update,
     remove,
   } as const

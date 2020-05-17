@@ -1,14 +1,8 @@
 import { array, date, object, string, number } from "yup"
 
 export const ArticleCreationSchema = object().shape({
-  type: array()
-    .of(string())
-    .nullable(false)
-    .required("Укажите раздел публикации"),
-  status: array()
-    .of(string())
-    .nullable(false)
-    .required("Укажите статус публикации"),
+  type: string().nullable(true).required("Укажите раздел публикации"),
+  status: string().nullable(true).required("Укажите статус публикации"),
   title: string().required("Укажите заголовок статьи"),
   lead: string().when("status", {
     is: (status) => ["published", "ready"].includes(status),

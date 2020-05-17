@@ -1,12 +1,5 @@
-import React, {
-  memo,
-  Fragment,
-  useState,
-  useMemo,
-  useCallback,
-  FormEvent,
-  SyntheticEvent,
-} from "react"
+import React, { memo, Fragment, useState, useMemo, useCallback } from "react"
+import { useFormik } from "formik"
 import {
   Container,
   Grid,
@@ -22,6 +15,185 @@ import {
 import { deepOrange } from "@material-ui/core/colors"
 import { User } from "@api/user"
 import { useCurrentUser } from "@features/core"
+import { object, string } from "yup"
+
+const UserEditSchema = object().shape({
+  email: string().email().required("Укажите email"),
+  first_name: string().required("Укажите имя"),
+  job: string().nullable(true).notRequired(),
+  last_name: string().required("Укажите фамилию"),
+  phone: string().nullable(true).notRequired(),
+  // password: string | null
+})
+
+export const UserAccountPage = memo(function UserAccountPage() {
+  const { user, update } = useCurrentUser()
+  const classes = useStyles()
+
+  const [openedSuccessDialog, setOpenedSuccessDialog] = useState(false)
+
+  const avatarCaption = useMemo(
+    () =>
+      user?.first_name
+        .charAt(0)
+        .toUpperCase()
+        .concat(user.last_name.charAt(0).toUpperCase()) ?? "BC",
+    [user],
+  )
+
+  const updateSettings = useCallback(
+    (user: User) =>
+      Promise.resolve(update(user)).then(() => setOpenedSuccessDialog(false)),
+    [update],
+  )
+
+  return (
+    <Fragment>
+      <Container maxWidth="sm">
+        <Paper className={classes.paper} variant="elevation">
+          {user && (
+            <AccountSettingsForm
+              avatar={avatarCaption}
+              user={user}
+              onSubmit={updateSettings}
+            />
+          )}
+        </Paper>
+      </Container>
+      <SuccessDialog
+        isOpened={openedSuccessDialog}
+        onClose={() => setOpenedSuccessDialog(false)}
+      />
+    </Fragment>
+  )
+})
+
+type AccountSettingsFormProps = {
+  avatar: string
+  user: User
+  onSubmit: (user: User) => Promise<void>
+}
+
+const AccountSettingsForm = memo((props: AccountSettingsFormProps) => {
+  const { avatar, user, onSubmit } = props
+  const classes = useStyles()
+
+  const {
+    values,
+    touched,
+    errors,
+    isSubmitting,
+    handleChange,
+    handleSubmit,
+    handleBlur,
+  } = useFormik<User>({
+    enableReinitialize: true,
+    initialValues: {
+      ...user,
+    },
+    initialTouched: {
+      first_name: false,
+      last_name: false,
+      email: false,
+      phone: false,
+      job: false,
+    },
+    validationSchema: UserEditSchema,
+    validateOnChange: true,
+    validateOnBlur: true,
+    onSubmit: async (values, { setSubmitting }) => {
+      await onSubmit(values)
+      setSubmitting(false)
+    },
+  })
+
+  return (
+    <form onSubmit={handleSubmit} className={classes.root} noValidate={true}>
+      <Grid container={true} spacing={3}>
+        <Grid item={true}>
+          <Avatar className={classes.avatar}>{avatar}</Avatar>
+        </Grid>
+        <Grid item={true} xs={12} sm>
+          <TextField
+            label="Имя"
+            id="first_name"
+            name="first_name"
+            value={values.first_name}
+            error={"first_name" in errors && touched.first_name}
+            helperText={errors.first_name}
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <TextField
+            label="Фамилия"
+            id="last_name"
+            name="last_name"
+            value={values.last_name}
+            error={"last_name" in errors && touched.last_name}
+            helperText={errors.last_name}
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <TextField
+            label="Должность"
+            id="job"
+            name="job"
+            value={values.job ?? ""}
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <TextField
+            label="Телефон"
+            id="phone"
+            name="phone"
+            type="tel"
+            value={values.phone ?? ""}
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <TextField
+            label="Email"
+            id="email"
+            name="email"
+            type="email"
+            value={values.email}
+            error={"email" in errors && touched.email}
+            helperText={errors.email}
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+        </Grid>
+        <Grid item={true} xs={12}>
+          <Grid container={true} justify="flex-end">
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              variant="contained"
+              color="primary"
+            >
+              Сохранить
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
+    </form>
+  )
+})
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,124 +211,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const UserAccountPage = memo(function UserAccountPage() {
-  const { user, update } = useCurrentUser()
-  const classes = useStyles()
-
-  const [settings, setSettings] = useState<User>({ ...user })
-  const [openedSuccessDialog, setOpenedSuccessDialog] = useState(false)
-
-  const handleChangeField = useCallback(
-    (field: keyof User) => (event: SyntheticEvent<{ value: string }>) => {
-      setSettings({ ...settings, ...{ [field]: event.currentTarget.value } })
-    },
-    [settings, setSettings],
-  )
-
-  const handleSubmit = useCallback(
-    (event: FormEvent) => {
-      event.preventDefault()
-      update(settings)
-      setOpenedSuccessDialog(true)
-    },
-    [settings, update],
-  )
-
-  const avatarCaption = useMemo(
-    () =>
-      settings.first_name
-        .charAt(0)
-        .toUpperCase()
-        .concat(settings.last_name.charAt(0).toUpperCase()),
-    [settings.first_name, settings.last_name],
-  )
-
-  return (
-    <Fragment>
-      <Container maxWidth="sm">
-        <Paper className={classes.paper} variant="elevation">
-          <form
-            onSubmit={handleSubmit}
-            className={classes.root}
-            noValidate={true}
-          >
-            <Grid container={true} spacing={3}>
-              <Grid item={true}>
-                <Avatar className={classes.avatar}>{avatarCaption}</Avatar>
-              </Grid>
-              <Grid item={true} xs={12} sm>
-                <TextField
-                  label="Имя"
-                  id="name"
-                  value={settings.first_name}
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                  onChange={handleChangeField("first_name")}
-                />
-                <TextField
-                  label="Фамилия"
-                  id="name"
-                  value={settings.last_name}
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                  onChange={handleChangeField("last_name")}
-                />
-                <TextField
-                  label="Должность"
-                  id="job"
-                  value={settings.job ?? ""}
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                  onChange={handleChangeField("job")}
-                />
-                <TextField
-                  label="Телефон"
-                  id="phone"
-                  type="tel"
-                  value={settings.phone ?? ""}
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                  onChange={handleChangeField("phone")}
-                />
-                <TextField
-                  label="Email"
-                  id="email"
-                  type="email"
-                  value={settings.email}
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                  onChange={handleChangeField("email")}
-                />
-              </Grid>
-              <Grid item={true} xs={12}>
-                <Grid container={true} justify="flex-end">
-                  <Button type="submit" variant="contained" color="primary">
-                    Сохранить
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          </form>
-        </Paper>
-      </Container>
-      <SuccessDialog
-        isOpened={openedSuccessDialog}
-        onClose={() => setOpenedSuccessDialog(false)}
-      />
-    </Fragment>
-  )
-})
-
 type SuccessDialogProps = {
   isOpened: boolean
   onClose: () => void
 }
 
+// TODO: duplicate component
 const SuccessDialog = memo(function SuccessDialog(props: SuccessDialogProps) {
   const { isOpened, onClose } = props
   return (

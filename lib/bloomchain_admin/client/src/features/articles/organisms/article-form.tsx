@@ -61,7 +61,6 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
       await onSubmit(values)
       setSubmitting(false)
     },
-    onReset: (values) => {},
   })
 
   const handleChangeEditor = useCallback(
@@ -112,6 +111,8 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
       ),
     [initialArticle.authors, authors],
   )
+
+  console.log(touched)
 
   return (
     <form onSubmit={handleSubmit} className={classes.root} noValidate={true}>
