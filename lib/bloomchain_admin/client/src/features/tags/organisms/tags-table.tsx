@@ -133,12 +133,23 @@ const TagsTableEditRow = (props: TagsTableEditRowProps) => {
     onEditingCanceled,
   } = props
 
-  const { values, errors, handleChange, submitForm } = useFormik<Partial<Tag>>({
+  const {
+    values,
+    touched,
+    errors,
+    handleChange,
+    handleBlur,
+    submitForm,
+  } = useFormik<Partial<Tag>>({
+    enableReinitialize: true,
     initialValues: {
       name: data?.name ?? "",
     },
+    initialTouched: {
+      name: false,
+    },
     validationSchema: TagCreationSchema,
-    validateOnChange: true,
+    validateOnBlur: false,
     onSubmit: async (values, actions) => {
       await onEditingApproved(mode, values, data)
       actions.setSubmitting(false)
@@ -176,13 +187,14 @@ const TagsTableEditRow = (props: TagsTableEditRowProps) => {
             autoFocus={true}
             type="text"
             name="name"
-            error={"name" in errors}
             value={values.name}
-            helperText={errors.name}
+            error={"name" in errors && touched.name}
+            helperText={touched.name ? errors.name : undefined}
             fullWidth={true}
             variant="standard"
             placeholder="Имя"
             onChange={handleChange}
+            onBlur={handleBlur}
           />
         )}
         {mode === "delete" && (

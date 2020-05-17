@@ -12,16 +12,7 @@ import {
 import { indigo } from "@material-ui/core/colors"
 import { User } from "@api/user"
 import { useCurrentUser, SuccessDialog } from "@features/core"
-import { object, string } from "yup"
-
-const UserEditSchema = object().shape({
-  email: string().email().required("Укажите email"),
-  first_name: string().required("Укажите имя"),
-  job: string().nullable(true).notRequired(),
-  last_name: string().required("Укажите фамилию"),
-  phone: string().nullable(true).notRequired(),
-  // password: string | null
-})
+import { UserEditSchema } from "@features/users"
 
 export const UserAccountPage = memo(function UserAccountPage() {
   const { user, update } = useCurrentUser()
@@ -97,8 +88,6 @@ const AccountSettingsForm = memo((props: AccountSettingsFormProps) => {
       job: false,
     },
     validationSchema: UserEditSchema,
-    validateOnChange: true,
-    validateOnBlur: true,
     onSubmit: async (values, { setSubmitting }) => {
       await onSubmit(values)
       setSubmitting(false)
@@ -118,7 +107,7 @@ const AccountSettingsForm = memo((props: AccountSettingsFormProps) => {
             name="first_name"
             value={values.first_name}
             error={"first_name" in errors && touched.first_name}
-            helperText={errors.first_name}
+            helperText={touched.first_name ? errors.first_name : undefined}
             fullWidth={true}
             margin="normal"
             variant="outlined"
@@ -131,7 +120,7 @@ const AccountSettingsForm = memo((props: AccountSettingsFormProps) => {
             name="last_name"
             value={values.last_name}
             error={"last_name" in errors && touched.last_name}
-            helperText={errors.last_name}
+            helperText={touched.last_name ? errors.last_name : undefined}
             fullWidth={true}
             margin="normal"
             variant="outlined"
@@ -168,7 +157,7 @@ const AccountSettingsForm = memo((props: AccountSettingsFormProps) => {
             type="email"
             value={values.email}
             error={"email" in errors && touched.email}
-            helperText={errors.email}
+            helperText={touched.email ? errors.email : undefined}
             fullWidth={true}
             margin="normal"
             variant="outlined"

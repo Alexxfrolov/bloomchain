@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useCallback } from "react"
+import React, { Fragment, memo, useMemo, useCallback } from "react"
 import { useFormik } from "formik"
 import format from "date-fns/format"
 import {
@@ -141,14 +141,21 @@ const AuthorsTableEditRow = memo((props: AuthorsTableEditRowProps) => {
     onEditingCanceled,
   } = props
 
-  const { values, errors, handleChange, submitForm } = useFormik<
-    Partial<Author>
-  >({
+  const {
+    values,
+    touched,
+    errors,
+    handleChange,
+    handleBlur,
+    submitForm,
+  } = useFormik<Partial<Author>>({
     initialValues: {
       name: data?.name ?? "",
     },
+    initialTouched: {
+      name: false,
+    },
     validationSchema: AuthorCreationSchema,
-    validateOnChange: true,
     onSubmit: async (values, actions) => {
       await onEditingApproved(mode, values, data)
       actions.setSubmitting(false)
@@ -180,37 +187,45 @@ const AuthorsTableEditRow = memo((props: AuthorsTableEditRowProps) => {
           </IconButton>
         </Grid>
       </TableCell>
-      <TableCell colSpan={["add", "delete"].includes(mode) ? 2 : undefined}>
-        {["add", "update"].includes(mode) && (
-          <TextField
-            autoFocus={true}
-            type="text"
-            name="name"
-            error={"name" in errors}
-            value={values.name}
-            helperText={errors.name}
-            fullWidth={true}
-            variant="standard"
-            placeholder="Имя"
-            onChange={handleChange}
-          />
-        )}
-        {mode === "delete" && (
+      {["add", "update"].includes(mode) && (
+        <Fragment>
+          <TableCell>
+            <TextField
+              autoFocus={true}
+              type="text"
+              name="name"
+              value={values.name}
+              error={"name" in errors && touched.name}
+              helperText={touched.name ? errors.name : undefined}
+              fullWidth={true}
+              variant="standard"
+              placeholder="Имя"
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </TableCell>
+          <TableCell>
+            <TextField
+              type="text"
+              name="inserted_at"
+              defaultValue={format(
+                new Date(data?.inserted_at ?? new Date()),
+                "dd.MM.yyyy",
+              )}
+              fullWidth={true}
+              variant="standard"
+              disabled={true}
+            />
+          </TableCell>
+        </Fragment>
+      )}
+      {mode === "delete" && (
+        <TableCell colSpan={2}>
+          (
           <Typography component="p" variant="body1">
             {localization.deleteText}
           </Typography>
-        )}
-      </TableCell>
-      {mode === "update" && data && data.inserted_at && (
-        <TableCell>
-          <TextField
-            type="text"
-            name="inserted_at"
-            defaultValue={format(new Date(data.inserted_at), "dd.MM.yyyy")}
-            fullWidth={true}
-            variant="standard"
-            disabled={true}
-          />
+          )}
         </TableCell>
       )}
     </TableRow>

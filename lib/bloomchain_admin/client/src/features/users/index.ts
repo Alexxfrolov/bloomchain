@@ -1,2 +1,2 @@
 export { UsersTable } from "./organisms"
-export { UserCreationSchema } from "./schemes"
+export { UserCreationSchema, UserEditSchema } from "./schemes"

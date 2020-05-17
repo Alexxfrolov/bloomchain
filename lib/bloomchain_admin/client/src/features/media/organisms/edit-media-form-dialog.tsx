@@ -33,13 +33,19 @@ export const EditMediaFormDialog = memo(function (
     isSubmitting,
     handleChange,
     handleSubmit,
+    handleBlur,
   } = useFormik<MediaFile>({
     enableReinitialize: true,
     initialValues: {
       ...modifyingMediaFile,
     },
+    initialTouched: {
+      alt: false,
+      url: false,
+      source: false,
+      title: false,
+    },
     validationSchema: MediaEditingSchema,
-    validateOnChange: true,
     onSubmit: async (values, { setSubmitting }) => {
       await onUpdateMedia(values)
       setSubmitting(false)
@@ -66,14 +72,15 @@ export const EditMediaFormDialog = memo(function (
             label="Аттрибут аlt"
             required={true}
             value={values.alt ?? ""}
-            error={!!errors.alt}
-            helperText={errors.alt}
+            error={"alt" in errors && touched.alt}
+            helperText={touched.alt ? errors.alt : undefined}
             type="text"
             disabled={isSubmitting}
             fullWidth={true}
             margin="normal"
             variant="standard"
             onChange={handleChange}
+            onBlur={handleBlur}
           />
           <TextField
             id="title"
@@ -82,10 +89,13 @@ export const EditMediaFormDialog = memo(function (
             type="text"
             disabled={isSubmitting}
             value={values.title ?? ""}
+            error={"title" in errors && touched.title}
+            helperText={touched.title ? errors.title : undefined}
             fullWidth={true}
             margin="normal"
             variant="standard"
             onChange={handleChange}
+            onBlur={handleBlur}
           />
           <TextField
             id="source"
@@ -94,10 +104,13 @@ export const EditMediaFormDialog = memo(function (
             type="text"
             disabled={isSubmitting}
             value={values.source ?? ""}
+            error={"source" in errors && touched.source}
+            helperText={touched.source ? errors.source : undefined}
             fullWidth={true}
             margin="normal"
             variant="standard"
             onChange={handleChange}
+            onBlur={handleBlur}
           />
         </DialogContent>
         <DialogActions>

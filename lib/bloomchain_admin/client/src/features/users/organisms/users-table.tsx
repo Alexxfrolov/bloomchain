@@ -155,25 +155,38 @@ const UsersTableEditRow = (props: UsersTableEditRowProps) => {
     onEditingCanceled,
   } = props
 
-  const { values, errors, handleChange, submitForm } = useFormik<Partial<User>>(
-    {
-      initialValues: {
-        first_name: data?.first_name ?? "",
-        last_name: data?.last_name ?? "",
-        role: data?.role ?? "writer",
-        job: data?.job ?? "",
-        email: data?.email ?? "",
-        phone: data?.phone ?? "",
-        inserted_at: data?.inserted_at ?? new Date(),
-      },
-      validationSchema: UserCreationSchema,
-      validateOnChange: true,
-      onSubmit: async (values, actions) => {
-        await onEditingApproved(mode, values, data)
-        actions.setSubmitting(false)
-      },
+  const {
+    values,
+    touched,
+    errors,
+    handleChange,
+    handleBlur,
+    submitForm,
+  } = useFormik<Partial<User>>({
+    initialValues: {
+      first_name: data?.first_name ?? "",
+      last_name: data?.last_name ?? "",
+      role: data?.role ?? "writer",
+      job: data?.job ?? "",
+      email: data?.email ?? "",
+      phone: data?.phone ?? "",
+      inserted_at: data?.inserted_at ?? new Date(),
     },
-  )
+    initialTouched: {
+      first_name: false,
+      last_name: false,
+      role: false,
+      job: false,
+      email: false,
+      phone: false,
+      inserted_at: false,
+    },
+    validationSchema: UserCreationSchema,
+    onSubmit: async (values, actions) => {
+      await onEditingApproved(mode, values, data)
+      actions.setSubmitting(false)
+    },
+  })
 
   const handleEditCanceled = useCallback(() => onEditingCanceled(mode), [
     mode,
@@ -207,30 +220,37 @@ const UsersTableEditRow = (props: UsersTableEditRowProps) => {
               autoFocus={true}
               type="text"
               name="first_name"
-              error={"first_name" in errors}
               value={values.first_name}
-              helperText={errors.first_name}
+              error={"first_name" in errors && touched.first_name}
+              helperText={touched.first_name ? errors.first_name : undefined}
               fullWidth={true}
               variant="standard"
               placeholder="Имя"
               onChange={handleChange}
+              onBlur={handleBlur}
             />
           </TableCell>
           <TableCell>
             <TextField
               type="text"
               name="last_name"
-              error={"last_name" in errors}
               value={values.last_name}
-              helperText={errors.last_name}
+              error={"last_name" in errors && touched.last_name}
+              helperText={touched.last_name ? errors.last_name : undefined}
               fullWidth={true}
               variant="standard"
               placeholder="Фамилия"
               onChange={handleChange}
+              onBlur={handleBlur}
             />
           </TableCell>
           <TableCell>
-            <Select name="role" value={values.role} onChange={handleChange}>
+            <Select
+              name="role"
+              value={values.role}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            >
               <MenuItem value="admin">Админ</MenuItem>
               <MenuItem value="writer">Автор</MenuItem>
             </Select>
@@ -239,39 +259,42 @@ const UsersTableEditRow = (props: UsersTableEditRowProps) => {
             <TextField
               type="text"
               name="job"
-              error={"job" in errors}
               value={values.job}
-              helperText={errors.job}
+              error={"job" in errors && touched.job}
+              helperText={touched.job ? errors.job : undefined}
               fullWidth={true}
               variant="standard"
               placeholder="Должность"
               onChange={handleChange}
+              onBlur={handleBlur}
             />
           </TableCell>
           <TableCell>
             <TextField
               type="text"
               name="phone"
-              error={"phone" in errors}
               value={values.phone}
-              helperText={errors.phone}
+              error={"phone" in errors && touched.phone}
+              helperText={touched.phone ? errors.job : undefined}
               fullWidth={true}
               variant="standard"
               placeholder="Телефон"
               onChange={handleChange}
+              onBlur={handleBlur}
             />
           </TableCell>
           <TableCell>
             <TextField
               type="text"
               name="email"
-              error={"email" in errors}
               value={values.email}
-              helperText={errors.email}
+              error={"email" in errors && touched.email}
+              helperText={touched.email ? errors.email : undefined}
               fullWidth={true}
               variant="standard"
               placeholder="Email"
               onChange={handleChange}
+              onBlur={handleBlur}
             />
           </TableCell>
           <TableCell>
@@ -279,7 +302,7 @@ const UsersTableEditRow = (props: UsersTableEditRowProps) => {
               type="text"
               name="inserted_at"
               defaultValue={format(
-                new Date(values.inserted_at ?? ""),
+                new Date(values.inserted_at ?? new Date()),
                 "dd.MM.yyyy",
               )}
               fullWidth={true}

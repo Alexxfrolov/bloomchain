@@ -42,9 +42,11 @@ export const AddMediaFormDialog = memo(function (
     errors,
     touched,
     isSubmitting,
-    setFieldValue,
     handleChange,
+    handleBlur,
     handleSubmit,
+    setFieldValue,
+    setFieldTouched,
   } = useFormik<AddMediaFormDialogState>({
     enableReinitialize: true,
     initialValues: {
@@ -54,7 +56,12 @@ export const AddMediaFormDialog = memo(function (
       source: "",
       type,
     },
-    validateOnChange: true,
+    initialTouched: {
+      file: false,
+      title: false,
+      alt: false,
+      source: false,
+    },
     validationSchema: MediaCreationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       await onCreateMediaFile(values)
@@ -74,6 +81,7 @@ export const AddMediaFormDialog = memo(function (
   const handleFileInputChange = useCallback(() => {
     if (fileInputRef.current && fileInputRef.current.files !== null) {
       setFieldValue("file", fileInputRef.current.files[0])
+      setFieldTouched("file", true)
     }
   }, [setFieldValue])
 
@@ -116,13 +124,14 @@ export const AddMediaFormDialog = memo(function (
             required={true}
             disabled={isSubmitting}
             value={values.alt ?? ""}
-            error={!!errors.alt}
-            helperText={errors.alt}
+            error={"alt" in errors && touched.alt}
+            helperText={touched.alt ? errors.alt : undefined}
             type="text"
             fullWidth={true}
             margin="normal"
             variant="standard"
             onChange={handleChange}
+            onBlur={handleBlur}
           />
           <TextField
             id="title"
@@ -130,11 +139,14 @@ export const AddMediaFormDialog = memo(function (
             label="Заголовок"
             type="text"
             value={values.title ?? ""}
+            error={"title" in errors && touched.title}
+            helperText={touched.title ? errors.title : undefined}
             fullWidth={true}
             disabled={isSubmitting}
             margin="normal"
             variant="standard"
             onChange={handleChange}
+            onBlur={handleBlur}
           />
           <TextField
             id="source"
@@ -142,11 +154,14 @@ export const AddMediaFormDialog = memo(function (
             label="Источник"
             type="text"
             value={values.source ?? ""}
+            error={"source" in errors && touched.source}
+            helperText={touched.source ? errors.source : undefined}
             fullWidth={true}
             disabled={isSubmitting}
             margin="normal"
             variant="standard"
             onChange={handleChange}
+            onBlur={handleBlur}
           />
         </DialogContent>
         <DialogActions>
