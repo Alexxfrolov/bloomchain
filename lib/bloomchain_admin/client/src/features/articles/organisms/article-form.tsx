@@ -102,17 +102,15 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
   const handleChangeTagsSelect = useCallback(
     (_event: ChangeEvent<{}>, tags: Tag[]) => {
       setFieldValue("tags", tags)
-      setFieldTouched("tags", true)
     },
-    [setFieldValue, setFieldTouched],
+    [setFieldValue],
   )
 
   const handleChangeAuthorsSelect = useCallback(
     (_event: ChangeEvent<{}>, authors: Author[]) => {
       setFieldValue("authors", authors)
-      setFieldTouched("authors", true)
     },
-    [setFieldValue, setFieldTouched],
+    [setFieldValue],
   )
 
   const handleUpload = useCallback(
@@ -136,6 +134,8 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
       ),
     [initialArticle.authors, authors],
   )
+
+  console.log(touched)
 
   return (
     <form onSubmit={handleSubmit} className={classes.root} noValidate={true}>
@@ -214,9 +214,9 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
                   {...params}
                   required={true}
                   label="Авторы"
-                  error={"authors" in errors && !!touched.authors?.length}
+                  error={"authors" in errors && !touched.authors?.length}
                   helperText={
-                    !!touched.authors?.length ? errors.authors : undefined
+                    !touched.authors?.length ? errors.authors : undefined
                   }
                   variant="outlined"
                 />
@@ -238,8 +238,8 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
                   {...params}
                   label="Тэги"
                   required={true}
-                  error={"tags" in errors && !!touched.tags?.length}
-                  helperText={!!touched.tags?.length ? errors.tags : undefined}
+                  error={"tags" in errors && !touched.tags?.length}
+                  helperText={!touched.tags?.length ? errors.tags : undefined}
                   variant="outlined"
                 />
               )}
@@ -266,7 +266,7 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               disabled={isSubmitting}
               onUpload={handleUpload}
             />
-            {errors.cover && (
+            {"cover" in errors && touched.cover && (
               <FormHelperText error={true}>{errors.cover}</FormHelperText>
             )}
           </FormControl>

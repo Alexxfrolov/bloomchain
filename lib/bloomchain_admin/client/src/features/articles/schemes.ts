@@ -57,11 +57,21 @@ export const ArticleCreationSchema = object().shape({
     }),
   cover: object()
     .nullable(true)
-    .shape({
-      alt: string().nullable(true).required("Укажите Alt обложке"),
-      title: string().nullable(true).notRequired(),
-    })
-    .required("Укажите обложку статьи"),
+    .when("status", {
+      is: (status) => ["published", "ready"].includes(status),
+      then: object()
+        .shape({
+          alt: string().nullable(true).required("Укажите Alt обложке"),
+          title: string().nullable(true).notRequired(),
+        })
+        .required("Укажите обложку статьи"),
+      otherwise: object()
+        .shape({
+          alt: string().nullable(true).required("Укажите Alt обложке"),
+          title: string().nullable(true).notRequired(),
+        })
+        .notRequired(),
+    }),
   time: number()
     .nullable(true)
     .integer("Время прочтения не может быть дробным числом")
