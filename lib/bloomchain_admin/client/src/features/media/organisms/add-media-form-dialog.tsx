@@ -83,7 +83,7 @@ export const AddMediaFormDialog = memo(function (
       setFieldValue("file", fileInputRef.current.files[0])
       setFieldTouched("file", true)
     }
-  }, [setFieldValue])
+  }, [setFieldValue, setFieldTouched])
 
   return (
     <Dialog

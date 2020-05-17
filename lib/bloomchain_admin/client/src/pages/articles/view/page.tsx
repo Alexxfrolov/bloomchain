@@ -109,13 +109,13 @@ export const ArticlesViewPage = memo(() => {
   ])
 
   useEffect(() => {
+    console.log(state.status)
     setState((state) => ({
       ...state,
       orderBy: "published_at",
       orderDirection: "desc",
       query: "",
       since: null,
-      tabIndex: 0,
       until: null,
     }))
   }, [state.status])

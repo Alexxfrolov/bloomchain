@@ -92,13 +92,13 @@ export const ArticlesTable = memo(function ArticlesTable(
       totalCount={pagination.total_items}
       options={{
         tableLayout: "fixed",
-        search: notEmptyData,
+        search: true,
         sorting: notEmptyData,
         searchText,
         searchFieldStyle: {
           width: "400px",
         },
-        debounceInterval: 250,
+        debounceInterval: 500,
         filtering: true,
         paging: notEmptyData,
         pageSize: pagination.page_size,
