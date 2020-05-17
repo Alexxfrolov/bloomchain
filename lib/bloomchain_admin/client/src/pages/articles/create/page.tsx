@@ -1,5 +1,6 @@
 import React, { memo, useState, useEffect, useCallback } from "react"
 import { Container, Paper, Typography, Toolbar, Box } from "@material-ui/core"
+import { AxiosResponse } from "axios"
 import { articlesApi, Article } from "@api/articles"
 import { tagsApi, Tag } from "@api/tags"
 import { authorsApi, Author } from "@api/authors"
@@ -26,7 +27,10 @@ export const ActicleCreatePage = memo(() => {
   })
 
   useEffect(() => {
-    Promise.all([tagsApi.getAll(), authorsApi.getAll()])
+    Promise.all<
+      AxiosResponse<{ data: Tag[] }>,
+      AxiosResponse<{ data: Author[] }>
+    >([tagsApi.getAll(), authorsApi.getAll()])
       .then(([tagsResponse, authorsResponse]) =>
         setState((state) => ({
           ...state,

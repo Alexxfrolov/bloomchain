@@ -25,11 +25,11 @@ function get(params: Params) {
 }
 
 export interface UploadableMediaFile {
-  type: "image" | "pdf" | "video"
-  title?: string | null
-  alt?: string | null
-  source?: string | null
+  alt: string
   file: File
+  source?: string | null
+  title?: string | null
+  type: MediaFile["type"]
 }
 
 function create(file: UploadableMediaFile) {
@@ -41,10 +41,10 @@ function create(file: UploadableMediaFile) {
 }
 
 export interface EditableMediaFile {
-  title: UploadableMediaFile["title"]
-  alt: UploadableMediaFile["alt"]
-  source: UploadableMediaFile["source"]
+  alt: string
   id: MediaFile["id"]
+  source?: string | null
+  title?: string | null
 }
 
 function update(media: EditableMediaFile) {

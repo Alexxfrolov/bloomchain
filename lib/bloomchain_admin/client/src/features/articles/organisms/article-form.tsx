@@ -231,9 +231,9 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               disabled={isSubmitting}
               onUpload={handleUpload}
             />
-            {errors.cover && (
+            {/* {errors.cover && (
               <FormHelperText error={true}>{errors.cover}</FormHelperText>
-            )}
+            )} */}
           </FormControl>
           {values.cover && (
             <FormControl margin="normal" fullWidth={true} variant="outlined">
