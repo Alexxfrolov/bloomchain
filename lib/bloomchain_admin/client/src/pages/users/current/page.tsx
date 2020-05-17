@@ -7,14 +7,11 @@ import {
   TextField,
   Avatar,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogActions,
   makeStyles,
 } from "@material-ui/core"
-import { deepOrange } from "@material-ui/core/colors"
+import { indigo } from "@material-ui/core/colors"
 import { User } from "@api/user"
-import { useCurrentUser } from "@features/core"
+import { useCurrentUser, SuccessDialog } from "@features/core"
 import { object, string } from "yup"
 
 const UserEditSchema = object().shape({
@@ -61,6 +58,7 @@ export const UserAccountPage = memo(function UserAccountPage() {
         </Paper>
       </Container>
       <SuccessDialog
+        title="Данные успешно сохранены"
         isOpened={openedSuccessDialog}
         onClose={() => setOpenedSuccessDialog(false)}
       />
@@ -207,26 +205,6 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     width: theme.spacing(12),
     height: theme.spacing(12),
-    backgroundColor: deepOrange[500],
+    backgroundColor: indigo[500],
   },
 }))
-
-type SuccessDialogProps = {
-  isOpened: boolean
-  onClose: () => void
-}
-
-// TODO: duplicate component
-const SuccessDialog = memo(function SuccessDialog(props: SuccessDialogProps) {
-  const { isOpened, onClose } = props
-  return (
-    <Dialog open={isOpened} onClose={onClose}>
-      <DialogTitle>Данные успешно сохранены</DialogTitle>
-      <DialogActions>
-        <Button onClick={onClose} color="primary" autoFocus>
-          Закрыть
-        </Button>
-      </DialogActions>
-    </Dialog>
-  )
-})
