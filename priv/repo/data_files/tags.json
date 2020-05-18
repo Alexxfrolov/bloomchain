@@ -2938,5 +2938,20 @@
     "id": 5793,
     "name": "Cash App",
     "slug": "cash-app"
+  },
+  {
+    "id": 5794,
+    "name": "IMB",
+    "slug": "imb"
+  },
+  {
+    "id": 5795,
+    "name": "смарт-контракт",
+    "slug": "smart-kontrakt"
+  },
+  {
+    "id": 5796,
+    "name": "XTZ",
+    "slug": "xtz"
   }
 ]
