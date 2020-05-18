@@ -13,7 +13,7 @@ end
 
 replace_embedly_urls = fn item ->
   Regex.replace(
-    ~r/<p>((https:\/\/twitter.com\/[a-z0-9_&=;\?\/]+)|(https:\/\/www.youtube.com\/watch\?v=[a-z0-9_&=;\?\/]+))<\/p>/i,
+    ~r/<p>((https:\/\/twitter.com\/[a-z0-9_&=;\-\?\/]+)|(https:\/\/www.youtube.com\/watch\?v=[a-z0-9_&=;\-\?\/]+))<\/p>/i,
     item,
     fn tag, _ ->
       url = Regex.run(~r/(?<=<p>)(.*?)(?=<\/p>)/, tag, capture: :first) |> List.first()
@@ -45,7 +45,24 @@ replace_caption = fn item, images ->
       height = Regex.run(~r/(?<=height=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
 
       alt = (Enum.find(images, &(&1.id == id)) || %{})[:alt]
-      capture = (Enum.find(images, &(&1.id == id)) || %{})[:capture]
+
+      capture =
+        case (Enum.find(images, &(&1.id == id)) || %{})[:capture] do
+          nil ->
+            Regex.run(~r/[^>]*$/, tag)
+            |> List.first()
+            |> String.replace("[/caption]", "")
+            |> String.trim()
+
+          "" ->
+            Regex.run(~r/[^>]*$/, tag)
+            |> List.first()
+            |> String.replace("[/caption]", "")
+            |> String.trim()
+
+          str ->
+            str
+        end
 
       "<div class=\"fr-img-space-wrap\">\
 <span contenteditable=\"false\" class=\"fr-img-caption fr-fic fr-dib\" draggable=\"false\">\
