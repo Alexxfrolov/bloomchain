@@ -1,6 +1,14 @@
-import React, { memo, useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { useRoute } from "react-router5"
-import { Container } from "@material-ui/core"
+import {
+  Container,
+  Typography,
+  Toolbar,
+  makeStyles,
+  createStyles,
+} from "@material-ui/core"
+import { debounce } from "@lib/debounce"
+import { SearchField } from "@ui/molecules/search-field"
 import { OrderDirection, Pagination } from "@api/common/types"
 import { articlesApi, Article } from "@api/articles"
 import { RequestStatus } from "@features/core"
@@ -20,7 +28,8 @@ type ArticlesViewPageState = {
   until: Date | null
 }
 
-export const ArticlesViewPage = memo(() => {
+export function ArticlesViewPage() {
+  const classes = useStyles()
   const { route, router } = useRoute()
 
   const [state, setState] = useState<ArticlesViewPageState>({
@@ -52,6 +61,8 @@ export const ArticlesViewPage = memo(() => {
         page: state.pagination.page,
         orderDirection: state.orderDirection,
         orderBy: state.orderBy,
+        since: state.since,
+        until: state.until,
       } as const
 
       articlesApi
@@ -75,12 +86,13 @@ export const ArticlesViewPage = memo(() => {
           })),
         )
     } else {
-      setState((state) => ({ ...state, request_status: "pending" }))
       const params = {
         status: route.name.split(".")[2] as Article["status"],
         type: state.type,
         query: state.query,
       } as const
+
+      setState((state) => ({ ...state, request_status: "pending" }))
 
       articlesApi
         .search(params)
@@ -98,7 +110,7 @@ export const ArticlesViewPage = memo(() => {
         .finally(() =>
           setState((state) => ({
             ...state,
-            status: route.name.split(".")[2] as Article["status"],
+            status: params.status,
           })),
         )
     }
@@ -109,6 +121,8 @@ export const ArticlesViewPage = memo(() => {
     state.pagination.page,
     state.query,
     state.type,
+    state.since,
+    state.until,
     route.name,
   ])
 
@@ -117,6 +131,7 @@ export const ArticlesViewPage = memo(() => {
       ...state,
       orderBy: "published_at",
       orderDirection: "desc",
+      type: "newsfeed",
       query: "",
       since: null,
       until: null,
@@ -134,61 +149,46 @@ export const ArticlesViewPage = memo(() => {
     }))
   }, [state.type])
 
-  // const handleDateStartChange = useCallback(
-  //   (date: Date | null) => setState((state) => ({ ...state, since: date })),
-  //   [],
-  // )
+  const handleDateStartChange = (date: Date | null) =>
+    setState((state) => ({ ...state, since: date }))
 
-  // const handleDateEndChange = useCallback(
-  //   (date: Date | null) => setState((state) => ({ ...state, until: date })),
-  //   [],
-  // )
+  const handleDateEndChange = (date: Date | null) =>
+    setState((state) => ({ ...state, until: date }))
 
-  const handleTablePageChange = useCallback(
-    (page: number) =>
-      setState((state) => ({
-        ...state,
-        pagination: { ...state.pagination, page: page + 1 },
-      })),
-    [],
-  )
+  const handleTablePageChange = (page: number) =>
+    setState((state) => ({
+      ...state,
+      pagination: { ...state.pagination, page: page + 1 },
+    }))
 
-  const handleChangeTableRowsPerPage = useCallback(
-    (page_size: number) =>
-      setState((state) => ({
-        ...state,
-        pagination: {
-          ...state.pagination,
-          page: 1,
-          page_size,
-        },
-      })),
-    [],
-  )
+  const handleChangeTableRowsPerPage = (page_size: number) =>
+    setState((state) => ({
+      ...state,
+      pagination: {
+        ...state.pagination,
+        page: 1,
+        page_size,
+      },
+    }))
 
-  const handleTableOrderChange = useCallback(
-    (orderBy: keyof Article, orderDirection: OrderDirection) => {
-      setState((state) => ({ ...state, orderDirection, orderBy }))
-    },
-    [],
-  )
+  const handleTableOrderChange = (
+    orderBy: keyof Article,
+    orderDirection: OrderDirection,
+  ) => {
+    setState((state) => ({ ...state, orderDirection, orderBy }))
+  }
 
-  const handleTableSearchChange = useCallback(
-    (query: string) => setState((state) => ({ ...state, query })),
-    [],
-  )
+  const handleSearchFieldChange = (query: string) => {
+    setState((state) => ({ ...state, query }))
+  }
 
-  const handleClickEditArticle = useCallback(
-    (id: number) => router.navigate("admin.articles.edit", { id }),
-    [router],
-  )
+  const handleClickEditArticle = (id: number) =>
+    router.navigate("admin.articles.edit", { id })
 
-  const handleTableSelectFilterChange = useCallback(
-    (type: Article["type"]) => setState((state) => ({ ...state, type })),
-    [],
-  )
+  const handleTableSelectFilterChange = (type: Article["type"]) =>
+    setState((state) => ({ ...state, type }))
 
-  const deleteArticle = useCallback((article: Article) => {
+  const deleteArticle = (article: Article) => {
     setState((state) => ({ ...state, request_status: "pending" }))
     return articlesApi
       .remove(article.id)
@@ -203,32 +203,64 @@ export const ArticlesViewPage = memo(() => {
       .catch((error) =>
         setState((state) => ({ ...state, error, request_status: "error" })),
       )
-  }, [])
+  }
 
-  const tableTitle = state.status
+  const title = state.status
     ? mapStatusToTableTitle[state.status]
     : "Не известный раздел"
 
   return (
     <Container maxWidth="lg">
+      <Toolbar>
+        <div className={classes.toolbarTitle}>
+          <Typography component="h1" variant="h5">
+            {title}
+          </Typography>
+        </div>
+        <div className={classes.toolbarSpacer}></div>
+        <div className={classes.toolbarSearchField}>
+          <SearchField
+            fullWidth={true}
+            searchText={state.query}
+            onChange={handleSearchFieldChange}
+            onClear={() => setState((state) => ({ ...state, query: "" }))}
+          />
+        </div>
+      </Toolbar>
       <ArticlesTable
         data={state.data}
+        dateStart={state.since}
+        dateEnd={state.until}
         isLoading={state.request_status === "pending"}
         pagination={state.pagination}
-        searchText={state.query}
-        title={tableTitle}
         type={state.type}
         onChangePage={handleTablePageChange}
         onChangeRowsPerPage={handleChangeTableRowsPerPage}
         onChangeSelectFilter={handleTableSelectFilterChange}
         onClickEditArticle={handleClickEditArticle}
+        onDateEndChange={handleDateEndChange}
+        onDateStartChange={handleDateStartChange}
         onOrderChange={handleTableOrderChange}
         onRowDelete={deleteArticle}
-        onSearchChange={handleTableSearchChange}
       />
     </Container>
   )
-})
+}
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    toolbarTitle: {
+      overflow: "hidden",
+    },
+    toolbarSpacer: {
+      flex: "1 1 10%",
+    },
+    toolbarSearchField: {
+      "min-width": "300px",
+      "padding-left": "16px",
+    },
+  }),
+)
 
 const mapStatusToTableTitle = {
   archive: "Архив",

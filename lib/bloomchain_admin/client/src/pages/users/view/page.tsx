@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState, useCallback } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import Container from "@material-ui/core/Container"
 import { OrderDirection, Pagination } from "@api/common/types"
 import { usersApi, User } from "@api/user"
@@ -14,7 +14,7 @@ type UsersPageState = {
   orderBy: keyof User
 }
 
-export const UsersPage = memo(() => {
+export function UsersPage() {
   const [state, setState] = useState<UsersPageState>({
     request_status: "pending",
     error: null,
@@ -150,4 +150,4 @@ export const UsersPage = memo(() => {
       />
     </Container>
   )
-})
+}

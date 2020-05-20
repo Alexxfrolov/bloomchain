@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState, useCallback } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import Container from "@material-ui/core/Container"
 import { OrderDirection, Pagination } from "@api/common/types"
 import { archivesApi, Archive } from "@api/archives"
@@ -14,7 +14,7 @@ type ArchivesPageState = {
   orderBy: keyof Archive
 }
 
-export const ArchivesPage = memo(() => {
+export function ArchivesPage() {
   const [state, setState] = useState<ArchivesPageState>({
     request_status: "pending",
     error: null,
@@ -137,4 +137,4 @@ export const ArchivesPage = memo(() => {
       <AddArchiveFormDialog addArchive={addArchive} />
     </Container>
   )
-})
+}

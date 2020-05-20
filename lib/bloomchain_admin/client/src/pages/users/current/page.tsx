@@ -14,7 +14,7 @@ import { User } from "@api/user"
 import { useCurrentUser, SuccessDialog } from "@features/core"
 import { UserEditSchema } from "@features/users"
 
-export const UserAccountPage = memo(function UserAccountPage() {
+export function UserAccountPage() {
   const { user, update } = useCurrentUser()
   const classes = useStyles()
 
@@ -52,7 +52,7 @@ export const UserAccountPage = memo(function UserAccountPage() {
       />
     </Fragment>
   )
-})
+}
 
 type AccountSettingsFormProps = {
   avatar: string

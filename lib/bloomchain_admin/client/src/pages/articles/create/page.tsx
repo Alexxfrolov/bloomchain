@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { Container, Paper, Typography, Toolbar, Box } from "@material-ui/core"
 import { AxiosResponse } from "axios"
 import { articlesApi, Article } from "@api/articles"
@@ -16,7 +16,7 @@ type ActicleCreatePageState = {
   isOpenedErrorDialog: boolean
 }
 
-export const ActicleCreatePage = memo(() => {
+export function ActicleCreatePage() {
   const [state, setState] = useState<ActicleCreatePageState>({
     request_status: "pending",
     error: null,
@@ -95,4 +95,4 @@ export const ActicleCreatePage = memo(() => {
       />
     </Container>
   )
-})
+}

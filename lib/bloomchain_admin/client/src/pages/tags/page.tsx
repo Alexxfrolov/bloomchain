@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState, useCallback } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import Container from "@material-ui/core/Container"
 import { OrderDirection, Pagination } from "@api/common/types"
 import { tagsApi, Tag } from "@api/tags"
@@ -14,7 +14,7 @@ type TagsPageState = {
   orderBy: keyof Tag
 }
 
-export const TagsPage = memo(() => {
+export function TagsPage() {
   const [state, setState] = useState<TagsPageState>({
     request_status: "pending",
     error: null,
@@ -132,4 +132,4 @@ export const TagsPage = memo(() => {
       />
     </Container>
   )
-})
+}

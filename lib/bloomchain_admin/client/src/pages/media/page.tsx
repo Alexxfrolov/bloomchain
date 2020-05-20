@@ -1,6 +1,5 @@
 import React, {
   Fragment,
-  memo,
   useState,
   useEffect,
   useCallback,
@@ -43,7 +42,7 @@ type MediaPageState = {
   modifyingMediaFile: MediaFile | null
 }
 
-export const MediaPage = memo(() => {
+export function MediaPage() {
   const classes = useStyles()
 
   const [state, setState] = useState<MediaPageState>({
@@ -306,7 +305,7 @@ export const MediaPage = memo(() => {
       )}
     </Container>
   )
-})
+}
 
 const mapIndexToMediaType = {
   0: "image",

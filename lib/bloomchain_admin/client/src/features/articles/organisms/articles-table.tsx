@@ -6,7 +6,6 @@ import IconEdit from "@material-ui/icons/Edit"
 import DateFnsUtils from "@date-io/date-fns"
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import { ru } from "date-fns/locale"
-import { SearchField } from "@ui/molecules/search-field"
 import { Pagination, OrderDirection } from "@api/common"
 import { Article } from "@api/articles"
 import { Table } from "@features/core"
@@ -15,10 +14,10 @@ import { ARTICLE_TYPES_RECORD } from "../lib"
 
 type ArticlesTableProps = {
   data: Article[]
+  dateEnd: Date | null
+  dateStart: Date | null
   isLoading: boolean
   pagination: Pagination
-  searchText: string
-  title: string
   type: Article["type"]
   onChangePage: (page: number) => void
   onChangeRowsPerPage: (pageSize: number) => void
@@ -29,112 +28,112 @@ type ArticlesTableProps = {
     orderDirection: OrderDirection,
   ) => void
   onRowDelete: (tag: Article) => Promise<void>
-  onSearchChange: (query: string) => void
+  onDateEndChange: (date: Date | null) => void
+  onDateStartChange: (date: Date | null) => void
 }
 
-export const ArticlesTable = memo(function ArticlesTable(
-  props: ArticlesTableProps,
-) {
+export function ArticlesTable(props: ArticlesTableProps) {
   const {
     data,
+    dateEnd,
+    dateStart,
     isLoading,
     pagination,
-    searchText,
-    title,
     type,
     onChangePage,
     onChangeRowsPerPage,
     onChangeSelectFilter,
     onClickEditArticle,
+    onDateEndChange,
+    onDateStartChange,
     onOrderChange,
     onRowDelete,
-    onSearchChange,
   } = props
 
-  const handleOrderChange = useCallback(
-    (orderBy: number, orderDirection: OrderDirection) => {
-      const { field } = columns[orderBy]
-      onOrderChange(field as keyof Article, orderDirection)
-    },
-    [onOrderChange],
-  )
+  const handleOrderChange = (
+    orderBy: number,
+    orderDirection: OrderDirection,
+  ) => {
+    const { field } = columns[orderBy]
+    onOrderChange(field as keyof Article, orderDirection)
+  }
 
-  const handleRowDelete = useCallback((tag: Article) => onRowDelete(tag), [
-    onRowDelete,
-  ])
+  const handleRowDelete = (tag: Article) => onRowDelete(tag)
 
-  const handleClickEditAtion = useCallback(
-    (_event, article: Article | Article[]) => {
-      if (Array.isArray(article)) {
-        return
-      }
-      onClickEditArticle(article.id)
-    },
-    [onClickEditArticle],
-  )
+  const handleClickEditAtion = (
+    _event: unknown,
+    article: Article | Article[],
+  ) => {
+    if (Array.isArray(article)) {
+      return
+    }
+    onClickEditArticle(article.id)
+  }
 
   const notEmptyData = !!data.length
 
   return (
     <Table
-      title={title}
       data={data}
       columns={columns}
       isLoading={isLoading}
       components={{
-        FilterRow: memo(() => (
+        FilterRow: () => (
           <ArticlesTableFilters
-            key="ArticlesTableFilters"
             type={type}
+            dateStart={dateStart}
+            dateEnd={dateEnd}
             onFilterChanged={onChangeSelectFilter}
+            onDateStartChange={onDateStartChange}
+            onDateEndChange={onDateEndChange}
           />
-        )),
-        // Actions: memo(() => (
-        //   <SearchField
-        //     key="SearchField"
-        //     query={searchText}
-        //     onChange={onSearchChange}
-        //   />
-        // )),
+        ),
       }}
       page={pagination.page - 1}
       totalCount={pagination.total_items}
       options={{
-        search: true,
-        searchText,
-        tableLayout: "fixed",
+        toolbar: false,
         sorting: notEmptyData,
-        debounceInterval: 500,
         filtering: true,
         paging: notEmptyData,
         pageSize: pagination.page_size,
         pageSizeOptions: pagination.page_size_options,
       }}
-      // editable={{
-      //   onRowDelete: handleRowDelete,
-      // }}
-      // actions={[
-      //   {
-      //     icon: () => <IconEdit />,
-      //     tooltip: "Редактирование статьи",
-      //     onClick: handleClickEditAtion,
-      //   },
-      // ]}
-      onSearchChange={onSearchChange}
+      editable={{
+        onRowDelete: handleRowDelete,
+      }}
+      actions={[
+        {
+          icon: () => <IconEdit />,
+          tooltip: "Редактирование статьи",
+          onClick: handleClickEditAtion,
+        },
+      ]}
       onOrderChange={handleOrderChange}
       onChangePage={onChangePage}
       onChangeRowsPerPage={onChangeRowsPerPage}
     />
   )
-})
+}
 
 type ArticlesTableFiltersProps = {
+  dateStart: Date | null
+  dateEnd: Date | null
   type: Article["type"]
   onFilterChanged: (type: Article["type"]) => void
+  onDateStartChange: (date: Date | null) => void
+  onDateEndChange: (date: Date | null) => void
 }
 
 const ArticlesTableFilters = memo((props: ArticlesTableFiltersProps) => {
-  const { type, onFilterChanged } = props
+  const {
+    dateStart,
+    dateEnd,
+    type,
+    onFilterChanged,
+    onDateStartChange,
+    onDateEndChange,
+  } = props
 
   const handleSelectChange = useCallback(
     (event: ChangeEvent<{ name?: string; value: unknown }>) =>
@@ -162,28 +161,31 @@ const ArticlesTableFilters = memo((props: ArticlesTableFiltersProps) => {
       <TableCell />
       <TableCell />
       <TableCell>
-        {/* <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
-            <DatePicker
-              variant="dialog"
-              margin="none"
-              inputVariant="outlined"
-              label="Дата начала"
-              format="dd/MM/yyyy"
-              size="small"
-              value={values.since}
-              onChange={handleDateStartChange}
-            />
-            <DatePicker
-              variant="dialog"
-              margin="none"
-              inputVariant="outlined"
-              label="Дата окончания"
-              format="dd/MM/yyyy"
-              size="small"
-              value={values.until}
-              onChange={handleDateEndChange}
-            />
-          </MuiPickersUtilsProvider> */}
+        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
+          <DatePicker
+            variant="dialog"
+            margin="none"
+            inputVariant="standard"
+            inputProps={{}}
+            label="С"
+            format="dd/MM/yyyy"
+            disableFuture={true}
+            size="small"
+            value={dateStart}
+            onChange={onDateStartChange}
+          />
+          <DatePicker
+            variant="dialog"
+            margin="none"
+            inputVariant="standard"
+            label="По"
+            disableFuture={true}
+            format="dd/MM/yyyy"
+            size="small"
+            value={dateEnd}
+            onChange={onDateEndChange}
+          />
+        </MuiPickersUtilsProvider>
       </TableCell>
       <TableCell />
       <TableCell />
@@ -226,7 +228,7 @@ const columns: Column<Article>[] = [
     title: "Дата публикации",
     defaultSort: "desc",
     filtering: false,
-    type: "numeric",
+    type: "date",
     render: (article) =>
       article.published_at
         ? format(new Date(article.published_at), "dd.MM.yyyy HH:mm")
@@ -236,7 +238,7 @@ const columns: Column<Article>[] = [
     field: "updated_at",
     title: "Дата обновления",
     filtering: false,
-    type: "numeric",
+    type: "date",
     render: (article) =>
       article.updated_at
         ? format(new Date(article.updated_at), "dd.MM.yyyy HH:mm")

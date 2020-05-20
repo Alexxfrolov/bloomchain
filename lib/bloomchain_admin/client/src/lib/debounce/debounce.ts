@@ -1,4 +1,4 @@
-export type Procedure = (...args: any[]) => void
+export type Procedure = (...args: unknown[]) => void
 
 export function debounce<T extends Procedure>(
   func: T,

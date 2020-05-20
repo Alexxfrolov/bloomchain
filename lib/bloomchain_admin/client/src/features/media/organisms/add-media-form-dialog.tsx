@@ -72,6 +72,7 @@ export const AddMediaFormDialog = memo(function (
   useEffect(() => {
     if (values.file && imageRef.current) {
       const blobURL = window.URL.createObjectURL(values.file)
+      console.log(blobURL)
       imageRef.current.setAttribute("src", blobURL)
 
       return window.URL.revokeObjectURL(blobURL)

@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { useRoute } from "react-router5"
 import { AxiosResponse } from "axios"
 import { Container, Paper, Typography, Toolbar, Box } from "@material-ui/core"
@@ -17,7 +17,7 @@ type ActicleEditPageState = {
   isOpenedDialog: boolean
 }
 
-export const ActicleEditPage = memo(() => {
+export function ActicleEditPage() {
   const { route } = useRoute()
 
   const [state, setState] = useState<ActicleEditPageState>({
@@ -126,4 +126,4 @@ export const ActicleEditPage = memo(() => {
       />
     </Container>
   )
-})
+}
