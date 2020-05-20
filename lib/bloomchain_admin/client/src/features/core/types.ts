@@ -5,3 +5,5 @@ export interface HeadCell<T> {
   sort_field?: keyof T
   width?: string
 }
+
+export type RequestStatus = "pending" | "success" | "error"

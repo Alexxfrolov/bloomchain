@@ -8,18 +8,22 @@ export interface Subscriber {
   inserted_at: Date | string
 }
 
-type Params = OrderParams<Subscriber> & PaginationParams
+type Params = Partial<OrderParams<Subscriber>> & Partial<PaginationParams>
 
-function get(params: Params) {
-  const { order, orderBy, ...restOptions } = params
-
+function get({
+  orderDirection = "desc",
+  orderBy = "inserted_at",
+  page_size = 25,
+  page = 1,
+}: Params) {
   return request<{ data: Subscriber[]; meta: Pagination }>(
     "GET",
     "/subscribers",
     {
       params: {
-        ...restOptions,
-        sort_by: `${order}(${orderBy})`,
+        page_size,
+        page,
+        sort_by: `${orderDirection}(${orderBy})`,
       },
     },
   )

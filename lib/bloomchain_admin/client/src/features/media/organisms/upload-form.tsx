@@ -1,11 +1,4 @@
-import React, {
-  memo,
-  Fragment,
-  useState,
-  useCallback,
-  useRef,
-  Ref,
-} from "react"
+import React, { memo, Fragment, useState, useCallback } from "react"
 import { useDropzone } from "react-dropzone"
 import {
   Box,
@@ -31,6 +24,158 @@ import lightBlue from "@material-ui/core/colors/lightBlue"
 import grey from "@material-ui/core/colors/grey"
 import { ConditionalList } from "@ui"
 import { mediaApi, MediaFile } from "@api/media"
+import { RequestStatus } from "@features/core"
+
+const MAX_FILE_SIZE = 1024 * 1024 * 50
+
+type MediaUploadFormProps = {
+  accept?: string | string[]
+  disabled?: boolean
+
+  maxSize?: number
+  onUpload: (image: MediaFile) => void
+}
+
+type MediaUploadFormState = {
+  tabIndex: number
+  isOpenedDialog: boolean
+  request_status: RequestStatus
+  error: string | null
+  data: MediaFile[]
+}
+
+export const MediaUploadForm = memo(function MediaUploadForm(
+  props: MediaUploadFormProps,
+) {
+  const { accept = [], disabled, maxSize = MAX_FILE_SIZE, onUpload } = props
+  const classes = useStyles()
+
+  const [state, setState] = useState<MediaUploadFormState>({
+    tabIndex: 0,
+    isOpenedDialog: false,
+    request_status: "success",
+    error: null,
+    data: [],
+  })
+
+  const handleDrop = useCallback(
+    async (files) => {
+      if (files.length === 1) {
+        try {
+          const { data: image } = await mediaApi.create({
+            file: files[0],
+            type: "image",
+          })
+          onUpload(image)
+        } catch (error) {
+          setState((state) => ({ ...state, error, request_status: "error" }))
+        }
+      }
+    },
+    [onUpload],
+  )
+
+  const handleDropAccepted = useCallback((files, event) => {}, [])
+  const handleDropRejected = useCallback((files, event) => {}, [])
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept,
+    disabled,
+    maxSize,
+    onDrop: handleDrop,
+    onDropAccepted: handleDropAccepted,
+    onDropRejected: handleDropRejected,
+  })
+
+  const handleChangeTab = useCallback(() => {
+    setState((state) => ({ ...state, tabIndex: 0 }))
+  }, [])
+
+  const fetchData = useCallback(async () => {
+    try {
+      // FIX: add pagination
+      const params = {
+        type: "image" as MediaFile["type"],
+      } as const
+      const response = await mediaApi.get(params)
+      return setState((state) => ({
+        ...state,
+        error: null,
+        request_status: "success",
+        data: response.data.data,
+      }))
+    } catch (error) {
+      return setState((state) => ({ ...state, error, request_status: "error" }))
+    }
+  }, [])
+
+  const openDialog = useCallback(async () => {
+    setState((state) => ({ ...state, request_status: "pending", error: null }))
+    await fetchData()
+    setState((state) => ({ ...state, isOpenedDialog: true }))
+  }, [fetchData])
+
+  const closeDialog = useCallback(() => {
+    setState((state) => ({ ...state, isOpenedDialog: false }))
+  }, [])
+
+  const handleAddButtonClick = useCallback(
+    (image: MediaFile) => {
+      onUpload(image)
+      closeDialog()
+    },
+    [onUpload, closeDialog],
+  )
+
+  return (
+    <Fragment>
+      <Paper>
+        <AppBar position="static" color="default">
+          <Tabs
+            value={state.tabIndex}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+            aria-label="Images upload panel"
+          >
+            <Tab
+              title="Загрузить изображение"
+              icon={<CloudUploadOutlinedIcon />}
+              className={classes.tab}
+              onChange={handleChangeTab}
+              {...a11yProps(0)}
+            />
+            <Tab
+              title="Загруженные изображения"
+              icon={<PermMediaOutlinedIcon />}
+              className={classes.tab}
+              onClick={openDialog}
+            />
+          </Tabs>
+        </AppBar>
+        <TabPanel value={state.tabIndex} index={0}>
+          <div {...getRootProps()}>
+            <Box p={2} className={classes.box}>
+              <input {...getInputProps()} />
+              <Fragment>
+                <Typography align="center" variant="subtitle1" component="p">
+                  <strong>Переместите сюда изображение</strong>
+                </Typography>
+                <Typography align="center">(или нажмите)</Typography>
+              </Fragment>
+            </Box>
+          </div>
+        </TabPanel>
+      </Paper>
+      <MediaLibraryDialog
+        media={state.data}
+        isOpened={state.isOpenedDialog}
+        onAdd={handleAddButtonClick}
+        onClose={closeDialog}
+      />
+    </Fragment>
+  )
+})
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -85,141 +230,6 @@ const useStyles = makeStyles((theme) =>
     },
   }),
 )
-
-type ImagesUploadFormProps = {
-  accept?: string[]
-  onUpload: (image: MediaFile) => void
-}
-
-export const MediaUploadForm = memo(function MediaUploadForm(
-  props: ImagesUploadFormProps,
-) {
-  const { accept, onUpload } = props
-  const classes = useStyles()
-
-  const onDrop = useCallback(
-    async (files) => {
-      if (files.length === 1) {
-        try {
-          const { data: image } = await mediaApi.create({
-            file: files[0],
-            type: "image",
-          })
-          onUpload(image)
-        } catch {}
-      }
-    },
-    [onUpload],
-  )
-
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-  })
-
-  const [tabIndex, setTabIndex] = useState(0)
-  const [isOpenedDialog, setOpenedDialog] = useState(false)
-  const [isDataLoading, setDataLoading] = useState(false)
-  const [hasError, setError] = useState(false)
-  const [media, setMedia] = useState<MediaFile[]>([])
-
-  const inputFileRef: Ref<HTMLInputElement> = useRef(null)
-
-  const handleChangeTab = useCallback(
-    (_event: React.ChangeEvent<{ checked: boolean }>, _value: number) => {
-      setTabIndex(0)
-    },
-    [setTabIndex],
-  )
-
-  const openDialog = useCallback(async () => {
-    setDataLoading(true)
-    setError(false)
-
-    try {
-      // FIX: add pagination
-      const response = await mediaApi.get("image")
-      setMedia(response.data.data)
-    } catch {
-      setError(true)
-    }
-    setDataLoading(false)
-    setOpenedDialog(true)
-  }, [setError, setDataLoading, setMedia, setOpenedDialog])
-
-  const closeDialog = useCallback(() => {
-    setOpenedDialog(false)
-  }, [setOpenedDialog])
-
-  const inputFileChangeHandler = useCallback(async () => {
-    if (inputFileRef.current && inputFileRef.current.files !== null) {
-      try {
-        const { data: image } = await mediaApi.create({
-          file: inputFileRef.current.files[0],
-          type: "image",
-        })
-        onUpload(image)
-      } catch {}
-    }
-  }, [onUpload])
-
-  const handleAddButtonClick = useCallback(
-    (image: MediaFile) => {
-      onUpload(image)
-      closeDialog()
-    },
-    [onUpload, closeDialog],
-  )
-
-  return (
-    <Fragment>
-      <Paper>
-        <AppBar position="static" color="default">
-          <Tabs
-            value={tabIndex}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="fullWidth"
-            aria-label="Images upload panel"
-          >
-            <Tab
-              title="Загрузить изображение"
-              icon={<CloudUploadOutlinedIcon />}
-              className={classes.tab}
-              onChange={handleChangeTab}
-              {...a11yProps(0)}
-            />
-            <Tab
-              title="Загруженные изображения"
-              icon={<PermMediaOutlinedIcon />}
-              className={classes.tab}
-              onClick={openDialog}
-            />
-            {/* <Tab icon={<LinkOutlinedIcon />} /> */}
-          </Tabs>
-        </AppBar>
-        <TabPanel value={tabIndex} index={0}>
-          <div {...getRootProps()}>
-            <Box p={2} className={classes.box}>
-              <input {...getInputProps()} />
-              <Fragment>
-                <Typography align="center" variant="subtitle1" component="p">
-                  <strong>Переместите сюда изображение</strong>
-                </Typography>
-                <Typography align="center">(или нажмите)</Typography>
-              </Fragment>
-            </Box>
-          </div>
-        </TabPanel>
-      </Paper>
-      <MediaLibraryDialog
-        media={media}
-        isOpened={isOpenedDialog}
-        onAdd={handleAddButtonClick}
-        onClose={closeDialog}
-      />
-    </Fragment>
-  )
-})
 
 function a11yProps(index: number) {
   return {

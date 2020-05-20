@@ -10,15 +10,19 @@ export interface Archive {
   update_at: string | null
 }
 
-type Params = OrderParams<Archive> & PaginationParams
+type Params = Partial<OrderParams<Archive>> & Partial<PaginationParams>
 
-function get(params: Params) {
-  const { order, orderBy, ...restOptions } = params
-
+function get({
+  orderDirection = "desc",
+  orderBy = "inserted_at",
+  page_size = 25,
+  page = 1,
+}: Params) {
   return request<{ data: Archive[]; meta: Pagination }>("GET", "/archives", {
     params: {
-      ...restOptions,
-      sort_by: `${order}(${orderBy})`,
+      page,
+      page_size,
+      sort_by: `${orderDirection}(${orderBy})`,
     },
   })
 }

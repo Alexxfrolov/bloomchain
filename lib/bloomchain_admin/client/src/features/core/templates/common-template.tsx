@@ -10,6 +10,7 @@ import clsx from "clsx"
 import useMediaQuery from "@material-ui/core/useMediaQuery"
 import { useTheme } from "@material-ui/core/styles"
 import { Drawer, IconButton, makeStyles } from "@material-ui/core"
+import { grey } from "@material-ui/core/colors"
 import MenuOpenRoundedIcon from "@material-ui/icons/MenuOpenRounded"
 
 import { Header } from "../organisms"
@@ -60,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
+    backgroundColor: grey[50],
   },
   drawerPaperClose: {
     overflowX: "hidden",
@@ -78,6 +80,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     height: "100vh",
     overflow: "auto",
+    backgroundColor: "white",
   },
   paper: {
     padding: theme.spacing(2),
@@ -95,7 +98,7 @@ type CommonTemplateProps = {
 
 export const CommonTemplate = ({
   children,
-  header = <Header />,
+  header = <Header openedDrawer={false} onDrawerClose={() => {}} />,
   menu,
 }: CommonTemplateProps) => {
   const classes = useStyles()
@@ -137,7 +140,9 @@ export const CommonTemplate = ({
             <MenuOpenRoundedIcon />
           </IconButton>
         </div>
-        {menu}
+        {cloneElement(menu, {
+          openedDrawer: isOpened,
+        })}
       </Drawer>
       <main className={classes.content}>{children}</main>
     </div>

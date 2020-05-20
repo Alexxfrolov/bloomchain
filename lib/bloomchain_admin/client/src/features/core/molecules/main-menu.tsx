@@ -7,9 +7,11 @@ import {
   ListItemIcon,
   ListItemText,
   ListSubheader,
+  Tooltip,
   makeStyles,
 } from "@material-ui/core"
 import { indigo } from "@material-ui/core/colors"
+import CreateRoundedIcon from "@material-ui/icons/CreateRounded"
 import DescriptionRoundedIcon from "@material-ui/icons/DescriptionRounded"
 import GroupRoundedIcon from "@material-ui/icons/GroupRounded"
 import ArchiveRoundedIcon from "@material-ui/icons/ArchiveRounded"
@@ -77,10 +79,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const MainMenu = memo(function MainMenu() {
+type MainMenuProps = {
+  openedDrawer: boolean
+}
+
+export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
   const { user } = useCurrentUser()
   const { router } = useRoute()
   const classes = useStyles()
+  const { openedDrawer } = props
 
   const isCurrentMenu = useCallback(
     (routeName, routeParams = {}) =>
@@ -92,204 +99,199 @@ export const MainMenu = memo(function MainMenu() {
     <Fragment>
       <Divider />
       <List>
-        <ListSubheader inset={true}>Публикации</ListSubheader>
-        <ListItem
-          aria-current={
-            isCurrentMenu("admin.articles.create") ||
-            isCurrentMenu("admin.articles")
-              ? "page"
-              : undefined
-          }
-          className={classes.listitem}
-        >
-          <RouterLink
-            routeName="admin.articles"
-            title="Создать"
-            className={classes.link}
-          >
-            <ListItemIcon style={{ paddingLeft: "7px" }}>
-              <DescriptionRoundedIcon
-                style={{ color: indigo[500] }}
-                titleAccess="Создать"
-              />
-            </ListItemIcon>
-            <ListItemText primary="Создать" />
-          </RouterLink>
-        </ListItem>
-        <ListItem
-          aria-current={
-            isCurrentMenu("admin.articles.draft") ? "page" : undefined
-          }
-          className={classes.listitem}
-        >
-          <RouterLink
-            routeName="admin.articles.draft"
-            title="Черновик"
-            className={classes.link}
-          >
-            <ListItemIcon style={{ paddingLeft: "7px" }}>
-              <DraftsRoundedIcon style={{ color: indigo[500] }} />
-            </ListItemIcon>
-            <ListItemText primary="Черновик" />
-          </RouterLink>
-        </ListItem>
-        <ListItem
-          aria-current={
-            isCurrentMenu("admin.articles.ready") ? "page" : undefined
-          }
-          className={classes.listitem}
-        >
-          <RouterLink
-            routeName="admin.articles.ready"
-            title="Готово к публикации"
-            className={classes.link}
-          >
-            <ListItemIcon style={{ paddingLeft: "7px" }}>
-              <InsertDriveFileRoundedIcon style={{ color: indigo[500] }} />
-            </ListItemIcon>
-            <ListItemText primary="Готово к публикации" />
-          </RouterLink>
-        </ListItem>
-        <ListItem
-          aria-current={
-            isCurrentMenu("admin.articles.published") ? "page" : undefined
-          }
-          className={classes.listitem}
-        >
-          <RouterLink
-            routeName="admin.articles.published"
-            title="Опубликовано"
-            className={classes.link}
-          >
-            <ListItemIcon style={{ paddingLeft: "7px" }}>
-              <DescriptionRoundedIcon style={{ color: indigo[500] }} />
-            </ListItemIcon>
-            <ListItemText primary="Опубликовано" />
-          </RouterLink>
-        </ListItem>
-        <ListItem
-          aria-current={
-            isCurrentMenu("admin.articles.archive") ? "page" : undefined
-          }
-          className={classes.listitem}
-        >
-          <RouterLink
-            routeName="admin.articles.archive"
-            title="Архив"
-            className={classes.link}
-          >
-            <ListItemIcon style={{ paddingLeft: "7px" }}>
-              <ArchiveRoundedIcon style={{ color: indigo[500] }} />
-            </ListItemIcon>
-            <ListItemText primary="Архив" />
-          </RouterLink>
-        </ListItem>
-      </List>
-      <Divider />
-      <List>
-        <ListSubheader inset={true}>Страницы</ListSubheader>
-        <ListItem
-          aria-current={isCurrentMenu("admin.archives") ? "page" : undefined}
-          className={classes.listitem}
-        >
-          <RouterLink
-            routeName="admin.archives"
-            title="Исследования Архив"
-            className={classes.link}
-          >
-            <ListItemIcon style={{ paddingLeft: "7px" }}>
-              <ImportContactsRoundedIcon style={{ color: indigo[500] }} />
-            </ListItemIcon>
-            <ListItemText primary="Исследования (архив)" />
-          </RouterLink>
-        </ListItem>
-      </List>
-      <Divider />
-      {user.role === "admin" && (
-        <List>
-          <ListSubheader inset={true}>Управление</ListSubheader>
-          <ListItem
-            aria-current={isCurrentMenu("admin.users") ? "page" : undefined}
-            className={classes.listitem}
-          >
-            <RouterLink
-              routeName="admin.users"
-              title="Пользователи"
-              className={classes.link}
-            >
-              <ListItemIcon style={{ paddingLeft: "7px" }}>
-                <GroupRoundedIcon style={{ color: indigo[500] }} />
-              </ListItemIcon>
-              <ListItemText primary="Пользователи" />
-            </RouterLink>
-          </ListItem>
+        {openedDrawer && <ListSubheader inset={true}>Публикации</ListSubheader>}
+        <Tooltip title={openedDrawer ? "" : "Создать статью"}>
           <ListItem
             aria-current={
-              isCurrentMenu("admin.subscribers") ? "page" : undefined
+              isCurrentMenu("admin.articles.create") ||
+              isCurrentMenu("admin.articles")
+                ? "page"
+                : undefined
+            }
+            className={classes.listitem}
+          >
+            <RouterLink routeName="admin.articles" className={classes.link}>
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <CreateRoundedIcon
+                  style={{ color: indigo[500] }}
+                  titleAccess="Создать"
+                />
+              </ListItemIcon>
+              <ListItemText primary="Создать" />
+            </RouterLink>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title={openedDrawer ? "" : "Опубликовано"}>
+          <ListItem
+            aria-current={
+              isCurrentMenu("admin.articles.published") ? "page" : undefined
             }
             className={classes.listitem}
           >
             <RouterLink
-              routeName="admin.subscribers"
-              title="Подписчики"
+              routeName="admin.articles.published"
               className={classes.link}
             >
               <ListItemIcon style={{ paddingLeft: "7px" }}>
-                <AlternateEmailIcon style={{ color: indigo[500] }} />
+                <DescriptionRoundedIcon style={{ color: indigo[500] }} />
               </ListItemIcon>
-              <ListItemText primary="Подписчики" />
+              <ListItemText primary="Опубликовано" />
             </RouterLink>
           </ListItem>
+        </Tooltip>
+        <Tooltip title={openedDrawer ? "" : "Готово к публикации"}>
+          <ListItem
+            aria-current={
+              isCurrentMenu("admin.articles.ready") ? "page" : undefined
+            }
+            className={classes.listitem}
+          >
+            <RouterLink
+              routeName="admin.articles.ready"
+              className={classes.link}
+            >
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <InsertDriveFileRoundedIcon style={{ color: indigo[500] }} />
+              </ListItemIcon>
+              <ListItemText primary="Готово к публикации" />
+            </RouterLink>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title={openedDrawer ? "" : "Черновик"}>
+          <ListItem
+            aria-current={
+              isCurrentMenu("admin.articles.draft") ? "page" : undefined
+            }
+            className={classes.listitem}
+          >
+            <RouterLink
+              routeName="admin.articles.draft"
+              className={classes.link}
+            >
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <DraftsRoundedIcon style={{ color: indigo[500] }} />
+              </ListItemIcon>
+              <ListItemText primary="Черновик" />
+            </RouterLink>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title={openedDrawer ? "" : "Архив"}>
+          <ListItem
+            aria-current={
+              isCurrentMenu("admin.articles.archive") ? "page" : undefined
+            }
+            className={classes.listitem}
+          >
+            <RouterLink
+              routeName="admin.articles.archive"
+              className={classes.link}
+            >
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <ArchiveRoundedIcon style={{ color: indigo[500] }} />
+              </ListItemIcon>
+              <ListItemText primary="Архив" />
+            </RouterLink>
+          </ListItem>
+        </Tooltip>
+      </List>
+      <Divider />
+      <List>
+        {openedDrawer && <ListSubheader inset={true}>Страницы</ListSubheader>}
+        <Tooltip title={openedDrawer ? "" : "Исследования Архив"}>
+          <ListItem
+            aria-current={isCurrentMenu("admin.archives") ? "page" : undefined}
+            className={classes.listitem}
+          >
+            <RouterLink routeName="admin.archives" className={classes.link}>
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <ImportContactsRoundedIcon style={{ color: indigo[500] }} />
+              </ListItemIcon>
+              <ListItemText primary="Исследования (архив)" />
+            </RouterLink>
+          </ListItem>
+        </Tooltip>
+      </List>
+      <Divider />
+      {user.role === "admin" && (
+        <List>
+          {openedDrawer && (
+            <ListSubheader inset={true}>Управление</ListSubheader>
+          )}
+          <Tooltip title={openedDrawer ? "" : "Пользователи"}>
+            <ListItem
+              aria-current={isCurrentMenu("admin.users") ? "page" : undefined}
+              className={classes.listitem}
+            >
+              <RouterLink routeName="admin.users" className={classes.link}>
+                <ListItemIcon style={{ paddingLeft: "7px" }}>
+                  <GroupRoundedIcon style={{ color: indigo[500] }} />
+                </ListItemIcon>
+                <ListItemText primary="Пользователи" />
+              </RouterLink>
+            </ListItem>
+          </Tooltip>
+          <Tooltip title={openedDrawer ? "" : "Подписчики"}>
+            <ListItem
+              aria-current={
+                isCurrentMenu("admin.subscribers") ? "page" : undefined
+              }
+              className={classes.listitem}
+            >
+              <RouterLink
+                routeName="admin.subscribers"
+                className={classes.link}
+              >
+                <ListItemIcon style={{ paddingLeft: "7px" }}>
+                  <AlternateEmailIcon style={{ color: indigo[500] }} />
+                </ListItemIcon>
+                <ListItemText primary="Подписчики" />
+              </RouterLink>
+            </ListItem>
+          </Tooltip>
         </List>
       )}
       <Divider />
       <List>
-        <ListSubheader inset={true}>Словари</ListSubheader>
-        <ListItem
-          aria-current={isCurrentMenu("admin.authors") ? "page" : undefined}
-          className={classes.listitem}
-        >
-          <RouterLink
-            routeName="admin.authors"
-            title="Авторы"
-            className={classes.link}
+        {openedDrawer && <ListSubheader inset={true}>Словари</ListSubheader>}
+        <Tooltip title={openedDrawer ? "" : "Авторы"}>
+          <ListItem
+            aria-current={isCurrentMenu("admin.authors") ? "page" : undefined}
+            className={classes.listitem}
           >
-            <ListItemIcon style={{ paddingLeft: "7px" }}>
-              <FaceRoundedIcon style={{ color: indigo[500] }} />
-            </ListItemIcon>
-            <ListItemText primary="Авторы" />
-          </RouterLink>
-        </ListItem>
-        <ListItem
-          aria-current={isCurrentMenu("admin.tags") ? "page" : undefined}
-          className={classes.listitem}
-        >
-          <RouterLink
-            routeName="admin.tags"
-            title="Тэги"
-            className={classes.link}
+            <RouterLink routeName="admin.authors" className={classes.link}>
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <FaceRoundedIcon style={{ color: indigo[500] }} />
+              </ListItemIcon>
+              <ListItemText primary="Авторы" />
+            </RouterLink>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title={openedDrawer ? "" : "Тэги"}>
+          <ListItem
+            aria-current={isCurrentMenu("admin.tags") ? "page" : undefined}
+            className={classes.listitem}
           >
-            <ListItemIcon style={{ paddingLeft: "7px" }}>
-              <LabelRoundedIcon style={{ color: indigo[500] }} />
-            </ListItemIcon>
-            <ListItemText primary="Тэги" />
-          </RouterLink>
-        </ListItem>
-        <ListItem
-          aria-current={isCurrentMenu("admin.media") ? "page" : undefined}
-          className={classes.listitem}
-        >
-          <RouterLink
-            routeName="admin.media"
-            title="Медиа"
-            className={classes.link}
+            <RouterLink routeName="admin.tags" className={classes.link}>
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <LabelRoundedIcon style={{ color: indigo[500] }} />
+              </ListItemIcon>
+              <ListItemText primary="Тэги" />
+            </RouterLink>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title={openedDrawer ? "" : "Медиа"}>
+          <ListItem
+            aria-current={isCurrentMenu("admin.media") ? "page" : undefined}
+            className={classes.listitem}
           >
-            <ListItemIcon style={{ paddingLeft: "7px" }}>
-              <PermMediaRoundedIcon style={{ color: indigo[500] }} />
-            </ListItemIcon>
-            <ListItemText primary="Медиа" />
-          </RouterLink>
-        </ListItem>
+            <RouterLink routeName="admin.media" className={classes.link}>
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <PermMediaRoundedIcon style={{ color: indigo[500] }} />
+              </ListItemIcon>
+              <ListItemText primary="Медиа" />
+            </RouterLink>
+          </ListItem>
+        </Tooltip>
       </List>
     </Fragment>
   )

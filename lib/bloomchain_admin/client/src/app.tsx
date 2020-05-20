@@ -57,7 +57,9 @@ export const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <UserProvider>
-        <CommonTemplate menu={<MainMenu />}>{setPageByRoute()}</CommonTemplate>
+        <CommonTemplate menu={<MainMenu openedDrawer={false} />}>
+          {setPageByRoute()}
+        </CommonTemplate>
       </UserProvider>
     </ThemeProvider>
   )

@@ -4,12 +4,12 @@ import { OrderParams, Pagination, PaginationParams } from "../common"
 
 export interface Article {
   authors: import("../authors").Author[]
-  body: string | null
+  body: string
   cover: import("../media").MediaFile | null
-  inserted_at: Date | null
+  inserted_at: Date | string | null
   id: number
   lead: string | null
-  published_at: Date | null
+  published_at: Date | string | null
   seo_settings: SeoSettings
   status: "published" | "draft" | "archive" | "ready"
   tags: import("../tags").Tag[]
@@ -24,7 +24,7 @@ export interface Article {
     | "calendar"
     | "people"
     | "research"
-  updated_at: Date | null
+  updated_at: Date | string | null
   url?: string | null
 }
 
@@ -74,20 +74,27 @@ export interface SeoSettings {
   twitter_image?: string
 }
 
-type Params = OrderParams<Article> &
-  PaginationParams & {
+type Params = Partial<OrderParams<Article>> &
+  Partial<PaginationParams> & {
     status: Article["status"]
     type: Article["type"]
     since?: Date | string | null
     until?: Date | string | null
   }
 
-function get(params: Params) {
-  const { order, orderBy, ...restOptions } = params
+function get({
+  orderDirection = "desc",
+  orderBy = "published_at",
+  page_size = 25,
+  page = 1,
+  ...otherOptions
+}: Params) {
   return request<{ data: Article[]; meta: Pagination }>("GET", "/articles", {
     params: {
-      ...restOptions,
-      sort_by: `${order}(${orderBy})`,
+      page_size,
+      page,
+      sort_by: `${orderDirection}(${orderBy})`,
+      ...otherOptions,
     },
   })
 }
@@ -159,7 +166,7 @@ interface SearchParams {
 }
 
 function search(options: SearchParams) {
-  return request("GET", "/articles/search", {
+  return request<{ data: Article[] }>("GET", "/articles/search", {
     params: {
       ...options,
     },

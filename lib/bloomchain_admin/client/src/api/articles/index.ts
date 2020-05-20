@@ -1,2 +1,2 @@
 export { articlesApi } from "./api"
-export type { Article } from "./api"
+export type { Article, SeoSettings } from "./api"
