@@ -20,10 +20,33 @@ defmodule BloomchainWeb.PageController do
     changeset = Subscriber.changeset(%Subscriber{}, params)
 
     with {:ok, _} <- Repo.insert(changeset) do
-      redirect(conn, to: page_path(conn, :index))
+      conn
+      |> put_flash(
+        :subscription_success,
+        "Вы успешно подписались на рассылку. Спасибо, что читаете Bloomchain!"
+      )
+      |> redirect(to: redirect_back(conn))
     else
       {:error, _} ->
-        redirect(conn, to: page_path(conn, :index))
+        conn
+        |> put_flash(
+          :subscription_error,
+          "Ваш адрес был зарегистрирован ранее. Спасибо, что читаете Bloomchain!"
+        )
+        |> put_flash(:subscription_email, params[:email])
+        |> redirect(to: redirect_back(conn))
     end
   end
+
+  def redirect_back(conn, alternative \\ "/") do
+    path =
+      conn
+      |> get_req_header("referer")
+      |> referrer
+
+    path || alternative
+  end
+
+  defp referrer([]), do: nil
+  defp referrer([h | _]), do: h |> String.replace(BloomchainWeb.Endpoint.url(), "")
 end

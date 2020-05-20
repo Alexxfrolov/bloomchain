@@ -3,7 +3,17 @@
   <div class="bc-footer__subscribe">
 
     <div id="js-subscription-input">
-      <%= email_input f, :email, placeholder: "Ваш Email", class: "bc-footer__input bg-transparent border-0" %>
+      <%= if get_flash(@conn, :subscription_error) do %>
+
+        <%= email_input f, :email, value: get_flash(@conn, :subscription_email), placeholder: "Ваш Email", class: "bc-footer__input bg-transparent border-0" %>
+        <p style="margin-bottom: 0; color: #E02829; font-size: 12px;"><%= get_flash(@conn, :subscription_error) %></p>
+
+      <% else %>
+
+        <%= email_input f, :email, placeholder: "Ваш Email", class: "bc-footer__input bg-transparent border-0" %>
+        <p style="margin-bottom: 0; color: #28a745; font-size: 12px;"><%= get_flash(@conn, :subscription_success) %></p>
+
+      <% end %>
     </div>
     <%= submit "Подписаться", class: "bc-footer__button btn btn-primary ml-md-5" %>
 
