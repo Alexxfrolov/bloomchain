@@ -2,9 +2,13 @@
 
   <div class="bc-footer__subscribe">
 
-    <%= email_input f, :email, placeholder: "Ваш Email", class: "bc-footer__input bg-transparent border-0" %>
+    <div id="js-subscription-input">
+      <%= email_input f, :email, placeholder: "Ваш Email", class: "bc-footer__input bg-transparent border-0" %>
+    </div>
     <%= submit "Подписаться", class: "bc-footer__button btn btn-primary ml-md-5" %>
 
   </div>
+
+  <p class="bc-footer__p text-center mt-3">*Нажимая подписаться вы соглашаетесь с политикой конфиденциальности</p>
 
 <% end %>
