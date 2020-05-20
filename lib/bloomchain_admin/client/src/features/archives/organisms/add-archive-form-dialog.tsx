@@ -50,19 +50,6 @@ export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
     }
   }, [archive, setArchive])
 
-  // const handleChangeTextField = useCallback(
-  //   (event: ChangeEvent<{ value: string }>) => {
-  //     setArchive({
-  //       ...archive,
-  //       cover: {
-  //         ...archive.cover,
-  //         alt: event.currentTarget.value,
-  //       },
-  //     })
-  //   },
-  //   [archive, setArchive],
-  // )
-
   const handleUpload = useCallback(
     (image: MediaFile) => {
       setArchive({

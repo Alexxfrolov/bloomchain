@@ -6,9 +6,13 @@ import {
   Paper,
   TextField,
   Avatar,
+  InputAdornment,
+  IconButton,
   Button,
   makeStyles,
 } from "@material-ui/core"
+import VisibilityRoundedIcon from "@material-ui/icons/VisibilityRounded"
+import VisibilityOffRoundedIcon from "@material-ui/icons/VisibilityOffRounded"
 import { indigo } from "@material-ui/core/colors"
 import { User } from "@api/user"
 import { useCurrentUser, SuccessDialog } from "@features/core"
@@ -28,7 +32,7 @@ export function UserAccountPage() {
 
   const updateSettings = useCallback(
     (user: User) =>
-      Promise.resolve(update(user)).then(() => setOpenedSuccessDialog(false)),
+      Promise.resolve(update(user)).then(() => setOpenedSuccessDialog(true)),
     [update],
   )
 
@@ -64,6 +68,12 @@ const AccountSettingsForm = memo((props: AccountSettingsFormProps) => {
   const { avatar, user, onSubmit } = props
   const classes = useStyles()
 
+  const [isPasswordVisible, setPasswordVisible] = useState(false)
+
+  const handleClickShowPassword = () => {
+    setPasswordVisible(!isPasswordVisible)
+  }
+
   const {
     values,
     touched,
@@ -76,6 +86,7 @@ const AccountSettingsForm = memo((props: AccountSettingsFormProps) => {
     enableReinitialize: true,
     initialValues: {
       ...user,
+      password: "",
     },
     initialTouched: {
       first_name: false,
@@ -83,6 +94,7 @@ const AccountSettingsForm = memo((props: AccountSettingsFormProps) => {
       email: false,
       phone: false,
       job: false,
+      password: false,
     },
     validationSchema: UserEditSchema,
     onSubmit: async (values, { setSubmitting }) => {
@@ -158,6 +170,36 @@ const AccountSettingsForm = memo((props: AccountSettingsFormProps) => {
             fullWidth={true}
             margin="normal"
             variant="outlined"
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <TextField
+            label="Пароль"
+            id="password"
+            name="password"
+            type={isPasswordVisible ? "text" : "password"}
+            value={values.password}
+            error={"password" in errors && touched.password}
+            helperText={touched.password ? errors.password : undefined}
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                  >
+                    {isPasswordVisible ? (
+                      <VisibilityRoundedIcon />
+                    ) : (
+                      <VisibilityOffRoundedIcon />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
             onChange={handleChange}
             onBlur={handleBlur}
           />

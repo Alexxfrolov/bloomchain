@@ -218,7 +218,7 @@ export function MediaPage() {
     <Container maxWidth="lg">
       <Paper>
         <Toolbar className={classes.toolbar}>
-          <Typography component="h1" variant="h6" className={classes.title}>
+          <Typography component="h1" variant="h5" className={classes.title}>
             Медиа
           </Typography>
           <IconButton
@@ -228,7 +228,7 @@ export function MediaPage() {
             }
             aria-label="add media"
           >
-            <AddBoxIcon color="primary" />
+            <AddBoxIcon color="action" />
           </IconButton>
         </Toolbar>
         {state.request_status === "error" ? (
@@ -325,7 +325,7 @@ const useStyles = makeStyles((theme) =>
       marginRight: theme.spacing(2),
     },
     toolbar: {
-      marginBottom: theme.spacing(2),
+      justifyContent: "space-between",
     },
     tab: {
       width: "50%",

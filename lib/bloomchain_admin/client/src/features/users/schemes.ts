@@ -15,4 +15,11 @@ export const UserEditSchema = object().shape({
   job: string().nullable(true).notRequired(),
   last_name: string().required("Укажите фамилию"),
   phone: string().nullable(true).notRequired(),
+  password: string()
+    .notRequired()
+    .min(8, "Пароль должен быть не менее 8 символов")
+    .matches(
+      /^.*((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
+      "Пароль должен содержать 1 специальный символ, 1 заглавный, 1 цифру и 1 нижний регистр.",
+    ),
 })

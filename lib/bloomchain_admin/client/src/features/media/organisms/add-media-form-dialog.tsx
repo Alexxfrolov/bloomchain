@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useRef, useEffect } from "react"
+import React, { memo, useCallback, useRef } from "react"
 import { useFormik } from "formik"
 import {
   Dialog,
@@ -10,6 +10,7 @@ import {
   TextField,
   Button,
 } from "@material-ui/core"
+import { getBlobUrl } from "@lib/blob"
 import { MediaFile } from "@api/media"
 
 import { MediaCreationSchema } from "../schemes"
@@ -34,7 +35,6 @@ export const AddMediaFormDialog = memo(function (
 ) {
   const { isOpened, type, onClose, onCreateMediaFile } = props
 
-  const imageRef = useRef<HTMLImageElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const {
@@ -63,21 +63,13 @@ export const AddMediaFormDialog = memo(function (
       source: false,
     },
     validationSchema: MediaCreationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
     onSubmit: async (values, { setSubmitting }) => {
       await onCreateMediaFile(values)
       setSubmitting(false)
     },
   })
-
-  useEffect(() => {
-    if (values.file && imageRef.current) {
-      const blobURL = window.URL.createObjectURL(values.file)
-      console.log(blobURL)
-      imageRef.current.setAttribute("src", blobURL)
-
-      return window.URL.revokeObjectURL(blobURL)
-    }
-  }, [values.file])
 
   const handleFileInputChange = useCallback(() => {
     if (fileInputRef.current && fileInputRef.current.files !== null) {
@@ -95,9 +87,9 @@ export const AddMediaFormDialog = memo(function (
       <form onSubmit={handleSubmit} noValidate={true}>
         <DialogTitle id="upload-form-dialog">Загрузка файла</DialogTitle>
         <DialogContent>
-          {values.file && (
+          {values.file && getBlobUrl(values.file) && (
             <FormControl margin="normal" fullWidth={true} variant="outlined">
-              <img width="100%" ref={imageRef} alt="" />
+              <img width="100%" src={getBlobUrl(values.file)} alt="" />
             </FormControl>
           )}
           {!!errors.file && (

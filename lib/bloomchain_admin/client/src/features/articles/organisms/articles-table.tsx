@@ -2,10 +2,7 @@ import React, { memo, useCallback, ChangeEvent } from "react"
 import format from "date-fns/format"
 import { Column } from "material-table"
 import { Link, Select, MenuItem, TableRow, TableCell } from "@material-ui/core"
-import IconEdit from "@material-ui/icons/Edit"
-import DateFnsUtils from "@date-io/date-fns"
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
-import { ru } from "date-fns/locale"
+import IconEdit from "@material-ui/icons/EditRounded"
 import { Pagination, OrderDirection } from "@api/common"
 import { Article } from "@api/articles"
 import { Table } from "@features/core"
@@ -14,8 +11,6 @@ import { ARTICLE_TYPES_RECORD } from "../lib"
 
 type ArticlesTableProps = {
   data: Article[]
-  dateEnd: Date | null
-  dateStart: Date | null
   isLoading: boolean
   pagination: Pagination
   type: Article["type"]
@@ -28,15 +23,11 @@ type ArticlesTableProps = {
     orderDirection: OrderDirection,
   ) => void
   onRowDelete: (tag: Article) => Promise<void>
-  onDateEndChange: (date: Date | null) => void
-  onDateStartChange: (date: Date | null) => void
 }
 
 export function ArticlesTable(props: ArticlesTableProps) {
   const {
     data,
-    dateEnd,
-    dateStart,
     isLoading,
     pagination,
     type,
@@ -44,8 +35,6 @@ export function ArticlesTable(props: ArticlesTableProps) {
     onChangeRowsPerPage,
     onChangeSelectFilter,
     onClickEditArticle,
-    onDateEndChange,
-    onDateStartChange,
     onOrderChange,
     onRowDelete,
   } = props
@@ -81,11 +70,7 @@ export function ArticlesTable(props: ArticlesTableProps) {
         FilterRow: () => (
           <ArticlesTableFilters
             type={type}
-            dateStart={dateStart}
-            dateEnd={dateEnd}
             onFilterChanged={onChangeSelectFilter}
-            onDateStartChange={onDateStartChange}
-            onDateEndChange={onDateEndChange}
           />
         ),
       }}
@@ -117,23 +102,12 @@ export function ArticlesTable(props: ArticlesTableProps) {
 }
 
 type ArticlesTableFiltersProps = {
-  dateStart: Date | null
-  dateEnd: Date | null
   type: Article["type"]
   onFilterChanged: (type: Article["type"]) => void
-  onDateStartChange: (date: Date | null) => void
-  onDateEndChange: (date: Date | null) => void
 }
 
 const ArticlesTableFilters = memo((props: ArticlesTableFiltersProps) => {
-  const {
-    dateStart,
-    dateEnd,
-    type,
-    onFilterChanged,
-    onDateStartChange,
-    onDateEndChange,
-  } = props
+  const { type, onFilterChanged } = props
 
   const handleSelectChange = useCallback(
     (event: ChangeEvent<{ name?: string; value: unknown }>) =>
@@ -160,33 +134,7 @@ const ArticlesTableFilters = memo((props: ArticlesTableFiltersProps) => {
       </TableCell>
       <TableCell />
       <TableCell />
-      <TableCell>
-        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
-          <DatePicker
-            variant="dialog"
-            margin="none"
-            inputVariant="standard"
-            inputProps={{}}
-            label="С"
-            format="dd/MM/yyyy"
-            disableFuture={true}
-            size="small"
-            value={dateStart}
-            onChange={onDateStartChange}
-          />
-          <DatePicker
-            variant="dialog"
-            margin="none"
-            inputVariant="standard"
-            label="По"
-            disableFuture={true}
-            format="dd/MM/yyyy"
-            size="small"
-            value={dateEnd}
-            onChange={onDateEndChange}
-          />
-        </MuiPickersUtilsProvider>
-      </TableCell>
+      <TableCell></TableCell>
       <TableCell />
       <TableCell />
     </TableRow>

@@ -1,13 +1,18 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect } from "react"
 import { useRoute } from "react-router5"
 import {
   Container,
+  Paper,
   Typography,
   Toolbar,
+  FormControl,
+  Button,
   makeStyles,
   createStyles,
 } from "@material-ui/core"
-import { debounce } from "@lib/debounce"
+import DateFnsUtils from "@date-io/date-fns"
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
+import { ru } from "date-fns/locale"
 import { SearchField } from "@ui/molecules/search-field"
 import { OrderDirection, Pagination } from "@api/common/types"
 import { articlesApi, Article } from "@api/articles"
@@ -149,11 +154,14 @@ export function ArticlesViewPage() {
     }))
   }, [state.type])
 
-  const handleDateStartChange = (date: Date | null) =>
+  const handleDateSinceChange = (date: Date | null) =>
     setState((state) => ({ ...state, since: date }))
 
-  const handleDateEndChange = (date: Date | null) =>
+  const handleDateUntilChange = (date: Date | null) =>
     setState((state) => ({ ...state, until: date }))
+
+  const handleResetButtonClick = () =>
+    setState((state) => ({ ...state, since: null, until: null }))
 
   const handleTablePageChange = (page: number) =>
     setState((state) => ({
@@ -211,43 +219,83 @@ export function ArticlesViewPage() {
 
   return (
     <Container maxWidth="lg">
-      <Toolbar>
-        <div className={classes.toolbarTitle}>
-          <Typography component="h1" variant="h5">
-            {title}
-          </Typography>
-        </div>
-        <div className={classes.toolbarSpacer}></div>
-        <div className={classes.toolbarSearchField}>
-          <SearchField
-            fullWidth={true}
-            searchText={state.query}
-            onChange={handleSearchFieldChange}
-            onClear={() => setState((state) => ({ ...state, query: "" }))}
-          />
-        </div>
-      </Toolbar>
-      <ArticlesTable
-        data={state.data}
-        dateStart={state.since}
-        dateEnd={state.until}
-        isLoading={state.request_status === "pending"}
-        pagination={state.pagination}
-        type={state.type}
-        onChangePage={handleTablePageChange}
-        onChangeRowsPerPage={handleChangeTableRowsPerPage}
-        onChangeSelectFilter={handleTableSelectFilterChange}
-        onClickEditArticle={handleClickEditArticle}
-        onDateEndChange={handleDateEndChange}
-        onDateStartChange={handleDateStartChange}
-        onOrderChange={handleTableOrderChange}
-        onRowDelete={deleteArticle}
-      />
+      <Paper>
+        <Toolbar>
+          <div className={classes.toolbarTitle}>
+            <Typography component="h1" variant="h5">
+              {title}
+            </Typography>
+          </div>
+          <div className={classes.toolbarSpacer}></div>
+          <div className={classes.toolbarSearchField}>
+            <SearchField
+              fullWidth={true}
+              searchText={state.query}
+              onChange={handleSearchFieldChange}
+              onClear={() => setState((state) => ({ ...state, query: "" }))}
+            />
+          </div>
+        </Toolbar>
+        <Toolbar>
+          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
+            <div className={classes.toolbarDate}>
+              <FormControl>
+                <DatePicker
+                  variant="inline"
+                  margin="none"
+                  inputVariant="outlined"
+                  label="Дата начала"
+                  format="dd/MM/yyyy"
+                  disableFuture={true}
+                  size="small"
+                  value={state.since}
+                  onChange={handleDateSinceChange}
+                />
+              </FormControl>
+              <FormControl>
+                <DatePicker
+                  variant="inline"
+                  margin="none"
+                  inputVariant="outlined"
+                  label="Дата окончания"
+                  format="dd/MM/yyyy"
+                  disableFuture={true}
+                  size="small"
+                  value={state.until}
+                  onChange={handleDateUntilChange}
+                />
+              </FormControl>
+              <FormControl>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  color="primary"
+                  onClick={handleResetButtonClick}
+                >
+                  Сбросить
+                </Button>
+              </FormControl>
+            </div>
+          </MuiPickersUtilsProvider>
+        </Toolbar>
+        <ArticlesTable
+          data={state.data}
+          isLoading={state.request_status === "pending"}
+          pagination={state.pagination}
+          type={state.type}
+          onChangePage={handleTablePageChange}
+          onChangeRowsPerPage={handleChangeTableRowsPerPage}
+          onChangeSelectFilter={handleTableSelectFilterChange}
+          onClickEditArticle={handleClickEditArticle}
+          onOrderChange={handleTableOrderChange}
+          onRowDelete={deleteArticle}
+        />
+      </Paper>
     </Container>
   )
 }
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     toolbarTitle: {
       overflow: "hidden",
@@ -258,6 +306,14 @@ const useStyles = makeStyles(() =>
     toolbarSearchField: {
       "min-width": "300px",
       "padding-left": "16px",
+    },
+    toolbarDate: {
+      display: "flex",
+      alignItems: "center",
+
+      "& > *": {
+        margin: theme.spacing(1),
+      },
     },
   }),
 )
