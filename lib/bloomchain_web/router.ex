@@ -15,6 +15,7 @@ defmodule BloomchainWeb.Router do
   end
 
   pipeline :sign_in do
+    plug(:fetch_session)
     plug(:put_layout, {BloomchainWeb.LayoutView, :sign_in})
   end
 
