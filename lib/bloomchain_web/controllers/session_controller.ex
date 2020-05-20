@@ -12,7 +12,7 @@ defmodule BloomchainWeb.SessionController do
       {:ok, user} ->
         conn
         |> Account.login(user)
-        |> redirect_after_login(user)
+        |> redirect(to: admin_home_path(conn, :index))
 
       {:error, _} ->
         conn
@@ -25,14 +25,5 @@ defmodule BloomchainWeb.SessionController do
     conn
     |> Account.logout()
     |> send_resp(:no_content, "")
-  end
-
-  # Private
-
-  defp redirect_after_login(conn, user) do
-    case user.role == "admin" do
-      true -> redirect(conn, to: admin_home_path(conn, :index))
-      false -> redirect(conn, to: page_path(conn, :index))
-    end
   end
 end
