@@ -7229,7 +7229,8 @@ html.lb-disable-scrolling {
     background: #121212; }
     .bc-footer__subscribe {
       display: flex;
-      justify-content: center; }
+      justify-content: center;
+      align-items: flex-start; }
       @media (max-width: 767.98px) {
         .bc-footer__subscribe {
           flex-direction: column; } }
