@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback, useRef, FormEvent } from "react"
+import React, { useState, useCallback, useRef, FormEvent } from "react"
 import {
   Dialog,
   DialogTitle,
@@ -16,9 +16,7 @@ type AddArchiveFormDialogProps = {
   addArchive: (archive: Archive) => Promise<void>
 }
 
-export const AddArchiveFormDialog = memo(function AddArchiveFormDialog(
-  props: AddArchiveFormDialogProps,
-) {
+export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
   const { addArchive } = props
 
   const [opened, setOpened] = useState(false)
@@ -157,4 +155,4 @@ export const AddArchiveFormDialog = memo(function AddArchiveFormDialog(
       </form>
     </Dialog>
   )
-})
+}

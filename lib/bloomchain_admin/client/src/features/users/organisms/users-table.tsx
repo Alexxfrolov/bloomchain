@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useCallback, Fragment } from "react"
+import React, { memo, useCallback, Fragment } from "react"
 import { useFormik } from "formik"
 import format from "date-fns/format"
 import {
@@ -64,7 +64,7 @@ export const UsersTable = memo(function UsersTable(props: UsersTableProps) {
     onRowDelete,
   ])
 
-  const notEmptyData = useMemo(() => !!data.length, [data])
+  const notEmptyData = !!data.length
 
   return (
     <Table

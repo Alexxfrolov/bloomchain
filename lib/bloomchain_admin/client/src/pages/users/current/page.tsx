@@ -1,4 +1,4 @@
-import React, { memo, Fragment, useState, useMemo, useCallback } from "react"
+import React, { memo, Fragment, useState, useCallback } from "react"
 import { useFormik } from "formik"
 import {
   Container,
@@ -20,14 +20,11 @@ export const UserAccountPage = memo(function UserAccountPage() {
 
   const [openedSuccessDialog, setOpenedSuccessDialog] = useState(false)
 
-  const avatarCaption = useMemo(
-    () =>
-      user?.first_name
-        .charAt(0)
-        .toUpperCase()
-        .concat(user.last_name.charAt(0).toUpperCase()) ?? "BC",
-    [user],
-  )
+  const avatarCaption =
+    user?.first_name
+      .charAt(0)
+      .toUpperCase()
+      .concat(user.last_name.charAt(0).toUpperCase()) ?? "BC"
 
   const updateSettings = useCallback(
     (user: User) =>

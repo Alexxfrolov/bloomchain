@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useCallback } from "react"
+import React, { memo, useCallback } from "react"
 import format from "date-fns/format"
 import { Column } from "material-table"
 import { Pagination, OrderDirection } from "@api/common"
@@ -47,7 +47,7 @@ export const ArchivesTable = memo(function ArchivesTable(
     onRowDelete,
   ])
 
-  const notEmptyData = useMemo(() => !!data.length, [data])
+  const notEmptyData = !!data.length
 
   return (
     <Table

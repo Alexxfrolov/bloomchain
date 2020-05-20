@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useCallback, ChangeEvent } from "react"
+import React, { memo, useCallback, ChangeEvent } from "react"
 import format from "date-fns/format"
 import { Column } from "material-table"
 import { Link, Select, MenuItem, TableRow, TableCell } from "@material-ui/core"
@@ -6,6 +6,7 @@ import IconEdit from "@material-ui/icons/Edit"
 import DateFnsUtils from "@date-io/date-fns"
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import { ru } from "date-fns/locale"
+import { SearchField } from "@ui/molecules/search-field"
 import { Pagination, OrderDirection } from "@api/common"
 import { Article } from "@api/articles"
 import { Table } from "@features/core"
@@ -72,7 +73,7 @@ export const ArticlesTable = memo(function ArticlesTable(
     [onClickEditArticle],
   )
 
-  const notEmptyData = useMemo(() => !!data.length, [data])
+  const notEmptyData = !!data.length
 
   return (
     <Table
@@ -81,39 +82,44 @@ export const ArticlesTable = memo(function ArticlesTable(
       columns={columns}
       isLoading={isLoading}
       components={{
-        FilterRow: () => (
-          <ArticlesTableFilterSelect
+        FilterRow: memo(() => (
+          <ArticlesTableFilters
+            key="ArticlesTableFilters"
             type={type}
             onFilterChanged={onChangeSelectFilter}
           />
-        ),
+        )),
+        // Actions: memo(() => (
+        //   <SearchField
+        //     key="SearchField"
+        //     query={searchText}
+        //     onChange={onSearchChange}
+        //   />
+        // )),
       }}
       page={pagination.page - 1}
       totalCount={pagination.total_items}
       options={{
-        tableLayout: "fixed",
         search: true,
-        sorting: notEmptyData,
         searchText,
-        searchFieldStyle: {
-          width: "400px",
-        },
+        tableLayout: "fixed",
+        sorting: notEmptyData,
         debounceInterval: 500,
         filtering: true,
         paging: notEmptyData,
         pageSize: pagination.page_size,
         pageSizeOptions: pagination.page_size_options,
       }}
-      editable={{
-        onRowDelete: handleRowDelete,
-      }}
-      actions={[
-        {
-          icon: () => <IconEdit />,
-          tooltip: "Редактирование статьи",
-          onClick: handleClickEditAtion,
-        },
-      ]}
+      // editable={{
+      //   onRowDelete: handleRowDelete,
+      // }}
+      // actions={[
+      //   {
+      //     icon: () => <IconEdit />,
+      //     tooltip: "Редактирование статьи",
+      //     onClick: handleClickEditAtion,
+      //   },
+      // ]}
       onSearchChange={onSearchChange}
       onOrderChange={handleOrderChange}
       onChangePage={onChangePage}
@@ -122,42 +128,41 @@ export const ArticlesTable = memo(function ArticlesTable(
   )
 })
 
-type ArticlesTableFilterSelectProps = {
+type ArticlesTableFiltersProps = {
   type: Article["type"]
   onFilterChanged: (type: Article["type"]) => void
 }
 
-const ArticlesTableFilterSelect = memo(
-  (props: ArticlesTableFilterSelectProps) => {
-    const { type, onFilterChanged } = props
+const ArticlesTableFilters = memo((props: ArticlesTableFiltersProps) => {
+  const { type, onFilterChanged } = props
 
-    const handleSelectChange = useCallback(
-      (event: ChangeEvent<{ name?: string; value: unknown }>) =>
-        onFilterChanged(event.target.value as Article["type"]),
-      [onFilterChanged],
-    )
+  const handleSelectChange = useCallback(
+    (event: ChangeEvent<{ name?: string; value: unknown }>) =>
+      onFilterChanged(event.target.value as Article["type"]),
+    [onFilterChanged],
+  )
 
-    return (
-      <TableRow>
-        <TableCell />
-        <TableCell>
-          <Select
-            name="type"
-            value={type}
-            fullWidth={true}
-            onChange={handleSelectChange}
-          >
-            {Object.keys(ARTICLE_TYPES_RECORD).map((type) => (
-              <MenuItem key={type} value={type}>
-                {ARTICLE_TYPES_RECORD[type]}
-              </MenuItem>
-            ))}
-          </Select>
-        </TableCell>
-        <TableCell />
-        <TableCell />
-        <TableCell>
-          {/* <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
+  return (
+    <TableRow>
+      <TableCell />
+      <TableCell>
+        <Select
+          name="type"
+          value={type}
+          fullWidth={true}
+          onChange={handleSelectChange}
+        >
+          {Object.keys(ARTICLE_TYPES_RECORD).map((type) => (
+            <MenuItem key={type} value={type}>
+              {ARTICLE_TYPES_RECORD[type]}
+            </MenuItem>
+          ))}
+        </Select>
+      </TableCell>
+      <TableCell />
+      <TableCell />
+      <TableCell>
+        {/* <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
             <DatePicker
               variant="dialog"
               margin="none"
@@ -179,13 +184,12 @@ const ArticlesTableFilterSelect = memo(
               onChange={handleDateEndChange}
             />
           </MuiPickersUtilsProvider> */}
-        </TableCell>
-        <TableCell />
-        <TableCell />
-      </TableRow>
-    )
-  },
-)
+      </TableCell>
+      <TableCell />
+      <TableCell />
+    </TableRow>
+  )
+})
 
 const columns: Column<Article>[] = [
   {

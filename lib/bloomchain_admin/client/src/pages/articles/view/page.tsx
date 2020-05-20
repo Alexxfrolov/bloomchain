@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect, useCallback, useMemo } from "react"
+import React, { memo, useState, useEffect, useCallback } from "react"
 import { useRoute } from "react-router5"
 import { Container } from "@material-ui/core"
 import { OrderDirection, Pagination } from "@api/common/types"
@@ -37,65 +37,70 @@ export const ArticlesViewPage = memo(() => {
     },
     query: "",
     since: null,
-    status: null,
+    status: route.name.split(".")[2] as Article["status"],
     request_status: "pending",
     type: "newsfeed",
     until: null,
   })
 
   useEffect(() => {
-    const status = route.name.split(".")[2] as Article["status"]
-    setState((state) => ({ ...state, status }))
-  }, [route.name])
+    if (state.query.length === 0) {
+      const params = {
+        status: route.name.split(".")[2] as Article["status"],
+        type: state.type,
+        page_size: state.pagination.page_size,
+        page: state.pagination.page,
+        orderDirection: state.orderDirection,
+        orderBy: state.orderBy,
+      } as const
 
-  useEffect(() => {
-    if (state.status) {
-      if (state.query.length === 0) {
-        const params = {
-          status: state.status,
-          type: state.type,
-          page_size: state.pagination.page_size,
-          page: state.pagination.page,
-          orderDirection: state.orderDirection,
-          orderBy: state.orderBy,
-        } as const
+      articlesApi
+        .get(params)
+        .then(({ data: { data, meta } }) =>
+          setState((state) => ({
+            ...state,
+            data,
+            pagination: { ...state.pagination, ...meta },
+            error: null,
+            request_status: "success",
+          })),
+        )
+        .catch((error) =>
+          setState((state) => ({ ...state, error, request_status: "error" })),
+        )
+        .finally(() =>
+          setState((state) => ({
+            ...state,
+            status: route.name.split(".")[2] as Article["status"],
+          })),
+        )
+    } else {
+      setState((state) => ({ ...state, request_status: "pending" }))
+      const params = {
+        status: route.name.split(".")[2] as Article["status"],
+        type: state.type,
+        query: state.query,
+      } as const
 
-        articlesApi
-          .get(params)
-          .then(({ data: { data, meta } }) =>
-            setState((state) => ({
-              ...state,
-              data,
-              pagination: { ...state.pagination, ...meta },
-              error: null,
-              request_status: "success",
-            })),
-          )
-          .catch((error) =>
-            setState((state) => ({ ...state, error, request_status: "error" })),
-          )
-      } else {
-        setState((state) => ({ ...state, request_status: "pending" }))
-        const params = {
-          status: state.status,
-          type: state.type,
-          query: state.query,
-        } as const
-
-        articlesApi
-          .search(params)
-          .then(({ data: { data } }) =>
-            setState((state) => ({
-              ...state,
-              data,
-              error: null,
-              request_status: "success",
-            })),
-          )
-          .catch((error) =>
-            setState((state) => ({ ...state, error, request_status: "error" })),
-          )
-      }
+      articlesApi
+        .search(params)
+        .then(({ data: { data } }) =>
+          setState((state) => ({
+            ...state,
+            data,
+            error: null,
+            request_status: "success",
+          })),
+        )
+        .catch((error) =>
+          setState((state) => ({ ...state, error, request_status: "error" })),
+        )
+        .finally(() =>
+          setState((state) => ({
+            ...state,
+            status: route.name.split(".")[2] as Article["status"],
+          })),
+        )
     }
   }, [
     state.orderBy,
@@ -103,13 +108,11 @@ export const ArticlesViewPage = memo(() => {
     state.pagination.page_size,
     state.pagination.page,
     state.query,
-    state.status,
     state.type,
     route.name,
   ])
 
   useEffect(() => {
-    console.log(state.status)
     setState((state) => ({
       ...state,
       orderBy: "published_at",
@@ -202,13 +205,9 @@ export const ArticlesViewPage = memo(() => {
       )
   }, [])
 
-  const tableTitle = useMemo(
-    () =>
-      state.status
-        ? mapStatusToTableTitle[state.status]
-        : "Не известный раздел",
-    [state.status],
-  )
+  const tableTitle = state.status
+    ? mapStatusToTableTitle[state.status]
+    : "Не известный раздел"
 
   return (
     <Container maxWidth="lg">
