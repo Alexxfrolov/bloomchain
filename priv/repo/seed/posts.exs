@@ -8,7 +8,10 @@ make_paragraphs = fn item ->
   |> Enum.reject(&(String.trim(&1) == ""))
   |> Enum.map(&("<p>" <> &1 <> "</p>"))
   |> Enum.join()
-  |> String.replace(["[embed]", "[/embed]", "<p></p>", "style=\"font-weight: 400;\""], "")
+  |> String.replace(
+    ["[embed]", "[/embed]", "<p></p>", "<b></b>", "style=\"font-weight: 400;\""],
+    ""
+  )
 end
 
 replace_embedly_urls = fn item ->
@@ -29,7 +32,7 @@ replace_bloomchain_urls = fn item ->
   |> String.replace("/wp-content/uploads/", "/uploads/wp-content/")
 end
 
-replace_caption = fn item, images ->
+replace_caption = fn item ->
   Regex.replace(
     ~r/\[caption(.*?)\[\/caption\]/,
     item,
@@ -43,26 +46,16 @@ replace_caption = fn item, images ->
       src = Regex.run(~r/(?<=src=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
       width = Regex.run(~r/(?<=width=\")(.*?)(?=\"])/, tag, capture: :first) |> List.first()
       height = Regex.run(~r/(?<=height=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
-
-      alt = (Enum.find(images, &(&1.id == id)) || %{})[:alt]
+      alt = Regex.run(~r/(?<=alt=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
 
       capture =
-        case (Enum.find(images, &(&1.id == id)) || %{})[:capture] do
-          nil ->
-            Regex.run(~r/[^>]*$/, tag)
-            |> List.first()
-            |> String.replace("[/caption]", "")
-            |> String.trim()
-
-          "" ->
-            Regex.run(~r/[^>]*$/, tag)
-            |> List.first()
-            |> String.replace("[/caption]", "")
-            |> String.trim()
-
-          str ->
-            str
-        end
+        Regex.replace(
+          ~r/(\[caption (.*?)\])((<a (.*?)><img (.*?) \/><\/a>)|(<img (.*?) \/>))/,
+          tag,
+          ""
+        )
+        |> String.replace("[/caption]", "")
+        |> String.trim()
 
       "<div class=\"fr-img-space-wrap\">\
 <span contenteditable=\"false\" class=\"fr-img-caption fr-fic fr-dib\" draggable=\"false\">\
@@ -141,23 +134,17 @@ s3_urls = fn item ->
   )
 end
 
-attachments =
-  File.read!("#{File.cwd!()}/priv/repo/data_files/attachments.json")
-  |> Poison.decode!(keys: :atoms)
-
 "#{File.cwd!()}/priv/repo/data_files/posts.json"
 |> File.read!()
 |> Poison.decode!(keys: :atoms)
 |> Enum.map(fn item ->
-  images = Enum.filter(attachments, &(&1.post_id == item.id))
-
   body =
     item.body
     |> make_paragraphs.()
     |> replace_pdfs.()
     |> replace_embedly_urls.()
     |> replace_bloomchain_urls.()
-    |> replace_caption.(images)
+    |> replace_caption.()
     |> replace_strong_tags.()
     |> replace_blockquote.()
     |> s3_urls.()

@@ -38,7 +38,6 @@ defmodule BloomchainWeb.SearchController do
           ]
         }
       },
-      sort: [%{published_at: %{order: "desc"}}],
       size: 6
     }
   end
