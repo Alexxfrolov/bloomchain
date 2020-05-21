@@ -152,6 +152,7 @@ const columns: Column<Article>[] = [
     field: "title",
     title: "Заголовок",
     filtering: false,
+    cellStyle: { whiteSpace: "nowrap" },
     render: (article) =>
       article.url ? (
         <Link href={article.url} target="_blank">
