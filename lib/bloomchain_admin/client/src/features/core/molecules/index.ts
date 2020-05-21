@@ -1,5 +1,3 @@
 export { DeleteDialog } from "./delete-dialog"
-export { ErrorDialog } from "./error-dialog"
 export { FullPageLoadScreen, FullPageErrorScreen } from "./full-page-screens"
 export { MainMenu } from "./main-menu"
-export { SuccessDialog } from "./success-dialog"

@@ -1,12 +1,10 @@
 export {
   DeleteDialog,
-  ErrorDialog,
-  FullPageLoadScreen,
   FullPageErrorScreen,
+  FullPageLoadScreen,
   MainMenu,
-  SuccessDialog,
 } from "./molecules"
-export { Header, Table } from "./organisms"
+export { CloseNotifications, Header, Table } from "./organisms"
 export type { TableRowActionMode } from "./organisms"
 export { CommonTemplate } from "./templates"
 export * from "./lib"

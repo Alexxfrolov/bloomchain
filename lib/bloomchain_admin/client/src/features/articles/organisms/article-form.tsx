@@ -1,4 +1,5 @@
-import React, { useMemo, useCallback, ChangeEvent } from "react"
+import React, { useMemo, useCallback, ChangeEvent, useEffect } from "react"
+import { useSnackbar } from "notistack"
 import {
   Grid,
   TextField,
@@ -40,6 +41,7 @@ type ArticleFormProps = {
 export function ArticleForm(props: ArticleFormProps) {
   const { authors, initialArticle = articleStore, tags } = props
   const classes = useStyles()
+  const { enqueueSnackbar } = useSnackbar()
 
   const {
     values,
@@ -59,11 +61,21 @@ export function ArticleForm(props: ArticleFormProps) {
     },
     validationSchema: ArticleCreationSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      await props.onSubmit(values)
+      const error: string | undefined = await props.onSubmit(values)
       setSubmitting(false)
-      resetForm()
+      !error && resetForm()
     },
   })
+
+  useEffect(() => {
+    if (isSubmitting) {
+      Object.values(errors).forEach((error) => {
+        enqueueSnackbar(error, {
+          variant: "error",
+        })
+      })
+    }
+  }, [errors, isSubmitting, enqueueSnackbar])
 
   const handleChangeEditor = useCallback(
     (value: string) => {

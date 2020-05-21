@@ -132,6 +132,7 @@
     "humps": "^2.0.1",
     "material-table": "^1.57.2",
     "nanoid": "^2.1.8",
+    "notistack": "^0.9.16",
     "react": "^16.13.0",
     "react-app-polyfill": "^1.0.6",
     "react-dom": "^16.13.0",

@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react"
 import { useRoute } from "react-router5"
+import { useSnackbar } from "notistack"
 import { AxiosResponse } from "axios"
 import { Container, Paper, Typography, Toolbar, Box } from "@material-ui/core"
 import { articlesApi, Article } from "@api/articles"
 import { tagsApi, Tag } from "@api/tags"
 import { authorsApi, Author } from "@api/authors"
 import { MediaFile } from "@api/media"
-import { RequestStatus, SuccessDialog } from "@features/core"
+import { RequestStatus } from "@features/core"
 import { ArticleForm, ArticleStore } from "@features/articles"
 
 type ActicleEditPageState = {
@@ -14,18 +15,17 @@ type ActicleEditPageState = {
   error: string | null
   tags: Tag[]
   authors: Author[]
-  isOpenedDialog: boolean
 }
 
 export function ActicleEditPage() {
   const { route } = useRoute()
+  const { enqueueSnackbar } = useSnackbar()
 
   const [state, setState] = useState<ActicleEditPageState>({
     request_status: "pending",
     error: null,
     tags: [],
     authors: [],
-    isOpenedDialog: false,
   })
 
   const [article, setArticle] = useState<ArticleStore & { id: number }>({
@@ -85,28 +85,39 @@ export function ActicleEditPage() {
           cover_id: data.cover?.id ?? null,
         }))
       })
-      .catch((error) =>
-        setState((state) => ({ ...state, request_status: "error", error })),
-      )
-  }, [route.params.id])
+      .catch((error) => {
+        setState((state) => ({ ...state, request_status: "error", error }))
+        enqueueSnackbar("Произошла ошибка", {
+          variant: "error",
+        })
+      })
+  }, [route.params.id, enqueueSnackbar])
 
-  const updateArticle = useCallback(async (article: Article) => {
-    try {
-      await articlesApi.update(article)
-      setState((state) => ({
-        ...state,
-        error: null,
-        request_status: "success",
-        isOpenedDialog: true,
-      }))
-    } catch (error) {
-      setState((state) => ({
-        ...state,
-        error,
-        request_status: "error",
-      }))
-    }
-  }, [])
+  const updateArticle = useCallback(
+    async (article: Article) => {
+      try {
+        await articlesApi.update(article)
+        setState((state) => ({
+          ...state,
+          error: null,
+          request_status: "success",
+        }))
+        enqueueSnackbar("Статья успешно обновлена", {
+          variant: "success",
+        })
+      } catch (error) {
+        setState((state) => ({
+          ...state,
+          error,
+          request_status: "error",
+        }))
+        enqueueSnackbar("Произошла ошибка", {
+          variant: "error",
+        })
+      }
+    },
+    [enqueueSnackbar],
+  )
 
   return (
     <Container maxWidth="lg">
@@ -127,13 +138,6 @@ export function ActicleEditPage() {
           ) : null}
         </Box>
       </Paper>
-      <SuccessDialog
-        title="Статья успешно обновлена"
-        isOpened={state.isOpenedDialog}
-        onClose={() =>
-          setState((state) => ({ ...state, isOpenedDialog: false }))
-        }
-      />
     </Container>
   )
 }

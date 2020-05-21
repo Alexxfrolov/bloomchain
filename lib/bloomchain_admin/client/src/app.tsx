@@ -1,5 +1,6 @@
 import React, { useCallback } from "react"
 import { useRoute } from "react-router5"
+import { SnackbarProvider } from "notistack"
 import CssBaseline from "@material-ui/core/CssBaseline"
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles"
 import { ruRU } from "@material-ui/core/locale"
@@ -15,7 +16,12 @@ import {
   UserAccountPage,
   UsersPage,
 } from "@pages"
-import { CommonTemplate, UserProvider, MainMenu } from "@features/core"
+import {
+  CommonTemplate,
+  UserProvider,
+  MainMenu,
+  CloseNotifications,
+} from "@features/core"
 
 const theme = createMuiTheme({}, ruRU)
 
@@ -55,12 +61,23 @@ export const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <UserProvider>
-        <CommonTemplate menu={<MainMenu openedDrawer={false} />}>
-          {setPageByRoute()}
-        </CommonTemplate>
-      </UserProvider>
+      <SnackbarProvider
+        hideIconVariant={true}
+        preventDuplicate={true}
+        maxSnack={10}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        action={(key) => <CloseNotifications notificationKey={key} />}
+      >
+        <CssBaseline />
+        <UserProvider>
+          <CommonTemplate menu={<MainMenu openedDrawer={false} />}>
+            {setPageByRoute()}
+          </CommonTemplate>
+        </UserProvider>
+      </SnackbarProvider>
     </ThemeProvider>
   )
 }
