@@ -1,5 +1,6 @@
 import React, { memo, Fragment, useState, useCallback } from "react"
 import { useFormik } from "formik"
+import { useSnackbar } from "notistack"
 import {
   Container,
   Grid,
@@ -15,14 +16,13 @@ import VisibilityRoundedIcon from "@material-ui/icons/VisibilityRounded"
 import VisibilityOffRoundedIcon from "@material-ui/icons/VisibilityOffRounded"
 import { indigo } from "@material-ui/core/colors"
 import { User } from "@api/user"
-import { useCurrentUser, SuccessDialog } from "@features/core"
+import { useCurrentUser } from "@features/core"
 import { UserEditSchema } from "@features/users"
 
 export function UserAccountPage() {
   const { user, update } = useCurrentUser()
   const classes = useStyles()
-
-  const [openedSuccessDialog, setOpenedSuccessDialog] = useState(false)
+  const { enqueueSnackbar } = useSnackbar()
 
   const avatarCaption =
     user?.first_name
@@ -32,8 +32,12 @@ export function UserAccountPage() {
 
   const updateSettings = useCallback(
     (user: User) =>
-      Promise.resolve(update(user)).then(() => setOpenedSuccessDialog(true)),
-    [update],
+      Promise.resolve(update(user)).then(() => {
+        enqueueSnackbar("Данные успешно сохранены", {
+          variant: "success",
+        })
+      }),
+    [update, enqueueSnackbar],
   )
 
   return (
@@ -49,11 +53,6 @@ export function UserAccountPage() {
           )}
         </Paper>
       </Container>
-      <SuccessDialog
-        title="Данные успешно сохранены"
-        isOpened={openedSuccessDialog}
-        onClose={() => setOpenedSuccessDialog(false)}
-      />
     </Fragment>
   )
 }
@@ -87,14 +86,6 @@ const AccountSettingsForm = memo((props: AccountSettingsFormProps) => {
     initialValues: {
       ...user,
       password: "",
-    },
-    initialTouched: {
-      first_name: false,
-      last_name: false,
-      email: false,
-      phone: false,
-      job: false,
-      password: false,
     },
     validationSchema: UserEditSchema,
     onSubmit: async (values, { setSubmitting }) => {

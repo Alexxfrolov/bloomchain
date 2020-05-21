@@ -3,6 +3,8 @@ import { request } from "@features/core"
 
 import { Pagination, PaginationParams } from "../common"
 
+export type MediaFileType = "image" | "pdf" | "video"
+
 export interface MediaFile {
   alt: string | null
   inserted_at: string
@@ -10,7 +12,7 @@ export interface MediaFile {
   url: string
   source: string | null
   title: string | null
-  type: "image" | "pdf" | "video"
+  type: MediaFileType
   updated_at: string
 }
 
@@ -24,8 +26,12 @@ function get(params: Params) {
   })
 }
 
+function getById(id: number) {
+  return request<MediaFile>("GET", `/media/${id}`)
+}
+
 export interface UploadableMediaFile {
-  alt: string
+  alt?: string
   file: File
   source?: string | null
   title?: string | null
@@ -41,7 +47,7 @@ function create(file: UploadableMediaFile) {
 }
 
 export interface EditableMediaFile {
-  alt: string
+  alt: string | null
   id: MediaFile["id"]
   source?: string | null
   title?: string | null
@@ -61,6 +67,7 @@ function remove(id: number) {
 
 export const mediaApi = {
   get,
+  getById,
   create,
   update,
   remove,

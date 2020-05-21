@@ -1,4 +1,5 @@
-import React, { memo, useMemo, useCallback, ChangeEvent } from "react"
+import React, { useMemo, useCallback, ChangeEvent, useEffect } from "react"
+import { useSnackbar } from "notistack"
 import {
   Grid,
   TextField,
@@ -15,19 +16,19 @@ import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import { ru } from "date-fns/locale"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import { useFormik } from "formik"
-import { Editor } from "@lib/editor"
+import { RichTextEditor } from "@lib/editor"
 import { Article } from "@api/articles"
 import { Author } from "@api/authors"
-import { MediaFile } from "@api/media"
 import { Tag } from "@api/tags"
 import { MediaUploadForm } from "@features/media"
 
-import { article, ArticleStore } from "../model/article.store"
+import { articleStore, ArticleStore } from "../model"
 import { ArticleCreationSchema } from "../schemes"
 import {
   computedUnusedOptionsByInitialOptionsList,
   ARTICLE_STATUSES_RECORD,
   ARTICLE_TYPES_RECORD,
+  ARTICLE_OG_TYPES,
 } from "../lib"
 
 type ArticleFormProps = {
@@ -37,9 +38,10 @@ type ArticleFormProps = {
   onSubmit: (article: Article) => Promise<void>
 }
 
-export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
-  const { authors, initialArticle = article, tags, onSubmit } = props
+export function ArticleForm(props: ArticleFormProps) {
+  const { authors, initialArticle = articleStore, tags } = props
   const classes = useStyles()
+  const { enqueueSnackbar } = useSnackbar()
 
   const {
     values,
@@ -57,31 +59,23 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
     initialValues: {
       ...initialArticle,
     },
-    initialTouched: {
-      type: false,
-      title: false,
-      lead: false,
-      authors: [],
-      tags: [],
-      body: false,
-      cover: false,
-      status: false,
-      published_at: false,
-      time: false,
-      seo_settings: {
-        keywords: false,
-        description: false,
-        og_type: false,
-        og_title: false,
-        og_description: false,
-      },
-    },
     validationSchema: ArticleCreationSchema,
-    onSubmit: async (values, { setSubmitting }) => {
-      await onSubmit(values)
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      const error: string | undefined = await props.onSubmit(values)
       setSubmitting(false)
+      !error && resetForm()
     },
   })
+
+  useEffect(() => {
+    if (isSubmitting) {
+      Object.values(errors).forEach((error) => {
+        enqueueSnackbar(error, {
+          variant: "error",
+        })
+      })
+    }
+  }, [errors, isSubmitting, enqueueSnackbar])
 
   const handleChangeEditor = useCallback(
     (value: string) => {
@@ -114,12 +108,17 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
   )
 
   const handleUpload = useCallback(
-    (image: MediaFile) => {
-      setFieldValue("cover", image)
-      setFieldTouched("cover", true)
+    (image: import("@api/media").MediaFile) => {
+      setFieldValue("cover_id", image.id)
+      setFieldTouched("cover_id", true)
     },
     [setFieldValue, setFieldTouched],
   )
+
+  const deleteCover = useCallback(() => {
+    setFieldValue("cover_id", null)
+    setFieldTouched("cover_id", true)
+  }, [setFieldValue, setFieldTouched])
 
   const tagsOptions = useMemo(
     () => computedUnusedOptionsByInitialOptionsList(tags, initialArticle.tags),
@@ -180,7 +179,7 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
             id="lead"
             name="lead"
             label="Лид"
-            value={values.lead}
+            value={values.lead ?? ""}
             error={"lead" in errors && touched.lead}
             helperText={
               touched.lead
@@ -212,9 +211,15 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
                   {...params}
                   required={true}
                   label="Авторы"
-                  error={"authors" in errors && !touched.authors?.length}
+                  error={
+                    "authors" in errors &&
+                    "authors" in touched &&
+                    !touched.authors?.length
+                  }
                   helperText={
-                    !touched.authors?.length ? errors.authors : undefined
+                    "authors" in touched && !touched.authors?.length
+                      ? errors.authors
+                      : undefined
                   }
                   variant="outlined"
                 />
@@ -236,15 +241,29 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
                   {...params}
                   label="Тэги"
                   required={true}
-                  error={"tags" in errors && !touched.tags?.length}
-                  helperText={!touched.tags?.length ? errors.tags : undefined}
+                  error={
+                    "tags" in errors &&
+                    "tags" in touched &&
+                    !touched.tags?.length
+                  }
+                  helperText={
+                    "tags" in touched && !touched.tags?.length
+                      ? errors.tags
+                      : undefined
+                  }
                   variant="outlined"
                 />
               )}
             />
           </FormControl>
-          <FormControl margin="normal" fullWidth={true} variant="outlined">
-            <Editor value={values.body} onChange={handleChangeEditor} />
+          <FormControl margin="normal" fullWidth={true}>
+            <RichTextEditor
+              content={values.body}
+              onChange={handleChangeEditor}
+            />
+            {"body" in errors && touched.body && (
+              <FormHelperText error={true}>{errors.body}</FormHelperText>
+            )}
           </FormControl>
         </Grid>
         <Grid item={true} md={12} lg={4}>
@@ -261,22 +280,12 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <MediaUploadForm
               accept={["image/jpeg", "image/png"]}
+              initialMedia={initialArticle.cover ?? null}
               disabled={isSubmitting}
               onUpload={handleUpload}
+              onDeletePreview={deleteCover}
             />
-            {"cover" in errors && touched.cover && (
-              <FormHelperText error={true}>{errors.cover}</FormHelperText>
-            )}
           </FormControl>
-          {values.cover && (
-            <FormControl margin="normal" fullWidth={true} variant="outlined">
-              <img
-                width="100%"
-                src={values.cover.url}
-                alt={values.cover.alt ?? ""}
-              />
-            </FormControl>
-          )}
           <FormControl margin="normal" fullWidth={true}>
             <TextField
               id="status"
@@ -309,13 +318,11 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
                 margin="none"
                 fullWidth={true}
                 disabled={values.status !== "ready" || isSubmitting}
-                error={"published_at" in errors && touched.published_at}
+                error={"published_at" in errors && "published_at" in touched}
                 helperText={
-                  touched.published_at
+                  "published_at" in errors && "published_at" in touched
                     ? errors.published_at
-                      ? errors.published_at
-                      : "Доступно при статусе Готово к публикации"
-                    : undefined
+                    : "Доступно при статусе Готово к публикации"
                 }
                 inputVariant="outlined"
                 label="Дата публикации"
@@ -353,7 +360,7 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               id="seo_settings.keywords"
               name="seo_settings.keywords"
               label="Keywords"
-              value={values.seo_settings.keywords}
+              value={values.seo_settings.keywords ?? ""}
               error={
                 !!errors.seo_settings?.keywords &&
                 touched.seo_settings?.keywords
@@ -378,6 +385,7 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               id="seo_settings.description"
               name="seo_settings.description"
               label="Description"
+              value={values.seo_settings.description ?? ""}
               error={
                 !!errors.seo_settings?.description &&
                 touched.seo_settings?.description
@@ -403,6 +411,7 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               id="seo_settings.og_type"
               name="seo_settings.og_type"
               label="og:type"
+              select={true}
               value={values.seo_settings.og_type}
               error={
                 !!errors.seo_settings?.og_type && touched.seo_settings?.og_type
@@ -417,7 +426,13 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
               variant="outlined"
               onChange={handleChange}
               onBlur={handleBlur}
-            />
+            >
+              {ARTICLE_OG_TYPES.map((og_type) => (
+                <MenuItem key={og_type} value={og_type}>
+                  {og_type}
+                </MenuItem>
+              ))}
+            </TextField>
             <FormHelperText variant="filled">
               По умолчанию article
             </FormHelperText>
@@ -506,7 +521,7 @@ export const ArticleForm = memo(function ArticleForm(props: ArticleFormProps) {
       </Grid>
     </form>
   )
-})
+}
 
 const useStyles = makeStyles(() =>
   createStyles({

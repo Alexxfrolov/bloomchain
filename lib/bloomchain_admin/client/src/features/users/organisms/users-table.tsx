@@ -172,15 +172,6 @@ const UsersTableEditRow = (props: UsersTableEditRowProps) => {
       phone: data?.phone ?? "",
       inserted_at: data?.inserted_at ?? new Date(),
     },
-    initialTouched: {
-      first_name: false,
-      last_name: false,
-      role: false,
-      job: false,
-      email: false,
-      phone: false,
-      inserted_at: false,
-    },
     validationSchema: UserCreationSchema,
     onSubmit: async (values, actions) => {
       await onEditingApproved(mode, values, data)

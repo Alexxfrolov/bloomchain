@@ -40,6 +40,13 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaController do
     |> render("show.json", media: media)
   end
 
+  def show(conn, %{id: id}) do
+    media = Repo.get!(Media, id)
+
+    conn
+    |> render("show.json", media: media)
+  end
+
   def update(conn, %{id: id} = params) do
     media = Repo.get!(Media, id) |> Media.changeset(params) |> Repo.update!()
 

@@ -22,15 +22,19 @@ import { config } from "./config"
 
 type EditorProps = {
   options?: typeof config
-  value: string
+  content: string
   onChange: (value: string) => void
 }
 
-export const Editor = ({ options = config, value, onChange }: EditorProps) => (
-  <FroalaEditor
-    tag="textarea"
-    config={options}
-    model={value}
-    onModelChange={onChange}
-  />
-)
+export function RichTextEditor(props: EditorProps) {
+  const { options = config, content, onChange } = props
+
+  return (
+    <FroalaEditor
+      tag="textarea"
+      config={options}
+      model={content}
+      onModelChange={onChange}
+    />
+  )
+}

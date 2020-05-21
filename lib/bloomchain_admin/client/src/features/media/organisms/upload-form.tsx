@@ -1,4 +1,4 @@
-import React, { memo, Fragment, useState, useCallback } from "react"
+import React, { memo, Fragment, useState, useEffect, useCallback } from "react"
 import { useDropzone } from "react-dropzone"
 import {
   Box,
@@ -7,6 +7,7 @@ import {
   Tab,
   Paper,
   Typography,
+  FormControl,
   Dialog,
   GridList,
   GridListTile,
@@ -20,20 +21,25 @@ import CloseIcon from "@material-ui/icons/Close"
 import AddRoundedIcon from "@material-ui/icons/AddRounded"
 import CloudUploadOutlinedIcon from "@material-ui/icons/CloudUploadOutlined"
 import PermMediaOutlinedIcon from "@material-ui/icons/PermMediaOutlined"
+import EditIcon from "@material-ui/icons/Edit"
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline"
 import lightBlue from "@material-ui/core/colors/lightBlue"
 import grey from "@material-ui/core/colors/grey"
 import { ConditionalList } from "@ui"
 import { mediaApi, MediaFile } from "@api/media"
 import { RequestStatus } from "@features/core"
 
+import { EditMediaFormDialog } from "./edit-media-form-dialog"
+
 const MAX_FILE_SIZE = 1024 * 1024 * 50
 
 type MediaUploadFormProps = {
   accept?: string | string[]
   disabled?: boolean
-
+  initialMedia?: MediaFile
   maxSize?: number
-  onUpload: (image: MediaFile) => void
+  onUpload: (file: MediaFile) => void
+  onDeletePreview?: () => void
 }
 
 type MediaUploadFormState = {
@@ -42,12 +48,21 @@ type MediaUploadFormState = {
   request_status: RequestStatus
   error: string | null
   data: MediaFile[]
+  uploadedFile: MediaFile | null
+  isOpenedEditDialog: boolean
 }
 
 export const MediaUploadForm = memo(function MediaUploadForm(
   props: MediaUploadFormProps,
 ) {
-  const { accept = [], disabled, maxSize = MAX_FILE_SIZE, onUpload } = props
+  const {
+    accept = [],
+    disabled,
+    initialMedia = null,
+    maxSize = MAX_FILE_SIZE,
+    onUpload,
+    onDeletePreview,
+  } = props
   const classes = useStyles()
 
   const [state, setState] = useState<MediaUploadFormState>({
@@ -56,17 +71,34 @@ export const MediaUploadForm = memo(function MediaUploadForm(
     request_status: "success",
     error: null,
     data: [],
+    isOpenedEditDialog: false,
+    uploadedFile: initialMedia ?? null,
   })
+
+  useEffect(() => {
+    setState((state) => ({ ...state, uploadedFile: initialMedia }))
+  }, [initialMedia])
 
   const handleDrop = useCallback(
     async (files) => {
       if (files.length === 1) {
+        setState((state) => ({
+          ...state,
+          request_status: "pending",
+          error: null,
+        }))
         try {
-          const { data: image } = await mediaApi.create({
+          const { data } = await mediaApi.create({
             file: files[0],
             type: "image",
           })
-          onUpload(image)
+          setState((state) => ({
+            ...state,
+            request_status: "success",
+            error: null,
+            uploadedFile: data,
+          }))
+          onUpload(data)
         } catch (error) {
           setState((state) => ({ ...state, error, request_status: "error" }))
         }
@@ -75,16 +107,11 @@ export const MediaUploadForm = memo(function MediaUploadForm(
     [onUpload],
   )
 
-  const handleDropAccepted = useCallback((files, event) => {}, [])
-  const handleDropRejected = useCallback((files, event) => {}, [])
-
   const { getRootProps, getInputProps } = useDropzone({
     accept,
     disabled,
     maxSize,
     onDrop: handleDrop,
-    onDropAccepted: handleDropAccepted,
-    onDropRejected: handleDropRejected,
   })
 
   const handleChangeTab = useCallback(() => {
@@ -119,13 +146,46 @@ export const MediaUploadForm = memo(function MediaUploadForm(
     setState((state) => ({ ...state, isOpenedDialog: false }))
   }, [])
 
+  const updateMediaFile = (file: MediaFile) =>
+    mediaApi
+      .update(file)
+      .then((response) =>
+        setState((state) => ({
+          ...state,
+          request_status: "success",
+          error: null,
+          uploadedFile: response.data,
+        })),
+      )
+      .catch((error) =>
+        setState((state) => ({
+          ...state,
+          error,
+          request_status: "error",
+        })),
+      )
+      .finally(() =>
+        setState((state) => ({
+          ...state,
+          isOpenedEditDialog: false,
+        })),
+      )
+
   const handleAddButtonClick = useCallback(
     (image: MediaFile) => {
       onUpload(image)
+      setState((state) => ({ ...state, uploadedFile: image }))
       closeDialog()
     },
     [onUpload, closeDialog],
   )
+
+  const handleDeleteButtonClick = useCallback(() => {
+    if (onDeletePreview) {
+      onDeletePreview()
+    }
+    setState((state) => ({ ...state, uploadedFile: null }))
+  }, [onDeletePreview])
 
   return (
     <Fragment>
@@ -173,6 +233,58 @@ export const MediaUploadForm = memo(function MediaUploadForm(
         onAdd={handleAddButtonClick}
         onClose={closeDialog}
       />
+      {state.uploadedFile && (
+        <FormControl margin="normal" fullWidth={true}>
+          <Typography variant="h6" component="h6" gutterBottom={true}>
+            Предварительный просмотр:
+          </Typography>
+          <div className={classes.imagePreview}>
+            <img
+              className={classes.img}
+              src={state.uploadedFile.url}
+              alt={state.uploadedFile.alt ?? ""}
+            />
+            <GridListTileBar
+              titlePosition="bottom"
+              actionPosition="right"
+              actionIcon={
+                <div className={classes.imagePreviewActions}>
+                  <IconButton
+                    size="small"
+                    color="inherit"
+                    onClick={() =>
+                      setState((state) => ({
+                        ...state,
+                        isOpenedEditDialog: true,
+                      }))
+                    }
+                  >
+                    <EditIcon htmlColor="white" />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    color="inherit"
+                    onClick={handleDeleteButtonClick}
+                  >
+                    <DeleteOutlineIcon htmlColor="white" />
+                  </IconButton>
+                </div>
+              }
+              className={classes.titleBar}
+            />
+          </div>
+        </FormControl>
+      )}
+      {state.uploadedFile && (
+        <EditMediaFormDialog
+          isOpened={state.isOpenedEditDialog}
+          modifyingMediaFile={state.uploadedFile}
+          onUpdateMedia={updateMediaFile}
+          onClose={() =>
+            setState((state) => ({ ...state, isOpenedEditDialog: false }))
+          }
+        />
+      )}
     </Fragment>
   )
 })
@@ -202,6 +314,17 @@ const useStyles = makeStyles((theme) =>
       }),
       "&:hover": {
         borderColor: "rgba(0, 0, 0, 0.75)",
+      },
+    },
+    imagePreview: {
+      position: "relative",
+      display: "flex",
+      maxWidth: "300px",
+    },
+    imagePreviewActions: {
+      display: "flex",
+      "& > *": {
+        margin: theme.spacing(1),
       },
     },
     title: {

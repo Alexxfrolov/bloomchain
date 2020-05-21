@@ -152,9 +152,6 @@ const AuthorsTableEditRow = memo((props: AuthorsTableEditRowProps) => {
     initialValues: {
       name: data?.name ?? "",
     },
-    initialTouched: {
-      name: false,
-    },
     validationSchema: AuthorCreationSchema,
     onSubmit: async (values, actions) => {
       await onEditingApproved(mode, values, data)

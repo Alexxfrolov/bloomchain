@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect } from "react"
+import { useSnackbar } from "notistack"
 import { Container, Paper, Typography, Toolbar, Box } from "@material-ui/core"
 import { AxiosResponse } from "axios"
 import { articlesApi, Article } from "@api/articles"
 import { tagsApi, Tag } from "@api/tags"
 import { authorsApi, Author } from "@api/authors"
-import { ErrorDialog, SuccessDialog, RequestStatus } from "@features/core"
+import { RequestStatus } from "@features/core"
 import { ArticleForm } from "@features/articles"
 
 type ActicleCreatePageState = {
@@ -12,18 +13,16 @@ type ActicleCreatePageState = {
   error: string | null
   tags: Tag[]
   authors: Author[]
-  isOpenedSuccessDialog: boolean
-  isOpenedErrorDialog: boolean
 }
 
 export function ActicleCreatePage() {
+  const { enqueueSnackbar } = useSnackbar()
+
   const [state, setState] = useState<ActicleCreatePageState>({
     request_status: "pending",
     error: null,
     tags: [],
     authors: [],
-    isOpenedSuccessDialog: false,
-    isOpenedErrorDialog: false,
   })
 
   useEffect(() => {
@@ -40,29 +39,38 @@ export function ActicleCreatePage() {
           authors: authorsResponse.data.data,
         })),
       )
-      .catch((error) =>
-        setState((state) => ({ ...state, request_status: "error", error })),
-      )
-  }, [])
+      .catch((error) => {
+        setState((state) => ({ ...state, request_status: "error", error }))
+        enqueueSnackbar("Произошла ошибка", {
+          variant: "error",
+        })
+      })
+  }, [enqueueSnackbar])
 
-  const createArticle = useCallback(async (article: Article) => {
+  const createArticle = async (article: Article) => {
     try {
       await articlesApi.create(article)
       setState((state) => ({
         ...state,
         request_status: "success",
         error: null,
-        isOpenedSuccessDialog: true,
       }))
+      enqueueSnackbar("Статья успешно сохранена", {
+        variant: "success",
+      })
     } catch (error) {
       setState((state) => ({
         ...state,
         request_status: "error",
-        error,
-        isOpenedErrorDialog: true,
+        error: error.response.statusText,
       }))
+      const { errors = {} }: { errors: ServerError } = error.response.data
+      enqueueSnackbar(mapServerToClientError(errors), {
+        variant: "error",
+      })
+      return error.response.status
     }
-  }, [])
+  }
 
   return (
     <Container maxWidth="lg">
@@ -80,19 +88,18 @@ export function ActicleCreatePage() {
           />
         </Box>
       </Paper>
-      <SuccessDialog
-        title="Статья успешно сохранена"
-        isOpened={state.isOpenedSuccessDialog}
-        onClose={() =>
-          setState((state) => ({ ...state, isOpenedSuccessDialog: false }))
-        }
-      />
-      <ErrorDialog
-        isOpened={state.isOpenedErrorDialog}
-        onClose={() =>
-          setState((state) => ({ ...state, isOpenedErrorDialog: false }))
-        }
-      />
     </Container>
   )
+}
+
+interface ServerError {
+  [key: string]: string[]
+}
+
+const mapServerToClientError = (errors: ServerError | null | undefined) => {
+  if (errors) {
+    return "Статья с таким заголовком уже существует"
+  }
+
+  return "Произошла ошибка"
 }

@@ -11,6 +11,7 @@ export interface Article {
   lead: string | null
   published_at: Date | string | null
   seo_settings: SeoSettings
+  slug: string
   status: "published" | "draft" | "archive" | "ready"
   tags: import("../tags").Tag[]
   time: string | null
@@ -25,7 +26,7 @@ export interface Article {
     | "people"
     | "research"
   updated_at: Date | string | null
-  url?: string | null
+  url: string
 }
 
 export interface SeoSettings {
@@ -116,7 +117,7 @@ function create(article: Omit<Article, "id">) {
       tags: tags.reduce<number[]>((acc, tag) => [...acc, tag.id], []),
       seo_settings: {
         ...seo_settings,
-        keywords: seo_settings.keywords.length
+        keywords: seo_settings.keywords
           ? seo_settings.keywords.split(/[ ,]+/)
           : [],
       },

@@ -20,3 +20,18 @@ export const ARTICLE_TYPES_RECORD: Record<
   people: "Персона",
   research: "Исследования",
 }
+
+export const ARTICLE_OG_TYPES: import("@api/articles").SeoSettings["og_type"][] = [
+  "music.song",
+  "music.album",
+  "music.playlist",
+  "music.radio_station",
+  "video.movie",
+  "video.episode",
+  "video.tv_show",
+  "video.other",
+  "article",
+  "book",
+  "profile",
+  "website",
+]
