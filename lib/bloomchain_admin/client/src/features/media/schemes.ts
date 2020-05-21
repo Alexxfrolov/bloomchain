@@ -13,13 +13,13 @@ export const MediaCreationSchema = object().shape({
 })
 
 export const MediaEditingSchema = object().shape({
-  title: string().notRequired(),
+  title: string().nullable(true).notRequired(),
   alt: string().when("type", {
     is: (type) => type === "image",
-    then: string().required("Укажите alt изображения"),
-    otherwise: mixed().notRequired(),
+    then: string().nullable(true).required("Укажите alt изображения"),
+    otherwise: mixed().nullable(true).notRequired(),
   }),
-  source: string().notRequired(),
+  source: string().nullable(true).notRequired(),
   type: mixed().oneOf(["image", "pdf", "video"]),
 })
 

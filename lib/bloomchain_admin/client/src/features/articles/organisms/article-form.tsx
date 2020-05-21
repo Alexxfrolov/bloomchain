@@ -96,12 +96,17 @@ export function ArticleForm(props: ArticleFormProps) {
   )
 
   const handleUpload = useCallback(
-    (cover_id: number) => {
-      setFieldValue("cover_id", cover_id)
+    (image: import("@api/media").MediaFile) => {
+      setFieldValue("cover_id", image.id)
       setFieldTouched("cover_id", true)
     },
     [setFieldValue, setFieldTouched],
   )
+
+  const deleteCover = useCallback(() => {
+    setFieldValue("cover_id", null)
+    setFieldTouched("cover_id", true)
+  }, [setFieldValue, setFieldTouched])
 
   const tagsOptions = useMemo(
     () => computedUnusedOptionsByInitialOptionsList(tags, initialArticle.tags),
@@ -266,6 +271,7 @@ export function ArticleForm(props: ArticleFormProps) {
               initialMedia={initialArticle.cover ?? null}
               disabled={isSubmitting}
               onUpload={handleUpload}
+              onDeletePreview={deleteCover}
             />
           </FormControl>
           <FormControl margin="normal" fullWidth={true}>

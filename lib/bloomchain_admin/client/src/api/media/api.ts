@@ -26,6 +26,10 @@ function get(params: Params) {
   })
 }
 
+function getById(id: number) {
+  return request<MediaFile>("GET", `/media/${id}`)
+}
+
 export interface UploadableMediaFile {
   alt?: string
   file: File
@@ -43,7 +47,7 @@ function create(file: UploadableMediaFile) {
 }
 
 export interface EditableMediaFile {
-  alt: string
+  alt: string | null
   id: MediaFile["id"]
   source?: string | null
   title?: string | null
@@ -63,6 +67,7 @@ function remove(id: number) {
 
 export const mediaApi = {
   get,
+  getById,
   create,
   update,
   remove,
