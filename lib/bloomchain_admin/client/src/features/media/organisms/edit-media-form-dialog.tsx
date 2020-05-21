@@ -39,12 +39,6 @@ export const EditMediaFormDialog = memo(function (
     initialValues: {
       ...modifyingMediaFile,
     },
-    initialTouched: {
-      alt: false,
-      url: false,
-      source: false,
-      title: false,
-    },
     validationSchema: MediaEditingSchema,
     onSubmit: async (values, { setSubmitting }) => {
       await onUpdateMedia(values)

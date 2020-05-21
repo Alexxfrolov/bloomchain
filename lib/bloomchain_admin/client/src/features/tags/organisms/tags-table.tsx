@@ -145,9 +145,6 @@ const TagsTableEditRow = (props: TagsTableEditRowProps) => {
     initialValues: {
       name: data?.name ?? "",
     },
-    initialTouched: {
-      name: false,
-    },
     validationSchema: TagCreationSchema,
     validateOnBlur: false,
     onSubmit: async (values, actions) => {

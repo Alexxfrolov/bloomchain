@@ -88,14 +88,6 @@ const AccountSettingsForm = memo((props: AccountSettingsFormProps) => {
       ...user,
       password: "",
     },
-    initialTouched: {
-      first_name: false,
-      last_name: false,
-      email: false,
-      phone: false,
-      job: false,
-      password: false,
-    },
     validationSchema: UserEditSchema,
     onSubmit: async (values, { setSubmitting }) => {
       await onSubmit(values)

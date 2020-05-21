@@ -1,15 +1,32 @@
-import { array, date, object, string, number } from "yup"
+import { mixed, array, date, object, string, number } from "yup"
 
 export const ArticleCreationSchema = object().shape({
-  type: string().nullable(true).required("Укажите раздел публикации"),
-  status: string().nullable(true).required("Укажите статус публикации"),
+  type: mixed()
+    .oneOf([
+      null,
+      "newsfeed",
+      "detailed",
+      "analysis",
+      "in-russia",
+      "calendar",
+      "people",
+      "research",
+    ])
+    .required("Укажите раздел публикации"),
+  status: mixed()
+    .oneOf([null, "published", "draft", "archive", "ready"])
+    .required("Укажите статус публикации"),
   title: string().required("Укажите заголовок статьи"),
   lead: string().when("status", {
     is: (status) => ["published", "ready"].includes(status),
     then: string()
+      .nullable(true)
       .max(255, "Не более 255 символов")
       .required("Лид статьи не заполнен"),
-    otherwise: string().max(255, "Не более 255 символов").notRequired(),
+    otherwise: string()
+      .nullable(true)
+      .max(255, "Не более 255 символов")
+      .notRequired(),
   }),
   body: string().when("status", {
     is: (status) => ["published", "ready"].includes(status),
@@ -35,16 +52,17 @@ export const ArticleCreationSchema = object().shape({
       .nullable(true)
       .max(255, "Не более 255 символов")
       .notRequired(),
-    keywords: array()
-      .of(string())
-      .when("status", {
-        is: (status) => ["published", "ready"].includes(status),
-        then: array().of(string()).required("Укажите ключевые слова"),
-        otherwise: array().of(string()).notRequired(),
-      }),
+    keywords: string().when("status", {
+      is: (status) => ["published", "ready"].includes(status),
+      then: string().nullable(false).required("Укажите ключевые слова"),
+      otherwise: string().nullable(true).notRequired(),
+    }),
     og_type: string().notRequired(),
-    og_title: string().notRequired(),
-    og_description: string().max(255, "Не более 255 символов").notRequired(),
+    og_title: string().nullable(true).notRequired(),
+    og_description: string()
+      .nullable(true)
+      .max(255, "Не более 255 символов")
+      .notRequired(),
   }),
   published_at: date()
     .nullable(true)
@@ -55,23 +73,11 @@ export const ArticleCreationSchema = object().shape({
         .required("Укажите дату публикации"),
       otherwise: date().notRequired(),
     }),
-  cover: object()
-    .nullable(true)
-    .when("status", {
-      is: (status) => ["published", "ready"].includes(status),
-      then: object()
-        .shape({
-          alt: string().nullable(true).required("Укажите Alt обложке"),
-          title: string().nullable(true).notRequired(),
-        })
-        .required("Укажите обложку статьи"),
-      otherwise: object()
-        .shape({
-          alt: string().nullable(true).required("Укажите Alt обложке"),
-          title: string().nullable(true).notRequired(),
-        })
-        .notRequired(),
-    }),
+  cover_id: number().when("status", {
+    is: (status) => ["published", "ready"].includes(status),
+    then: number().nullable(true).required("Загрузите обложку для статьи"),
+    otherwise: number().nullable(true).notRequired(),
+  }),
   time: number()
     .nullable(true)
     .integer("Время прочтения не может быть дробным числом")

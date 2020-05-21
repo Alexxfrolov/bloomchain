@@ -56,12 +56,6 @@ export const AddMediaFormDialog = memo(function (
       source: "",
       type,
     },
-    initialTouched: {
-      file: false,
-      title: false,
-      alt: false,
-      source: false,
-    },
     validationSchema: MediaCreationSchema,
     validateOnBlur: false,
     validateOnChange: false,

@@ -45,7 +45,7 @@ export function ActicleCreatePage() {
       )
   }, [])
 
-  const createArticle = useCallback(async (article: Article) => {
+  const createArticle = async (article: Article) => {
     try {
       await articlesApi.create(article)
       setState((state) => ({
@@ -62,7 +62,7 @@ export function ActicleCreatePage() {
         isOpenedErrorDialog: true,
       }))
     }
-  }, [])
+  }
 
   return (
     <Container maxWidth="lg">
