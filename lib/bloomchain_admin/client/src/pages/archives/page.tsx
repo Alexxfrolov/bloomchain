@@ -123,7 +123,7 @@ export function ArchivesPage() {
   }, [])
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="lg">
       <ArchivesTable
         data={state.data}
         isLoading={state.request_status === "pending"}

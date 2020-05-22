@@ -304,7 +304,7 @@ const useStyles = makeStyles((theme) =>
       flex: "1 1 10%",
     },
     toolbarSearchField: {
-      "min-width": "300px",
+      "min-width": "500px",
       "padding-left": "16px",
     },
     toolbarDate: {

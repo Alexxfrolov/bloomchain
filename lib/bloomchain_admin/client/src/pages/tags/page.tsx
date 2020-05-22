@@ -119,7 +119,7 @@ export function TagsPage() {
   }, [])
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="lg">
       <TagsTable
         data={state.data}
         isLoading={state.request_status === "pending"}

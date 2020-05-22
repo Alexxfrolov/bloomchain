@@ -92,7 +92,7 @@ const columns: Column<Tag>[] = [
     field: "name",
   },
   {
-    title: "Описание",
+    title: "Slug",
     field: "slug",
   },
   {
@@ -189,7 +189,7 @@ const TagsTableEditRow = (props: TagsTableEditRowProps) => {
             helperText={touched.name ? errors.name : undefined}
             fullWidth={true}
             variant="standard"
-            placeholder="Имя"
+            placeholder="Наименование"
             onChange={handleChange}
             onBlur={handleBlur}
           />

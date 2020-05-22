@@ -32,7 +32,7 @@ export const Table = <T extends object>(props: MaterialTableProps<T>) => {
     sorting: true,
     thirdSortClick: false,
     paginationType: "stepped",
-    emptyRowsWhenPaging: false,
+    emptyRowsWhenPaging: true,
     headerStyle: {
       backgroundColor: indigo[600],
       color: "#fff",

@@ -89,7 +89,7 @@ export function SubscribersPage() {
   )
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="lg">
       <SubscribersTable
         data={state.data}
         isLoading={state.request_status === "pending"}
