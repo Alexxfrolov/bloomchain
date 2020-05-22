@@ -54,7 +54,7 @@ defmodule Bloomchain.Content.Post do
   end
 
   @required_fields ~w(title type)a
-  @optional_fields ~w(id slug body lead type status time cover_id published_at seo_settings)a
+  @optional_fields ~w(id slug body lead type status time cover_id published_at total_views seo_settings)a
 
   def changeset(post, attrs) do
     post

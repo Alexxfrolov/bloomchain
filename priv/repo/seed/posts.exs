@@ -37,12 +37,6 @@ replace_caption = fn item ->
     ~r/\[caption(.*?)\[\/caption\]/,
     item,
     fn tag, _ ->
-      id =
-        Regex.run(~r/(?<=id=\")(.*?)(?=\" )/, tag, capture: :first)
-        |> List.first()
-        |> String.replace("attachment_", "")
-        |> String.to_integer()
-
       src = Regex.run(~r/(?<=src=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
       width = Regex.run(~r/(?<=width=\")(.*?)(?=\"])/, tag, capture: :first) |> List.first()
       height = Regex.run(~r/(?<=height=\")(.*?)(?=\" )/, tag, capture: :first) |> List.first()
@@ -72,13 +66,17 @@ replace_caption = fn item ->
 end
 
 replace_strong_tags = fn item ->
-  item
-  |> String.replace(["<h3><strong>", "<h3><b>"], "<h3>")
-  |> String.replace(["</strong></h3>", "</b></h3>"], "</h3>")
-  |> String.replace(["<h2><strong>", "<h2><b>"], "<h2>")
-  |> String.replace(["</strong></h2>", "</b></h2>"], "</h2>")
-  |> String.replace(["<h1><strong>", "<h1><b>"], "<h1>")
-  |> String.replace(["</strong></h1>", "</b></h1>"], "</h1>")
+  Regex.replace(
+    ~r/<h[0-9]{1,1}>(.*?)<\/h[0-9]>/,
+    item,
+    fn tag, _ ->
+      tag
+      |> String.replace(
+        ["<span style=\"font-weight: 400\"", "<b>", "</b>", "<strong>", "</strong>"],
+        ""
+      )
+    end
+  )
 end
 
 replace_blockquote = fn item ->
@@ -160,6 +158,9 @@ end)
     else
       ""
     end
+
+  require IEx
+  IEx.pry()
 
   Repo.insert!(
     Post.changeset(%Post{}, %{
