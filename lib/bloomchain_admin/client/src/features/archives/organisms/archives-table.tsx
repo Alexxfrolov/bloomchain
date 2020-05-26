@@ -6,8 +6,8 @@ import { Archive } from "@api/archives"
 import { Table } from "@features/core"
 
 type ArchivesTableProps = {
-  isLoading: boolean
   data: Archive[]
+  isLoading: boolean
   pagination: Pagination
   onChangePage: (page: number) => void
   onChangeRowsPerPage: (pageSize: number) => void
@@ -15,7 +15,6 @@ type ArchivesTableProps = {
     orderBy: keyof Archive,
     orderDirection: OrderDirection,
   ) => void
-  onRowAdd: (tag: Archive) => Promise<void>
   onRowDelete: (tag: Archive) => Promise<void>
 }
 
@@ -29,7 +28,6 @@ export const ArchivesTable = memo(function ArchivesTable(
     onChangePage,
     onChangeRowsPerPage,
     onOrderChange,
-    onRowAdd,
     onRowDelete,
   } = props
 
@@ -41,8 +39,6 @@ export const ArchivesTable = memo(function ArchivesTable(
     [onOrderChange],
   )
 
-  const handleRowAdd = useCallback((tag: Archive) => onRowAdd(tag), [onRowAdd])
-
   const handleRowDelete = useCallback((tag: Archive) => onRowDelete(tag), [
     onRowDelete,
   ])
@@ -51,20 +47,19 @@ export const ArchivesTable = memo(function ArchivesTable(
 
   return (
     <Table
-      title="Исследования (архив)"
       data={data}
       columns={columns}
       isLoading={isLoading}
       page={pagination.page - 1}
       totalCount={pagination.total_items}
       options={{
+        toolbar: false,
         sorting: notEmptyData,
         paging: notEmptyData,
         pageSize: pagination.page_size,
         pageSizeOptions: pagination.page_size_options,
       }}
       editable={{
-        onRowAdd: handleRowAdd,
         onRowDelete: handleRowDelete,
       }}
       onOrderChange={handleOrderChange}
@@ -82,6 +77,7 @@ const columns: Column<Archive>[] = [
     render: (archive) => (
       <img
         width="100%"
+        style={{ objectFit: "contain" }}
         src={archive.cover.url}
         alt={archive.cover.alt ?? ""}
         title={archive.cover.title ?? ""}

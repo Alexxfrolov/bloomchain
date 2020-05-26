@@ -1,8 +1,8 @@
 <%= form_for @conn, page_path(@conn, :create), fn f-> %>
 
-  <div class="bc-footer__subscribe">
+  <div class="bc-footer__subscribe align-items-center align-items-md-start">
 
-    <div id="js-subscription-input">
+    <div id="js-subscription-input" class="bc-footer__input_wrapper">
       <%= if get_flash(@conn, :subscription_error) do %>
 
         <%= email_input f, :email, value: get_flash(@conn, :subscription_email), placeholder: "Ваш Email", class: "bc-footer__input bg-transparent border-0" %>

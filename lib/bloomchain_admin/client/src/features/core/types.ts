@@ -6,4 +6,4 @@ export interface HeadCell<T> {
   width?: string
 }
 
-export type RequestStatus = "pending" | "success" | "error"
+export type RequestStatus = "idle" | "pending" | "success" | "error"

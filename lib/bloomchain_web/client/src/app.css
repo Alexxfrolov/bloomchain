@@ -7248,6 +7248,9 @@ button.bg-dark:focus {
         text-align: center;
         margin-right: 0 !important;
         width: 100%; } }
+        .bc-footer__input_wrapper {
+          width: 100%;
+        }
   @media (max-width: 767.98px) {
     .bc-footer__button {
       margin: 30px auto 0; } }

@@ -40,7 +40,7 @@
         <img class="bc-footer__img" src="/customer/images/logo-white.svg">
       </div>
       <div class="bc-footer__links col-xl-6 col-lg-5 col-md-6">
-        <div>
+        <div class="row flex-column flex-sm-row">
           <a class="bc-footer__link" target="_blank" href="https://bloomchain.ru/BloomChain-Mediakit-2019.pdf">Медиа-кит</a>
           <%# <a class="bc-footer__link" target="_blank" href="#">О нас</a> %>
           <%# <a class="bc-footer__link" target="_blank" href="#">Контакты</a> %>

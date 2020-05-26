@@ -16,7 +16,7 @@ import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import { ru } from "date-fns/locale"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import { useFormik } from "formik"
-import { RichTextEditor } from "@lib/editor"
+import { RichEditor } from "@lib/rich-editor"
 import { Article } from "@api/articles"
 import { Author } from "@api/authors"
 import { Tag } from "@api/tags"
@@ -257,10 +257,7 @@ export function ArticleForm(props: ArticleFormProps) {
             />
           </FormControl>
           <FormControl margin="normal" fullWidth={true}>
-            <RichTextEditor
-              content={values.body}
-              onChange={handleChangeEditor}
-            />
+            <RichEditor content={values.body} onChange={handleChangeEditor} />
             {"body" in errors && touched.body && (
               <FormHelperText error={true}>{errors.body}</FormHelperText>
             )}

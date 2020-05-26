@@ -109,7 +109,6 @@ function create(article: Omit<Article, "id">) {
     const { tags, authors, seo_settings, cover, ...rest } = article
     const data = {
       ...rest,
-      cover_id: cover?.id ?? null,
       authors: authors.reduce<number[]>(
         (acc, author) => [...acc, author.id],
         [],
@@ -142,7 +141,6 @@ function update(
         [],
       ),
       tags: tags.reduce<number[]>((acc, tag) => [...acc, tag.id], []),
-      cover_id: cover?.id ?? null,
       seo_settings: {
         ...seo_settings,
         keywords: seo_settings.keywords.length

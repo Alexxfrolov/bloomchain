@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useRef, FormEvent } from "react"
+import React, { useCallback } from "react"
+import { useFormik } from "formik"
 import {
   Dialog,
   DialogTitle,
@@ -6,77 +7,70 @@ import {
   DialogActions,
   Typography,
   FormControl,
+  FormHelperText,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  Link,
   Button,
 } from "@material-ui/core"
-import { archivesApi, Archive } from "@api/archives"
-import { mediaApi, MediaFile } from "@api/media"
-import { MediaUploadForm } from "@features/media"
+import PictureAsPdfOutlinedIcon from "@material-ui/icons/PictureAsPdfOutlined"
+import { getBlobUrl } from "@lib/blob"
+import { DropZone } from "@features/core"
+
+import { ArchiveCreationSchema } from "../schemes"
 
 type AddArchiveFormDialogProps = {
-  addArchive: (archive: Archive) => Promise<void>
+  isOpened: boolean
+  onSubmit: (cover: File, pdf: File) => Promise<void>
+  onClose: () => void
 }
 
 export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
-  const { addArchive } = props
+  const { isOpened, onClose } = props
 
-  const [opened, setOpened] = useState(false)
-
-  const [archive, setArchive] = useState({
-    cover: null,
-    pdf: {
-      file: null,
-      id: null,
-      url: "",
-      type: "pdf",
+  const {
+    values,
+    touched,
+    errors,
+    isSubmitting,
+    handleSubmit,
+    setFieldValue,
+  } = useFormik<{
+    cover: File | null
+    pdf: File | null
+  }>({
+    initialValues: {
+      cover: null,
+      pdf: null,
+    },
+    validationSchema: ArchiveCreationSchema,
+    onSubmit: async ({ cover, pdf }, { setSubmitting }) => {
+      await props.onSubmit(cover as File, pdf as File)
+      setSubmitting(false)
     },
   })
 
-  const pdfFileInputRef = useRef<HTMLInputElement>(null)
-  const pdfRef = useRef<HTMLEmbedElement>(null)
-
-  const handlePDFFileInputChange = useCallback(() => {
-    if (pdfFileInputRef.current && pdfFileInputRef.current.files !== null) {
-      const blobURL = URL.createObjectURL(pdfFileInputRef.current.files[0])
-      pdfRef.current?.setAttribute("data", blobURL)
-      pdfRef.current?.removeAttribute("hidden")
-      pdfRef.current?.setAttribute("style", "height: 300px;")
-      setArchive({
-        ...archive,
-        pdf: {
-          ...archive.pdf,
-          file: pdfFileInputRef.current.files[0],
-        },
-      })
-    }
-  }, [archive, setArchive])
-
-  const handleUpload = useCallback(
-    (image: MediaFile) => {
-      setArchive({
-        ...archive,
-        cover: image,
-      })
+  const handleDropImage = useCallback(
+    (files: File[]) => {
+      setFieldValue("cover", files[0])
     },
-    [archive, setArchive],
+    [setFieldValue],
   )
 
-  const handleSubmit = useCallback(
-    async (event: FormEvent) => {
-      event.preventDefault()
-      try {
-        const pdf = await mediaApi.create(archive.pdf)
-        const response = await archivesApi.create(archive.cover.id, pdf.data.id)
-        addArchive(response.data)
-        setOpened(false)
-      } catch {}
+  const handleDropPdf = useCallback(
+    (files: File[]) => {
+      setFieldValue("pdf", files[0])
     },
-    [archive, setOpened, addArchive],
+    [setFieldValue],
   )
 
   return (
     <Dialog
-      open={opened}
-      onClose={() => setOpened(false)}
+      open={isOpened}
+      onClose={onClose}
       aria-labelledby="add-archive-form-dialog"
     >
       <form onSubmit={handleSubmit} noValidate={true}>
@@ -84,58 +78,75 @@ export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
           Добавить новый архив
         </DialogTitle>
         <DialogContent dividers={true}>
-          <FormControl margin="normal" fullWidth={true} variant="outlined">
-            <Typography variant="h6" component="h6" gutterBottom={false}>
+          <FormControl margin="normal" fullWidth={true}>
+            <Typography variant="h6" component="h6">
               Обложка
             </Typography>
           </FormControl>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
-            <MediaUploadForm onUpload={handleUpload} />
+            <DropZone
+              title="Переместите сюда изображение"
+              accept={["image/jpeg", "image/png"]}
+              disabled={isSubmitting}
+              onDrop={handleDropImage}
+            />
+            {"cover" in errors && touched.cover && (
+              <FormHelperText error={true}>{errors.cover}</FormHelperText>
+            )}
           </FormControl>
-          {archive.cover && (
-            <FormControl margin="normal" fullWidth={true} variant="outlined">
+          {values.cover && getBlobUrl(values.cover) && (
+            <FormControl margin="normal" fullWidth={true}>
+              <Typography variant="h6" component="h6" gutterBottom={true}>
+                Предварительный просмотр:
+              </Typography>
               <img
-                src={archive.cover.url}
+                style={{ objectFit: "contain" }}
                 width="100%"
-                alt={archive.cover?.alt ?? ""}
+                src={getBlobUrl(values.cover)}
+                alt=""
               />
             </FormControl>
           )}
-          <FormControl margin="normal" fullWidth={true} variant="outlined">
+          <FormControl margin="normal" fullWidth={true}>
             <Typography variant="h6" component="h6">
               PDF
             </Typography>
           </FormControl>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
-            <object
-              ref={pdfRef}
-              type="application/pdf"
-              width="100%"
-              hidden
-              aria-label="pdf preview"
-            ></object>
-          </FormControl>
-          <FormControl margin="normal" fullWidth={true} variant="outlined">
-            <input
+            <DropZone
+              title="Переместите сюда пдф"
               accept="application/pdf"
-              id="pdf"
-              ref={pdfFileInputRef}
-              type="file"
-              style={{ display: "none" }}
-              onChange={handlePDFFileInputChange}
+              disabled={isSubmitting}
+              onDrop={handleDropPdf}
             />
-            <label htmlFor="pdf">
-              <Button variant="contained" color="primary" component="span">
-                Добавить PDF
-              </Button>
-            </label>
+            {"pdf" in errors && touched.pdf && (
+              <FormHelperText error={true}>{errors.pdf}</FormHelperText>
+            )}
           </FormControl>
+          {values.pdf && getBlobUrl(values.pdf) && (
+            <FormControl margin="normal" fullWidth={true}>
+              <List>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <PictureAsPdfOutlinedIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>
+                    <Link href={getBlobUrl(values.pdf)} target="_blank">
+                      {values.pdf.name}
+                    </Link>
+                  </ListItemText>
+                </ListItem>
+              </List>
+            </FormControl>
+          )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpened(false)} color="primary">
+          <Button onClick={onClose} color="primary">
             Отменить
           </Button>
-          <Button type="submit" color="primary">
+          <Button type="submit" disabled={isSubmitting} color="primary">
             Сохранить
           </Button>
         </DialogActions>

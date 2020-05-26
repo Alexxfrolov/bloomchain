@@ -1,5 +1,6 @@
 export {
   DeleteDialog,
+  DropZone,
   FullPageErrorScreen,
   FullPageLoadScreen,
   MainMenu,

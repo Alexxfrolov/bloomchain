@@ -337,7 +337,8 @@ const useStyles = makeStyles((theme) =>
     },
     img: {
       maxWidth: "100%",
-      height: "auto",
+      maxHeight: "250px",
+      objectFit: "contain",
     },
     titleBar: {
       padding: "0 0.9375rem",

@@ -1,9 +1,6 @@
-import React, { useCallback } from "react"
+import React, { Fragment, useCallback } from "react"
 import { useRoute } from "react-router5"
-import { SnackbarProvider } from "notistack"
 import CssBaseline from "@material-ui/core/CssBaseline"
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles"
-import { ruRU } from "@material-ui/core/locale"
 import {
   ActicleCreatePage,
   ActicleEditPage,
@@ -16,14 +13,7 @@ import {
   UserAccountPage,
   UsersPage,
 } from "@pages"
-import {
-  CommonTemplate,
-  UserProvider,
-  MainMenu,
-  CloseNotifications,
-} from "@features/core"
-
-const theme = createMuiTheme({}, ruRU)
+import { CommonTemplate, MainMenu } from "@features/core"
 
 export const App = () => {
   const { route } = useRoute()
@@ -60,24 +50,11 @@ export const App = () => {
   }, [route.name])
 
   return (
-    <ThemeProvider theme={theme}>
-      <SnackbarProvider
-        hideIconVariant={true}
-        preventDuplicate={true}
-        maxSnack={10}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        action={(key) => <CloseNotifications notificationKey={key} />}
-      >
-        <CssBaseline />
-        <UserProvider>
-          <CommonTemplate menu={<MainMenu openedDrawer={false} />}>
-            {setPageByRoute()}
-          </CommonTemplate>
-        </UserProvider>
-      </SnackbarProvider>
-    </ThemeProvider>
+    <Fragment>
+      <CssBaseline />
+      <CommonTemplate menu={<MainMenu openedDrawer={false} />}>
+        {setPageByRoute()}
+      </CommonTemplate>
+    </Fragment>
   )
 }

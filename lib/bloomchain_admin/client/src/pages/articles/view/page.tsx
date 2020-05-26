@@ -37,10 +37,14 @@ export function ArticlesViewPage() {
   const classes = useStyles()
   const { route, router } = useRoute()
 
+  const initialStatus = route.name.split(".")[2] as Article["status"]
+
   const [state, setState] = useState<ArticlesViewPageState>({
     data: [],
     error: null,
-    orderBy: "published_at",
+    orderBy: ["published", "ready"].includes(initialStatus)
+      ? "published_at"
+      : "inserted_at",
     orderDirection: "desc",
     pagination: {
       page: 1,
@@ -51,16 +55,20 @@ export function ArticlesViewPage() {
     },
     query: "",
     since: null,
-    status: route.name.split(".")[2] as Article["status"],
+    status: initialStatus,
     request_status: "pending",
     type: "newsfeed",
     until: null,
   })
 
+  console.log(state)
+
   useEffect(() => {
+    const status = route.name.split(".")[2] as Article["status"]
+
     if (state.query.length === 0) {
       const params = {
-        status: route.name.split(".")[2] as Article["status"],
+        status,
         type: state.type,
         page_size: state.pagination.page_size,
         page: state.pagination.page,
@@ -87,12 +95,12 @@ export function ArticlesViewPage() {
         .finally(() =>
           setState((state) => ({
             ...state,
-            status: route.name.split(".")[2] as Article["status"],
+            status,
           })),
         )
     } else {
       const params = {
-        status: route.name.split(".")[2] as Article["status"],
+        status,
         type: state.type,
         query: state.query,
       } as const
@@ -134,25 +142,33 @@ export function ArticlesViewPage() {
   useEffect(() => {
     setState((state) => ({
       ...state,
-      orderBy: "published_at",
+      orderBy: ["published", "ready"].includes(
+        route.name.split(".")[2] as Article["status"],
+      )
+        ? "published_at"
+        : "inserted_at",
       orderDirection: "desc",
       type: "newsfeed",
       query: "",
       since: null,
       until: null,
     }))
-  }, [state.status])
+  }, [state.status, route.name])
 
   useEffect(() => {
     setState((state) => ({
       ...state,
-      orderBy: "published_at",
+      orderBy: ["published", "ready"].includes(
+        route.name.split(".")[2] as Article["status"],
+      )
+        ? "published_at"
+        : "inserted_at",
       orderDirection: "desc",
       query: "",
       since: null,
       until: null,
     }))
-  }, [state.type])
+  }, [state.type, route.name])
 
   const handleDateSinceChange = (date: Date | null) =>
     setState((state) => ({ ...state, since: date }))

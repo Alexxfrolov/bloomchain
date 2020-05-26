@@ -96,12 +96,13 @@ export function ActicleEditPage() {
   const updateArticle = useCallback(
     async (article: Article) => {
       try {
-        await articlesApi.update(article)
+        const response = await articlesApi.update(article)
         setState((state) => ({
           ...state,
           error: null,
           request_status: "success",
         }))
+        setArticle((state) => ({ ...state, ...response.data }))
         enqueueSnackbar("Статья успешно обновлена", {
           variant: "success",
         })

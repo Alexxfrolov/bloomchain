@@ -2,8 +2,7 @@ import "react-app-polyfill/stable"
 
 import React from "react"
 import ReactDOM from "react-dom"
-import { RouterProvider } from "react-router5"
-import { router } from "@features/core"
+import { AppProviders, router } from "@features/core"
 
 import * as serviceWorker from "./service-worker"
 import { App } from "./app"
@@ -13,9 +12,9 @@ const root = document.getElementById("root")
 const render = () => {
   if (root) {
     ReactDOM.render(
-      <RouterProvider router={router}>
+      <AppProviders>
         <App />
-      </RouterProvider>,
+      </AppProviders>,
       root,
     )
   } else {

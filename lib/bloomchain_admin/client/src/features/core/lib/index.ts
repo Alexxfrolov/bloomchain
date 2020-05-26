@@ -1,4 +1,3 @@
 export { request } from "./request"
-export { router } from "./router"
-export { RouterLink } from "./router-link"
-export { UserProvider, useCurrentUser } from "./user-provider"
+export { router, RouterLink } from "./router"
+export { AppProviders, UserProvider, useCurrentUser } from "./context"

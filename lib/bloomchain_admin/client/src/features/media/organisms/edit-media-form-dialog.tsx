@@ -17,14 +17,14 @@ type EditMediaFormDialogProps = {
   modifyingMediaFile: MediaFile
   isOpened: boolean
   onClose: () => void
-  onUpdateMedia: (mediaFile: MediaFile) => Promise<void>
+  onSubmit: (mediaFile: MediaFile) => Promise<void>
 }
 
 // TODO: add touched check
 export const EditMediaFormDialog = memo(function (
   props: EditMediaFormDialogProps,
 ) {
-  const { modifyingMediaFile, isOpened, onClose, onUpdateMedia } = props
+  const { modifyingMediaFile, isOpened, onClose, onSubmit } = props
 
   const {
     values,
@@ -41,7 +41,7 @@ export const EditMediaFormDialog = memo(function (
     },
     validationSchema: MediaEditingSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      await onUpdateMedia(values)
+      await onSubmit(values)
       setSubmitting(false)
     },
   })
@@ -58,7 +58,12 @@ export const EditMediaFormDialog = memo(function (
         </DialogTitle>
         <DialogContent>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
-            <img width="100%" src={values.url} alt={values.alt ?? ""} />
+            <img
+              style={{ objectFit: "contain" }}
+              width="100%"
+              src={values.url}
+              alt={values.alt ?? ""}
+            />
           </FormControl>
           <TextField
             id="alt"
