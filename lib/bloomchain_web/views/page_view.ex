@@ -11,7 +11,7 @@ defmodule BloomchainWeb.PageView do
       content_tag(:div, class: "bc-article__image") do
         [
           do_image_tag(item),
-          content_tag(:p, item.title),
+          content_tag(:p, Phoenix.HTML.raw(item.title)),
           content_tag(:div, class: "d-flex align-items-center") do
             SharedView.article_attrs(item)
           end
@@ -23,7 +23,10 @@ defmodule BloomchainWeb.PageView do
   def render_article(item, conn: _conn, path: path) do
     content_tag(:div) do
       [
-        link(item.title, to: path, class: "bc-article__heading line-clamp line-clamp__size_3"),
+        link(Phoenix.HTML.raw(item.title),
+          to: path,
+          class: "bc-article__heading line-clamp line-clamp__size_3"
+        ),
         content_tag(:p, item.lead,
           class: "bc-article__paragraph mt-1 line-clamp line-clamp__size_3"
         ),
@@ -43,7 +46,7 @@ defmodule BloomchainWeb.PageView do
           class: "bc-news__time"
         ),
         link(
-          item.title,
+          Phoenix.HTML.raw(item.title),
           to: newsfeed_path(conn, :show, item.slug),
           class:
             "bc-news__title bc-article__heading font-weight-medium line-clamp line-clamp__size_2"

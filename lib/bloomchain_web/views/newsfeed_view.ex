@@ -16,7 +16,7 @@ defmodule BloomchainWeb.NewsfeedView do
       [
         content_tag(:span, formatted_time(item.published_at), class: "bc-news__time"),
         link(
-          item.title,
+          Phoenix.HTML.raw(item.title),
           to: href_path(item),
           class: "bc-news__title bc-article__heading font-weight-medium"
         )
