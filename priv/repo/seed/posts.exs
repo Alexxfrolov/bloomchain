@@ -72,7 +72,7 @@ replace_strong_tags = fn item ->
     fn tag, _ ->
       tag
       |> String.replace(
-        ["<span style=\"font-weight: 400\"", "<b>", "</b>", "<strong>", "</strong>"],
+        ["<span style=\"font-weight: 400\">", "<b>", "</b>", "<strong>", "</strong>"],
         ""
       )
     end
@@ -158,9 +158,6 @@ end)
     else
       ""
     end
-
-  require IEx
-  IEx.pry()
 
   Repo.insert!(
     Post.changeset(%Post{}, %{

@@ -10,15 +10,15 @@
 
 ## From Ecto.Changeset.cast/4
 msgid "can't be blank"
-msgstr ""
+msgstr "Не может быть пустым"
 
 ## From Ecto.Changeset.unique_constraint/3
 msgid "has already been taken"
-msgstr ""
+msgstr "с таким именем уже существует"
 
 ## From Ecto.Changeset.put_change/3
 msgid "is invalid"
-msgstr ""
+msgstr "не верный"
 
 ## From Ecto.Changeset.validate_acceptance/3
 msgid "must be accepted"
@@ -80,7 +80,7 @@ msgstr[1] ""
 
 ## From Ecto.Changeset.validate_number/3
 msgid "must be less than %{number}"
-msgstr ""
+msgstr "должно быть более %{number} символов"
 
 msgid "must be greater than %{number}"
 msgstr ""
