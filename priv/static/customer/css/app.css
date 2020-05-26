@@ -10102,11 +10102,6 @@ html.lb-disable-scrolling {
   padding: 0.25rem 1rem;
 }
 
-.main {
-  overflow-x: hidden;
-  overflow-y: scroll;
-}
-
 .article {
   display: block;
   font-size: 1rem;
@@ -10182,7 +10177,7 @@ html.lb-disable-scrolling {
   background: #fff;
 }
 
-@media ( max-width: 991.98px) {
+/* @media ( max-width: 991.98px) {
   .article blockquote:after {
     content: '';
     display: block;
@@ -10195,7 +10190,7 @@ html.lb-disable-scrolling {
     height: 100%;
     background: #fff;
   }
-}
+} */
 
 .article blockquote > div {
   position: relative;
