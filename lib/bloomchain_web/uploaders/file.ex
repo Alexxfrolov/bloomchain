@@ -3,6 +3,7 @@ defmodule BloomchainWeb.Uploaders.File do
   use Arc.Ecto.Definition
 
   # @versions [:original]
+  @acl :public_read
 
   def validate({file, %{type: "image"}}) do
     ~w(.jpg .jpeg .png) |> Enum.member?(Path.extname(file.file_name))
