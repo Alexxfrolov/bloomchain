@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/alexmoisdeveloper/bloomchain-admin/css/admin.css",
-    "main.js": "/alexmoisdeveloper/bloomchain-admin/js/bundle.a34590bc.js",
-    "main.js.map": "/alexmoisdeveloper/bloomchain-admin/js/bundle.a34590bc.js.map",
+    "main.js": "/alexmoisdeveloper/bloomchain-admin/js/bundle.bb305ae1.js",
+    "main.js.map": "/alexmoisdeveloper/bloomchain-admin/js/bundle.bb305ae1.js.map",
     "css/admin.css.map": "/alexmoisdeveloper/bloomchain-admin/css/admin.css.map",
     "index.html": "/alexmoisdeveloper/bloomchain-admin/index.html",
-    "js/bundle.a34590bc.js.LICENSE.txt": "/alexmoisdeveloper/bloomchain-admin/js/bundle.a34590bc.js.LICENSE.txt"
+    "js/bundle.bb305ae1.js.LICENSE.txt": "/alexmoisdeveloper/bloomchain-admin/js/bundle.bb305ae1.js.LICENSE.txt"
   },
   "entrypoints": [
     "css/admin.css",
-    "js/bundle.a34590bc.js"
+    "js/bundle.bb305ae1.js"
   ]
 }

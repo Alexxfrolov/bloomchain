@@ -21,7 +21,7 @@
           <span class="text-primary">—</span><span class="ml-2">Индексы</span>
         </a>
         <a class="bc-analitics__text-link nav-link" href="#analitics">
-          <span class="text-primary">—</span><span class="ml-2">Биржевая аналитика</span>
+          <span class="text-primary">—</span><span class="ml-2">Аналитика</span>
         </a>
       </nav>
     </div>
@@ -32,7 +32,7 @@
 <div class="bg-white">
   <div class="container py-5">
     <a name="analitics"></a>
-    <h1 class="bc-analitics__h1">Биржевая аналитика</h1>
+    <h1 class="bc-analitics__h1">Аналитика</h1>
     <div class="js-article-list">
       <%= render SharedView, "_article_block.html", assigns %>
     </div>

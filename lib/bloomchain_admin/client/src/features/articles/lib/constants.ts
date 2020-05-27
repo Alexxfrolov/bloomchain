@@ -14,7 +14,7 @@ export const ARTICLE_TYPES_RECORD: Record<
 > = {
   newsfeed: "Коротко",
   detailed: "В Деталях",
-  analysis: "Биржевая аналитика",
+  analysis: "Аналитика",
   "in-russia": "Что в России",
   calendar: "События",
   people: "Персона",
