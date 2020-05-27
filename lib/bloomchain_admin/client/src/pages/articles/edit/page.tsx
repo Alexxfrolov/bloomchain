@@ -70,9 +70,12 @@ export function ActicleEditPage() {
           authors: authorsResponse.data.data,
         }))
 
-        const data: Partial<
-          ArticleStore & { cover: MediaFile }
-        > = Object.entries(articleResponse.data)
+        const {
+          cover,
+          ...restData
+        }: Partial<ArticleStore & { cover: MediaFile }> = Object.entries(
+          articleResponse.data,
+        )
           .filter((arr) => arr.every((item) => item))
           .reduce(
             (acc, item) => Object.assign({}, acc, { [item[0]]: item[1] }),
@@ -81,8 +84,8 @@ export function ActicleEditPage() {
 
         setArticle((article) => ({
           ...article,
-          ...data,
-          cover_id: data.cover?.id ?? null,
+          ...restData,
+          cover_id: cover?.id ?? null,
         }))
       })
       .catch((error) => {
@@ -96,7 +99,25 @@ export function ActicleEditPage() {
   const updateArticle = useCallback(
     async (article: Article) => {
       try {
-        const response = await articlesApi.update(article)
+        const { cover, tags, seo_settings, authors, body, ...rest } = article
+        const data = {
+          ...rest,
+          authors: authors.reduce<number[]>(
+            (acc, author) => [...acc, author.id],
+            [],
+          ),
+          body: body.replace(/style=".*?"/, ""),
+          tags: tags.reduce<number[]>((acc, tag) => [...acc, tag.id], []),
+          seo_settings: {
+            ...seo_settings,
+            keywords:
+              typeof seo_settings.keywords === "string"
+                ? seo_settings.keywords.split(/[ ,]+/)
+                : [],
+          },
+        }
+
+        const response = await articlesApi.update(data)
         setState((state) => ({
           ...state,
           error: null,

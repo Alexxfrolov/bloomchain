@@ -39,7 +39,7 @@ type ArticleFormProps = {
 }
 
 export function ArticleForm(props: ArticleFormProps) {
-  const { authors, initialArticle = articleStore, tags } = props
+  const { authors, initialArticle = articleStore, tags, onSubmit } = props
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
 
@@ -60,10 +60,9 @@ export function ArticleForm(props: ArticleFormProps) {
       ...initialArticle,
     },
     validationSchema: ArticleCreationSchema,
-    onSubmit: async (values, { setSubmitting, resetForm }) => {
-      const error: string | undefined = await props.onSubmit(values)
+    onSubmit: async (values, { setSubmitting }) => {
+      await onSubmit(values)
       setSubmitting(false)
-      !error && resetForm()
     },
   })
 
@@ -197,7 +196,7 @@ export function ArticleForm(props: ArticleFormProps) {
             onBlur={handleBlur}
           />
           <FormControl margin="normal" fullWidth={true} variant="outlined">
-            <Autocomplete<Author>
+            <Autocomplete
               id="authors"
               multiple={true}
               options={authorsOptions}
@@ -205,6 +204,11 @@ export function ArticleForm(props: ArticleFormProps) {
               value={values.authors}
               disableCloseOnSelect={true}
               getOptionLabel={(option) => option.name}
+              getOptionSelected={(option) =>
+                Boolean(
+                  values.authors.find((author) => author.id === option.id),
+                )
+              }
               onChange={handleChangeAuthorsSelect}
               renderInput={(params) => (
                 <TextField
@@ -227,7 +231,7 @@ export function ArticleForm(props: ArticleFormProps) {
             />
           </FormControl>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
-            <Autocomplete<Tag>
+            <Autocomplete
               id="tags"
               multiple={true}
               options={tagsOptions}
@@ -235,6 +239,9 @@ export function ArticleForm(props: ArticleFormProps) {
               value={values.tags}
               disableCloseOnSelect={true}
               getOptionLabel={(option) => option.name}
+              getOptionSelected={(option) =>
+                Boolean(values.tags.find((author) => author.id === option.id))
+              }
               onChange={handleChangeTagsSelect}
               renderInput={(params) => (
                 <TextField

@@ -104,54 +104,14 @@ function getById(id: number) {
   return request<Article>("GET", `articles/${id}`)
 }
 
-function create(article: Omit<Article, "id">) {
-  try {
-    const { tags, authors, seo_settings, cover, ...rest } = article
-    const data = {
-      ...rest,
-      authors: authors.reduce<number[]>(
-        (acc, author) => [...acc, author.id],
-        [],
-      ),
-      tags: tags.reduce<number[]>((acc, tag) => [...acc, tag.id], []),
-      seo_settings: {
-        ...seo_settings,
-        keywords: seo_settings.keywords
-          ? seo_settings.keywords.split(/[ ,]+/)
-          : [],
-      },
-    }
-    return request<Article>("POST", "/articles", { data })
-  } catch (err) {
-    throw new Error(err)
-  }
+function create(article: Partial<Article>) {
+  return request<Article>("POST", "/articles", { data: { ...article } })
 }
 
-function update(
-  article: Omit<Article, "keywords"> & {
-    keywords: string
-  },
-) {
-  try {
-    const { cover, tags, seo_settings, authors, ...rest } = article
-    const data = {
-      ...rest,
-      authors: authors.reduce<number[]>(
-        (acc, author) => [...acc, author.id],
-        [],
-      ),
-      tags: tags.reduce<number[]>((acc, tag) => [...acc, tag.id], []),
-      seo_settings: {
-        ...seo_settings,
-        keywords: seo_settings.keywords.length
-          ? seo_settings.keywords.split(/[ ,]+/)
-          : [],
-      },
-    }
-    return request<Article>("PATCH", `/articles/${article.id}`, { data })
-  } catch (err) {
-    throw new Error(err)
-  }
+function update(article: Partial<Article>) {
+  return request<Article>("PATCH", `/articles/${article.id}`, {
+    data: { ...article },
+  })
 }
 
 function remove(id: number) {

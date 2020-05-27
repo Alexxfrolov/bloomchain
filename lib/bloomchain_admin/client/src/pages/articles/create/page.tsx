@@ -49,7 +49,24 @@ export function ActicleCreatePage() {
 
   const createArticle = async (article: Article) => {
     try {
-      await articlesApi.create(article)
+      const { tags, authors, seo_settings, cover, body, ...rest } = article
+      const data = {
+        ...rest,
+        authors: authors.reduce<number[]>(
+          (acc, author) => [...acc, author.id],
+          [],
+        ),
+        tags: tags.reduce<number[]>((acc, tag) => [...acc, tag.id], []),
+        body: body.replace(/style=".*?"/, ""),
+        seo_settings: {
+          ...seo_settings,
+          keywords: seo_settings.keywords
+            ? seo_settings.keywords.split(/[ ,]+/)
+            : [],
+        },
+      }
+
+      await articlesApi.create(data)
       setState((state) => ({
         ...state,
         request_status: "success",
