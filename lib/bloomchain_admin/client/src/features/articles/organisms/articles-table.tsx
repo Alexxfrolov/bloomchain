@@ -3,6 +3,7 @@ import format from "date-fns/format"
 import { Column } from "material-table"
 import { Link, Select, MenuItem, TableRow, TableCell } from "@material-ui/core"
 import IconEdit from "@material-ui/icons/EditRounded"
+import { encodeHTMLEntities } from "@lib/html"
 import { Pagination, OrderDirection } from "@api/common"
 import { Article } from "@api/articles"
 import { Table } from "@features/core"
@@ -156,10 +157,10 @@ const columns: Column<Article>[] = [
     render: (article) =>
       article.url ? (
         <Link href={article.url} target="_blank">
-          {article.title}
+          {encodeHTMLEntities(article.title)}
         </Link>
       ) : (
-        article.title
+        encodeHTMLEntities(article.title)
       ),
   },
   {

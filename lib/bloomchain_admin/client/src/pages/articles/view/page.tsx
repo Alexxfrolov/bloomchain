@@ -61,8 +61,6 @@ export function ArticlesViewPage() {
     until: null,
   })
 
-  console.log(state)
-
   useEffect(() => {
     const status = route.name.split(".")[2] as Article["status"]
 
@@ -252,7 +250,7 @@ export function ArticlesViewPage() {
             />
           </div>
         </Toolbar>
-        <Toolbar>
+        {/* <Toolbar>
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
             <div className={classes.toolbarDate}>
               <FormControl>
@@ -293,7 +291,7 @@ export function ArticlesViewPage() {
               </FormControl>
             </div>
           </MuiPickersUtilsProvider>
-        </Toolbar>
+        </Toolbar> */}
         <ArticlesTable
           data={state.data}
           isLoading={state.request_status === "pending"}
