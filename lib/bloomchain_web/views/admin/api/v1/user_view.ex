@@ -3,13 +3,19 @@ defmodule BloomchainWeb.Admin.Api.V1.UserView do
 
   def render("index.json", %{users: users, meta: meta}) do
     %{
-      data: Enum.map(users, &user_json/1),
+      data: Enum.map(users, &render("show.json", %{user: &1})),
       meta: meta
     }
   end
 
   def render("show.json", %{user: user}) do
     user_json(user)
+    |> Map.merge(%{
+      editable: true,
+      deletable:
+        !(Ecto.assoc_loaded?(user.author) && user.author &&
+            Enum.any?(user.author.post_ids))
+    })
   end
 
   def user_json(user) do
@@ -21,9 +27,6 @@ defmodule BloomchainWeb.Admin.Api.V1.UserView do
       role: user.role,
       job: user.job,
       phone: user.phone,
-      deletable:
-        !(Ecto.assoc_loaded?(user.author) && user.author &&
-            Enum.any?(user.author.post_ids)),
       inserted_at: user.inserted_at |> Timex.local(),
       updated_at: user.updated_at |> Timex.local()
     }
