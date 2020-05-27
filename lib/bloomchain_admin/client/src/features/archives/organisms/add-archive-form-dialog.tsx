@@ -29,7 +29,7 @@ type AddArchiveFormDialogProps = {
 }
 
 export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
-  const { isOpened, onClose } = props
+  const { isOpened, onClose, onSubmit } = props
 
   const {
     values,
@@ -47,11 +47,14 @@ export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
       pdf: null,
     },
     validationSchema: ArchiveCreationSchema,
-    onSubmit: async ({ cover, pdf }, { setSubmitting }) => {
-      await props.onSubmit(cover as File, pdf as File)
+    onSubmit: async ({ cover, pdf }, { setSubmitting, resetForm }) => {
+      await onSubmit(cover as File, pdf as File)
       setSubmitting(false)
+      resetForm()
     },
   })
+
+  console.log(isSubmitting)
 
   const handleDropImage = useCallback(
     (files: File[]) => {
