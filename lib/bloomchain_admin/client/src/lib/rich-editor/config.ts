@@ -5,7 +5,6 @@ export const config = {
   language: "ru",
   placeholderText: "Напечатайте что-нибудь",
   countCharacters: true,
-  zIndex: 2501,
   paragraphFormat: {
     N: "Normal",
     H2: "Heading 2",
