@@ -11,7 +11,8 @@ defmodule BloomchainWeb.SearchController do
         |> Enum.sort_by(&{&1.published_at.year, &1.published_at.month, &1.published_at.day})
         |> Enum.reverse(),
       meta: meta,
-      query: query
+      query: query,
+      title: "Вы искали - " <> query
     )
   end
 

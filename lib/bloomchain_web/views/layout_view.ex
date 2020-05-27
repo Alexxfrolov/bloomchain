@@ -24,11 +24,15 @@ defmodule BloomchainWeb.LayoutView do
   end
 
   def meta(:og_title, assigns) do
-    assigns[:og_title] || get_in(assigns, [:article, :seo_settings, "og_title"]) || ""
+    assigns[:og_title] || assigns[:title] ||
+      get_in(assigns, [:article, :seo_settings, "og_title"]) ||
+      "Bloomchain — Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
   end
 
   def meta(:og_description, assigns) do
-    assigns[:og_description] || get_in(assigns, [:article, :seo_settings, "og_description"]) || ""
+    assigns[:og_description] || assigns[:description] ||
+      get_in(assigns, [:article, :seo_settings, "og_description"]) ||
+      "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
   end
 
   def meta(:og_image, assigns) do
@@ -36,11 +40,15 @@ defmodule BloomchainWeb.LayoutView do
   end
 
   def meta(:twitter_title, assigns) do
-    assigns[:twitter_title] || get_in(assigns, [:article, :seo_settings, "twitter_title"]) || ""
+    assigns[:twitter_title] || assigns[:title] ||
+      get_in(assigns, [:article, :seo_settings, "twitter_title"]) ||
+      "Bloomchain — Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
   end
 
   def meta(:twitter_description, assigns) do
-    assigns[:twitter_description] || get_in(assigns, [:article, :seo_settings, "twitter_description"]) || ""
+    assigns[:twitter_description] || assigns[:description] ||
+      get_in(assigns, [:article, :seo_settings, "twitter_description"]) ||
+      "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
   end
 
   def meta(:twitter_image, assigns) do
