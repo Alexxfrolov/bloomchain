@@ -35,8 +35,8 @@ const MAX_FILE_SIZE = 1024 * 1024 * 50
 
 type MediaUploadFormProps = {
   accept?: string | string[]
+  cover_id?: number | null
   disabled?: boolean
-  initialMedia?: MediaFile
   maxSize?: number
   onUpload: (file: MediaFile) => void
   onDeletePreview?: () => void
@@ -58,7 +58,7 @@ export const MediaUploadForm = memo(function MediaUploadForm(
   const {
     accept = [],
     disabled,
-    initialMedia = null,
+    cover_id,
     maxSize = MAX_FILE_SIZE,
     onUpload,
     onDeletePreview,
@@ -72,12 +72,18 @@ export const MediaUploadForm = memo(function MediaUploadForm(
     error: null,
     data: [],
     isOpenedEditDialog: false,
-    uploadedFile: initialMedia ?? null,
+    uploadedFile: null,
   })
 
   useEffect(() => {
-    setState((state) => ({ ...state, uploadedFile: initialMedia }))
-  }, [initialMedia])
+    if (cover_id) {
+      mediaApi
+        .getById(cover_id)
+        .then((response) =>
+          setState((state) => ({ ...state, uploadedFile: response.data })),
+        )
+    }
+  }, [cover_id])
 
   const handleDrop = useCallback(
     async (files) => {
@@ -279,7 +285,7 @@ export const MediaUploadForm = memo(function MediaUploadForm(
         <EditMediaFormDialog
           isOpened={state.isOpenedEditDialog}
           modifyingMediaFile={state.uploadedFile}
-          onUpdateMedia={updateMediaFile}
+          onSubmit={updateMediaFile}
           onClose={() =>
             setState((state) => ({ ...state, isOpenedEditDialog: false }))
           }

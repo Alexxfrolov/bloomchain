@@ -2,7 +2,6 @@ import { mediaApi } from "@api/media"
 
 export const config = {
   height: 500,
-  language: "ru",
   placeholderText: "Напечатайте что-нибудь",
   countCharacters: true,
   paragraphFormat: {

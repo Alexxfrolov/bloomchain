@@ -1,6 +1,6 @@
 import { mixed, array, date, object, string, number } from "yup"
 
-export const ArticleCreationSchema = object().shape({
+export const ArticleSchema = object().shape({
   type: mixed()
     .oneOf([
       null,
@@ -28,11 +28,13 @@ export const ArticleCreationSchema = object().shape({
       .max(255, "Не более 255 символов")
       .notRequired(),
   }),
-  body: string().when("status", {
-    is: (status) => ["published", "ready"].includes(status),
-    then: string().required("Тело статьи не заполнено"),
-    otherwise: string().notRequired(),
-  }),
+  body: string()
+    .nullable(true)
+    .when("status", {
+      is: (status) => ["published", "ready"].includes(status),
+      then: string().required("Тело статьи не заполнено"),
+      otherwise: string().notRequired(),
+    }),
   authors: array()
     .of(string())
     .when("status", {

@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/css/admin.css",
-    "main.js": "/js/bundle.0503d51b.js",
-    "main.js.map": "/js/bundle.0503d51b.js.map",
+    "main.js": "/js/bundle.ea45b483.js",
+    "main.js.map": "/js/bundle.ea45b483.js.map",
     "css/admin.css.map": "/css/admin.css.map",
     "index.html": "/index.html",
-    "js/bundle.0503d51b.js.LICENSE.txt": "/js/bundle.0503d51b.js.LICENSE.txt"
+    "js/bundle.ea45b483.js.LICENSE.txt": "/js/bundle.ea45b483.js.LICENSE.txt"
   },
   "entrypoints": [
     "css/admin.css",
-    "js/bundle.0503d51b.js"
+    "js/bundle.ea45b483.js"
   ]
 }

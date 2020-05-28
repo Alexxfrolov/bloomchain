@@ -23,7 +23,7 @@ import { Tag } from "@api/tags"
 import { MediaUploadForm } from "@features/media"
 
 import { articleStore, ArticleStore } from "../model"
-import { ArticleCreationSchema } from "../schemes"
+import { ArticleSchema } from "../schemes"
 import {
   computedUnusedOptionsByInitialOptionsList,
   ARTICLE_STATUSES_RECORD,
@@ -35,7 +35,7 @@ type ArticleFormProps = {
   authors: Author[]
   initialArticle?: ArticleStore
   tags: Tag[]
-  onSubmit: (article: Article) => Promise<void>
+  onSubmit: (article: Article, cb?: () => void) => Promise<void>
 }
 
 export function ArticleForm(props: ArticleFormProps) {
@@ -59,9 +59,11 @@ export function ArticleForm(props: ArticleFormProps) {
     initialValues: {
       ...initialArticle,
     },
-    validationSchema: ArticleCreationSchema,
-    onSubmit: async (values, { setSubmitting }) => {
-      await onSubmit(values)
+    validateOnChange: true,
+    validateOnBlur: false,
+    validationSchema: ArticleSchema,
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      await onSubmit(values, resetForm)
       setSubmitting(false)
     },
   })
@@ -284,7 +286,7 @@ export function ArticleForm(props: ArticleFormProps) {
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <MediaUploadForm
               accept={["image/jpeg", "image/png"]}
-              initialMedia={initialArticle.cover ?? null}
+              cover_id={values.cover_id}
               disabled={isSubmitting}
               onUpload={handleUpload}
               onDeletePreview={deleteCover}

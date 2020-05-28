@@ -47,9 +47,9 @@ export function ActicleCreatePage() {
       })
   }, [enqueueSnackbar])
 
-  const createArticle = async (article: Article) => {
+  const createArticle = async (article: Article, cb: () => void) => {
     try {
-      const { tags, authors, seo_settings, cover, ...rest } = article
+      const { tags, authors, seo_settings, ...rest } = article
       const data = {
         ...rest,
         authors: authors.reduce<number[]>(
@@ -71,6 +71,7 @@ export function ActicleCreatePage() {
         request_status: "success",
         error: null,
       }))
+      cb()
       enqueueSnackbar("Статья успешно сохранена", {
         variant: "success",
       })
