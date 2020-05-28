@@ -4,7 +4,7 @@
       <article class="article">
         <header class="article__header">
           <h1 class="article__heading"><%= raw(@article.title) %></h1>
-          <div class="d-flex align-items-center">
+          <div class="d-flex align-items-center flex-wrap">
             <time pubdate datetime="<%= @article.published_at %>" title="<%= @article.published_at %>" class="article__time mr-sm-4 mr-2">
               <small><%= timestamp(@article.published_at) %></small>
             </time>
