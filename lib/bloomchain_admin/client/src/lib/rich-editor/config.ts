@@ -73,7 +73,12 @@ export const config = {
   imageManagerDeleteURL: "/admin/api/v1/media",
   imageManagerDeleteMethod: "DELETE",
   imageManagerLoadURL: "/admin/api/v1/media",
-  imageManagerLoadParams: { type: "image", editor: "true" },
+  imageManagerLoadParams: {
+    type: "image",
+    editor: "true",
+    page: 1,
+    page_size: 50,
+  },
   imageManagerToggleTags: false,
   imageManagerDeleteParams: "",
   videoAllowedTypes: ["mp4", "avi"],

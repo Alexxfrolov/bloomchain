@@ -116,13 +116,19 @@ export function ActicleEditPage() {
           },
         }
 
-        const response = await articlesApi.update(data)
+        const {
+          data: { cover, ...restArtcile },
+        } = await articlesApi.update(data)
         setState((state) => ({
           ...state,
           error: null,
           request_status: "success",
         }))
-        setArticle((state) => ({ ...state, ...response.data }))
+        setArticle((state) => ({
+          ...state,
+          ...restArtcile,
+          cover_id: cover?.id ?? null,
+        }))
         enqueueSnackbar("Статья успешно обновлена", {
           variant: "success",
         })

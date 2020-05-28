@@ -16,7 +16,9 @@ export const ArticleSchema = object().shape({
   status: mixed()
     .oneOf([null, "published", "draft", "archive", "ready"])
     .required("Укажите статус публикации"),
-  title: string().required("Укажите заголовок статьи"),
+  title: string()
+    .min(5, "Заголовок должен быть не менее 5 символов")
+    .required("Укажите заголовок статьи"),
   lead: string().when("status", {
     is: (status) => ["published", "ready"].includes(status),
     then: string()

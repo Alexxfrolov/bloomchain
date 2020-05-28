@@ -1,10 +1,18 @@
-import React, { memo, Fragment, useState, useEffect, useCallback } from "react"
+import React, {
+  memo,
+  Fragment,
+  useState,
+  useEffect,
+  useCallback,
+  ChangeEvent,
+} from "react"
 import { useDropzone } from "react-dropzone"
 import {
   Box,
   AppBar,
   Tabs,
   Tab,
+  Grid,
   Paper,
   Typography,
   FormControl,
@@ -13,12 +21,15 @@ import {
   GridListTile,
   GridListTileBar,
   Toolbar,
+  CircularProgress,
   IconButton,
   makeStyles,
   createStyles,
 } from "@material-ui/core"
+import Pagination from "@material-ui/lab/Pagination"
 import CloseIcon from "@material-ui/icons/Close"
 import AddRoundedIcon from "@material-ui/icons/AddRounded"
+import { Pagination as PaginationType } from "@api/common/types"
 import CloudUploadOutlinedIcon from "@material-ui/icons/CloudUploadOutlined"
 import PermMediaOutlinedIcon from "@material-ui/icons/PermMediaOutlined"
 import EditIcon from "@material-ui/icons/Edit"
@@ -47,7 +58,6 @@ type MediaUploadFormState = {
   isOpenedDialog: boolean
   request_status: RequestStatus
   error: string | null
-  data: MediaFile[]
   uploadedFile: MediaFile | null
   isOpenedEditDialog: boolean
 }
@@ -70,7 +80,6 @@ export const MediaUploadForm = memo(function MediaUploadForm(
     isOpenedDialog: false,
     request_status: "success",
     error: null,
-    data: [],
     isOpenedEditDialog: false,
     uploadedFile: null,
   })
@@ -124,29 +133,9 @@ export const MediaUploadForm = memo(function MediaUploadForm(
     setState((state) => ({ ...state, tabIndex: 0 }))
   }, [])
 
-  const fetchData = useCallback(async () => {
-    try {
-      // FIX: add pagination
-      const params = {
-        type: "image" as MediaFile["type"],
-      } as const
-      const response = await mediaApi.get(params)
-      return setState((state) => ({
-        ...state,
-        error: null,
-        request_status: "success",
-        data: response.data.data,
-      }))
-    } catch (error) {
-      return setState((state) => ({ ...state, error, request_status: "error" }))
-    }
-  }, [])
-
   const openDialog = useCallback(async () => {
-    setState((state) => ({ ...state, request_status: "pending", error: null }))
-    await fetchData()
     setState((state) => ({ ...state, isOpenedDialog: true }))
-  }, [fetchData])
+  }, [])
 
   const closeDialog = useCallback(() => {
     setState((state) => ({ ...state, isOpenedDialog: false }))
@@ -233,12 +222,13 @@ export const MediaUploadForm = memo(function MediaUploadForm(
           </div>
         </TabPanel>
       </Paper>
-      <MediaLibraryDialog
-        media={state.data}
-        isOpened={state.isOpenedDialog}
-        onAdd={handleAddButtonClick}
-        onClose={closeDialog}
-      />
+      {state.isOpenedDialog && (
+        <MediaLibraryDialog
+          isOpened={state.isOpenedDialog}
+          onAdd={handleAddButtonClick}
+          onClose={closeDialog}
+        />
+      )}
       {state.uploadedFile && (
         <FormControl margin="normal" fullWidth={true}>
           <Typography variant="h6" component="h6" gutterBottom={true}>
@@ -393,17 +383,76 @@ function TabPanel(props: TabPanelProps) {
 }
 
 type MediaLibraryDialogProps = {
-  media: MediaFile[]
   isOpened: boolean
   onAdd: (media: MediaFile) => void
   onClose: () => void
 }
 
+type MediaLibraryDialogState = {
+  request_status: RequestStatus
+  error: string | null
+  data: MediaFile[]
+  pagination: PaginationType
+}
+
 export const MediaLibraryDialog = memo(function MediaLibraryDialog(
   props: MediaLibraryDialogProps,
 ) {
-  const { media, isOpened, onAdd, onClose } = props
+  const { isOpened, onAdd, onClose } = props
   const classes = useStyles()
+
+  const [state, setState] = useState<MediaLibraryDialogState>({
+    request_status: "idle",
+    data: [],
+    error: null,
+    pagination: {
+      page: 1,
+      page_size: 15,
+      page_size_options: [15, 30, 50],
+      total_pages: 1,
+      total_items: 0,
+    },
+  })
+
+  useEffect(() => {
+    const params = {
+      type: "image" as MediaFile["type"],
+      page: state.pagination.page,
+      page_size: state.pagination.page_size,
+    } as const
+
+    setState((state) => ({ ...state, error: null, request_status: "pending" }))
+
+    mediaApi
+      .get(params)
+      .then((response) => {
+        setState((state) => ({
+          ...state,
+          error: null,
+          request_status: "success",
+          data: response.data.data,
+          pagination: {
+            ...state.pagination,
+            ...response.data.meta,
+          },
+        }))
+      })
+      .catch((error) => {
+        setState((state) => ({ ...state, error, request_status: "error" }))
+      })
+  }, [state.pagination.page, state.pagination.page_size])
+
+  const handleChangePagination = useCallback(
+    (_event: ChangeEvent<unknown>, page: number) =>
+      setState((state) => ({
+        ...state,
+        pagination: {
+          ...state.pagination,
+          page,
+        },
+      })),
+    [],
+  )
 
   return (
     <Dialog
@@ -420,38 +469,64 @@ export const MediaLibraryDialog = memo(function MediaLibraryDialog(
           <CloseIcon />
         </IconButton>
       </Toolbar>
-      <ConditionalList<MediaFile>
-        list={media}
-        renderExists={(list) => (
-          <GridList cellHeight={200} className={classes.gridList} cols={3}>
-            {list.map((item) => (
-              <GridListTile key={item.id}>
-                <img
-                  src={item.url}
-                  alt={item.title ?? ""}
-                  className={classes.img}
-                />
-                <GridListTileBar
-                  titlePosition="bottom"
-                  title={item.title ?? ""}
-                  subtitle={<span>{item.source ?? ""}</span>}
-                  actionPosition="right"
-                  actionIcon={
-                    <IconButton
-                      size="small"
-                      className={classes.iconButton}
-                      onClick={() => onAdd(item)}
-                    >
-                      <AddRoundedIcon htmlColor={lightBlue[800]} />
-                    </IconButton>
-                  }
-                  className={classes.titleBar}
-                />
-              </GridListTile>
-            ))}
-          </GridList>
-        )}
-      />
+      {state.request_status === "idle" || state.request_status === "pending" ? (
+        <Box m={4}>
+          <Grid container={true} alignItems="center" justify="center">
+            <CircularProgress color="primary" size={60} />
+          </Grid>
+        </Box>
+      ) : (
+        <ConditionalList<MediaFile>
+          list={state.data}
+          renderExists={(list) => (
+            <Fragment>
+              <GridList cellHeight={200} className={classes.gridList} cols={3}>
+                {list.map((item) => (
+                  <GridListTile key={item.id}>
+                    <img
+                      src={item.url}
+                      alt={item.title ?? ""}
+                      className={classes.img}
+                    />
+                    <GridListTileBar
+                      titlePosition="bottom"
+                      title={item.title ?? ""}
+                      subtitle={<span>{item.source ?? ""}</span>}
+                      actionPosition="right"
+                      actionIcon={
+                        <IconButton
+                          size="small"
+                          className={classes.iconButton}
+                          onClick={() => onAdd(item)}
+                        >
+                          <AddRoundedIcon htmlColor={lightBlue[800]} />
+                        </IconButton>
+                      }
+                      className={classes.titleBar}
+                    />
+                  </GridListTile>
+                ))}
+              </GridList>
+              <Box m={3}>
+                <Grid container={true} alignItems="center" justify="center">
+                  <Pagination
+                    page={state.pagination.page}
+                    count={state.pagination.total_pages}
+                    onChange={handleChangePagination}
+                    color="primary"
+                    disabled={
+                      state.request_status === "idle" ||
+                      state.request_status === "pending"
+                    }
+                    showFirstButton={true}
+                    showLastButton={true}
+                  />
+                </Grid>
+              </Box>
+            </Fragment>
+          )}
+        />
+      )}
     </Dialog>
   )
 })
