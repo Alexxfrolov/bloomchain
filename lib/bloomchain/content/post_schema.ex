@@ -79,12 +79,17 @@ defmodule Bloomchain.Content.Post do
   defp process_slug(changeset), do: changeset
 
   defp process_body(%Ecto.Changeset{valid?: true, changes: %{body: body}} = changeset) do
-    clean_body =
+    replace_embedly = fn body ->
       Regex.replace(~r/(<div class=\"fr-embedly)(.*?)(<\/div>)/, body, fn item, _ ->
         Regex.replace(~r/style=\"(.*?)\"/, item, "")
       end)
+    end
 
-    put_change(changeset, :body, clean_body)
+    replace_froala = fn body ->
+      Regex.replace(~r/(<p data-f-id=\"pbf\")(.*?)(<\/p>)/, body, "")
+    end
+
+    put_change(changeset, :body, body |> replace_embedly.() |> replace_froala.())
   end
 
   defp process_body(changeset), do: changeset
