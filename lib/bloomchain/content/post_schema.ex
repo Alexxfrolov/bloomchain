@@ -68,6 +68,7 @@ defmodule Bloomchain.Content.Post do
     |> validate_length(:title, min: 3)
     |> process_slug
     |> unique_constraint(:uniq_slug_with_type, name: :uniq_slug_with_type)
+    |> process_body()
     |> process_tags(attrs[:tags])
     |> process_authors(attrs[:authors])
     |> process_seo()
@@ -81,6 +82,17 @@ defmodule Bloomchain.Content.Post do
   end
 
   defp process_slug(changeset), do: changeset
+
+  defp process_body(%Ecto.Changeset{valid?: true, changes: %{body: body}} = changeset) do
+    clean_body =
+      Regex.replace(~r/(<div class=\"fr-embedly)(.*?)(<\/div>)/, body, fn item, _ ->
+        Regex.replace(~r/style=\"(.*?)\"/, item, "")
+      end)
+
+    put_change(changeset, :body, clean_body)
+  end
+
+  defp process_body(changeset), do: changeset
 
   defp process_published(
          %Ecto.Changeset{valid?: true, changes: %{status: "published"} = changes} = changeset
