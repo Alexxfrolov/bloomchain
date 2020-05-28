@@ -53,24 +53,33 @@ defmodule Bloomchain.Content.Article do
   end
 
   def create(%{} = params) do
-    %Post{}
-    |> Post.changeset(params)
-    |> Repo.insert!()
-    |> ES.reindex()
+    post =
+      %Post{}
+      |> Post.changeset(params)
+      |> Repo.insert!()
+
+    Task.async(fn -> ES.reindex(post) end)
+
+    post
   end
 
   def update(%Post{} = post, %{} = params) do
+    post =
+      post
+      |> Post.common_changeset(params)
+      |> Repo.update!()
+
+    Task.async(fn -> ES.reindex(post) end)
+
     post
-    |> Post.common_changeset(params)
-    |> Repo.update!()
-    |> ES.reindex()
   end
 
   def delete!(id) do
     post = Repo.get!(Post, id)
 
     Repo.delete!(post)
-    ES.delete(post)
+
+    Task.async(fn -> ES.delete(post) end)
   end
 
   def inc_total_views(%Post{} = post) do
