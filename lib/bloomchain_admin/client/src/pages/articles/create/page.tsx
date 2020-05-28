@@ -49,7 +49,7 @@ export function ActicleCreatePage() {
 
   const createArticle = async (article: Article) => {
     try {
-      const { tags, authors, seo_settings, cover, body, ...rest } = article
+      const { tags, authors, seo_settings, cover, ...rest } = article
       const data = {
         ...rest,
         authors: authors.reduce<number[]>(
@@ -57,7 +57,6 @@ export function ActicleCreatePage() {
           [],
         ),
         tags: tags.reduce<number[]>((acc, tag) => [...acc, tag.id], []),
-        body: body.replace(/style=".*?"/, ""),
         seo_settings: {
           ...seo_settings,
           keywords: seo_settings.keywords

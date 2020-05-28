@@ -99,14 +99,13 @@ export function ActicleEditPage() {
   const updateArticle = useCallback(
     async (article: Article) => {
       try {
-        const { cover, tags, seo_settings, authors, body, ...rest } = article
+        const { cover, tags, seo_settings, authors, ...rest } = article
         const data = {
           ...rest,
           authors: authors.reduce<number[]>(
             (acc, author) => [...acc, author.id],
             [],
           ),
-          body: body.replace(/style=".*?"/, ""),
           tags: tags.reduce<number[]>((acc, tag) => [...acc, tag.id], []),
           seo_settings: {
             ...seo_settings,

@@ -11,7 +11,7 @@ import {
 import { useSnackbar } from "notistack"
 import AddBoxIcon from "@material-ui/icons/AddBox"
 import { OrderDirection, Pagination } from "@api/common/types"
-import { mediaApi } from "@api/media"
+import { mediaApi, UploadableMediaFile } from "@api/media"
 import { archivesApi, Archive } from "@api/archives"
 import { RequestStatus } from "@features/core"
 import { ArchivesTable, AddArchiveFormDialog } from "@features/archives"
@@ -107,35 +107,40 @@ export function ArchivesPage() {
   const createArchive = useCallback(
     async (cover: File, pdf: File) => {
       setState((state) => ({ ...state, request_status: "pending" }))
-      Promise.all([
-        mediaApi.create({ type: "image", file: cover }),
-        mediaApi.create({ type: "pdf", file: pdf }),
-      ])
-        .then((response) => response.map((resp) => resp.data.id))
-        .then(([cover_id, pdf_id]) => archivesApi.create(cover_id, pdf_id))
-        .then((response) => {
-          setState((state) => ({
-            ...state,
-            error: null,
-            request_status: "success",
-            data: [response.data, ...state.data],
-            isOpenedAddFormDialog: false,
-          }))
-          enqueueSnackbar("Архив успешно создан", {
-            variant: "success",
-          })
+      const files: UploadableMediaFile[] = [
+        { type: "image", file: cover },
+        { type: "pdf", file: pdf },
+      ]
+
+      try {
+        const response = await Promise.all(
+          files.map(async (file) => {
+            return await mediaApi.create(file)
+          }),
+        )
+        const [cover_id, pdf_id] = response.map((resp) => resp.data.id)
+        const archiveResponse = await archivesApi.create(cover_id, pdf_id)
+        setState((state) => ({
+          ...state,
+          error: null,
+          request_status: "success",
+          data: [archiveResponse.data, ...state.data],
+          isOpenedAddFormDialog: false,
+        }))
+        enqueueSnackbar("Архив успешно создан", {
+          variant: "success",
         })
-        .catch((error) => {
-          setState((state) => ({
-            ...state,
-            error,
-            request_status: "error",
-            isOpenedAddFormDialog: false,
-          }))
-          enqueueSnackbar("Произошла ошибка", {
-            variant: "error",
-          })
+      } catch (error) {
+        setState((state) => ({
+          ...state,
+          error,
+          request_status: "error",
+          isOpenedAddFormDialog: false,
+        }))
+        enqueueSnackbar("Произошла ошибка", {
+          variant: "error",
         })
+      }
     },
     [enqueueSnackbar],
   )
