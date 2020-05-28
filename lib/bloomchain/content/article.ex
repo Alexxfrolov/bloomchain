@@ -53,25 +53,24 @@ defmodule Bloomchain.Content.Article do
   end
 
   def create(%{} = params) do
-    post =
-      %Post{}
-      |> Post.changeset(params)
-      |> Repo.insert!()
-
-    Task.async(fn -> ES.reindex(post) end)
-
-    post
+    with {:ok, post} <- %Post{} |> Post.changeset(params) |> Repo.insert() do
+      Task.async(fn -> ES.reindex(post) end)
+      {:ok, post}
+    else
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   def update(%Post{} = post, %{} = params) do
-    post =
-      post
-      |> Post.common_changeset(params)
-      |> Repo.update!()
-
-    Task.async(fn -> ES.reindex(post) end)
-
-    post
+    with {:ok, post} <- post |> Post.changeset(params) |> Repo.update() do
+      post = post |> Repo.preload([:tags, :cover, :authors], force: true)
+      Task.async(fn -> ES.reindex(post) end)
+      {:ok, post}
+    else
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   def delete!(id) do

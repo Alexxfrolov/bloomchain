@@ -56,12 +56,7 @@ defmodule Bloomchain.Content.Post do
   @required_fields ~w(title type)a
   @optional_fields ~w(id slug body lead type status time cover_id published_at total_views seo_settings)a
 
-  def changeset(post, attrs) do
-    post
-    |> common_changeset(attrs)
-  end
-
-  def common_changeset(changeset, attrs) do
+  def changeset(changeset, attrs) do
     changeset
     |> cast(attrs, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)

@@ -52,11 +52,11 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
   end
 
   def update(conn, %{id: id} = params) do
-    article = Article.get!(id)
-
-    with {:ok, article} <- Article.update(article, params) do
+    with {:ok, article} <- Article.get!(id) |> Article.update(params) do
       conn
-      |> render("show.json", article: article)
+      |> render("show.json",
+        article: article
+      )
     else
       {:error, changeset} ->
         conn
