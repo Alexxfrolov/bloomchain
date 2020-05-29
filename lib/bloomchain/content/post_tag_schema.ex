@@ -1,9 +1,6 @@
 defmodule Bloomchain.Content.PostTag do
-  import Ecto.Changeset
-
-  alias Bloomchain.Content.{Tag, Post}
-
   use Ecto.Schema
+  alias Bloomchain.Content.{Tag, Post}
 
   schema "posts_tags" do
     belongs_to(:tag, Tag, foreign_key: :tag_id)

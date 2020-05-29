@@ -1,0 +1,13 @@
+# app_root/compile
+info "Building Phoenix static assets"
+
+cd $phoenix_dir
+cd lib/bloomchain_admin/client
+yarn build
+
+cd $phoenix_dir
+cd lib/bloomchain_web/client
+yarn install && yarn build
+
+cd $phoenix_dir
+mix phx.digest

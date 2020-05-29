@@ -6,7 +6,7 @@ defmodule Bloomchain.Paginator do
 
   def paginate(query, %{page_size: _} = params) do
     page_number = params |> Map.get(:page, 1) |> to_int
-    page_size = params |> Map.get(:page_size, @page_size) |> to_int
+    page_size = params |> Map.get(:page_size) |> to_int
     total_items = total_items(query)
 
     %Paginator{

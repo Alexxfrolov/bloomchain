@@ -1,9 +1,6 @@
 defmodule Bloomchain.Content.PostAuthor do
-  import Ecto.Changeset
-
-  alias Bloomchain.Content.{Author, Post}
-
   use Ecto.Schema
+  alias Bloomchain.Content.{Author, Post}
 
   schema "posts_authors" do
     belongs_to(:tag, Author, foreign_key: :author_id)
