@@ -22,7 +22,7 @@ npm-debug.log
 # this depending on your deployment strategy.
 /priv/static/admin/*
 !/priv/static/admin/.keep
-/priv/static/customer/*
+#/priv/static/customer/*
 !/priv/static/customer/.keep
 
 # Files matching config/*.secret.exs pattern contain sensitive
