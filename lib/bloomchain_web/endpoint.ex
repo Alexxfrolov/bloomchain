@@ -8,13 +8,13 @@ defmodule BloomchainWeb.Endpoint do
   # You should set gzip to true if you are running phoenix.digest
   # when deploying your static files in production.
 
-  plug(Plug.Static, at: "/uploads", from: Path.expand('./uploads'), gzip: false)
+  plug(Plug.Static, at: "/uploads", from: Path.expand('./uploads'), gzip: true)
 
   plug(
     Plug.Static,
     at: "/",
-    from: :bloomchain,
-    gzip: false,
+    from: "priv/static",
+    gzip: true,
     only: ~w(customer grapejs admin)
   )
 
@@ -59,7 +59,7 @@ defmodule BloomchainWeb.Endpoint do
   def init(_key, config) do
     if config[:load_from_system_env] do
       port = System.get_env("PORT") || raise "expected the PORT environment variable to be set"
-      {:ok, Keyword.put(config, :http, [:inet6, port: port])}
+      {:ok, Keyword.put(config, :http, [:inet6, port: port, compress: true])}
     else
       {:ok, config}
     end

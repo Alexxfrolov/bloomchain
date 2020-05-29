@@ -102,7 +102,7 @@
             <i class="icon-search"></i>
           <% end %>
 
-          <%= text_input f, :query, placeholder: "Поиск по сайту", aria_label: "Search", type: "search", class: "bc-header__search__input form-control" %>
+          <%= text_input f, :query, placeholder: "Поиск по сайту (по релевантности)", aria_label: "Search", type: "search", class: "bc-header__search__input form-control" %>
 
           <a class="bc-header__search__close hamburger hamburger--slider-r is-active">
             <div class="hamburger-box">

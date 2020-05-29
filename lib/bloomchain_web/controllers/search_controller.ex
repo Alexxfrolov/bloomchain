@@ -3,28 +3,25 @@ defmodule BloomchainWeb.SearchController do
   alias Bloomchain.ElasticsearchCluster, as: ES
 
   def index(conn, %{query: query}) do
-    %{entries: articles, metadata: meta} = do_query(query) |> ES.search()
+    %{entries: articles, metadata: meta} = do_query(query) |> ES.search(scroll: "15m")
 
     render(conn, "index.html",
-      articles:
-        articles
-        |> Enum.sort_by(&{&1.published_at.year, &1.published_at.month, &1.published_at.day})
-        |> Enum.reverse(),
+      articles: articles,
       meta: meta,
       query: query,
       title: "Вы искали - " <> query
     )
   end
 
-  # def index(conn, %{scroll: scroll}) do
-  #   %{entries: articles, metadata: meta} = ES.scroll(scroll)
-  #
-  #   conn
-  #   |> put_resp_header("x-pagination-scroll", to_string(meta.after))
-  #   |> put_layout(false)
-  #   |> put_view(BloomchainWeb.SharedView)
-  #   |> render("_article_block.html", articles: articles, meta: meta)
-  # end
+  def index(conn, %{scroll: scroll}) do
+    %{entries: articles, metadata: meta} = ES.scroll(scroll)
+
+    conn
+    |> put_resp_header("x-pagination-scroll", to_string(meta.after))
+    |> put_layout(false)
+    |> put_view(BloomchainWeb.SharedView)
+    |> render("_article_block.html", articles: articles, meta: meta)
+  end
 
   defp do_query(str) do
     %{
@@ -46,7 +43,7 @@ defmodule BloomchainWeb.SearchController do
           ]
         }
       },
-      size: 50
+      size: 6
     }
   end
 end
