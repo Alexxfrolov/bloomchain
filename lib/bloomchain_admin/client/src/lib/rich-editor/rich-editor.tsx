@@ -9,7 +9,6 @@ import "froala-editor/js/plugins/link.min.js"
 import "froala-editor/js/plugins/image.min.js"
 import "froala-editor/js/plugins/table.min.js"
 import "froala-editor/js/plugins/url.min.js"
-import "froala-editor/js/plugins/quote.min.js"
 import "froala-editor/js/plugins/video.min.js"
 import "froala-editor/js/plugins/quick_insert.min.js"
 import "froala-editor/js/plugins/image_manager.min.js"
@@ -24,6 +23,8 @@ import "froala-editor/js/plugins/char_counter.min.js"
 import "froala-editor/js/languages/ru.js"
 import "froala-editor/css/froala_editor.pkgd.min.css"
 import "froala-editor/css/third_party/embedly.min.css"
+
+import "./quote"
 
 import { config } from "./config"
 
