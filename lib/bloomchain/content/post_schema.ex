@@ -157,7 +157,8 @@ defmodule Bloomchain.Content.Post do
            changeset
        ) do
     default_description =
-      "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
+      changes.lead ||
+        "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
 
     cover_url =
       if changes[:cover_id] do
