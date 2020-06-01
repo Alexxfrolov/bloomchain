@@ -1,5 +1,35 @@
 import { mixed, array, date, object, string, number } from "yup"
 
+const ArticleSeoSettingsSchema = object().when("status", {
+  is: (status) => ["published", "ready"].includes(status),
+  then: object().shape({
+    description: string()
+      .nullable(true)
+      .max(255, "Не более 255 символов")
+      .required("Укажите description"),
+    keywords: string().nullable(true).required("Укажите ключевые слова"),
+    og_type: string().notRequired(),
+    og_title: string().nullable(true).notRequired(),
+    og_description: string()
+      .nullable(true)
+      .max(255, "Не более 255 символов")
+      .notRequired(),
+  }),
+  otherwise: object().shape({
+    description: string()
+      .nullable(true)
+      .max(255, "Не более 255 символов")
+      .notRequired(),
+    keywords: string().nullable(true).notRequired(),
+    og_type: string().notRequired(),
+    og_title: string().nullable(true).notRequired(),
+    og_description: string()
+      .nullable(true)
+      .max(255, "Не более 255 символов")
+      .notRequired(),
+  }),
+})
+
 export const ArticleSchema = object().shape({
   type: mixed()
     .oneOf([
@@ -18,18 +48,8 @@ export const ArticleSchema = object().shape({
     .required("Укажите статус публикации"),
   title: string()
     .min(5, "Заголовок должен быть не менее 5 символов")
-    .required("Укажите заголовок статьи"),
-  lead: string().when("status", {
-    is: (status) => ["published", "ready"].includes(status),
-    then: string()
-      .nullable(true)
-      .max(255, "Не более 255 символов")
-      .required("Лид статьи не заполнен"),
-    otherwise: string()
-      .nullable(true)
-      .max(255, "Не более 255 символов")
-      .notRequired(),
-  }),
+    .required("Укажите заголовок"),
+  lead: string().nullable(true).max(255, "Не более 255 символов").notRequired(),
   body: string()
     .nullable(true)
     .when("status", {
@@ -51,23 +71,7 @@ export const ArticleSchema = object().shape({
       then: array().of(string()).required("Укажите тэги"),
       otherwise: array().of(string()).notRequired(),
     }),
-  seo_settings: object().shape({
-    description: string()
-      .nullable(true)
-      .max(255, "Не более 255 символов")
-      .notRequired(),
-    keywords: string().when("status", {
-      is: (status) => ["published", "ready"].includes(status),
-      then: string().nullable(false).required("Укажите ключевые слова"),
-      otherwise: string().nullable(true).notRequired(),
-    }),
-    og_type: string().notRequired(),
-    og_title: string().nullable(true).notRequired(),
-    og_description: string()
-      .nullable(true)
-      .max(255, "Не более 255 символов")
-      .notRequired(),
-  }),
+  seo_settings: ArticleSeoSettingsSchema,
   published_at: date()
     .nullable(true)
     .when("status", {
@@ -79,7 +83,7 @@ export const ArticleSchema = object().shape({
     }),
   cover_id: number().when("status", {
     is: (status) => ["published", "ready"].includes(status),
-    then: number().nullable(true).required("Загрузите обложку для статьи"),
+    then: number().nullable(true).required("Загрузите обложку"),
     otherwise: number().nullable(true).notRequired(),
   }),
   time: number()

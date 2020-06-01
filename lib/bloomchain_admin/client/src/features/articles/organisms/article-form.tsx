@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, ChangeEvent, useEffect } from "react"
-import { useSnackbar } from "notistack"
+import { useSnackbar, VariantType } from "notistack"
 import {
   Grid,
   TextField,
@@ -68,15 +68,26 @@ export function ArticleForm(props: ArticleFormProps) {
     },
   })
 
+  const createNotification = useCallback(
+    (error: string, variant: VariantType = "error") => {
+      enqueueSnackbar(error, {
+        variant,
+      })
+    },
+    [enqueueSnackbar],
+  )
+
   useEffect(() => {
     if (isSubmitting) {
-      Object.values(errors).forEach((error) => {
-        enqueueSnackbar(error, {
-          variant: "error",
+      Object.values(errors)
+        .flatMap((error) =>
+          typeof error === "string" ? error : Object.values(error),
+        )
+        .forEach((error) => {
+          createNotification(error)
         })
-      })
     }
-  }, [errors, isSubmitting, enqueueSnackbar])
+  }, [errors, isSubmitting, createNotification])
 
   const handleChangeEditor = useCallback(
     (value: string) => {
