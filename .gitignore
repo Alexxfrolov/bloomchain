@@ -24,7 +24,7 @@ npm-debug.log
 !/priv/static/admin/.keep
 #/priv/static/customer/*
 !/priv/static/customer/.keep
-
+priv/static/customer/js/*
 # Files matching config/*.secret.exs pattern contain sensitive
 # data and you should not commit them into version control.
 #

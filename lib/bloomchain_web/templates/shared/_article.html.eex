@@ -28,6 +28,7 @@
         </header>
 
         <div class="article__body pt-4">
+          <p class="font-italic"><%= raw(@article.lead) %></p>
           <%= raw(@article.body) %>
         </div>
       </article>
