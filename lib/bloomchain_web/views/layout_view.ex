@@ -12,7 +12,8 @@ defmodule BloomchainWeb.LayoutView do
   end
 
   def meta(:keywords, assigns) do
-    assigns[:keywords] || get_in(assigns, [:article, :seo_settings, "keywords"]) || ""
+    (assigns[:keywords] || get_in(assigns, [:article, :seo_settings, "keywords"]) || [])
+    |> Enum.join(", ")
   end
 
   def meta(:og_url, assigns) do
