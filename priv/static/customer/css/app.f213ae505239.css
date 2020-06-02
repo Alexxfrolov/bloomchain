@@ -10304,3 +10304,7 @@ input:focus-visible,
 input:focus-within {
 background-color: red;
 }
+
+.embdscl0 {
+  display: none !important;
+}
