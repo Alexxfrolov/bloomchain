@@ -394,7 +394,7 @@ export function ArticleForm(props: ArticleFormProps) {
               onBlur={handleBlur}
             />
             <FormHelperText variant="filled">
-              Разделяйте слова запятыми или пробелами. По умолчанию тэги статьи.
+              Разделяйте слова запятыми или пробелами.
             </FormHelperText>
           </FormControl>
           <FormControl margin="dense" fullWidth={true}>

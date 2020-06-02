@@ -1,33 +1,17 @@
 import { mixed, array, date, object, string, number } from "yup"
 
-const ArticleSeoSettingsSchema = object().when("status", {
-  is: (status) => ["published", "ready"].includes(status),
-  then: object().shape({
-    description: string()
-      .nullable(true)
-      .max(255, "Не более 255 символов")
-      .required("Укажите description"),
-    keywords: string().nullable(true).required("Укажите ключевые слова"),
-    og_type: string().notRequired(),
-    og_title: string().nullable(true).notRequired(),
-    og_description: string()
-      .nullable(true)
-      .max(255, "Не более 255 символов")
-      .notRequired(),
-  }),
-  otherwise: object().shape({
-    description: string()
-      .nullable(true)
-      .max(255, "Не более 255 символов")
-      .notRequired(),
-    keywords: string().nullable(true).notRequired(),
-    og_type: string().notRequired(),
-    og_title: string().nullable(true).notRequired(),
-    og_description: string()
-      .nullable(true)
-      .max(255, "Не более 255 символов")
-      .notRequired(),
-  }),
+const ArticleSeoSettingsSchema = object().shape({
+  description: string()
+    .nullable(true)
+    .max(255, "Не более 255 символов")
+    .notRequired(),
+  keywords: string().nullable(true).notRequired(),
+  og_type: string().notRequired(),
+  og_title: string().nullable(true).notRequired(),
+  og_description: string()
+    .nullable(true)
+    .max(255, "Не более 255 символов")
+    .notRequired(),
 })
 
 export const ArticleSchema = object().shape({
