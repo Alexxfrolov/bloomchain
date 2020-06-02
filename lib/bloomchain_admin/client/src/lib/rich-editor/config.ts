@@ -4,6 +4,7 @@ export const config = {
   height: 500,
   placeholderText: "Напечатайте что-нибудь",
   countCharacters: true,
+  toolbarSticky: false,
   paragraphFormat: {
     N: "Normal",
     H2: "Heading 2",
