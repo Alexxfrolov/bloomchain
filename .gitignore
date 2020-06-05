@@ -33,6 +33,7 @@ priv/static/customer/js/*
 # variables.
 /config/*.secret.exs
 
+/priv/repo/seed/
 
 # environmental variables
 .env
