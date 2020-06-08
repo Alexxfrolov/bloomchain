@@ -8,17 +8,13 @@
     <meta name="theme-color" content="#000000" />
     <link rel="manifest" href="/admin/manifest.json" />
     <title>Bloomchain admin</title>
-    <link href="/admin/css/admin.css" rel="stylesheet">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/admin/bundle.css") %>">
 </head>
 
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <%= if Mix.env == :dev do %>
-      <script src='http://localhost:8080/bundle.js'></script>
-    <% else %>
-      <script src="<%= static_path(@conn, "/admin/js/bundle.0438dbbd.js") %>"></script>
-    <% end %>
+    <script src="<%= static_path(@conn, "/admin/bundle.js") %>"></script>
 </body>
 
 </html>
