@@ -32,8 +32,6 @@ priv/static/*
 # variables.
 /config/*.secret.exs
 
-/priv/repo/seed/
-
 # environmental variables
 .env
 

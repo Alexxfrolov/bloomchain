@@ -1,7 +1,7 @@
 alias Bloomchain.Repo
 alias Bloomchain.Content.{User, Author}
 
-"#{File.cwd!()}/priv/repo/data_files/users.json"
+"#{File.cwd!()}/priv/repo/seed/data_files/users.json"
 |> File.read!()
 |> Poison.decode!(keys: :atoms)
 |> Enum.each(fn item ->

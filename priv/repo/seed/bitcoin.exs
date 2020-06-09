@@ -1,7 +1,7 @@
 alias Bloomchain.Repo
 alias Bloomchain.Content.{Index}
 
-"#{File.cwd!()}/priv/repo/data_files/bitcoin.json"
+"#{File.cwd!()}/priv/repo/seed/data_files/bitcoin.json"
 |> File.read!()
 |> Poison.decode!(keys: :atoms)
 |> Enum.map(fn item ->

@@ -2,7 +2,7 @@ alias Bloomchain.Repo
 alias Bloomchain.Content.{Tag}
 
 data =
-  "#{File.cwd!()}/priv/repo/data_files/tags.json"
+  "#{File.cwd!()}/priv/repo/seed/data_files/tags.json"
   |> File.read!()
   |> Poison.decode!(keys: :atoms)
 

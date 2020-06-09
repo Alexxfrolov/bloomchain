@@ -27,8 +27,7 @@ end
 
 replace_bloomchain_urls = fn item ->
   item
-  |> String.replace("http://bloomchain.ru/", "/")
-  |> String.replace("https://bloomchain.ru/", "/")
+  |> String.replace(["http://bloomchain.ru/", "https://bloomchain.ru/"], "/")
   |> String.replace("/wp-content/uploads/", "/uploads/wp-content/")
 end
 
@@ -132,7 +131,7 @@ s3_urls = fn item ->
   )
 end
 
-"#{File.cwd!()}/priv/repo/data_files/posts.json"
+"#{File.cwd!()}/priv/repo/seed/data_files/posts.json"
 |> File.read!()
 |> Poison.decode!(keys: :atoms)
 |> Enum.map(fn item ->
@@ -154,7 +153,7 @@ end)
 
   cover_url =
     if cover.id do
-      "https://bloomchain.s3.amazonaws.com" <> Upload.url({cover.file, cover})
+      Upload.url({cover.file, cover})
     else
       ""
     end

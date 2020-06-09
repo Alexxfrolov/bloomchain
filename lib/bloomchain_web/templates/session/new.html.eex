@@ -7,7 +7,6 @@
   <h1 class="MuiTypography-root MuiTypography-h5">Sign in</h1>
   <%= form_for @conn, session_path(@conn, :create), [as: :session, class: "jss291"], fn f-> %>
     <div class="MuiFormControl-root MuiTextField-root MuiFormControl-marginNormal MuiFormControl-fullWidth">
-        <!-- <label class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined Mui-required Mui-required" data-shrink="false" for="email" id="email-label">Email Address<span class="MuiFormLabel-asterisk MuiInputLabel-asterisk"> *</span></label> -->
         <div class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl">
             <%= text_input f, :email, placeholder: "Email", class: "MuiInputBase-input MuiOutlinedInput-input" %>
             <fieldset aria-hidden="true" class="jss405 MuiOutlinedInput-notchedOutline">
@@ -16,7 +15,6 @@
         </div>
     </div>
     <div class="MuiFormControl-root MuiTextField-root MuiFormControl-marginNormal MuiFormControl-fullWidth">
-        <!-- <label class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined Mui-required Mui-required" data-shrink="false" for="password" id="password-label">Password<span class="MuiFormLabel-asterisk MuiInputLabel-asterisk"> *</span></label> -->
         <div class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl">
           <%= password_input f, :password, placeholder: "Password", class: "MuiInputBase-input MuiOutlinedInput-input" %>
             <fieldset aria-hidden="true" class="jss405 MuiOutlinedInput-notchedOutline">

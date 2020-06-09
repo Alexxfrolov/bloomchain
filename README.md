@@ -26,10 +26,8 @@ News site app built on Phoenix framework in Elixir.
 
 
 ### Frontend аdmin
-
 Requires [Node.js](https://nodejs.org/) >=10.16.0+ to run.
 For installation dependencies and devDependencies run `yarn install`
-For starting webpack-dev-server run `yarn start`
 For production build run `yarn build`
 
 ## BloomChain Bitcoin Price Index
@@ -99,8 +97,8 @@ Required fields:
 1) `last` - актуальная цена BTC к USD за 24 часа
 2) `volume ` - оборот BTC за 24 часа
 
-Рассчет
-```js
-const value = ((quoteVolume * lastPrice + volume * last) / (quoteVolume + volume)).toFixed(2)
-```
-
+## Seed old data
+* Выполнить все запросы из `priv/repo/seed/sql_scripts/` и сохранить в формате json
+* формат наименования - posts.sql -> posts.json, bitcoin.sql -> bitcoin.json и тд
+* все json файлы должны лежать в `priv/repo/seed/data_files/`
+* `mix run priv/repo/seeds.exs`

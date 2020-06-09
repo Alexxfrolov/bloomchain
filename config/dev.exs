@@ -13,7 +13,9 @@ config :bloomchain, BloomchainWeb.Endpoint,
   check_origin: false,
   watchers: [
     yarn: [
-      "run", "watch", cd: Path.expand("../assets", __DIR__)
+      "run",
+      "watch",
+      cd: Path.expand("../assets", __DIR__)
     ]
   ]
 
@@ -67,15 +69,3 @@ config :bloomchain, Bloomchain.ElasticsearchCluster, url: System.get_env("ES_URL
 # # Arc Image Upload
 config :arc,
   storage: Arc.Storage.Local
-
-# Arc Image Upload
-# config :arc,
-#   # storage: Arc.Storage.Local
-#   storage: Arc.Storage.S3,
-#   bucket: {:system, "AWS_BUCKET"},
-#   virtual_host: true
-#
-# config :ex_aws,
-#   access_key_id: [{:system, "AWS_ACCESS_KEY_ID"}, :instance_role],
-#   secret_access_key: [{:system, "AWS_SECRET_ACCESS_KEY"}, :instance_role],
-#   region: [{:system, "AWS_REGION"}, :instance_role]

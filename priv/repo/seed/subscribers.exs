@@ -2,7 +2,7 @@ alias Bloomchain.Repo
 alias Bloomchain.Content.{Subscriber}
 
 data =
-  "#{File.cwd!()}/priv/repo/data_files/subscribers.json"
+  "#{File.cwd!()}/priv/repo/seed/data_files/subscribers.json"
   |> File.read!()
   |> Poison.decode!(keys: :atoms)
   |> Enum.map(fn item ->
