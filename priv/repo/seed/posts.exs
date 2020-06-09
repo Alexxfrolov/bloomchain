@@ -123,12 +123,16 @@ persist_cover = fn cover, alt ->
   end
 end
 
-s3_urls = fn item ->
+s3_urls = fn item, Arc.Storage.S3 ->
   item
   |> String.replace(
     "/uploads/wp-content/",
-    "https://bloomchain.s3.amazonaws.com/uploads/wp-content/"
+    "https://#{System.get_env("AWS_BUCKET")}.s3.amazonaws.com/uploads/wp-content/"
   )
+end
+
+s3_urls = fn item, _storage ->
+  item
 end
 
 "#{File.cwd!()}/priv/repo/seed/data_files/posts.json"
@@ -144,7 +148,7 @@ end
     |> replace_caption.()
     |> replace_strong_tags.()
     |> replace_blockquote.()
-    |> s3_urls.()
+    |> s3_urls.(Application.get_env(:arc, :storage))
 
   Map.replace!(item, :body, body)
 end)

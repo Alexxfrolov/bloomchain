@@ -25,7 +25,7 @@ config :bloomchain, BloomchainWeb.Endpoint,
 config :bloomchain, Bloomchain.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "20"),
   ssl: true
 
 # Do not print debug messages in production
@@ -33,9 +33,9 @@ config :logger, level: :debug
 
 # Arc Image Upload
 config :arc,
-  # storage: Arc.Storage.Local
   storage: Arc.Storage.S3,
   bucket: {:system, "AWS_BUCKET"},
+  version_timeout: 60_000,
   virtual_host: true
 
 config :ex_aws,
@@ -43,47 +43,13 @@ config :ex_aws,
   secret_access_key: [{:system, "AWS_SECRET_ACCESS_KEY"}, :instance_role],
   region: [{:system, "AWS_REGION"}, :instance_role]
 
+config :ex_aws, :hackney_opts,
+  follow_redirect: true,
+  recv_timeout: 60_000
+
 config :bloomchain, Bloomchain.ElasticsearchCluster,
   url: System.get_env("ES_URL"),
   username: System.get_env("ES_USER"),
   password: System.get_env("ES_PASSWORD")
 
 import_config "scheduler.exs"
-
-# ## SSL Support
-#
-# To get SSL working, you will need to add the `https` key
-# to the previous section and set your `:url` port to 443:
-#
-#     config :bloomchain, BloomchainWeb.Endpoint,
-#       ...
-#       url: [host: "example.com", port: 443],
-#       https: [:inet6,
-#               port: 443,
-#               keyfile: System.get_env("SOME_APP_SSL_KEY_PATH"),
-#               certfile: System.get_env("SOME_APP_SSL_CERT_PATH")]
-#
-# Where those two env variables return an absolute path to
-# the key and cert in disk or a relative path inside priv,
-# for example "priv/ssl/server.key".
-#
-# We also recommend setting `force_ssl`, ensuring no data is
-# ever sent via http, always redirecting to https:
-#
-#     config :bloomchain, BloomchainWeb.Endpoint,
-#       force_ssl: [hsts: true]
-#
-# Check `Plug.SSL` for all available options in `force_ssl`.
-
-# ## Using releases
-#
-# If you are doing OTP releases, you need to instruct Phoenix
-# to start the server for all endpoints:
-#
-#     config :phoenix, :serve_endpoints, true
-#
-# Alternatively, you can configure exactly which server to
-# start per endpoint:
-#
-#     config :bloomchain, BloomchainWeb.Endpoint, server: true
-#

@@ -101,4 +101,7 @@ Required fields:
 * Выполнить все запросы из `priv/repo/seed/sql_scripts/` и сохранить в формате json
 * формат наименования - posts.sql -> posts.json, bitcoin.sql -> bitcoin.json и тд
 * все json файлы должны лежать в `priv/repo/seed/data_files/`
+* для загрузки обложек статей необходимо положить все картинки с сервера в `uploads/wp-content`
+  `scp -r -P 223 bloomchain@88.99.30.169:~/web/wp-content/uploads/ ~/code/bloomchain/uploads/wp-content/`
 * `mix run priv/repo/seeds.exs`
+* переносим папку `uploads/wp-content` в облачное хранилище (если используется S3)
