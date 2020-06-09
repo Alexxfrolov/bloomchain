@@ -51,9 +51,12 @@ defmodule Bloomchain.ElasticsearchCluster do
 
   defp process_result(result) do
     with {:ok, result} <- result do
+      last = List.last(result["hits"]["hits"])
+
       scroll =
-        if result["hits"]["total"] > @max_size and length(result["hits"]["hits"]) == @max_size do
-          result["_scroll_id"]
+        if result["hits"]["total"] > @max_size and length(result["hits"]["hits"]) == @max_size and
+             last["sort"] do
+          Enum.join(last["sort"], ";")
         else
           nil
         end

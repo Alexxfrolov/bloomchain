@@ -6,7 +6,20 @@ defmodule BloomchainWeb.SharedView do
   def load_more_button(%{after: nil}) do
   end
 
-  def load_more_button(%{after: after_cursor}) do
+  def load_more_button(%{after: after_cursor, query: query}) do
+    content_tag(:div, class: "container px-0 pb-5 js-scroll-button-container") do
+      content_tag(
+        :button,
+        "Загрузить еще",
+        class: "bc-article__btn-link btn btn-link js-scroll-button",
+        type: "button",
+        data_scroll: after_cursor,
+        data_query: query
+      )
+    end
+  end
+
+  def load_more_button(%{after: after_cursor} = meta) do
     content_tag(:div, class: "container px-0 pb-5 js-scroll-button-container") do
       content_tag(
         :button,

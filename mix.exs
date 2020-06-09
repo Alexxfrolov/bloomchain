@@ -44,18 +44,21 @@ defmodule Bloomchain.Mixfile do
       {:better_params, "~> 0.5.0"},
 
       # json serializer
-      {:httpoison, "~> 1.6"},
       {:jason, "~> 1.1"},
+      {:poison, "~> 3.1"},
+
+      # http requests
+      {:httpoison, "~> 1.6"},
 
       # scheduler for cronjobs
       {:quantum, "~> 3.0-rc"},
 
       # User authentication
-      {:guardian, "~> 1.0"},
-      {:comeonin, "~> 4.0"},
-      {:bcrypt_elixir, "~> 1.0"},
+      {:guardian, "~> 2.0"},
+      {:comeonin, "~> 5.0"},
+      {:bcrypt_elixir, "~> 2.0"},
 
-      # Blog engine deps
+      # Post engine deps
       {:slugger, "~> 0.3"},
       {:earmark, "~> 1.2.6"},
       {:timex, "~> 3.3.0"},
@@ -69,15 +72,14 @@ defmodule Bloomchain.Mixfile do
       {:arc_ecto, "~> 0.11.3"},
 
       # If using Amazon S3:
-      ex_aws: "~> 2.0",
-      ex_aws_s3: "~> 2.0",
-      hackney: "~> 1.6",
-      poison: "~> 3.1",
-      sweet_xml: "~> 0.6",
+      {:ex_aws, "~> 2.0"},
+      {:ex_aws_s3, "~> 2.0"},
+      {:hackney, "~> 1.6"},
+      {:sweet_xml, "~> 0.6"},
 
       # ES search
-      elasticsearch: "~> 1.0.0",
-      sigaws: "~> 0.7"
+      {:elasticsearch, "~> 1.0"},
+      {:sigaws, "~> 0.7"}
     ]
   end
 

@@ -130,9 +130,9 @@ document.addEventListener("DOMContentLoaded", function () {
   $scrollButton && $scrollButton.addEventListener("click", pagination)
 
   function pagination(event) {
-    const { scroll, date } = event.currentTarget.dataset
+    const { scroll, date, query } = event.currentTarget.dataset
 
-    const url = `${location.pathname}?scroll=${scroll}&last_date=${date}`
+    const url = `${location.pathname}?scroll=${scroll}&last_date=${date}&query=${query}`
     const $button = document.querySelector(".container.px-0.pb-5")
 
     fetch(url)

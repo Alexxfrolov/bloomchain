@@ -1,7 +1,6 @@
 defmodule Bloomchain.Auth.Account do
   alias Bloomchain.Repo
   alias Bloomchain.Content.User
-  alias Comeonin.Bcrypt
   alias Bloomchain.Auth
 
   import Ecto.Query
@@ -36,7 +35,7 @@ defmodule Bloomchain.Auth.Account do
   defp check_password(nil, _), do: {:error, "Incorrect email or password"}
 
   defp check_password(user, given_password) do
-    case Bcrypt.checkpw(given_password, user.password_hash) do
+    case Bcrypt.verify_pass(given_password, user.password_hash) do
       true -> {:ok, user}
       false -> {:error, "Incorrect email or password"}
     end
