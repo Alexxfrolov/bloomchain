@@ -12,7 +12,7 @@
 
     <link href="https://fonts.gstatic.com" crossorigin="" rel="preconnect">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap&subset=cyrillic,cyrillic-ext" rel="stylesheet">
-    <link rel="stylesheet" href="<%= static_path(@conn, "/customer/css/app.f213ae505239.css") %>">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/customer/bundle.css") %>">
 
     <meta name="theme-color" content="#2f358f">
     <meta name="application-name" content="BloomChain">
@@ -47,6 +47,6 @@
     <script rel="dns-prefetch" src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script rel="dns-prefetch" src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script async rel="dns-prefetch" src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
-    <script src="<%= static_path(@conn, "/customer/js/app.js") %>"></script>
+    <script src="<%= static_path(@conn, "/customer/bundle.js") %>"></script>
   </body>
 </html>

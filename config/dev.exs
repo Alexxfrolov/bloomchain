@@ -8,11 +8,13 @@ use Mix.Config
 # with brunch.io to recompile .js and .css sources.
 config :bloomchain, BloomchainWeb.Endpoint,
   http: [port: 4000],
-  debug_errors: false,
-  code_reloader: false,
+  debug_errors: true,
+  code_reloader: true,
   check_origin: false,
   watchers: [
-    yarn: ["watch", cd: Path.expand("../lib/bloomchain_web/client", __DIR__)]
+    yarn: [
+      "run", "watch", cd: Path.expand("../assets", __DIR__)
+    ]
   ]
 
 # ## SSL Support
@@ -36,6 +38,7 @@ config :bloomchain, BloomchainWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r{priv/static/customer/*/*.*(js|css|jpg|svg|png|ico|txt)$},
+      ~r{priv/static/admin/*/*.*(js|css|jpg|svg|png|ico|txt)$},
       ~r{priv/gettext/.*(po)$},
       ~r{lib/bloomchain_web/views/.*(ex)$},
       ~r{lib/bloomchain_web/templates/.*(eex)$}
