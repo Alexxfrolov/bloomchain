@@ -1,0 +1,41 @@
+version: "3.7"
+services:
+  bloomchain:
+    restart: unless-stopped
+    command: mix phx.server
+    depends_on:
+      - elasticsearch
+    ports:
+      - "4000:4000"
+    image: "bloomchain/bloomchain:master"
+    environment:
+      PORT: "4000"
+      MIX_ENV: "prod"
+      SECRET_KEY_BASE: "${SECRET_KEY_BASE}"
+      
+      AWS_ACCESS_KEY_ID: ""
+      AWS_BUCKET: ""
+      AWS_REGION: ""
+      AWS_SECRET_ACCESS_KEY: ""
+      
+      DATABASE_URL: ""
+      
+      TZ: "Europe/Moscow"
+      
+      ES_URL: "https://url.aws.cloud.es.io:9243"
+      ES_USER: "elastic"
+      ES_PASSWORD: ""
+      
+      POSTMARK_API_KEY: "${POSTMARK_API_KEY:?POSTMARK_API_KEY is required}"
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+    restart: unless-stopped
+    ports:
+      - "172.17.0.1:9201:9200"
+      - "172.17.0.1:9301:9300"
+    volumes:
+      - ./elasticsearch/data:/usr/share/elasticsearch/data
+    environment:
+      discovery.type: 'single-node'
+      xpack.security.enabled: 'true'
+      ELASTIC_PASSWORD: "${ELASTIC_PASSWORD:?ELASTIC_PASSWORD is required}"
