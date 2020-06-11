@@ -25,8 +25,7 @@ config :bloomchain, BloomchainWeb.Endpoint,
 config :bloomchain, Bloomchain.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "20"),
-  ssl: true
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "20")
 
 # Do not print debug messages in production
 config :logger, level: :debug
