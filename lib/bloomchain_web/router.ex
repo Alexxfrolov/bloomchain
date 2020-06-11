@@ -1,6 +1,10 @@
 defmodule BloomchainWeb.Router do
   use BloomchainWeb, :router
 
+  use Plug.ErrorHandler
+  use Sentry.Plug
+
+
   pipeline :browser do
     plug(:accepts, ["html"])
     plug :fetch_session
