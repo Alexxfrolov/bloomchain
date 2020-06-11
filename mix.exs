@@ -79,7 +79,8 @@ defmodule Bloomchain.Mixfile do
 
       # ES search
       {:elasticsearch, "~> 1.0"},
-      {:sigaws, "~> 0.7"}
+      {:sigaws, "~> 0.7"},
+      {:sentry, "~> 7.0"}
     ]
   end
 
