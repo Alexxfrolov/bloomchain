@@ -41,8 +41,12 @@ RUN mix do deps.get, deps.compile
 WORKDIR /opt/app/assets
 
 RUN yarn
+RUN npm run-script build
 
 WORKDIR /opt/app
+
+RUN mix compile
+RUN mix phx.digest
 
 
 
