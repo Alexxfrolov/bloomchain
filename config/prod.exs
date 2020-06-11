@@ -15,9 +15,10 @@ use Mix.Config
 # which you typically run after static files are built.
 config :bloomchain, BloomchainWeb.Endpoint,
   load_from_system_env: true,
-  http: [compress: true],
-  url: [scheme: "https", host: "bloomchain.herokuapp.com", port: 443, compress: true],
-  force_ssl: [rewrite_on: [:x_forwarded_proto]],
+  # http: [compress: true],
+  url: [host: "new.bitdice.me", port: 80],
+  # url: [scheme: "https", host: "bloomchain.herokuapp.com", port: 443, compress: true],
+  # force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
 
