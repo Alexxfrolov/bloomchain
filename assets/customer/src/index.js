@@ -1,3 +1,6 @@
+import $ from "jquery"
+import "bootstrap"
+
 import { StockChart } from "./chart"
 import { Sharer } from "./lib/share-social"
 import { parseHTML, throwback_by_history } from "./lib/dom"
@@ -77,7 +80,7 @@ if (document.readyState === "complete" || document.readyState !== "loading") {
   document.addEventListener("DOMContentLoaded", Sharer.init)
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+$(document).ready(function () {
   $(".bc-header__nav .dropdown").on("shown.bs.dropdown", (e) => {
     window.innerWidth < 540 && $(e.target).prevAll().hide()
   })
@@ -112,14 +115,6 @@ document.addEventListener("DOMContentLoaded", function () {
         $(e.delegateTarget).parent().parent().removeClass("w-100")),
       $(void 0).hide()
   })
-
-  // $(".js-marquee").marquee({
-  //   duration: 4e4,
-  //   gap: 0,
-  //   delayBeforeStart: 0,
-  //   direction: "left",
-  //   duplicated: !0,
-  // })
 
   const $main = document.querySelector(".js-article-list")
   const $scrollButtonContainer = document.querySelector(
