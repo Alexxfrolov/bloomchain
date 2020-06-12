@@ -36,7 +36,7 @@ services:
 
       TZ: "Europe/Moscow"
 
-      ES_URL: "https://elasticsearch:9200"
+      ES_URL: "http://elasticsearch:9200"
       ES_USER: "elastic"
       ES_PASSWORD: "${ES_PASSWORD}"
 
