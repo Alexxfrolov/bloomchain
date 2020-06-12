@@ -123,16 +123,16 @@ persist_cover = fn cover, alt ->
   end
 end
 
-s3_urls = fn item, Arc.Storage.S3 ->
-  item
-  |> String.replace(
-    "/uploads/wp-content/",
-    "https://#{System.get_env("AWS_BUCKET")}.s3.amazonaws.com/uploads/wp-content/"
-  )
-end
-
-s3_urls = fn item, _storage ->
-  item
+s3_urls = fn item, storage ->
+  if storage == Arc.Storage.S3 do
+    item
+    |> String.replace(
+      "/uploads/wp-content/",
+      "https://#{System.get_env("AWS_BUCKET")}.s3.amazonaws.com/uploads/wp-content/"
+    )
+  else
+    item
+  end
 end
 
 "#{File.cwd!()}/priv/repo/seed/data_files/posts.json"
