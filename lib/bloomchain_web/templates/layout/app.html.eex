@@ -8,6 +8,7 @@
     <title><%= title(assigns) %></title>
     <meta name="keywords" content="<%= meta(:keywords, assigns) %>" >
     <meta name="description" content="<%= meta(:description, assigns) %>" >
+
     <link rel="icon" type="image/png" href="<%= static_path(@conn, "/customer/favicon.png") %>">
 
     <link href="https://fonts.gstatic.com" crossorigin="" rel="preconnect">
