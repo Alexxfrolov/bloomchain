@@ -16,7 +16,7 @@ end
 
 replace_embedly_urls = fn item ->
   Regex.replace(
-    ~r/<p>((https:\/\/twitter.com\/[a-z0-9_&=;\-\?\/]+)|(https:\/\/www.youtube.com\/watch\?v=[a-z0-9_&=;\-\?\/]+))<\/p>/i,
+    ~r/<p>((https:\/\/twitter.com\/[a-z0-9_&=;\-\?\/]+)|(https:\/\/www.youtube.com\/watch\?v=[a-z0-9_&=;\-\?\/]+)|(https:\/\/youtu.be\/[a-z0-9_&=;\-\?\/]+))<\/p>/i,
     item,
     fn tag, _ ->
       url = Regex.run(~r/(?<=<p>)(.*?)(?=<\/p>)/, tag, capture: :first) |> List.first()
