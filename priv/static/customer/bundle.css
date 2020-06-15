@@ -9828,3 +9828,12 @@ background-color: red;
   display: none !important;
 }
 
+.form__helper-text {
+  margin: 5px 0 0;
+  max-width: 330px;
+  opacity: 0;
+  visibility: hidden;
+  font-size: 12px;
+  line-height: 1.3;
+  transition: opacity .15s ease-in;
+}
