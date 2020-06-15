@@ -1,24 +1,10 @@
-<%= form_for @conn, page_path(@conn, :create), fn f-> %>
-
+<form class="js-form-subscription">
   <div class="bc-footer__subscribe align-items-center align-items-md-start">
-
     <div id="js-subscription-input" class="bc-footer__input_wrapper">
-      <%= if @conn.private[:phoenix_flash] && get_flash(@conn, :subscription_error) do %>
-
-        <%= email_input f, :email, value: get_flash(@conn, :subscription_email), required: true, placeholder: "Ваш Email", class: "bc-footer__input bg-transparent border-0" %>
-        <p style="margin-bottom: 0; color: #E02829; font-size: 12px;"><%= get_flash(@conn, :subscription_error) %></p>
-
-      <% else %>
-
-        <%= email_input f, :email, required: true, placeholder: "Ваш Email", class: "bc-footer__input bg-transparent border-0" %>
-        <p style="margin-bottom: 0; color: #28a745; font-size: 12px;"><%= if @conn.private[:phoenix_flash], do: get_flash(@conn, :subscription_success) %></p>
-
-      <% end %>
+        <input name="email" type="email" required placeholder="Ваш Email" class="bc-footer__input bg-transparent border-0">
+        <p class="form__helper-text js-subscription-error-msg"></p>
     </div>
-    <%= submit "Подписаться", class: "bc-footer__button btn btn-primary ml-md-5" %>
-
+    <button type="submit" class="bc-footer__button btn btn-primary ml-md-5">Подписаться</button>
   </div>
-
   <p class="bc-footer__p text-center mt-3">*Нажимая подписаться вы соглашаетесь с политикой конфиденциальности</p>
-
-<% end %>
+</form>

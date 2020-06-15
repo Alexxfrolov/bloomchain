@@ -1,13 +1,18 @@
 import $ from "jquery"
 import "bootstrap"
 
+import { Subscription } from "./subscription"
 import { StockChart } from "./chart"
 import { Sharer } from "./lib/share-social"
 import { parseHTML, throwback_by_history } from "./lib/dom"
 
 import "./app.css"
 
+const subscription = new Subscription()
+
 document.addEventListener("DOMContentLoaded", () => {
+  subscription.init()
+
   const bitcoin_chart_container = document.getElementById("js-chart-bitcoin")
   const top10_cryptocurrency_chart_container = document.getElementById(
     "js-chart-top10-cryptocurrency",
