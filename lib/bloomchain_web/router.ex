@@ -75,7 +75,6 @@ defmodule BloomchainWeb.Router do
     pipe_through(:browser)
 
     get("/", PageController, :index)
-    post("/subscribe", PageController, :create)
 
     resources("/newsfeed", NewsfeedController, only: [:index, :show], param: "slug")
     resources("/detailed", DetailedController, only: [:index, :show], param: "slug")
@@ -92,6 +91,7 @@ defmodule BloomchainWeb.Router do
       pipe_through [:api]
 
       resources("/index", Api.IndexController, only: [:index])
+      resources("/subscription", Api.SubscriptionController, only: [:create])
     end
   end
 end
