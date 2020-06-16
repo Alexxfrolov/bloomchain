@@ -43,7 +43,7 @@ defmodule BloomchainWeb.NewsfeedView do
   defp formatted_weekday(date) do
     case Date.day_of_week(date) do
       1 -> "Понедельник"
-      2 -> "Вторни"
+      2 -> "Вторник"
       3 -> "Среда"
       4 -> "Четверг"
       5 -> "Пятница"
