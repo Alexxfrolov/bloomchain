@@ -55,7 +55,7 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaController do
   end
 
   def delete(conn, %{id: id}) do
-    Repo.get!(Media, id) |> Repo.delete!()
+    Media.delete!(id)
 
     send_resp(conn, :no_content, "")
   end

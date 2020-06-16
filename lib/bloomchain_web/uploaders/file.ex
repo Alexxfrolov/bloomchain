@@ -1,6 +1,6 @@
 defmodule BloomchainWeb.Uploaders.File do
-  use Arc.Definition
-  use Arc.Ecto.Definition
+  use Waffle.Definition
+  use Waffle.Ecto.Definition
 
   # @versions [:original]
   @acl :public_read_write

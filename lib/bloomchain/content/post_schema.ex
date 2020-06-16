@@ -5,7 +5,7 @@ defmodule Bloomchain.Content.Post do
   require Slugger
 
   use Ecto.Schema
-  use Arc.Ecto.Schema
+  use Waffle.Ecto.Schema
 
   alias Bloomchain.Content.{Tag, Media, Author}
   alias BloomchainWeb.Uploaders.File

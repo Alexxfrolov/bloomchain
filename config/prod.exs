@@ -32,8 +32,8 @@ config :bloomchain, Bloomchain.Repo,
 config :logger, level: :debug
 
 # Arc Image Upload
-config :arc,
-  storage: Arc.Storage.S3,
+config :waffle,
+  storage: Waffle.Storage.S3,
   bucket: {:system, "AWS_BUCKET"},
   version_timeout: 60_000,
   virtual_host: true
@@ -56,10 +56,10 @@ config :sentry,
   dsn: "https://4ceb6862d2b6458fa32dd6f4644b57fc@o252637.ingest.sentry.io/5273561",
   environment_name: :prod,
   enable_source_code_context: true,
-  root_source_code_path: File.cwd!,
+  root_source_code_path: File.cwd!(),
   tags: %{
     env: "production"
   },
   included_environments: [:prod]
-  
+
 import_config "scheduler.exs"

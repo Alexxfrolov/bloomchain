@@ -50,6 +50,6 @@ config :bloomchain, Bloomchain.Repo,
 
 config :bloomchain, Bloomchain.ElasticsearchCluster, url: System.get_env("ES_URL")
 
-# # Arc Image Upload
-config :arc,
-  storage: Arc.Storage.Local
+# # Waffle Image Upload
+config :waffle,
+  storage: Waffle.Storage.Local

@@ -20,7 +20,7 @@ config :bloomchain, Bloomchain.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 # Arc Image Upload
-config :arc,
-  storage: Arc.Storage.Local
+config :waffle,
+  storage: Waffle.Storage.Local
 
 config :bloomchain, Bloomchain.ElasticsearchCluster, url: "http://example.com"

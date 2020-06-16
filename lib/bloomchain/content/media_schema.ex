@@ -1,6 +1,6 @@
 defmodule Bloomchain.Content.Media do
   use Ecto.Schema
-  use Arc.Ecto.Schema
+  use Waffle.Ecto.Schema
 
   import Ecto.Changeset
   import Ecto.Query
@@ -43,6 +43,14 @@ defmodule Bloomchain.Content.Media do
     |> cast_attachments(params, [:file])
     |> set_content_type(params)
     |> validate_required(@required_fields)
+  end
+
+  def delete!(id) do
+    item = Repo.get!(Media, id)
+    require IEx
+    IEx.pry()
+    File.delete({item.file, item})
+    Repo.delete!(item)
   end
 
   defp check_uuid(changeset) do

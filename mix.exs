@@ -68,8 +68,8 @@ defmodule Bloomchain.Mixfile do
       {:paginator, "~> 0.6"},
 
       # File attachment deps
-      {:arc, "~> 0.11.0"},
-      {:arc_ecto, "~> 0.11.3"},
+      {:waffle, "~> 1.1.0"},
+      {:waffle_ecto, "~> 0.0.9"},
 
       # If using Amazon S3:
       {:ex_aws, "~> 2.0"},
