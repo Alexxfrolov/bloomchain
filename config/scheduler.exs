@@ -12,8 +12,7 @@ config :bloomchain, Bloomchain.Scheduler,
        # нужно менять логику для новых монет
 
        Mix.Task.rerun("bloomchain.update_coin_price")
-       Mix.Task.rerun("bloomchain.update_coin_price")
-       # Mix.Task.rerun("bloomchain.update_index", [Bloomchain.Service.Index.Top10])
+       Mix.Task.rerun("bloomchain.update_index", [Bloomchain.Service.Index.Top10])
      end},
     {"*/15 * * * *",
      {Mix.Task, :rerun, ["bloomchain.update_index", [Bloomchain.Service.Index.Bitcoin]]}},
