@@ -47,5 +47,6 @@ Ecto.Adapters.SQL.query!(Repo, "
   'На правах рекламы',
   'Bloomchain Research',
   'support.wpbakery support.wpbakery',
-  'BloomChain BloomChain'
+  'BloomChain BloomChain',
+  'Новости Новости'
   )")
