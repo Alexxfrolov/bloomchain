@@ -12,7 +12,8 @@ config :bloomchain, Bloomchain.Scheduler,
        # поэтому "bloomchain.update_coin_price" запускается 2 раза при первом запуске
        # нужно менять логику для новых монет
 
-       Mix.Task.run("bloomchain.update_coin_price")
+       # раскоментировать при первом запуске
+       # Mix.Task.run("bloomchain.update_coin_price")
        Mix.Task.rerun("bloomchain.update_coin_price")
        Mix.Task.rerun("bloomchain.update_index", [Bloomchain.Service.Index.Top10])
      end},

@@ -38,3 +38,14 @@ Repo.insert!(
     role: "admin"
   })
 )
+
+# set foreign key to null for authors
+Ecto.Adapters.SQL.query!(Repo, "
+  UPDATE authors
+  SET user_id = NULL
+  WHERE name in (
+  'На правах рекламы',
+  'Bloomchain Research',
+  'support.wpbakery support.wpbakery',
+  'BloomChain BloomChain'
+  )")
