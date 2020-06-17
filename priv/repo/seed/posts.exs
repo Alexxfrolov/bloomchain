@@ -124,7 +124,7 @@ persist_cover = fn cover, alt ->
 end
 
 s3_urls = fn item, storage ->
-  if storage == Arc.Storage.S3 do
+  if storage == Waffle.Storage.S3 do
     item
     |> String.replace(
       "/uploads/wp-content/",
@@ -148,7 +148,7 @@ end
     |> replace_caption.()
     |> replace_strong_tags.()
     |> replace_blockquote.()
-    |> s3_urls.(Application.get_env(:arc, :storage))
+    |> s3_urls.(Application.get_env(:waffle, :storage))
 
   Map.replace!(item, :body, body)
 end)
