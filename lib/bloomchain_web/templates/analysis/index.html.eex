@@ -4,7 +4,7 @@
     <div class="col-md-9">
       <h1 class="bc-analitics__h1">Индексы</h1>
       <div class="d-flex justify-content-center justify-content-md-start mt-4 mb-5">
-        <button class="bc-article__btn-xs-w-100 btn btn-dark d-flex align-items-center justify-content-center" type="button">Скачать Методику</button>
+        <a class="bc-article__btn-xs-w-100 btn btn-dark d-flex align-items-center justify-content-center" href="https://bloomchain-cdn.s3.amazonaws.com/uploads/pdf/7a93be6a-afeb-11ea-9b8e-0242ac130004/Индексы_методология_корр.pdf?v=63759542850" target="_blank">Скачать Методику</a>
       </div>
       <div class="pb-3" id="js-chart-bitcoin" style="min-width: 300px; max-width: 800px;"></div>
       <div class="pt-3" id="js-chart-top10-cryptocurrency" style="min-width: 300px; max-width: 800px"></div>
