@@ -4,7 +4,6 @@ defmodule BloomchainWeb.Router do
   use Plug.ErrorHandler
   use Sentry.Plug
 
-
   pipeline :browser do
     plug(:accepts, ["html"])
     plug :fetch_session
@@ -28,7 +27,7 @@ defmodule BloomchainWeb.Router do
   end
 
   pipeline :xml do
-    plug(:accepts, ["text/xml"])
+    # plug(:accepts, ["text/xml"])
     plug(:put_layout, false)
   end
 
