@@ -15,8 +15,8 @@
           <%= if length( @context[:analysis]) > 0 do %>
             <%= render "_analysis.html", conn: @conn, articles: @context[:analysis] %>
           <% end %>
-          <%= if length( @context[:research]) > 0 do %>
-            <%= render "_research.html", conn: @conn, articles: @context[:research] %>
+          <%= if length( @context[:people]) > 0 do %>
+            <%= render "_people.html", conn: @conn, articles: @context[:people] %>
           <% end %>
         </div>
     </div>

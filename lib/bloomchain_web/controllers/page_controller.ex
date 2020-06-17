@@ -10,7 +10,8 @@ defmodule BloomchainWeb.PageController do
       analysis: Article.get_published_posts("analysis", limit: 3),
       in_russia: Article.get_published_posts("in-russia", limit: 3),
       calendar: Article.get_published_posts("calendar", limit: 3),
-      research: Article.get_published_posts("research", limit: 3)
+      # research: Article.get_published_posts("research", limit: 3)
+      people: Article.get_published_posts("people", limit: 3)
     }
 
     render(conn, "index.html", context: context)
