@@ -15,7 +15,7 @@ defmodule BloomchainWeb.Endpoint do
     at: "/",
     from: "priv/static",
     gzip: true,
-    only: ~w(customer grapejs admin)
+    only: ~w(customer grapejs admin robots.txt)
   )
 
   plug Plug.Parsers,
