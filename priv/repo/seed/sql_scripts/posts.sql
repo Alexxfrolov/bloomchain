@@ -11,9 +11,9 @@ inner join wp_popularpostsdata v on p0.id = v.postid
 
 inner join wp_postmeta m1 on m1.post_id = p0.id and m1.meta_key = "_thumbnail_id"
 inner join wp_posts p1 on p1.id = m1.meta_value
-INNER join wp_postmeta m2 on m2.post_id = p1.ID and m2.meta_key = "_wp_attachment_image_alt"
+left join wp_postmeta m2 on m2.post_id = p1.ID and m2.meta_key = "_wp_attachment_image_alt"
 
-inner join wp_postmeta m3 on m3.post_id = p0.ID and m3.meta_key = "_yoast_wpseo_metadesc"
+left join wp_postmeta m3 on m3.post_id = p0.ID and m3.meta_key = "_yoast_wpseo_metadesc"
 
 GROUP BY id, published_at, author_id, body, title, slug, "type", cover, cover_alt, description
 order BY published_at desc

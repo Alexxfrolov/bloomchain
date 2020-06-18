@@ -190,19 +190,19 @@ end)
 Ecto.Adapters.SQL.query!(Repo, "SELECT setval('posts_id_seq', (SELECT MAX(id) from posts))")
 
 # change type for research
-Ecto.Adapters.SQL.query!(Repo, "
-  UPDATE posts
-  SET type = 'research'
-  WHERE slug in (
-  'bez-kupyur-kak-menyalsya-rossijskij-rynok-onlajn-platezhej-i-operatsij-s-kartami',
-  'kriptovalyuty-uhodyat-na-dno-ico-ne-polzuyutsya-sprosom-rynok-defi-sokrashhaetsya',
-  'kriptovalyuty-v-krasnoj-zone-rynok-defi-nabiraet-silu-bitcoin-obygryvaet-zoloto',
-  'finansovye-tehnologii-v-rossii-klyuchevye-igroki-tsifry-perspektivy',
-  'rost-kapitalizatsii-populyarnost-ieo-i-drugie-trendy-kriptorynka-vo-vtorom-kvartale',
-  'kriptovalyutnyj-rynok-v-chetvertom-kvartale-2018-goda-issledovanie-bloomchain',
-  'kriptovalyutnyj-rynok-v-tretem-kvartale-2018-goda-issledovanie-bloomchain',
-  'kriptovalyutnyj-rynok-vo-vtorom-kvartale-2018-goda-issledovanie-bloomchain',
-  'kriptovalyutnyj-rynok-v-pervom-kvartale-2018-goda-issledovanie-bloomchain',
-  'rossijskij-finteh-v-2018-godu-issledovanie-bloomchain',
-  'kriptovalyuty-prinosyat-ubytok-tether-dogonyaet-xrp-obemy-ico-padayut'
-  )")
+# Ecto.Adapters.SQL.query!(Repo, "
+#   UPDATE posts
+#   SET type = 'research'
+#   WHERE slug in (
+#   'bez-kupyur-kak-menyalsya-rossijskij-rynok-onlajn-platezhej-i-operatsij-s-kartami',
+#   'kriptovalyuty-uhodyat-na-dno-ico-ne-polzuyutsya-sprosom-rynok-defi-sokrashhaetsya',
+#   'kriptovalyuty-v-krasnoj-zone-rynok-defi-nabiraet-silu-bitcoin-obygryvaet-zoloto',
+#   'finansovye-tehnologii-v-rossii-klyuchevye-igroki-tsifry-perspektivy',
+#   'rost-kapitalizatsii-populyarnost-ieo-i-drugie-trendy-kriptorynka-vo-vtorom-kvartale',
+#   'kriptovalyutnyj-rynok-v-chetvertom-kvartale-2018-goda-issledovanie-bloomchain',
+#   'kriptovalyutnyj-rynok-v-tretem-kvartale-2018-goda-issledovanie-bloomchain',
+#   'kriptovalyutnyj-rynok-vo-vtorom-kvartale-2018-goda-issledovanie-bloomchain',
+#   'kriptovalyutnyj-rynok-v-pervom-kvartale-2018-goda-issledovanie-bloomchain',
+#   'rossijskij-finteh-v-2018-godu-issledovanie-bloomchain',
+#   'kriptovalyuty-prinosyat-ubytok-tether-dogonyaet-xrp-obemy-ico-padayut'
+#   )")
