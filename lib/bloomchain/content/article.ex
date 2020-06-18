@@ -130,6 +130,8 @@ defmodule Bloomchain.Content.Article do
     ES.search(query)[:entries]
   end
 
+  defp tags_functions([]), do: []
+
   defp tags_functions(tags) do
     weight = 10 / length(tags)
 
