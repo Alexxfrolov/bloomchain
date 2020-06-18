@@ -153,7 +153,12 @@ end
   Map.replace!(item, :body, body)
 end)
 |> Enum.each(fn item ->
-  cover = persist_cover.(item.cover, item.cover_alt)
+  cover =
+    if item.cover do
+      persist_cover.(item.cover, item.cover_alt)
+    else
+      %{id: nil}
+    end
 
   cover_url =
     if cover.id do
@@ -173,7 +178,7 @@ end)
       status: "published",
       published_at: item.published_at,
       time: nil,
-      tags: String.split(item.tags, ","),
+      tags: if(item.tags, do: String.split(item.tags, ","), else: []),
       authors: [item.author_id],
       total_views: item.total_views,
       cover_id: cover.id,
