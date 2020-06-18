@@ -6,15 +6,15 @@ defmodule BloomchainWeb.Uploaders.File do
   @acl :public_read_write
 
   def validate({file, %{type: "image"}}) do
-    ~w(.jpg .jpeg .png) |> Path.extname(file.file_name) |> String.downcase() |> Enum.member?()
+    ~w(.jpg .jpeg .png) |> Enum.member?(String.downcase(Path.extname(file.file_name)))
   end
 
   def validate({file, %{type: "pdf"}}) do
-    ~w(.pdf) |> Path.extname(file.file_name) |> String.downcase() |> Enum.member?()
+    ~w(.pdf) |> Enum.member?(String.downcase(Path.extname(file.file_name)))
   end
 
   def validate({file, %{type: "video"}}) do
-    ~w(.mp4 .avi) |> Path.extname(file.file_name) |> String.downcase() |> Enum.member?()
+    ~w(.mp4 .avi) |> Enum.member?(String.downcase(Path.extname(file.file_name)))
   end
 
   def storage_dir(_version, {_file, scope}) do
