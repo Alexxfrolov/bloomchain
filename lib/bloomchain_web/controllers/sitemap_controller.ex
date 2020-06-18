@@ -5,7 +5,6 @@ defmodule BloomchainWeb.SitemapController do
   alias Bloomchain.Repo
   alias Bloomchain.Content.{Post, Tag}
 
-  plug(:accepts, ["text/xml"])
   plug(:put_layout, false)
 
   def index(conn, _) do

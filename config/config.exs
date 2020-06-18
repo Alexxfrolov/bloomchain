@@ -9,9 +9,10 @@ use Mix.Config
 config :bloomchain,
   ecto_repos: [Bloomchain.Repo]
 
-# register xml mime type
+# regiter xml mime types
 config :mime, :types, %{
-  "application/xml" => ["xml"]
+  "application/xml" => ["xml"],
+  "application/xhtml+xml" => ["xml"]
 }
 
 # Configures the endpoint
