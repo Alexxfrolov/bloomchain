@@ -9,6 +9,11 @@ use Mix.Config
 config :bloomchain,
   ecto_repos: [Bloomchain.Repo]
 
+# register xml mime type
+config :mime, :types, %{
+  "application/xml" => ["xml"]
+}
+
 # Configures the endpoint
 config :bloomchain, BloomchainWeb.Endpoint,
   url: [host: "localhost"],

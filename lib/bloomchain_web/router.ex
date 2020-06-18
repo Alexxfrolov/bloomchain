@@ -27,7 +27,7 @@ defmodule BloomchainWeb.Router do
   end
 
   pipeline :xml do
-    # plug(:accepts, ["text/xml"])
+    plug(:accepts, ["xml"])
     plug(:put_layout, false)
   end
 
