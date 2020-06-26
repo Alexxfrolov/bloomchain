@@ -12,6 +12,15 @@
 <div class="bg-white">
     <div class="container py-4">
         <div class="row">
+          <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3298778396159828" data-ad-slot="3292475306" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
+    </div>
+    
+    <div class="container py-4">
+        <div class="row">
           <%= if length( @context[:analysis]) > 0 do %>
             <%= render "_analysis.html", conn: @conn, articles: @context[:analysis] %>
           <% end %>
