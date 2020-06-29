@@ -3,8 +3,6 @@ defmodule BloomchainWeb.FeedView do
 
   import Phoenix.Controller, only: [current_url: 1]
 
-  alias Bloomchain.{Repo, Content.Post, Content.Artcile}
-
   def format_date(datetime) do
     Timex.format!(Timex.to_datetime(datetime, "UTC"), "{RFC1123}")
   end
@@ -57,9 +55,8 @@ defmodule BloomchainWeb.FeedView do
   def guid(item), do: "bloomchain_posts_#{item.type}_#{item.id}"
 
   defp first_paragraph(body) do
-    a =
-      Regex.run(~r/(?<=<p>)(.*?)(?=<\/p>)/, body, capture: :first)
-      |> List.first()
-      |> Floki.text()
+    Regex.run(~r/(?<=<p>)(.*?)(?=<\/p>)/, body, capture: :first)
+    |> List.first()
+    |> Floki.text()
   end
 end

@@ -1,6 +1,4 @@
 defmodule Bloomchain.Workflow.MainPosts do
-  import Ecto.Query
-
   alias Bloomchain.Repo
   alias Bloomchain.Content.Article
 

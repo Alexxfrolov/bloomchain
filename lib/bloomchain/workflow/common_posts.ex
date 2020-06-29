@@ -1,8 +1,6 @@
 defmodule Bloomchain.Workflow.CommonPosts do
-  import Ecto.Query
-
   alias Bloomchain.Repo
-  alias Bloomchain.Content.{Article, Post}
+  alias Bloomchain.Content.Article
 
   @limit 6
 

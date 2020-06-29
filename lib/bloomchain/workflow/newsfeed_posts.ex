@@ -1,6 +1,4 @@
 defmodule Bloomchain.Workflow.NewsfeedPosts do
-  import Ecto.Query
-
   alias Bloomchain.Repo
   alias Bloomchain.Content.Article
 
