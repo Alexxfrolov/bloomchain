@@ -75,6 +75,13 @@ defmodule BloomchainWeb.Router do
   end
 
   scope "/", BloomchainWeb do
+    pipe_through([:xml])
+
+    get("/feed", FeedController, :index)
+    get("/:type/feed", FeedController, :show)
+  end
+
+  scope "/", BloomchainWeb do
     pipe_through(:browser)
 
     get("/", PageController, :index)

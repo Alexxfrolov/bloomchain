@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title><![CDATA[<%= title(@type) %>]]></title>
+    <link><%= page_url(@conn, :index) %></link>
+    <description>
+      <![CDATA[<%= description(@type) %>]]>
+    </description>
+    <language>ru-RU</language>
+    <%= for entry <- @posts do %>
+      <%= render "_item.xml", post: entry, conn: @conn %>
+    <% end %>
+  </channel>
+</rss>
