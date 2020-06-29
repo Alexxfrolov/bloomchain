@@ -26,21 +26,71 @@ defmodule BloomchainWeb.SearchController do
   defp do_query(str) do
     %{
       query: %{
-        bool: %{
-          must: [
+        function_score: %{
+          query: %{
+            bool: %{
+              must: %{
+                multi_match: %{
+                  query: str,
+                  fields: ["title^3", "lead^2", "body"],
+                  type: "best_fields",
+                  fuzziness: "auto"
+                }
+              },
+              filter: [%{term: %{status: "published"}}]
+            }
+          },
+          functions: [
             %{
-              multi_match: %{
-                query: str,
-                fields: ["title^3", "lead^2", "body"],
-                tie_breaker: 0.1,
-                type: "most_fields",
-                fuzziness: "auto"
+              # The relevancy of old posts is multiplied by at least one.
+              weight: 1
+            },
+            %{
+              # Published this month get a big boost
+              weight: 5,
+              gauss: %{
+                published_at: %{
+                  scale: "3d",
+                  decay: 0.5
+                }
+              }
+            },
+            %{
+              # Published this month get a big boost
+              weight: 4,
+              gauss: %{
+                published_at: %{
+                  scale: "14d",
+                  decay: 0.5
+                }
+              }
+            },
+            %{
+              # Published this month get a big boost
+              weight: 3,
+              gauss: %{
+                published_at: %{
+                  scale: "31d",
+                  decay: 0.5
+                }
+              }
+            },
+            %{
+              # Published this year get a boost
+              weight: 2,
+              gauss: %{
+                published_at: %{
+                  scale: "100d",
+                  decay: 0.5
+                }
               }
             }
           ],
-          filter: [
-            %{term: %{status: "published"}}
-          ]
+          # All functions outputs get summed
+          score_mode: "sum",
+          # The documents relevance is multiplied with the sum
+          boost_mode: "multiply",
+          min_score: 10
         }
       },
       size: 6,
