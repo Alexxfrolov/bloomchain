@@ -1,13 +1,10 @@
 defmodule BloomchainWeb.FeedController do
   use BloomchainWeb, :controller
-  import Ecto.Query
-
-  alias Bloomchain.Repo
-  alias Bloomchain.Content.Article
   alias Bloomchain.Workflow.{MainPosts, NewsfeedPosts, CommonPosts}
 
   def index(conn, _params) do
     conn
+    |> put_resp_content_type("application/rss+xml")
     |> render("index.xml",
       posts: MainPosts.run() |> Keyword.values() |> List.flatten(),
       type: nil
@@ -18,6 +15,7 @@ defmodule BloomchainWeb.FeedController do
     %{entries: posts} = NewsfeedPosts.run()
 
     conn
+    |> put_resp_content_type("application/rss+xml")
     |> render("index.xml",
       posts: posts,
       type: "newsfeed"
@@ -28,6 +26,7 @@ defmodule BloomchainWeb.FeedController do
     %{entries: posts} = CommonPosts.run(type)
 
     conn
+    |> put_resp_content_type("application/rss+xml")
     |> render("index.xml",
       posts: posts,
       type: type

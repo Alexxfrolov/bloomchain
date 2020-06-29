@@ -1,7 +1,7 @@
 defmodule BloomchainWeb.FeedView do
   use BloomchainWeb, :view
 
-  import Ecto.Query
+  import Phoenix.Controller, only: [current_url: 1]
 
   alias Bloomchain.{Repo, Content.Post, Content.Artcile}
 
