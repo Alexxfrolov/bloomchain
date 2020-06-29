@@ -12,7 +12,7 @@ defmodule Bloomchain.Content.Post do
   alias Bloomchain.Repo
 
   @derive {Phoenix.Param, key: :slug}
-  @unwanted_symbols ~r/[–]/
+  @unwanted_symbols ~r/[\x{200B}\x{200C}\x{200D}\x{FEFF}]/u
 
   def fetch(term, key) do
     term
