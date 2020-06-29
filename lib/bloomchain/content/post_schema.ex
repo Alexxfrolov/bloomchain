@@ -12,6 +12,7 @@ defmodule Bloomchain.Content.Post do
   alias Bloomchain.Repo
 
   @derive {Phoenix.Param, key: :slug}
+  @unwanted_symbols ~r/[–]/
 
   def fetch(term, key) do
     term
@@ -73,7 +74,12 @@ defmodule Bloomchain.Content.Post do
   # Private
 
   defp process_slug(%Ecto.Changeset{valid?: true, changes: %{title: title} = changes} = changeset) do
-    put_change(changeset, :slug, changes[:slug] || Slugger.slugify_downcase(title))
+    put_change(
+      changeset,
+      :slug,
+      changes[:slug] ||
+        title |> String.replace(@unwanted_symbols, " ") |> Slugger.slugify_downcase()
+    )
   end
 
   defp process_slug(changeset), do: changeset

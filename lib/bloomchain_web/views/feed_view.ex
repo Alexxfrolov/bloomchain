@@ -14,13 +14,13 @@ defmodule BloomchainWeb.FeedView do
   def title(type) do
     # будут перенесено в БД при доработке - редактирование разделов
     %{
-      "newsfeed" => "Коротко",
-      "detailed" => "В деталях",
-      "in-russia" => "Что в России",
-      "people" => "Персона",
-      "analysis" => "Статистика",
-      "calendar" => "События",
-      "research" => "Исследования"
+      "newsfeed" => "Bloomchain: Коротко",
+      "detailed" => "Bloomchain: В деталях",
+      "in-russia" => "Bloomchain: Что в России",
+      "people" => "Bloomchain: Персона",
+      "analysis" => "Bloomchain: Статистика",
+      "calendar" => "Bloomchain: События",
+      "research" => "Bloomchain: Исследования"
     }
     |> Map.get(type, "Bloomchain")
   end
@@ -55,6 +55,9 @@ defmodule BloomchainWeb.FeedView do
   end
 
   defp first_paragraph(body) do
-    Regex.run(~r/(?<=<p>)(.*?)(?=<\/p>)/, body, capture: :first) |> List.first()
+    a =
+      Regex.run(~r/(?<=<p>)(.*?)(?=<\/p>)/, body, capture: :first)
+      |> List.first()
+      |> Floki.text()
   end
 end

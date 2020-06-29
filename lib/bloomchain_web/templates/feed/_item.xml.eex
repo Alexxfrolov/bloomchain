@@ -3,7 +3,7 @@
       <![CDATA[<%= parse_markdown(@post.title) %>]]>
   </title>
   <link><%= page_url(@conn, :index) <> @post.type <> "/" <> @post.slug %></link>
-  <guid><%= page_url(@conn, :index) <> @post.type <> "/" <> @post.slug %></guid>
+  <guid isPermaLink="false"><%= @post.id %></guid>
   <description>
     <![CDATA[<%= post_description(@post) %>]]>
   </description>
