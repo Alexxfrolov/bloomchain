@@ -25,9 +25,11 @@ defmodule BloomchainWeb.FeedController do
   end
 
   def show(conn, %{type: type}) do
+    %{entries: posts} = CommonPosts.run(type)
+
     conn
     |> render("index.xml",
-      posts: CommonPosts.run(),
+      posts: posts,
       type: type
     )
   end
