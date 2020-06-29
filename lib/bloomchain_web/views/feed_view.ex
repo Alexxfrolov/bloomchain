@@ -54,6 +54,8 @@ defmodule BloomchainWeb.FeedView do
     |> parse_markdown
   end
 
+  def guid(item), do: "bloomchain_posts_#{item.type}_#{item.id}"
+
   defp first_paragraph(body) do
     a =
       Regex.run(~r/(?<=<p>)(.*?)(?=<\/p>)/, body, capture: :first)
