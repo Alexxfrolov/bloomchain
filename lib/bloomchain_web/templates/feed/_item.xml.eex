@@ -1,0 +1,11 @@
+<item>
+  <title>
+      <![CDATA[<%= parse_markdown(@post.title) %>]]>
+  </title>
+  <link><%= page_url(@conn, :index) <> @post.type <> "/" <> @post.slug %></link>
+  <guid isPermaLink="false"><%= guid(@post) %></guid>
+  <description>
+    <![CDATA[<%= post_description(@post) %>]]>
+  </description>
+  <pubDate><%= format_date(@post.published_at) %></pubDate>
+</item>

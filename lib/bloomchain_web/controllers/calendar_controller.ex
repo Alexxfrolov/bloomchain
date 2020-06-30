@@ -1,9 +1,10 @@
 defmodule BloomchainWeb.CalendarController do
   use BloomchainWeb, :controller
   alias Bloomchain.Content.Article
+  alias Bloomchain.Workflow.CommonPosts
 
   def index(conn, %{scroll: scroll}) do
-    %{entries: articles, metadata: meta} = Article.paginate("calendar", scroll, size: 6)
+    %{entries: articles, metadata: meta} = CommonPosts.run("calendar", scroll)
 
     conn
     |> put_resp_header("x-pagination-scroll", to_string(meta.after))
@@ -13,7 +14,7 @@ defmodule BloomchainWeb.CalendarController do
   end
 
   def index(conn, _params) do
-    %{entries: articles, metadata: meta} = Article.paginate("calendar", size: 6)
+    %{entries: articles, metadata: meta} = CommonPosts.run("calendar")
 
     render(conn, "index.html",
       articles: articles,

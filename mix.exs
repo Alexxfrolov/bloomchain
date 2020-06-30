@@ -80,7 +80,10 @@ defmodule Bloomchain.Mixfile do
       # ES search
       {:elasticsearch, "~> 1.0"},
       {:sigaws, "~> 0.7"},
-      {:sentry, "~> 7.0"}
+      {:sentry, "~> 7.0"},
+
+      # HTML parser to get text 
+      {:floki, "~> 0.26.0"}
     ]
   end
 

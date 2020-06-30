@@ -56,6 +56,16 @@ defmodule BloomchainWeb.LayoutView do
     assigns[:twitter_image] || get_in(assigns, [:article, :seo_settings, "twitter_image"]) || ""
   end
 
+  def rss_link(conn) do
+    type = conn.path_info |> List.first()
+
+    if(Enum.member?(~w(newsfeed detailed in-russia people research analysis calendar), type)) do
+      feed_path(conn, :show, type)
+    else
+      feed_path(conn, :index)
+    end
+  end
+
   def active_navlink_class(conn, path) do
     current_path = Path.join(["/" | conn.path_info])
 

@@ -18,6 +18,11 @@ defmodule Bloomchain.Repo do
     {:ok, Keyword.put(opts, :url, System.get_env("DATABASE_URL"))}
   end
 
+  def limit(query, limit) do
+    from(p in query, limit: ^limit)
+    |> Repo.all()
+  end
+
   def stream_preload(stream, size: size, preloads: preloads) do
     stream
     |> Stream.chunk_every(size)
