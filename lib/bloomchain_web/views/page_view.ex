@@ -25,10 +25,10 @@ defmodule BloomchainWeb.PageView do
       [
         link(Phoenix.HTML.raw(item.title),
           to: path,
-          class: "bc-article__heading line-clamp line-clamp__size_3"
+          class: "bc-article__heading line-clamp line-clamp__size_2"
         ),
         content_tag(:p, item.lead,
-          class: "bc-article__paragraph mt-1 line-clamp line-clamp__size_3"
+          class: "bc-article__paragraph mt-1 line-clamp line-clamp__size_1"
         ),
         content_tag(:div, class: "d-flex align-items-center mt-3") do
           SharedView.article_attrs(item)
@@ -43,7 +43,7 @@ defmodule BloomchainWeb.PageView do
         content_tag(
           :span,
           date_time_format(item.published_at),
-          class: "bc-news__time"
+          class: "bc-news__time bc-news__time--wide"
         ),
         link(
           Phoenix.HTML.raw(item.title),
@@ -66,18 +66,18 @@ defmodule BloomchainWeb.PageView do
 
     month =
       case datetime.month do
-        1 -> "Янв."
-        2 -> "Февр."
-        3 -> "Марта"
-        4 -> "Апр."
+        1 -> "Янв"
+        2 -> "Фев"
+        3 -> "Мар"
+        4 -> "Апр"
         5 -> "Мая"
-        6 -> "Июня"
-        7 -> "Июля"
-        8 -> "Авг."
-        9 -> "Сент."
-        10 -> "Окт."
-        11 -> "Нояб."
-        12 -> "Дек."
+        6 -> "Июн"
+        7 -> "Июл"
+        8 -> "Авг"
+        9 -> "Сен"
+        10 -> "Окт"
+        11 -> "Ноя"
+        12 -> "Дек"
       end
 
     "#{datetime.day} #{month} #{time}"
