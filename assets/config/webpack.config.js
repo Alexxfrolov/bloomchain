@@ -29,7 +29,8 @@ module.exports = (env, options) => {
       ? "source-map"
       : isEnvDevelopment && "eval-source-map",
     entry: {
-      "customer/bundle": path.resolve("./customer/src/index.js"),
+      "customer/charts": path.resolve("./customer/src/charts.js"),
+      "customer/bundle": path.resolve("./customer/src/app.js"),
       "admin/bundle": path.resolve("./admin/index.tsx"),
     },
     output: {
