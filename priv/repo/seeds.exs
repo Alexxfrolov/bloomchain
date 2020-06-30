@@ -1,5 +1,1 @@
-Code.eval_file("priv/repo/seed/tags.exs")
-Code.eval_file("priv/repo/seed/users.exs")
-Code.eval_file("priv/repo/seed/posts.exs")
-Code.eval_file("priv/repo/seed/subscribers.exs")
-Code.eval_file("priv/repo/seed/bitcoin.exs")
+
