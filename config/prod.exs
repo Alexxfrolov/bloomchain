@@ -61,4 +61,4 @@ config :bloomchain, Bloomchain.ElasticsearchCluster,
 #   },
 #   included_environments: [:prod]
 
-import_config "scheduler.exs"
+# import_config "scheduler.exs"
