@@ -46,6 +46,7 @@
           <%# <a class="bc-footer__link" target="_blank" href="#">Контакты</a> %>
           <a class="bc-footer__link" target="_blank" href="mailto:contact@bloomchain.ru">contact@bloomchain.ru</a>
           <a class="bc-footer__link" target="_blank" href="tel:+79516564156">+7 (951) 656-41-56</a>
+          <a class="bc-footer__link" target="_blank" href="<%= rss_link(@conn) %>">RSS</a>
         </div>
         <div class="mt-3">
           <div class="bc-footer__p">Все права защищены © ООО Ворк Майл, 2016-2020</div>
