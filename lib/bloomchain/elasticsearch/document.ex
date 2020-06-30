@@ -7,6 +7,7 @@ defimpl Elasticsearch.Document, for: Bloomchain.Content.Post do
       id: post.id,
       slug: post.slug,
       title: post.title,
+      translit_titles: Translit.transliterate(post.title),
       body: post.body,
       lead: post.lead,
       type: post.type,

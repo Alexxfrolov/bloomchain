@@ -32,7 +32,7 @@ defmodule BloomchainWeb.SearchController do
               must: %{
                 multi_match: %{
                   query: str,
-                  fields: ["title^3", "lead^2", "body"],
+                  fields: ["title^3", "translit_titles^3", "lead^2", "body"],
                   type: "best_fields",
                   fuzziness: "auto"
                 }
@@ -42,12 +42,12 @@ defmodule BloomchainWeb.SearchController do
           },
           functions: [
             %{
-              # The relevancy of old posts is multiplied by at least one.
+              # Default weith for multiply
               weight: 1
             },
             %{
-              # Published this month get a big boost
-              weight: 5,
+              # Published 3 days get a big boost
+              weight: 6,
               gauss: %{
                 published_at: %{
                   scale: "3d",
@@ -56,7 +56,17 @@ defmodule BloomchainWeb.SearchController do
               }
             },
             %{
-              # Published this month get a big boost
+              # Published 1 weeek get a big boost
+              weight: 5,
+              gauss: %{
+                published_at: %{
+                  scale: "7d",
+                  decay: 0.5
+                }
+              }
+            },
+            %{
+              # Published 2 weeks get a  boost
               weight: 4,
               gauss: %{
                 published_at: %{
@@ -66,7 +76,7 @@ defmodule BloomchainWeb.SearchController do
               }
             },
             %{
-              # Published this month get a big boost
+              # Published this month get a boost
               weight: 3,
               gauss: %{
                 published_at: %{
@@ -76,11 +86,21 @@ defmodule BloomchainWeb.SearchController do
               }
             },
             %{
-              # Published this year get a boost
+              # Published 3 months get a boost
               weight: 2,
               gauss: %{
                 published_at: %{
                   scale: "100d",
+                  decay: 0.5
+                }
+              }
+            },
+            %{
+              # Published this year
+              weight: 1.5,
+              gauss: %{
+                published_at: %{
+                  scale: "365d",
                   decay: 0.5
                 }
               }
@@ -90,7 +110,7 @@ defmodule BloomchainWeb.SearchController do
           score_mode: "sum",
           # The documents relevance is multiplied with the sum
           boost_mode: "multiply",
-          min_score: 10
+          min_score: 3
         }
       },
       size: 6,
