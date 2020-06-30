@@ -47,7 +47,7 @@ defmodule BloomchainWeb.SearchController do
             },
             %{
               # Published 3 days get a big boost
-              weight: 6,
+              weight: 8,
               gauss: %{
                 published_at: %{
                   scale: "3d",
@@ -57,7 +57,7 @@ defmodule BloomchainWeb.SearchController do
             },
             %{
               # Published 1 weeek get a big boost
-              weight: 5,
+              weight: 6,
               gauss: %{
                 published_at: %{
                   scale: "7d",
@@ -67,7 +67,7 @@ defmodule BloomchainWeb.SearchController do
             },
             %{
               # Published 2 weeks get a  boost
-              weight: 4,
+              weight: 5,
               gauss: %{
                 published_at: %{
                   scale: "14d",
@@ -77,10 +77,20 @@ defmodule BloomchainWeb.SearchController do
             },
             %{
               # Published this month get a boost
-              weight: 3,
+              weight: 4,
               gauss: %{
                 published_at: %{
                   scale: "31d",
+                  decay: 0.5
+                }
+              }
+            },
+            %{
+              # Published this 2 months get a boost
+              weight: 3,
+              gauss: %{
+                published_at: %{
+                  scale: "70d",
                   decay: 0.5
                 }
               }
@@ -110,7 +120,7 @@ defmodule BloomchainWeb.SearchController do
           score_mode: "sum",
           # The documents relevance is multiplied with the sum
           boost_mode: "multiply",
-          min_score: 3
+          min_score: 1
         }
       },
       size: 6,

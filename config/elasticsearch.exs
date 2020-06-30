@@ -1,6 +1,9 @@
 use Mix.Config
 
 config :bloomchain, Bloomchain.ElasticsearchCluster,
+  url: System.get_env("ES_URL"),
+  username: System.get_env("ES_USER"),
+  password: System.get_env("ES_PASSWORD"),
   api: Elasticsearch.API.HTTP,
   default_options: [
     timeout: 20_000,
