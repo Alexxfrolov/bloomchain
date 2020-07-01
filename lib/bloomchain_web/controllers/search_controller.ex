@@ -32,7 +32,7 @@ defmodule BloomchainWeb.SearchController do
               must: %{
                 multi_match: %{
                   query: str,
-                  fields: ["title^3", "translit_titles^3", "lead^2", "body"],
+                  fields: ["tags.name^4", "title^2", "translit_titles^2", "lead^2", "body"],
                   type: "best_fields",
                   fuzziness: "auto"
                 }
@@ -44,11 +44,6 @@ defmodule BloomchainWeb.SearchController do
             %{
               # Default weith for multiply
               weight: 1
-            },
-            %{
-              # mathcing tags gives max score
-              weight: 10,
-              filter: %{term: %{"tags.slug": str}}
             },
             %{
               # Published 3 days get a big boost
@@ -137,7 +132,8 @@ defmodule BloomchainWeb.SearchController do
   end
 
   defp do_query(str, scroll) do
-    do_query(str)
+    str
+    |> do_query()
     |> Map.merge(%{search_after: String.split(scroll, ";")})
   end
 end
