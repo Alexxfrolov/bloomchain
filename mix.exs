@@ -59,8 +59,6 @@ defmodule Bloomchain.Mixfile do
       {:bcrypt_elixir, "~> 2.0"},
 
       # Post engine deps
-      {:slugger, "~> 0.3"},
-      {:earmark, "~> 1.2.6"},
       {:timex, "~> 3.3.0"},
       {:elixir_uuid, "~> 1.2"},
 
@@ -82,7 +80,7 @@ defmodule Bloomchain.Mixfile do
       {:sigaws, "~> 0.7"},
       {:sentry, "~> 7.0"},
 
-      # HTML parser to get text 
+      # HTML parser to get text
       {:floki, "~> 0.26.0"}
     ]
   end

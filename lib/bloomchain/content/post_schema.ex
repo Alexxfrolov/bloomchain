@@ -2,8 +2,6 @@ defmodule Bloomchain.Content.Post do
   import Ecto.Changeset
   import Ecto.Query
 
-  require Slugger
-
   use Ecto.Schema
   use Waffle.Ecto.Schema
 
@@ -12,7 +10,6 @@ defmodule Bloomchain.Content.Post do
   alias Bloomchain.Repo
 
   @derive {Phoenix.Param, key: :slug}
-  @unwanted_symbols ~r/[\x{200B}\x{200C}\x{200D}\x{FEFF}]/u
 
   def fetch(term, key) do
     term
@@ -78,7 +75,7 @@ defmodule Bloomchain.Content.Post do
       changeset,
       :slug,
       changes[:slug] ||
-        title |> String.replace(@unwanted_symbols, " ") |> Slugger.slugify_downcase()
+        title |> Translit.to_slug()
     )
   end
 

@@ -4,6 +4,8 @@ defmodule Translit do
   Supports russian transliteration.
   """
 
+  @unwanted_symbols ~r/[\x{200B}\x{200C}\x{200D}\x{FEFF}]/u
+
   @char_mappings %{
     "а" => "a",
     "б" => "b",
@@ -55,6 +57,10 @@ defmodule Translit do
   end
 
   def transliterate(text) do
-    Regex.replace(~r/[^-a-zA-Z0-9 ]/u, text, fn ch -> Map.get(@char_mappings, ch, "") end)
+    cleaned_str = text |> String.replace(@unwanted_symbols, " ")
+
+    Regex.replace(~r/[^-a-zA-Z0-9 ]/u, cleaned_str, fn ch ->
+      Map.get(@char_mappings, ch, "")
+    end)
   end
 end
