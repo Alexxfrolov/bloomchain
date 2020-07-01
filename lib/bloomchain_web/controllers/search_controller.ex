@@ -24,6 +24,8 @@ defmodule BloomchainWeb.SearchController do
   end
 
   defp do_query(str) do
+    slug = Translit.to_slug(str)
+
     %{
       query: %{
         function_score: %{
@@ -32,12 +34,21 @@ defmodule BloomchainWeb.SearchController do
               must: %{
                 multi_match: %{
                   query: str,
-                  fields: ["tags.name^4", "title^2", "translit_titles^2", "lead^2", "body"],
+                  fields: [
+                    "tags.name^4",
+                    "title^2",
+                    "translit_titles^2",
+                    "lead^2",
+                    "body"
+                  ],
                   type: "best_fields",
                   fuzziness: "auto"
                 }
               },
-              filter: [%{term: %{status: "published"}}]
+              filter: [%{term: %{status: "published"}}],
+              should: [
+                %{term: %{"tags.slug": slug}}
+              ]
             }
           },
           functions: [
