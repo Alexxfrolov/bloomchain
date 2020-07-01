@@ -38,11 +38,12 @@ export interface UploadableMediaFile {
   type: MediaFile["type"]
 }
 
-function create(file: UploadableMediaFile) {
+function create(data: UploadableMediaFile) {
   const formData = new FormData()
-  Object.keys(file).forEach((key) =>
-    formData.append(decamelize(key), file[key]),
+  Object.keys(data).forEach((key) =>
+    formData.append(decamelize(key), data[key]),
   )
+  if (!data.title) formData.append("title", data.file.name)
   return request<MediaFile>("POST", "/media", { data: formData })
 }
 

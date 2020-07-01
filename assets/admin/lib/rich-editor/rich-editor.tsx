@@ -26,7 +26,6 @@ import "froala-editor/css/third_party/embedly.min.css"
 
 import "./plugins/link"
 
-
 import { config } from "./config"
 
 type EditorProps = {

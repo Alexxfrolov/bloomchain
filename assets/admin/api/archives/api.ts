@@ -33,6 +33,12 @@ function create(cover_id: number, pdf_id: number) {
   })
 }
 
+function update(archive: Archive) {
+  return request<Archive>("PATCH", `/archives/${archive.id}`, {
+    data: { ...archive },
+  })
+}
+
 function remove(id: number) {
   return request("DELETE", `/archives/${id}`)
 }
@@ -40,5 +46,6 @@ function remove(id: number) {
 export const archivesApi = {
   get,
   create,
+  update,
   remove,
 }

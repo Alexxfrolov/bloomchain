@@ -1,6 +1,7 @@
 import React, { memo, useCallback } from "react"
 import format from "date-fns/format"
 import { Column } from "material-table"
+import IconEdit from "@material-ui/icons/EditRounded"
 import { Pagination, OrderDirection } from "@api/common"
 import { Archive } from "@api/archives"
 import { Table } from "@features/core"
@@ -15,7 +16,8 @@ type ArchivesTableProps = {
     orderBy: keyof Archive,
     orderDirection: OrderDirection,
   ) => void
-  onRowDelete: (tag: Archive) => Promise<void>
+  onRowDelete: (archive: Archive) => Promise<void>
+  onRowEdit: (archive: Archive) => void
 }
 
 export const ArchivesTable = memo(function ArchivesTable(
@@ -29,6 +31,7 @@ export const ArchivesTable = memo(function ArchivesTable(
     onChangeRowsPerPage,
     onOrderChange,
     onRowDelete,
+    onRowEdit,
   } = props
 
   const handleOrderChange = useCallback(
@@ -44,6 +47,16 @@ export const ArchivesTable = memo(function ArchivesTable(
   ])
 
   const notEmptyData = !!data.length
+
+  const handleClickEditAtion = (
+    _event: unknown,
+    archive: Archive | Archive[],
+  ) => {
+    if (Array.isArray(archive)) {
+      return
+    }
+    onRowEdit(archive)
+  }
 
   return (
     <Table
@@ -62,6 +75,13 @@ export const ArchivesTable = memo(function ArchivesTable(
       editable={{
         onRowDelete: handleRowDelete,
       }}
+      actions={[
+        {
+          icon: () => <IconEdit />,
+          tooltip: "Редактирование архива",
+          onClick: handleClickEditAtion,
+        },
+      ]}
       onOrderChange={handleOrderChange}
       onChangePage={onChangePage}
       onChangeRowsPerPage={onChangeRowsPerPage}

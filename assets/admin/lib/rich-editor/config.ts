@@ -1,6 +1,10 @@
 import { mediaApi } from "@api/media"
 
 export const config = {
+  key:
+    process.env.NODE_ENV === "production"
+      ? "nQE2uD1C2A1B1C2B2lsE-11G-10H-9xuC-21yptA2nhbA2B6C4B3F4B2A2C3G2D1=="
+      : null,
   height: 500,
   placeholderText: "Напечатайте что-нибудь",
   countCharacters: true,

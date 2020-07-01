@@ -18,18 +18,21 @@ import {
 } from "@material-ui/core"
 import PictureAsPdfOutlinedIcon from "@material-ui/icons/PictureAsPdfOutlined"
 import { getBlobUrl } from "@lib/blob"
+import { Archive } from "@api/archives"
+import { MediaFile } from "@api/media"
 import { DropZone } from "@features/core"
 
 import { ArchiveCreationSchema } from "../schemes"
 
-type AddArchiveFormDialogProps = {
+type EditArchiveFormDialogProps = {
+  data: Archive
   isOpened: boolean
-  onSubmit: (cover: File, pdf: File) => Promise<void>
+  onSubmit: (data: { [key: string]: File | MediaFile | null }) => Promise<void>
   onClose: () => void
 }
 
-export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
-  const { isOpened, onClose, onSubmit } = props
+export function EditArchiveFormDialog(props: EditArchiveFormDialogProps) {
+  const { data, isOpened, onClose, onSubmit } = props
 
   const {
     values,
@@ -38,17 +41,29 @@ export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
     isSubmitting,
     handleSubmit,
     setFieldValue,
+    setFieldTouched,
   } = useFormik<{
-    cover: File | null
-    pdf: File | null
+    cover: File | MediaFile | null
+    pdf: File | MediaFile | null
   }>({
+    enableReinitialize: true,
     initialValues: {
-      cover: null,
-      pdf: null,
+      cover: data.cover,
+      pdf: data.pdf,
     },
     validationSchema: ArchiveCreationSchema,
-    onSubmit: async ({ cover, pdf }, { setSubmitting, resetForm }) => {
-      await onSubmit(cover as File, pdf as File)
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      const data = Object.keys(values).reduce(
+        (acc, key) =>
+          values[key] instanceof File
+            ? Object.assign(acc, { [key]: values[key] })
+            : acc,
+        {},
+      ) as {
+        cover?: File | MediaFile | null
+        pdf?: File | MediaFile | null
+      }
+      await onSubmit(data)
       setSubmitting(false)
       resetForm()
     },
@@ -57,15 +72,17 @@ export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
   const handleDropImage = useCallback(
     (files: File[]) => {
       setFieldValue("cover", files[0])
+      setFieldTouched("cover", true)
     },
-    [setFieldValue],
+    [setFieldValue, setFieldTouched],
   )
 
   const handleDropPdf = useCallback(
     (files: File[]) => {
       setFieldValue("pdf", files[0])
+      setFieldTouched("pdf", true)
     },
-    [setFieldValue],
+    [setFieldValue, setFieldTouched],
   )
 
   return (
@@ -76,7 +93,7 @@ export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
     >
       <form onSubmit={handleSubmit} noValidate={true}>
         <DialogTitle id="add-archive-form-dialog">
-          Добавить новый архив
+          Редактирование архива
         </DialogTitle>
         <DialogContent dividers={true}>
           <FormControl margin="normal" fullWidth={true}>
@@ -87,7 +104,7 @@ export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <DropZone
               title="Переместите сюда изображение"
-              accept={["image/jpeg", "image/png"]}
+              accept={["image/jpeg", "image/jpg", "image/png"]}
               disabled={isSubmitting}
               onDrop={handleDropImage}
             />
@@ -99,7 +116,7 @@ export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
             <Typography variant="h6" component="h6" gutterBottom={true}>
               Предварительный просмотр:
             </Typography>
-            {values.cover && getBlobUrl(values.cover) && (
+            {values.cover && values.cover instanceof File ? (
               <img
                 style={{
                   maxWidth: "200px",
@@ -108,6 +125,17 @@ export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
                 }}
                 width="100%"
                 src={getBlobUrl(values.cover)}
+                alt=""
+              />
+            ) : (
+              <img
+                style={{
+                  maxWidth: "200px",
+                  maxHeight: "250px",
+                  objectFit: "contain",
+                }}
+                width="100%"
+                src={data.cover.url}
                 alt=""
               />
             )}
@@ -128,30 +156,38 @@ export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
               <FormHelperText error={true}>{errors.pdf}</FormHelperText>
             )}
           </FormControl>
-          {values.pdf && getBlobUrl(values.pdf) && (
-            <FormControl margin="normal" fullWidth={true}>
-              <List>
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <PictureAsPdfOutlinedIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText>
+          <FormControl margin="normal" fullWidth={true}>
+            <List>
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
+                    <PictureAsPdfOutlinedIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText>
+                  {values.pdf && values.pdf instanceof File ? (
                     <Link href={getBlobUrl(values.pdf)} target="_blank">
                       {values.pdf.name}
                     </Link>
-                  </ListItemText>
-                </ListItem>
-              </List>
-            </FormControl>
-          )}
+                  ) : (
+                    <Link href={data.pdf.url} target="_blank">
+                      {data.pdf.title}
+                    </Link>
+                  )}
+                </ListItemText>
+              </ListItem>
+            </List>
+          </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">
             Отменить
           </Button>
-          <Button type="submit" disabled={isSubmitting} color="primary">
+          <Button
+            type="submit"
+            disabled={isSubmitting || !Object.keys(touched).length}
+            color="primary"
+          >
             Сохранить
           </Button>
         </DialogActions>
