@@ -1,3 +1,52 @@
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Montserrat'), url('../static/fonts/Montserrat-Light.ttf') format('ttf'), url('../static/fonts/Montserrat-Light.eot') format('eot'), url('../static/fonts/Montserrat-Light.woff') format('woff'), url('../static/fonts/Montserrat-Light.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Montserrat'), url('../static/fonts/Montserrat-Regular.ttf') format('ttf'), url('../static/fonts/Montserrat-Regular.eot') format('eot'), url('../static/fonts/Montserrat-Regular.woff') format('woff'), url('../static/fonts/Montserrat-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  font-style: italic;
+  src: local('Montserrat'), url('../static/fonts/Montserrat-Italic.ttf') format('ttf'), url('../static/fonts/Montserrat-Italic.eot') format('eot'), url('../static/fonts/Montserrat-Italic.woff') format('woff'), url('../static/fonts/Montserrat-Italic.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Montserrat'), url('../static/fonts/Montserrat-Medium.ttf') format('ttf'), url('../static/fonts/Montserrat-Medium.eot') format('eot'), url('../static/fonts/Montserrat-Medium.woff') format('woff'), url('../static/fonts/Montserrat-Medium.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Montserrat'), url('../static/fonts/Montserrat-SemiBold.ttf') format('ttf'), url('../static/fonts/Montserrat-SemiBold.eot') format('eot'), url('../static/fonts/Montserrat-SemiBold.woff') format('woff'), url('../static/fonts/Montserrat-SemiBold.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Montserrat'), url('../static/fonts/Montserrat-Bold.ttf') format('ttf'), url('../static/fonts/Montserrat-Bold.eot') format('eot'), url('../static/fonts/Montserrat-Bold.woff') format('woff'), url('../static/fonts/Montserrat-Bold.woff2') format('woff2');
+  font-display: swap;
+}
+
 .hamburger, .navbar-toggler {
   padding: 10px 10px;
   display: inline-block;
@@ -8300,7 +8349,7 @@ button.bg-dark:focus {
 
 .bc-calendar__location-container {
   display: flex;
-  justify-content: start; }
+  justify-content: flex-start; }
   @media (max-width: 767.98px) {
     .bc-calendar__location-container {
       justify-content: center; } }
@@ -9150,13 +9199,13 @@ Slider arrows icons
   display: inline-flex;
   width: 18px;
   height: 30px;
-  background: transparent url("data:image/svg+xml,%3Csvg width='18px' height='30px' viewBox='0 0 18 30' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Artboard-12' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' font-family='Montserrat-Regular, Montserrat' font-size='45' font-weight='normal' letter-spacing='0.5625' line-spacing='30' opacity='0.734771286'%3E%3Ctext id='”' fill='%233763EA'%3E%3Ctspan x='0' y='40'%3E”%3C/tspan%3E%3C/text%3E%3C/g%3E%3C/svg%3E") center/18px 30px no-repeat; }
+  background: transparent url("data:image/svg+xml,%3Csvg width='18px' height='30px' viewBox='0 0 18 30' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Artboard-12' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' font-family='Montserrat' font-size='45' font-weight='normal' letter-spacing='0.5625' line-spacing='30' opacity='0.734771286'%3E%3Ctext id='”' fill='%233763EA'%3E%3Ctspan x='0' y='40'%3E”%3C/tspan%3E%3C/text%3E%3C/g%3E%3C/svg%3E") center/18px 30px no-repeat; }
 
 .icon-quote-open, .bc-article__quote:before, .bc-article__quote-small:before {
   display: inline-flex;
   width: 18px;
   height: 30px;
-  background: transparent url("data:image/svg+xml,%3Csvg width='18px' height='30px' viewBox='0 0 18 30' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Artboard-11' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' font-family='Montserrat-Regular, Montserrat' font-size='45' font-weight='normal' letter-spacing='0.5625' line-spacing='30' opacity='0.734771286'%3E%3Ctext id='“' fill='%233763EA'%3E%3Ctspan x='0' y='40'%3E“%3C/tspan%3E%3C/text%3E%3C/g%3E%3C/svg%3E") center/18px 30px no-repeat; }
+  background: transparent url("data:image/svg+xml,%3Csvg width='18px' height='30px' viewBox='0 0 18 30' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Artboard-11' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' font-family='Montserrat' font-size='45' font-weight='normal' letter-spacing='0.5625' line-spacing='30' opacity='0.734771286'%3E%3Ctext id='“' fill='%233763EA'%3E%3Ctspan x='0' y='40'%3E“%3C/tspan%3E%3C/text%3E%3C/g%3E%3C/svg%3E") center/18px 30px no-repeat; }
 
 /*
  Ico-open page icons for links
@@ -9705,7 +9754,7 @@ left: -25px;
 display: inline-flex;
 width: 18px;
 height: 30px;
-background: transparent url("data:image/svg+xml,%3Csvg width='18px' height='30px' viewBox='0 0 18 30' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Artboard-11' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' font-family='Montserrat-Regular, Montserrat' font-size='45' font-weight='normal' letter-spacing='0.5625' line-spacing='30' opacity='0.734771286'%3E%3Ctext id='“' fill='%233763EA'%3E%3Ctspan x='0' y='40'%3E“%3C/tspan%3E%3C/text%3E%3C/g%3E%3C/svg%3E") center/18px 30px no-repeat;
+background: transparent url("data:image/svg+xml,%3Csvg width='18px' height='30px' viewBox='0 0 18 30' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Artboard-11' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' font-family='Montserrat' font-size='45' font-weight='normal' letter-spacing='0.5625' line-spacing='30' opacity='0.734771286'%3E%3Ctext id='“' fill='%233763EA'%3E%3Ctspan x='0' y='40'%3E“%3C/tspan%3E%3C/text%3E%3C/g%3E%3C/svg%3E") center/18px 30px no-repeat;
 }
 
 .article blockquote div.blockqoute__inner:after {
@@ -9715,7 +9764,7 @@ position: absolute;
 display: inline-flex;
 width: 18px;
 height: 30px;
-background: transparent url("data:image/svg+xml,%3Csvg width='18px' height='30px' viewBox='0 0 18 30' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Artboard-12' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' font-family='Montserrat-Regular, Montserrat' font-size='45' font-weight='normal' letter-spacing='0.5625' line-spacing='30' opacity='0.734771286'%3E%3Ctext id='”' fill='%233763EA'%3E%3Ctspan x='0' y='40'%3E”%3C/tspan%3E%3C/text%3E%3C/g%3E%3C/svg%3E") center/18px 30px no-repeat;
+background: transparent url("data:image/svg+xml,%3Csvg width='18px' height='30px' viewBox='0 0 18 30' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Artboard-12' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' font-family='Montserrat' font-size='45' font-weight='normal' letter-spacing='0.5625' line-spacing='30' opacity='0.734771286'%3E%3Ctext id='”' fill='%233763EA'%3E%3Ctspan x='0' y='40'%3E”%3C/tspan%3E%3C/text%3E%3C/g%3E%3C/svg%3E") center/18px 30px no-repeat;
 } */
 
 .article .fr-embedly {

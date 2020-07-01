@@ -36,7 +36,7 @@ module.exports = (env, options) => {
     output: {
       filename: "[name].js",
       path: path.resolve(__dirname, "../../priv/static"),
-      publicPath: "/js/",
+      publicPath: "",
     },
     optimization: {
       minimize: isEnvProduction,
@@ -178,13 +178,22 @@ module.exports = (env, options) => {
               ],
               sideEffects: true,
             },
+            {
+              loader: require.resolve("file-loader"),
+              exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+              options: {
+                name: "[name].[ext]",
+                outputPath: "fonts/",
+                esModule: false,
+              },
+            },
           ],
         },
       ],
     },
     plugins: [
       new ModuleNotFoundPlugin(paths.appPath),
-      isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
+      // isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
       isEnvDevelopment && new CaseSensitivePathsPlugin(),
       isEnvDevelopment &&
         new WatchMissingNodeModulesPlugin(paths.appNodeModules),
