@@ -4,8 +4,8 @@ defmodule BloomchainWeb.TagController do
   alias Bloomchain.{Repo, Content.Tag}
   alias Bloomchain.ElasticsearchCluster, as: ES
 
-  def show(conn, %{scroll: scroll}) do
-    %{entries: articles, metadata: meta} = ES.scroll(scroll)
+  def show(conn, %{tag: tag, scroll: scroll}) do
+    %{entries: articles, metadata: meta} = do_query(tag, scroll) |> ES.search()
 
     conn
     |> put_resp_header("x-pagination-scroll", to_string(meta.after))
@@ -16,7 +16,7 @@ defmodule BloomchainWeb.TagController do
 
   def show(conn, %{tag: tag}) do
     name = Repo.get_by!(Tag, slug: tag).name
-    %{entries: articles, metadata: meta} = do_query(tag) |> ES.search(scroll: "5m")
+    %{entries: articles, metadata: meta} = do_query(tag) |> ES.search()
 
     render(conn, "show.html", articles: articles, meta: meta, tag: name)
   end
@@ -31,8 +31,17 @@ defmodule BloomchainWeb.TagController do
           ]
         }
       },
-      sort: [%{published_at: %{order: "desc"}}],
-      size: 6
+      size: 6,
+      sort: [
+        %{published_at: %{order: "desc"}},
+        %{_id: "desc"}
+      ]
     }
+  end
+
+  defp do_query(tag, scroll) do
+    tag
+    |> do_query()
+    |> Map.merge(%{search_after: String.split(scroll, ";")})
   end
 end
