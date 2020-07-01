@@ -46,6 +46,11 @@ defmodule BloomchainWeb.SearchController do
               weight: 1
             },
             %{
+              # mathcing tags gives max score
+              weight: 10,
+              filter: %{term: %{"tags.slug": str}}
+            },
+            %{
               # Published 3 days get a big boost
               weight: 8,
               gauss: %{
