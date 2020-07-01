@@ -25,7 +25,6 @@ import "froala-editor/js/languages/ru.js"
 import "froala-editor/css/froala_editor.pkgd.min.css"
 import "froala-editor/css/third_party/embedly.min.css"
 
-
 import { config } from "./config"
 
 type EditorProps = {

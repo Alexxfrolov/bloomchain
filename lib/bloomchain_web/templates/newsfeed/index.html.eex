@@ -4,4 +4,4 @@
   </div>
 </div>
 
-<%= load_more_button(@meta, last_date: @articles |> Map.keys() |> Enum.min()) %>
+<%= load_more_button(@meta, last_date: @articles |> Map.keys() |> Enum.min_by(&{&1.year, &1.month, &1.day})) %>
