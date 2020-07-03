@@ -14479,7 +14479,7 @@ article table tr:nth-child(even) {
 
 .article .fr-img-wrap img {
   margin-bottom: 0.5rem;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .article .fr-img-wrap .fr-inner {
