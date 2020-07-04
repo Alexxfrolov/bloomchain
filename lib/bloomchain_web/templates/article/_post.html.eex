@@ -6,11 +6,11 @@
           <h1 class="article__heading"><%= raw(@article.title) %></h1>
           <div class="d-flex align-items-center flex-wrap">
             <time pubdate datetime="<%= @article.published_at %>" title="<%= @article.published_at %>" class="article__time mr-sm-4 mr-2">
-              <small><%= timestamp(@article.published_at) %></small>
+              <small><%= SharedView.timestamp(@article.published_at) %></small>
             </time>
             <i class="mr-1 icon-user"></i>
             <address class="article__author mr-sm-4 mr-2">
-              <small class="small"><%= author(@article) %></small>
+              <small class="small"><%= SharedView.author(@article) %></small>
             </address>
             <%= if @article.time do %>
               <i class="mr-1 icon-clock"></i>

@@ -104,6 +104,18 @@ defmodule BloomchainWeb.SharedView do
     ]
   end
 
+  def timestamp(nil), do: ""
+
+  def timestamp(datetime) do
+    datetime
+    |> Timex.local()
+    |> Timex.format!("%d.%m.%Y %H:%M", :strftime)
+  end
+
+  def author(item) do
+    item.authors |> Enum.map(fn i -> i.name end) |> Enum.join(", ")
+  end
+
   defp do_image_tag(%{cover: nil}), do: ""
 
   defp do_image_tag(%{cover: cover}) do
@@ -114,17 +126,5 @@ defmodule BloomchainWeb.SharedView do
 
   defp time_from(datetime) do
     Timex.lformat!(datetime, "{relative}", "ru", :relative)
-  end
-
-  defp timestamp(nil), do: ""
-
-  defp timestamp(datetime) do
-    datetime
-    |> Timex.local()
-    |> Timex.format!("%d.%m.%Y %H:%M", :strftime)
-  end
-
-  defp author(item) do
-    item.authors |> Enum.map(fn i -> i.name end) |> Enum.join(", ")
   end
 end

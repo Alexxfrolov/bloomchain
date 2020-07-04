@@ -1,6 +1,7 @@
 defmodule BloomchainWeb.SearchController do
   use BloomchainWeb, :controller
   alias Bloomchain.ElasticsearchCluster, as: ES
+  alias BloomchainWeb.Workflow.RecomendationPosts
 
   @size 6
 
@@ -11,7 +12,11 @@ defmodule BloomchainWeb.SearchController do
     |> put_resp_header("x-pagination-scroll", to_string(meta.after))
     |> put_layout(false)
     |> put_view(BloomchainWeb.SharedView)
-    |> render("_article_block.html", articles: articles, meta: Map.merge(meta, %{query: query}))
+    |> render("_article_block.html",
+      articles: articles,
+      meta: Map.merge(meta, %{query: query}),
+      recomendations: []
+    )
   end
 
   def index(conn, %{query: query}) do
@@ -21,7 +26,8 @@ defmodule BloomchainWeb.SearchController do
       articles: articles,
       meta: Map.merge(meta, %{query: query}),
       query: query,
-      title: "Вы искали - " <> query
+      title: "Вы искали - " <> query,
+      recomendations: do_recomendations(meta, articles)
     )
   end
 
@@ -152,4 +158,13 @@ defmodule BloomchainWeb.SearchController do
     |> update_in([:query, :function_score, :query, :bool, :must_not], &[must_not | &1])
     |> Map.merge(%{search_after: [score, id]})
   end
+
+  defp do_recomendations(%{after: nil}, articles) do
+    articles
+    |> Enum.take(2)
+    |> RecomendationPosts.run()
+    |> Map.fetch!(:entries)
+  end
+
+  defp do_recomendations(_meta, _articles), do: []
 end

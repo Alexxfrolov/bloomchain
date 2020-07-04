@@ -11,3 +11,7 @@
 </div>
 
 <%= SharedView.load_more_button(@meta) %>
+
+<%= if @meta[:after] == nil do %>
+  <%= render BloomchainWeb.SharedView, "_recomendation_block.html", articles: @recomendations, conn: @conn %>
+<% end %>
