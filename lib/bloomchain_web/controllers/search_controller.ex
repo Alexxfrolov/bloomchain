@@ -2,6 +2,8 @@ defmodule BloomchainWeb.SearchController do
   use BloomchainWeb, :controller
   alias Bloomchain.ElasticsearchCluster, as: ES
 
+  @size 6
+
   def index(conn, %{query: query, scroll: scroll}) do
     %{entries: articles, metadata: meta} = do_query(query, scroll) |> ES.search()
 
@@ -24,31 +26,31 @@ defmodule BloomchainWeb.SearchController do
   end
 
   defp do_query(str) do
-    slug = Translit.to_slug(str)
-
     %{
       query: %{
         function_score: %{
           query: %{
             bool: %{
-              must: %{
-                multi_match: %{
-                  query: str,
-                  fields: [
-                    "tags.name^4",
-                    "title^2",
-                    "translit_titles^2",
-                    "lead^2",
-                    "body"
-                  ],
-                  type: "best_fields",
-                  fuzziness: "auto"
+              must: [
+                %{
+                  multi_match: %{
+                    query: str,
+                    fields: [
+                      "tags.name^4",
+                      "title^3",
+                      "translit_titles^3",
+                      "lead^3",
+                      "body"
+                    ],
+                    type: "best_fields",
+                    # tie_breaker: 0.3,
+                    operator: "and",
+                    fuzziness: "auto"
+                  }
                 }
-              },
-              filter: [%{term: %{status: "published"}}],
-              should: [
-                %{term: %{"tags.slug": slug}}
-              ]
+              ],
+              must_not: [],
+              filter: [%{term: %{status: "published"}}]
             }
           },
           functions: [
@@ -128,13 +130,12 @@ defmodule BloomchainWeb.SearchController do
             }
           ],
           # All functions outputs get summed
-          score_mode: "sum",
+          score_mode: "max",
           # The documents relevance is multiplied with the sum
-          boost_mode: "multiply",
-          min_score: 1
+          boost_mode: "multiply"
         }
       },
-      size: 6,
+      size: @size,
       sort: [
         %{_score: "desc"},
         %{_id: "desc"}
@@ -143,8 +144,12 @@ defmodule BloomchainWeb.SearchController do
   end
 
   defp do_query(str, scroll) do
+    [score, id] = String.split(scroll, ";")
+    must_not = [%{term: %{id: id}}]
+
     str
     |> do_query()
-    |> Map.merge(%{search_after: String.split(scroll, ";")})
+    |> update_in([:query, :function_score, :query, :bool, :must_not], &[must_not | &1])
+    |> Map.merge(%{search_after: [score, id]})
   end
 end

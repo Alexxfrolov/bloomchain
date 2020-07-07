@@ -1,4 +1,4 @@
-defmodule Bloomchain.Workflow.NewsfeedPosts do
+defmodule BloomchainWeb.Workflow.NewsfeedPosts do
   alias Bloomchain.Repo
   alias Bloomchain.Content.Article
 

@@ -1,7 +1,7 @@
 defmodule BloomchainWeb.DetailedController do
   use BloomchainWeb, :controller
   alias Bloomchain.Content.Article
-  alias Bloomchain.Workflow.CommonPosts
+  alias BloomchainWeb.Workflow.CommonPosts
 
   def index(conn, %{scroll: scroll}) do
     %{entries: articles, metadata: meta} = CommonPosts.run("detailed", scroll)

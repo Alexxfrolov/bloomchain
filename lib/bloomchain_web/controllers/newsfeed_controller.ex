@@ -1,7 +1,7 @@
 defmodule BloomchainWeb.NewsfeedController do
   use BloomchainWeb, :controller
   alias Bloomchain.Content.Article
-  alias Bloomchain.Workflow.NewsfeedPosts
+  alias BloomchainWeb.Workflow.NewsfeedPosts
 
   def index(conn, %{scroll: scroll, last_date: last_date}) do
     %{entries: articles, metadata: meta} = NewsfeedPosts.run(scroll)
