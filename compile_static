@@ -3,4 +3,6 @@ info "Building Phoenix static assets"
 
 cd $phoenix_dir
 cd assets && yarn build
-cd - && mix phx.digest
+cd -
+rm -rf assets/
+mix phx.digest
