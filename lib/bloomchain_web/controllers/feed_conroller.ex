@@ -1,6 +1,6 @@
 defmodule BloomchainWeb.FeedController do
   use BloomchainWeb, :controller
-  alias Bloomchain.Workflow.{MainPosts, NewsfeedPosts, CommonPosts}
+  alias BloomchainWeb.Workflow.{MainPosts, NewsfeedPosts, CommonPosts}
 
   def index(conn, _params) do
     conn

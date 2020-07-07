@@ -1,4 +1,4 @@
-defmodule Bloomchain.Workflow.MainPosts do
+defmodule BloomchainWeb.Workflow.MainPosts do
   alias Bloomchain.Repo
   alias Bloomchain.Content.Article
 
