@@ -145,7 +145,7 @@ defmodule BloomchainWeb.SearchController do
 
   defp do_query(str, scroll) do
     [score, id] = String.split(scroll, ";")
-    must_not = [%{term: %{id: id}}]
+    must_not = %{term: %{id: id}}
 
     str
     |> do_query()
