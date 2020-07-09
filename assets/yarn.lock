@@ -6051,6 +6051,11 @@ froala-editor@3.0.0:
   resolved "https://registry.yarnpkg.com/froala-editor/-/froala-editor-3.0.0.tgz#080bf0a071b0f5b6092ce9c3720188dcf6d7a1bb"
   integrity sha512-93G+GXUNPIiuHIcT/a2lxvQ9kED7pELRV/20csHB45mznBL2PqPmEwosGd/4RBN90ga4VbZQoqQi9ACls/3otg==
 
+froala-editor@^3.1.1-2:
+  version "3.1.1-2"
+  resolved "https://registry.yarnpkg.com/froala-editor/-/froala-editor-3.1.1-2.tgz#23cfba85bf4f922a422bc6555e4ae0bf1fccc178"
+  integrity sha512-sqQO38uDG2mpp6Zl8uq/sSH7/X9oAX4BBI+rbhsHTlloiQ5Jh91yTZxSdUgq4WhxWN/dHdhUkCyjYuuFLBFFxQ==
+
 from2@^2.1.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/from2/-/from2-2.3.0.tgz#8bfb5502bde4a4d36cfdeea007fcca21d7e382af"
@@ -9680,7 +9685,7 @@ performance-now@^2.1.0:
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
 "phoenix@file:../deps/phoenix":
-  version "1.4.14"
+  version "1.4.17"
 
 "phoenix_html@file:../deps/phoenix_html":
   version "2.14.0"
