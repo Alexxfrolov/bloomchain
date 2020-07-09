@@ -31,7 +31,7 @@ defmodule Bloomchain.Content.Tag do
 
   defp process_slug(%Ecto.Changeset{valid?: validity, changes: %{name: name}} = changeset) do
     case validity do
-      true -> put_change(changeset, :slug, Slugger.slugify_downcase(name))
+      true -> put_change(changeset, :slug, Translit.to_slug(name))
       false -> changeset
     end
   end

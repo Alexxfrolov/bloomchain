@@ -2,8 +2,6 @@ defmodule Bloomchain.Content.Post do
   import Ecto.Changeset
   import Ecto.Query
 
-  require Slugger
-
   use Ecto.Schema
   use Waffle.Ecto.Schema
 
@@ -73,7 +71,12 @@ defmodule Bloomchain.Content.Post do
   # Private
 
   defp process_slug(%Ecto.Changeset{valid?: true, changes: %{title: title} = changes} = changeset) do
-    put_change(changeset, :slug, changes[:slug] || Slugger.slugify_downcase(title))
+    put_change(
+      changeset,
+      :slug,
+      changes[:slug] ||
+        title |> Translit.to_slug()
+    )
   end
 
   defp process_slug(changeset), do: changeset

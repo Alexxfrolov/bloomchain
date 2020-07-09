@@ -36,19 +36,6 @@ defmodule Bloomchain.ElasticsearchCluster do
     process_result(Elasticsearch.post(ES, "/posts/_doc/_search/", query))
   end
 
-  def search(query, scroll: scroll) do
-    process_result(Elasticsearch.post(ES, "/posts/_doc/_search?scroll=#{scroll}", query))
-  end
-
-  def scroll(scroll) do
-    query = %{
-      scroll: "5m",
-      scroll_id: scroll
-    }
-
-    process_result(Elasticsearch.post(ES, "/_search/scroll", query))
-  end
-
   defp process_result(result) do
     with {:ok, result} <- result do
       last = List.last(result["hits"]["hits"])

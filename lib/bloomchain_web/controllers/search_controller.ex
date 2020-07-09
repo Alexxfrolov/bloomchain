@@ -2,6 +2,8 @@ defmodule BloomchainWeb.SearchController do
   use BloomchainWeb, :controller
   alias Bloomchain.ElasticsearchCluster, as: ES
 
+  @size 6
+
   def index(conn, %{query: query, scroll: scroll}) do
     %{entries: articles, metadata: meta} = do_query(query, scroll) |> ES.search()
 
@@ -26,24 +28,114 @@ defmodule BloomchainWeb.SearchController do
   defp do_query(str) do
     %{
       query: %{
-        bool: %{
-          must: [
+        function_score: %{
+          query: %{
+            bool: %{
+              must: [
+                %{
+                  multi_match: %{
+                    query: str,
+                    fields: [
+                      "tags.name^4",
+                      "title^3",
+                      "translit_titles^3",
+                      "lead^3",
+                      "body"
+                    ],
+                    type: "best_fields",
+                    # tie_breaker: 0.3,
+                    operator: "and",
+                    fuzziness: "auto"
+                  }
+                }
+              ],
+              must_not: [],
+              filter: [%{term: %{status: "published"}}]
+            }
+          },
+          functions: [
             %{
-              multi_match: %{
-                query: str,
-                fields: ["title^3", "lead^2", "body"],
-                tie_breaker: 0.1,
-                type: "most_fields",
-                fuzziness: "auto"
+              # Default weith for multiply
+              weight: 1
+            },
+            %{
+              # Published 3 days get a big boost
+              weight: 8,
+              gauss: %{
+                published_at: %{
+                  scale: "3d",
+                  decay: 0.5
+                }
+              }
+            },
+            %{
+              # Published 1 weeek get a big boost
+              weight: 6,
+              gauss: %{
+                published_at: %{
+                  scale: "7d",
+                  decay: 0.5
+                }
+              }
+            },
+            %{
+              # Published 2 weeks get a  boost
+              weight: 5,
+              gauss: %{
+                published_at: %{
+                  scale: "14d",
+                  decay: 0.5
+                }
+              }
+            },
+            %{
+              # Published this month get a boost
+              weight: 4,
+              gauss: %{
+                published_at: %{
+                  scale: "31d",
+                  decay: 0.5
+                }
+              }
+            },
+            %{
+              # Published this 2 months get a boost
+              weight: 3,
+              gauss: %{
+                published_at: %{
+                  scale: "70d",
+                  decay: 0.5
+                }
+              }
+            },
+            %{
+              # Published 3 months get a boost
+              weight: 2,
+              gauss: %{
+                published_at: %{
+                  scale: "100d",
+                  decay: 0.5
+                }
+              }
+            },
+            %{
+              # Published this year
+              weight: 1.5,
+              gauss: %{
+                published_at: %{
+                  scale: "365d",
+                  decay: 0.5
+                }
               }
             }
           ],
-          filter: [
-            %{term: %{status: "published"}}
-          ]
+          # All functions outputs get summed
+          score_mode: "max",
+          # The documents relevance is multiplied with the sum
+          boost_mode: "multiply"
         }
       },
-      size: 6,
+      size: @size,
       sort: [
         %{_score: "desc"},
         %{_id: "desc"}
@@ -52,7 +144,12 @@ defmodule BloomchainWeb.SearchController do
   end
 
   defp do_query(str, scroll) do
-    do_query(str)
-    |> Map.merge(%{search_after: String.split(scroll, ";")})
+    [score, id] = String.split(scroll, ";")
+    must_not = %{term: %{id: id}}
+
+    str
+    |> do_query()
+    |> update_in([:query, :function_score, :query, :bool, :must_not], &[must_not | &1])
+    |> Map.merge(%{search_after: [score, id]})
   end
 end

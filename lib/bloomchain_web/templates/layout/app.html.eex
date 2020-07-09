@@ -32,6 +32,8 @@
     <meta property="og:image" content="<%= meta(:og_image, assigns) %>" >
 
     <meta name="format-detection" content="telephone=no">
+
+    <link rel="alternate" type="application/rss+xml" title="Bloomchain Лента" href="<%= rss_link(@conn) %>" />
   </head>
   <body class="bg-light">
     <%= render "_header.html", conn: @conn %>

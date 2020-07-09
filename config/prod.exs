@@ -46,11 +46,6 @@ config :ex_aws, :hackney_opts,
   follow_redirect: true,
   recv_timeout: 60_000
 
-config :bloomchain, Bloomchain.ElasticsearchCluster,
-  url: System.get_env("ES_URL"),
-  username: System.get_env("ES_USER"),
-  password: System.get_env("ES_PASSWORD")
-
 # config :sentry,
 #   dsn: "https://4ceb6862d2b6458fa32dd6f4644b57fc@o252637.ingest.sentry.io/5273561",
 #   environment_name: :prod,
@@ -61,4 +56,4 @@ config :bloomchain, Bloomchain.ElasticsearchCluster,
 #   },
 #   included_environments: [:prod]
 
-import_config "scheduler.exs"
+# import_config "scheduler.exs"
