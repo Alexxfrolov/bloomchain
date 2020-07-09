@@ -332,7 +332,7 @@ const useStyles = makeStyles((theme) =>
       transform: "translateZ(0)",
     },
     img: {
-      maxWidth: "100%",
+      maxWidth: "200px",
       maxHeight: "250px",
       objectFit: "contain",
     },

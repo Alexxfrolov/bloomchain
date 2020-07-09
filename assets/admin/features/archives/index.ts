@@ -1,1 +1,5 @@
-export { ArchivesTable, AddArchiveFormDialog } from "./organisms"
+export {
+  ArchivesTable,
+  AddArchiveFormDialog,
+  EditArchiveFormDialog,
+} from "./organisms"

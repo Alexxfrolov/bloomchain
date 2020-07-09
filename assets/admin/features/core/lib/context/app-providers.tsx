@@ -30,7 +30,7 @@ export function AppProviders(props: AppProvidersProps) {
               vertical: "top",
               horizontal: "right",
             }}
-            autoHideDuration={6000}
+            autoHideDuration={5000}
             action={(key) => <CloseNotifications notificationKey={key} />}
           >
             {children}
