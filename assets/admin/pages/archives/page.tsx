@@ -167,7 +167,7 @@ export function ArchivesPage() {
       cover?: File | MediaFile | null
       pdf?: File | MediaFile | null
     }) => {
-      const files = Object.keys(data).reduce(
+      const files = Object.keys({ cover: data.cover, pdf: data.pdf }).reduce(
         (acc, key) => [...acc, { type: key, file: data[key] }],
         [],
       ) as UploadableMediaFile[]
