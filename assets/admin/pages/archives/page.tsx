@@ -163,6 +163,7 @@ export function ArchivesPage() {
 
   const updateArchive = useCallback(
     async (data: {
+      id: number
       cover?: File | MediaFile | null
       pdf?: File | MediaFile | null
     }) => {
@@ -178,7 +179,11 @@ export function ArchivesPage() {
           }),
         )
         const [cover_id, pdf_id] = response.map((resp) => resp.data.id)
-        const archiveResponse = await archivesApi.create(cover_id, pdf_id)
+        const archiveResponse = await archivesApi.update({
+          id: data.id,
+          cover_id,
+          pdf_id,
+        })
         setState((state) => ({
           ...state,
           error: null,

@@ -105,7 +105,7 @@ const columns: Column<Archive>[] = [
     ),
   },
   {
-    title: "Описание",
+    title: "PDF",
     field: "PDF",
     sorting: false,
     render: (archive) => (

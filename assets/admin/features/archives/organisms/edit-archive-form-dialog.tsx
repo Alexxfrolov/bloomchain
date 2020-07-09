@@ -27,7 +27,9 @@ import { ArchiveCreationSchema } from "../schemes"
 type EditArchiveFormDialogProps = {
   data: Archive
   isOpened: boolean
-  onSubmit: (data: { [key: string]: File | MediaFile | null }) => Promise<void>
+  onSubmit: (data: {
+    [key: string]: File | MediaFile | number | null
+  }) => Promise<void>
   onClose: () => void
 }
 
@@ -53,7 +55,7 @@ export function EditArchiveFormDialog(props: EditArchiveFormDialogProps) {
     },
     validationSchema: ArchiveCreationSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      const data = Object.keys(values).reduce(
+      const files = Object.keys(values).reduce(
         (acc, key) =>
           values[key] instanceof File
             ? Object.assign(acc, { [key]: values[key] })
@@ -63,7 +65,7 @@ export function EditArchiveFormDialog(props: EditArchiveFormDialogProps) {
         cover?: File | MediaFile | null
         pdf?: File | MediaFile | null
       }
-      await onSubmit(data)
+      await onSubmit({ id: data.id, ...files })
       setSubmitting(false)
       resetForm()
     },
@@ -120,7 +122,7 @@ export function EditArchiveFormDialog(props: EditArchiveFormDialogProps) {
               <img
                 style={{
                   maxWidth: "200px",
-                  maxHeight: "250px",
+                  maxHeight: "200px",
                   objectFit: "contain",
                 }}
                 width="100%"
@@ -131,7 +133,7 @@ export function EditArchiveFormDialog(props: EditArchiveFormDialogProps) {
               <img
                 style={{
                   maxWidth: "200px",
-                  maxHeight: "250px",
+                  maxHeight: "200px",
                   objectFit: "contain",
                 }}
                 width="100%"
