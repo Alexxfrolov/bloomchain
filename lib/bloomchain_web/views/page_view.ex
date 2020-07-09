@@ -37,7 +37,7 @@ defmodule BloomchainWeb.PageView do
     end
   end
 
-  def render_short(item, conn: conn) do
+  def render_short(item, conn: _conn, path: path) do
     content_tag(:div, class: "bc-news__item") do
       [
         content_tag(
@@ -47,7 +47,7 @@ defmodule BloomchainWeb.PageView do
         ),
         link(
           Phoenix.HTML.raw(item.title),
-          to: newsfeed_path(conn, :show, item.slug),
+          to: path,
           class:
             "bc-news__title bc-article__heading font-weight-medium line-clamp line-clamp__size_2"
         )

@@ -2,6 +2,6 @@
     <h1 class="highlight">Коротко<%= link("Больше", to: newsfeed_path(@conn, :index), class: "btn btn-title") %></h1>
 
     <%= for short <- @articles do %>
-      <%= render_short(short, conn: @conn) %>
+      <%= render_short(short, conn: @conn, path: article_path(@conn, :show, "newsfeed", short.slug)) %>
     <% end %>
 </div>
