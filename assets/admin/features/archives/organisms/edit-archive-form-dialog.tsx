@@ -28,7 +28,9 @@ type EditArchiveFormDialogProps = {
   data: Archive
   isOpened: boolean
   onSubmit: (data: {
-    [key: string]: File | MediaFile | number | null
+    id: number
+    cover?: File | null
+    pdf?: File | null
   }) => Promise<void>
   onClose: () => void
 }
@@ -62,10 +64,12 @@ export function EditArchiveFormDialog(props: EditArchiveFormDialogProps) {
             : acc,
         {},
       ) as {
-        cover?: File | MediaFile | null
-        pdf?: File | MediaFile | null
+        cover?: File | null
+        pdf?: File | null
       }
-      await onSubmit({ id: data.id, ...files })
+      if (Object.keys(files).length) {
+        await onSubmit({ id: data.id, ...files })
+      }
       setSubmitting(false)
       resetForm()
     },

@@ -91,13 +91,12 @@ export const ArchivesTable = memo(function ArchivesTable(
 
 const columns: Column<Archive>[] = [
   {
-    title: "Наименование",
+    title: "Баннер",
     field: "banner",
     sorting: false,
     render: (archive) => (
       <img
-        width="100%"
-        style={{ objectFit: "contain" }}
+        style={{ maxHeight: "200px", objectFit: "contain" }}
         src={archive.cover.url}
         alt={archive.cover.alt ?? ""}
         title={archive.cover.title ?? ""}

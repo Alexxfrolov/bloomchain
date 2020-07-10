@@ -33,7 +33,7 @@ function create(cover_id: number, pdf_id: number) {
   })
 }
 
-interface UpdateArchiveData {
+export interface UpdateArchiveData {
   id: number
   cover_id?: number
   pdf_id?: number
