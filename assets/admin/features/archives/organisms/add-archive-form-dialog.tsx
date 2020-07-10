@@ -103,7 +103,7 @@ export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
               <img
                 style={{
                   maxWidth: "200px",
-                  maxHeight: "250px",
+                  maxHeight: "200px",
                   objectFit: "contain",
                 }}
                 width="100%"

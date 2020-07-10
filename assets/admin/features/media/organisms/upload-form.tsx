@@ -333,7 +333,7 @@ const useStyles = makeStyles((theme) =>
     },
     img: {
       maxWidth: "200px",
-      maxHeight: "250px",
+      maxHeight: "200px",
       objectFit: "contain",
     },
     titleBar: {

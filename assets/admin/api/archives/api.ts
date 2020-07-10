@@ -33,9 +33,15 @@ function create(cover_id: number, pdf_id: number) {
   })
 }
 
-function update(archive: Archive) {
-  return request<Archive>("PATCH", `/archives/${archive.id}`, {
-    data: { ...archive },
+export interface UpdateArchiveData {
+  id: number
+  cover_id?: number
+  pdf_id?: number
+}
+
+function update(data: UpdateArchiveData) {
+  return request<Archive>("PATCH", `/archives/${data.id}`, {
+    data: { ...data },
   })
 }
 

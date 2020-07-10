@@ -12,7 +12,7 @@ import { useSnackbar } from "notistack"
 import AddBoxIcon from "@material-ui/icons/AddBox"
 import { OrderDirection, Pagination } from "@api/common/types"
 import { mediaApi, UploadableMediaFile, MediaFile } from "@api/media"
-import { archivesApi, Archive } from "@api/archives"
+import { archivesApi, Archive, UpdateArchiveData } from "@api/archives"
 import { RequestStatus } from "@features/core"
 import {
   ArchivesTable,
@@ -162,29 +162,48 @@ export function ArchivesPage() {
   )
 
   const updateArchive = useCallback(
-    async (data: {
-      cover?: File | MediaFile | null
-      pdf?: File | MediaFile | null
-    }) => {
-      const files = Object.keys(data).reduce(
-        (acc, key) => [...acc, { type: key, file: data[key] }],
-        [],
-      ) as UploadableMediaFile[]
+    async (data: { id: number; cover?: File | null; pdf?: File | null }) => {
+      const { id, ...files } = data
+      const mediaToUpload: UploadableMediaFile[] = [
+        { type: "image", file: files.cover },
+        { type: "pdf", file: files.pdf },
+      ].filter((media) => media.file)
       setState((state) => ({ ...state, request_status: "pending" }))
       try {
-        const response = await Promise.all(
-          files.map(async (file) => {
+        const responses = await Promise.all(
+          mediaToUpload.map(async (file) => {
             return await mediaApi.create(file)
           }),
         )
-        const [cover_id, pdf_id] = response.map((resp) => resp.data.id)
-        const archiveResponse = await archivesApi.create(cover_id, pdf_id)
+        const archiveDataIds = responses.reduce<{ [key: string]: number }>(
+          (acc, item) => {
+            if (item.data.type === "image") {
+              return Object.assign(acc, { cover_id: item.data.id })
+            }
+            if (item.data.type === "pdf") {
+              return Object.assign(acc, { pdf_id: item.data.id })
+            }
+            return acc
+          },
+          {},
+        )
+        const archiveResponse = await archivesApi.update({
+          id: data.id,
+          ...archiveDataIds,
+        })
         setState((state) => ({
           ...state,
           error: null,
           request_status: "success",
-          data: [archiveResponse.data, ...state.data],
-          isOpenedAddFormDialog: false,
+          data: state.data.map((item) =>
+            item.id === archiveResponse.data.id
+              ? {
+                  ...item,
+                  ...archiveResponse.data,
+                }
+              : item,
+          ),
+          isOpenedEditFormDialog: false,
         }))
         enqueueSnackbar("Архив успешно отредактирован", {
           variant: "success",
@@ -194,7 +213,7 @@ export function ArchivesPage() {
           ...state,
           error,
           request_status: "error",
-          isOpenedAddFormDialog: false,
+          isOpenedEditFormDialog: false,
         }))
         enqueueSnackbar("Произошла ошибка", {
           variant: "error",
