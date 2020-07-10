@@ -1,9 +1,10 @@
 defmodule BloomchainWeb.PersonController do
   use BloomchainWeb, :controller
   alias Bloomchain.Content.Article
+  alias BloomchainWeb.Workflow.CommonPosts
 
   def index(conn, %{scroll: scroll}) do
-    %{entries: articles, metadata: meta} = Article.paginate("people", scroll, size: 6)
+    %{entries: articles, metadata: meta} = CommonPosts.run("people", scroll)
 
     conn
     |> put_resp_header("x-pagination-scroll", to_string(meta.after))
@@ -13,7 +14,7 @@ defmodule BloomchainWeb.PersonController do
   end
 
   def index(conn, _params) do
-    %{entries: articles, metadata: meta} = Article.paginate("people", size: 6)
+    %{entries: articles, metadata: meta} = CommonPosts.run("people")
 
     render(conn, "index.html",
       articles: articles,

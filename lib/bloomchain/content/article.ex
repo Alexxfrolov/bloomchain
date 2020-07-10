@@ -5,28 +5,12 @@ defmodule Bloomchain.Content.Article do
   alias Bloomchain.Content.Post
   alias Bloomchain.ElasticsearchCluster, as: ES
 
-  def paginate(type, size: size) do
+  def published_posts(type) do
     from(
       p in Post,
       where: p.type == ^type and p.status == "published",
       preload: [:cover, :authors],
       order_by: [desc: p.published_at, desc: p.id]
-    )
-    |> Repo.paginate(cursor_fields: [:published_at, :id], sort_direction: :desc, limit: size)
-  end
-
-  def paginate(type, scroll, size: size) do
-    from(
-      p in Post,
-      where: p.type == ^type and p.status == "published",
-      preload: [:cover, :authors],
-      order_by: [desc: p.published_at, desc: p.id]
-    )
-    |> Repo.paginate(
-      after: scroll,
-      cursor_fields: [:published_at, :id],
-      sort_direction: :desc,
-      limit: size
     )
   end
 
@@ -38,18 +22,6 @@ defmodule Bloomchain.Content.Article do
   def get(slug, type: type) do
     Repo.get_by!(Post, slug: slug, type: type, status: "published")
     |> Repo.preload([:tags, :cover, :authors])
-  end
-
-  def get_published_posts(type, limit: limit) do
-    Repo.all(
-      from(
-        p in Post,
-        where: p.type == ^type and p.status == "published",
-        preload: [:cover, :authors],
-        order_by: [desc: :published_at],
-        limit: ^limit
-      )
-    )
   end
 
   def create(%{} = params) do

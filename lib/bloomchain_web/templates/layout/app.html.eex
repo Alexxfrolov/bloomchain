@@ -32,6 +32,9 @@
     <meta property="og:image" content="<%= meta(:og_image, assigns) %>" >
 
     <meta name="format-detection" content="telephone=no">
+
+    <link rel="alternate" type="application/rss+xml" title="Bloomchain Лента" href="<%= rss_link(@conn) %>" />
+
     <script data-ad-client="ca-pub-3298778396159828" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
   </head>
   <body class="bg-light">

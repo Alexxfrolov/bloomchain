@@ -15,7 +15,6 @@ use Mix.Config
 # which you typically run after static files are built.
 config :bloomchain, BloomchainWeb.Endpoint,
   load_from_system_env: true,
-  # http: [compress: true],
   url: [scheme: "https", host: "bloomchain.ru", port: 443],
   # url: [scheme: "https", host: "bloomchain.herokuapp.com", port: 443, compress: true],
   # force_ssl: [rewrite_on: [:x_forwarded_proto]],
@@ -46,11 +45,6 @@ config :ex_aws,
 config :ex_aws, :hackney_opts,
   follow_redirect: true,
   recv_timeout: 60_000
-
-config :bloomchain, Bloomchain.ElasticsearchCluster,
-  url: System.get_env("ES_URL"),
-  username: System.get_env("ES_USER"),
-  password: System.get_env("ES_PASSWORD")
 
 config :sentry,
   dsn: "https://4ceb6862d2b6458fa32dd6f4644b57fc@o252637.ingest.sentry.io/5273561",

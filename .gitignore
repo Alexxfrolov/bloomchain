@@ -7,9 +7,6 @@
 /*.ez
 /vendor
 
-# seed data files
-priv/repo/seed/data_files/
-
 # Generated on crash by the VM
 erl_crash.dump
 
@@ -23,8 +20,7 @@ npm-debug.log
 # we ignore priv/static. You may want to comment
 # this depending on your deployment strategy.
 !/priv/static/robots.txt
-priv/static/
-priv/static/customer/*
+/priv/static
 
 
 # Files matching config/*.secret.exs pattern contain sensitive
@@ -38,8 +34,4 @@ priv/static/customer/*
 # environmental variables
 .env
 
-# frontend
-/lib/bloomchain_admin/client/node_modules
-/lib/bloomchain_web/client/node_modules
 .vscode
-/lib/bloomchain_admin/client/build

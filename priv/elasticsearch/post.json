@@ -22,6 +22,9 @@
       "title": {
         "type": "search_as_you_type"
       },
+      "translit_titles": {
+        "type": "text"
+      },
       "lead": {
         "type": "text"
       },
@@ -60,7 +63,7 @@
         "type": "object",
         "properties": {
           "slug":  {"type": "keyword"},
-          "name": {"type": "keyword"},
+          "name": {"type": "text"},
           "id": {"type": "integer"}
         }
       }
