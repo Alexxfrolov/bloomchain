@@ -51,6 +51,7 @@ defmodule BloomchainWeb.Router do
       resources("/subscribers", Admin.Api.V1.SubscriberController, only: [:index])
       resources("/archives", Admin.Api.V1.ArchiveController)
       resources("/authors", Admin.Api.V1.AuthorController)
+      resources("/sections", Admin.Api.V1.SectionController)
     end
 
     scope "/preview" do
