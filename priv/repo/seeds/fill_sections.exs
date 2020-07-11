@@ -3,6 +3,18 @@ alias Bloomchain.Content.Section
 
 Repo.insert_all(Section, [
   %{
+    name: "По умолчанию",
+    slug: "default",
+    inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
+    updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
+    seo_settings: %{
+      title:
+        "Bloomchain — Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе",
+      description:
+        "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
+    }
+  },
+  %{
     name: "Коротко",
     slug: "newsfeed",
     inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),

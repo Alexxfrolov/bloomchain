@@ -31,33 +31,21 @@ defmodule BloomchainWeb.SectionController do
   end
 
   def index(conn, %{type: "analysis"}) do
-    %{entries: articles, metadata: meta, section: section} = CommonPosts.run("analysis")
+    %{entries: articles, metadata: meta} = CommonPosts.run("analysis")
 
-    render(conn, "analysis.html",
-      articles: articles,
-      meta: meta,
-      section: section
-    )
+    render(conn, "analysis.html", articles: articles, meta: meta)
   end
 
   def index(conn, %{type: "newsfeed"}) do
-    %{entries: articles, metadata: meta, section: section} = NewsfeedPosts.run()
+    %{entries: articles, metadata: meta} = NewsfeedPosts.run()
 
-    render(conn, "newsfeed.html",
-      articles: group(articles),
-      meta: meta,
-      section: section
-    )
+    render(conn, "newsfeed.html", articles: group(articles), meta: meta)
   end
 
   def index(conn, %{type: type}) do
-    %{entries: articles, metadata: meta, section: section} = CommonPosts.run(type)
+    %{entries: articles, metadata: meta} = CommonPosts.run(type)
 
-    render(conn, "index.html",
-      articles: articles,
-      meta: meta,
-      section: section
-    )
+    render(conn, "index.html", articles: articles, meta: meta)
   end
 
   defp group(items) do

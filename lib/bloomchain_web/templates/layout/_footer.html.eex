@@ -23,13 +23,9 @@
     <div class="row">
       <div class="col">
         <nav class="bc-footer__nav">
-          <%= link("Коротко", to: section_path(@conn, :index, "newsfeed"), class: "bc-footer__nav-link") %>
-          <%= link("В Деталях", to: section_path(@conn, :index, "detailed"), class: "bc-footer__nav-link") %>
-          <%= link("Статистика", to: section_path(@conn, :index, "analysis"), class: "bc-footer__nav-link") %>
-          <%= link("Персона", to: section_path(@conn, :index, "person"), class: "bc-footer__nav-link") %>
-          <%= link("Что в России", to: section_path(@conn, :index, "in-russia"), class: "bc-footer__nav-link") %>
-          <%= link("События", to: section_path(@conn, :index, "calendar"), class: "bc-footer__nav-link") %>
-          <%= link("Исследования (архив)", to: section_path(@conn, :index, "research-archive"), class: "bc-footer__nav-link") %>
+          <%= for i <- ~w(newsfeed detailed analysis people in-russia calendar research-archive) do %>
+            <%= link(@conn.assigns.sections[i].name, to: section_path(@conn, :index, i), class: "bc-footer__nav-link") %>
+          <% end %>
         </nav>
       </div>
     </div>

@@ -11,7 +11,6 @@ defmodule BloomchainWeb.Workflow.CommonPosts do
       sort_direction: :desc,
       limit: @limit
     )
-    |> Map.merge(%{section: Repo.get_by!(Section, slug: type)})
   end
 
   def run(type, scroll) do

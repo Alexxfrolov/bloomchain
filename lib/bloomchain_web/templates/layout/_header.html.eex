@@ -68,27 +68,11 @@
   <hr class="bc-header__separator m-0 d-none d-md-block" />
   <div class="container navbar-collapse collapse py-2" id="navbarSupportedContent">
     <nav class="navbar-nav bc-header__nav">
-      <div class="nav-item">
-        <%= link("Коротко", to: section_path(@conn, :index, "newsfeed"), class: active_navlink_class(@conn, section_path(@conn, :index, "newsfeed"))) %>
-      </div>
-      <div class="nav-item">
-        <%= link("В Деталях", to: section_path(@conn, :index, "detailed"), class: active_navlink_class(@conn, section_path(@conn, :index, "detailed"))) %>
-      </div>
-      <div class="nav-item">
-        <%= link("Статистика", to: section_path(@conn, :index, "analysis"), class: active_navlink_class(@conn, section_path(@conn, :index, "analysis"))) %>
-      </div>
-      <div class="nav-item">
-        <%= link("Персона", to: section_path(@conn, :index, "people"), class: active_navlink_class(@conn, section_path(@conn, :index, "people"))) %>
-      </div>
-      <div class="nav-item">
-        <%= link("Что в России", to: section_path(@conn, :index, "in-russia"), class: active_navlink_class(@conn, section_path(@conn, :index, "in-russia"))) %>
-      </div>
-      <div class="nav-item">
-        <%= link("События", to: section_path(@conn, :index, "calendar"), class: active_navlink_class(@conn, section_path(@conn, :index, "calendar"))) %>
-      </div>
-      <div class="nav-item">
-        <%= link("Исследования (Архив)", to: section_path(@conn, :index, "research-archive"), class: active_navlink_class(@conn, section_path(@conn, :index, "research-archive"))) %>
-      </div>
+      <%= for i <- ~w(newsfeed detailed analysis people in-russia calendar research-archive) do %>
+        <div class="nav-item">
+          <%= link(@conn.assigns.sections[i].name, to: section_path(@conn, :index, i), class: active_navlink_class(@conn, section_path(@conn, :index, i))) %>
+        </div>
+      <% end %>
     </nav>
     <ul class="navbar-nav d-none d-md-flex bc-header__search">
       <li class="nav-item d-flex align-items-center w-100">
