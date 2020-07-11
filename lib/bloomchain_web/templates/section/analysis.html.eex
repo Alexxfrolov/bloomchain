@@ -27,7 +27,7 @@
 <div class="bg-white">
   <div class="container py-5">
     <a name="analitics"></a>
-    <h1 class="bc-analitics__h1">Аналитика</h1>
+    <h1 class="bc-analitics__h1"><%= @section.name %></h1>
     <div class="js-article-list">
       <%= render SharedView, "_article_block.html", assigns %>
     </div>

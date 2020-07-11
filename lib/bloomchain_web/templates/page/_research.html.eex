@@ -1,5 +1,8 @@
 <div class="col-lg-6 mt-lg-0 mt-5">
-    <h1 class="bc-article__z-index highlight mb-4">Исследования<%= link("Больше", to: research_path(@conn, :index), class: "btn btn-title") %></h1>
+    <h1 class="bc-article__z-index highlight mb-4">
+      Исследования
+      <%= link("Больше", to: section_path(@conn, :index, "research"), class: "btn btn-title") %>
+    </h1>
 
     <%= SharedView.main_article_tag(List.first(@articles), conn: @conn) %>
 

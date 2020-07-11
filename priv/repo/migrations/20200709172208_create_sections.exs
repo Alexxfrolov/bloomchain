@@ -3,14 +3,14 @@ defmodule Bloomchain.Repo.Migrations.CreateSections do
 
   def change do
     create table(:sections) do
-      add(:type, :string, null: false)
+      add(:slug, :string, null: false)
       add(:name, :string, null: false)
       add(:seo_settings, :map)
 
       timestamps()
     end
 
-    create(unique_index(:sections, [:type]))
+    create(unique_index(:sections, [:slug]))
     create(unique_index(:sections, [:name]))
   end
 end

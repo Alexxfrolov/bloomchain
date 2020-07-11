@@ -1,0 +1,7 @@
+<div class="container pt-4 pb-5">
+  <div class="js-article-list">
+     <%= render "_newsfeed_block.html", conn: @conn, articles: @articles, previous_date: nil %>
+  </div>
+</div>
+
+<%= load_more_button(@meta, last_date: @articles |> Map.keys() |> Enum.min_by(&{&1.year, &1.month, &1.day})) %>

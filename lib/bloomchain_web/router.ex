@@ -74,6 +74,13 @@ defmodule BloomchainWeb.Router do
     resources("/", SitemapController, only: [:show], param: "property")
   end
 
+  scope "/api", BloomchainWeb do
+    pipe_through [:api]
+
+    resources("/index", Api.IndexController, only: [:index])
+    resources("/subscription", Api.SubscriptionController, only: [:create])
+  end
+
   scope "/", BloomchainWeb do
     pipe_through([:xml])
 
@@ -86,24 +93,10 @@ defmodule BloomchainWeb.Router do
 
     get("/", PageController, :index)
 
-    resources("/newsfeed", NewsfeedController, only: [:index])
-    resources("/detailed", DetailedController, only: [:index])
-    resources("/analysis", AnalysisController, only: [:index])
-    resources("/people", PersonController, only: [:index])
-    resources("/in-russia", InRussiaController, only: [:index])
-    resources("/calendar", CalendarController, only: [:index])
-    resources("/research", ResearchController, only: [:index])
-    resources("/research-archive", ArchiveController, only: [:index])
-    resources("/search", SearchController, only: [:index, :create])
-    resources("/tag", TagController, only: [:show], param: "tag")
+    get("/search", SearchController, :index)
+    get("/tag/:slug", TagController, :show)
 
     get("/:type/:slug", ArticleController, :show)
-
-    scope "/api" do
-      pipe_through [:api]
-
-      resources("/index", Api.IndexController, only: [:index])
-      resources("/subscription", Api.SubscriptionController, only: [:create])
-    end
+    get("/:type", SectionController, :index)
   end
 end

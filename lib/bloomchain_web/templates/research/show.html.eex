@@ -1,3 +1,0 @@
-<%= render BloomchainWeb.SharedView, "_article.html", assigns %>
-
-<%= render BloomchainWeb.SharedView, "_recomendation_block.html", assigns %>

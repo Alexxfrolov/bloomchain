@@ -23,13 +23,13 @@
     <div class="row">
       <div class="col">
         <nav class="bc-footer__nav">
-          <%= link("Коротко", to: newsfeed_path(@conn, :index), class: "bc-footer__nav-link") %>
-          <%= link("В Деталях", to: detailed_path(@conn, :index), class: "bc-footer__nav-link") %>
-          <%= link("Статистика", to: analysis_path(@conn, :index), class: "bc-footer__nav-link") %>
-          <%= link("Персона", to: person_path(@conn, :index), class: "bc-footer__nav-link") %>
-          <%= link("Что в России", to: in_russia_path(@conn, :index), class: "bc-footer__nav-link") %>
-          <%= link("События", to: calendar_path(@conn, :index), class: "bc-footer__nav-link") %>
-          <%= link("Исследования (архив)", to: archive_path(@conn, :index), class: "bc-footer__nav-link") %>
+          <%= link("Коротко", to: section_path(@conn, :index, "newsfeed"), class: "bc-footer__nav-link") %>
+          <%= link("В Деталях", to: section_path(@conn, :index, "detailed"), class: "bc-footer__nav-link") %>
+          <%= link("Статистика", to: section_path(@conn, :index, "analysis"), class: "bc-footer__nav-link") %>
+          <%= link("Персона", to: section_path(@conn, :index, "person"), class: "bc-footer__nav-link") %>
+          <%= link("Что в России", to: section_path(@conn, :index, "in-russia"), class: "bc-footer__nav-link") %>
+          <%= link("События", to: section_path(@conn, :index, "calendar"), class: "bc-footer__nav-link") %>
+          <%= link("Исследования (архив)", to: section_path(@conn, :index, "research-archive"), class: "bc-footer__nav-link") %>
         </nav>
       </div>
     </div>

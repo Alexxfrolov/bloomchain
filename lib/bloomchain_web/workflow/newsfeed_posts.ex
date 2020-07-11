@@ -1,6 +1,6 @@
 defmodule BloomchainWeb.Workflow.NewsfeedPosts do
   alias Bloomchain.Repo
-  alias Bloomchain.Content.Article
+  alias Bloomchain.Content.{Article, Section}
 
   @limit 12
 
@@ -11,6 +11,7 @@ defmodule BloomchainWeb.Workflow.NewsfeedPosts do
       sort_direction: :desc,
       limit: @limit
     )
+    |> Map.merge(%{section: Repo.get_by!(Section, slug: "newsfeed")})
   end
 
   def run(scroll) do

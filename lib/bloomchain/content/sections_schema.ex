@@ -2,8 +2,7 @@ defmodule Bloomchain.Content.Section do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @required_fields ~w(type name)a
-  @allow_types ~w(newsfeed detailed peope in-russia analysis calendar research research-archive)a
+  @required_fields ~w(slug name)a
 
   schema "sections" do
     field(:slug, :string)
@@ -17,7 +16,7 @@ defmodule Bloomchain.Content.Section do
     changeset
     |> cast(attrs, @required_fields)
     |> validate_required(@required_fields)
-    |> unique_constraint(:type)
+    |> unique_constraint(:slug)
     |> unique_constraint(:name)
     |> process_seo()
   end

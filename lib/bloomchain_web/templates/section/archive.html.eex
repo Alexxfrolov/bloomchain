@@ -1,0 +1,15 @@
+<div class="container py-4">
+  <div class="row">
+    <div class="col-md-12 mt-md-0">
+      <%= for item <- @data do %>
+        <p>
+          <%=
+            File.url({item.cover.file, item.cover})
+            |> img_tag(class: "alignnone size-full")
+            |> link(to: File.url({item.pdf.file, item.pdf}), target: "_blank")
+          %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+</div>

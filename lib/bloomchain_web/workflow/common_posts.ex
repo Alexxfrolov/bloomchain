@@ -1,6 +1,6 @@
 defmodule BloomchainWeb.Workflow.CommonPosts do
   alias Bloomchain.Repo
-  alias Bloomchain.Content.Article
+  alias Bloomchain.Content.{Article, Section}
 
   @limit 6
 
@@ -11,6 +11,7 @@ defmodule BloomchainWeb.Workflow.CommonPosts do
       sort_direction: :desc,
       limit: @limit
     )
+    |> Map.merge(%{section: Repo.get_by!(Section, slug: type)})
   end
 
   def run(type, scroll) do
