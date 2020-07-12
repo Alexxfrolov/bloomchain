@@ -1,9 +1,9 @@
 defmodule Bloomchain.Content.Archive do
   use Ecto.Schema
+  import Ecto.{Changeset, Query}
 
-  import Ecto.Changeset
-
-  alias Bloomchain.Content.{Media}
+  alias Bloomchain.Repo
+  alias Bloomchain.Content.{Archive, Media}
 
   def fetch(term, key) do
     term
@@ -27,6 +27,15 @@ defmodule Bloomchain.Content.Archive do
     struct
     |> cast(prepared_params(params), @required_fields)
     |> validate_required(@required_fields)
+  end
+
+  def all do
+    from(
+      archive in Archive,
+      preload: [:cover, :pdf],
+      order_by: [desc: archive.inserted_at, desc: archive.id]
+    )
+    |> Repo.all()
   end
 
   defp prepared_params(%{pdf: pdf, cover: cover}) do

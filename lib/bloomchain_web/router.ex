@@ -10,6 +10,7 @@ defmodule BloomchainWeb.Router do
     plug(:fetch_flash)
     # plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
+    plug(Bloomchain.Plug.SetSectionData)
   end
 
   pipeline :admin do
@@ -50,6 +51,7 @@ defmodule BloomchainWeb.Router do
       resources("/subscribers", Admin.Api.V1.SubscriberController, only: [:index])
       resources("/archives", Admin.Api.V1.ArchiveController)
       resources("/authors", Admin.Api.V1.AuthorController)
+      resources("/sections", Admin.Api.V1.SectionController)
     end
 
     scope "/preview" do
@@ -74,6 +76,13 @@ defmodule BloomchainWeb.Router do
     resources("/", SitemapController, only: [:show], param: "property")
   end
 
+  scope "/api", BloomchainWeb do
+    pipe_through [:api]
+
+    resources("/index", Api.IndexController, only: [:index])
+    resources("/subscription", Api.SubscriptionController, only: [:create])
+  end
+
   scope "/", BloomchainWeb do
     pipe_through([:xml])
 
@@ -86,24 +95,10 @@ defmodule BloomchainWeb.Router do
 
     get("/", PageController, :index)
 
-    resources("/newsfeed", NewsfeedController, only: [:index])
-    resources("/detailed", DetailedController, only: [:index])
-    resources("/analysis", AnalysisController, only: [:index])
-    resources("/people", PersonController, only: [:index])
-    resources("/in-russia", InRussiaController, only: [:index])
-    resources("/calendar", CalendarController, only: [:index])
-    resources("/research", ResearchController, only: [:index])
-    resources("/research-archive", ArchiveController, only: [:index])
-    resources("/search", SearchController, only: [:index, :create])
-    resources("/tag", TagController, only: [:show], param: "tag")
+    get("/search", SearchController, :index)
+    get("/tag/:slug", TagController, :show)
 
     get("/:type/:slug", ArticleController, :show)
-
-    scope "/api" do
-      pipe_through [:api]
-
-      resources("/index", Api.IndexController, only: [:index])
-      resources("/subscription", Api.SubscriptionController, only: [:create])
-    end
+    get("/:type", SectionController, :index)
   end
 end

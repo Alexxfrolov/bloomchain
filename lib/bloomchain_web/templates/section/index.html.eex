@@ -1,9 +1,10 @@
 <div class="container py-5">
-  <h1 class="bc-analitics__h1">Исследования</h1>
+  <h1 class="bc-analitics__h1"><%= assigns.sections[@conn.path_params["type"]].name %></h1>
 
   <div class="js-article-list">
     <%= render SharedView, "_article_block.html", assigns %>
   </div>
+
 </div>
 
 <%= SharedView.load_more_button(@meta) %>

@@ -3,12 +3,14 @@ defmodule BloomchainWeb.LayoutView do
 
   def title(assigns) do
     assigns[:title] || get_in(assigns, [:article, :title]) ||
-      "Bloomchain — Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
+      get_in(assigns, [:sections, assigns.conn.path_params["type"], :seo, "title"]) ||
+      get_in(assigns, [:sections, "default", :seo, "title"])
   end
 
   def meta(:description, assigns) do
     assigns[:description] || get_in(assigns, [:article, :seo_settings, "description"]) ||
-      "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
+      get_in(assigns, [:sections, assigns.conn.path_params["type"], :seo, "description"]) ||
+      get_in(assigns, [:sections, "default", :seo, "description"])
   end
 
   def meta(:keywords, assigns) do
@@ -27,13 +29,13 @@ defmodule BloomchainWeb.LayoutView do
   def meta(:og_title, assigns) do
     assigns[:og_title] || assigns[:title] ||
       get_in(assigns, [:article, :seo_settings, "og_title"]) ||
-      "Bloomchain — Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
+      get_in(assigns, [:sections, "default", :seo, "title"])
   end
 
   def meta(:og_description, assigns) do
     assigns[:og_description] || assigns[:description] ||
       get_in(assigns, [:article, :seo_settings, "og_description"]) ||
-      "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
+      get_in(assigns, [:sections, "default", :seo, "description"])
   end
 
   def meta(:og_image, assigns) do
@@ -43,13 +45,13 @@ defmodule BloomchainWeb.LayoutView do
   def meta(:twitter_title, assigns) do
     assigns[:twitter_title] || assigns[:title] ||
       get_in(assigns, [:article, :seo_settings, "twitter_title"]) ||
-      "Bloomchain — Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
+      get_in(assigns, [:sections, "default", :seo, "title"])
   end
 
   def meta(:twitter_description, assigns) do
     assigns[:twitter_description] || assigns[:description] ||
       get_in(assigns, [:article, :seo_settings, "twitter_description"]) ||
-      "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
+      get_in(assigns, [:sections, "default", :seo, "description"])
   end
 
   def meta(:twitter_image, assigns) do
@@ -69,7 +71,7 @@ defmodule BloomchainWeb.LayoutView do
   def active_navlink_class(conn, path) do
     current_path = Path.join(["/" | conn.path_info])
 
-    if path == current_path do
+    if Regex.match?(~r/#{path}/, current_path) do
       "nav-link nav-link--active"
     else
       "nav-link"

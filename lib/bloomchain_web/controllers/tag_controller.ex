@@ -5,7 +5,7 @@ defmodule BloomchainWeb.TagController do
   alias Bloomchain.ElasticsearchCluster, as: ES
   alias BloomchainWeb.Workflow.RecomendationPosts
 
-  def show(conn, %{tag: tag, scroll: scroll}) do
+  def show(conn, %{slug: tag, scroll: scroll}) do
     %{entries: articles, metadata: meta} = do_query(tag, scroll) |> ES.search()
 
     conn
@@ -15,7 +15,7 @@ defmodule BloomchainWeb.TagController do
     |> render("_article_block.html", articles: articles, meta: meta, recomendations: [])
   end
 
-  def show(conn, %{tag: tag}) do
+  def show(conn, %{slug: tag}) do
     name = Repo.get_by!(Tag, slug: tag).name
     %{entries: articles, metadata: meta} = do_query(tag) |> ES.search()
 

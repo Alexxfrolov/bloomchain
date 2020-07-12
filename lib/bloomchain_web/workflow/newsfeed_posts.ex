@@ -1,6 +1,6 @@
 defmodule BloomchainWeb.Workflow.NewsfeedPosts do
   alias Bloomchain.Repo
-  alias Bloomchain.Content.Article
+  alias Bloomchain.Content.{Article, Section}
 
   @limit 12
 
