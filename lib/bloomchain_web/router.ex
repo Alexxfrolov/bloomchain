@@ -52,6 +52,7 @@ defmodule BloomchainWeb.Router do
       resources("/archives", Admin.Api.V1.ArchiveController)
       resources("/authors", Admin.Api.V1.AuthorController)
       resources("/sections", Admin.Api.V1.SectionController)
+      resources("/redirects", Admin.Api.V1.RedirectController)
     end
 
     scope "/preview" do
