@@ -10,12 +10,16 @@ defmodule BloomchainWeb.Router do
     plug(:fetch_flash)
     # plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
-    plug(Bloomchain.Plug.SetSectionData)
+  end
+
+  pipeline :customer do
+    plug(BloomchainWeb.Plug.Redirect)
+    plug(BloomchainWeb.Plug.SetSectionData)
   end
 
   pipeline :admin do
-    plug(Bloomchain.Plug.Authentication)
-    plug(Bloomchain.Plug.EnsureAuthentication)
+    plug(BloomchainWeb.Plug.Authentication)
+    plug(BloomchainWeb.Plug.EnsureAuthentication)
     plug(:put_layout, {BloomchainWeb.LayoutView, :admin})
   end
 
@@ -92,7 +96,7 @@ defmodule BloomchainWeb.Router do
   end
 
   scope "/", BloomchainWeb do
-    pipe_through(:browser)
+    pipe_through([:browser, :customer])
 
     get("/", PageController, :index)
 

@@ -1,4 +1,4 @@
-defmodule Bloomchain.Plug.ValidParams do
+defmodule BloomchainWeb.Plug.ValidParams do
   import Plug.Conn, only: [assign: 3]
 
   def valid_filters(conn, params) do

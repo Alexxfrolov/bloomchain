@@ -1,4 +1,4 @@
-defmodule Bloomchain.Plug.Authentication do
+defmodule BloomchainWeb.Plug.Authentication do
 
   use Guardian.Plug.Pipeline,
     otp_app: :bloomchain,

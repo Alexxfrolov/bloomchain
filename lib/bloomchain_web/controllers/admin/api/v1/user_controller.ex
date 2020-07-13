@@ -1,7 +1,7 @@
 defmodule BloomchainWeb.Admin.Api.V1.UserController do
   use BloomchainWeb, :controller
 
-  import Bloomchain.Plug.ValidParams
+  import BloomchainWeb.Plug.ValidParams
   import Bloomchain.Paginator
 
   alias Bloomchain.{Repo, Content.User, Content.Author, Auth.Account}
