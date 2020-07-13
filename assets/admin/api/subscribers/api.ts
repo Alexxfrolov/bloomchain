@@ -1,6 +1,6 @@
 import { request } from "@features/core"
 
-import { OrderParams, Pagination, PaginationParams } from "../common"
+import type { OrderParams, Pagination, PaginationParams } from "../common"
 
 export interface Subscriber {
   id: number

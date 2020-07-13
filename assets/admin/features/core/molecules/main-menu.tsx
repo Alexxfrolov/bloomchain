@@ -22,6 +22,7 @@ import InsertDriveFileRoundedIcon from "@material-ui/icons/InsertDriveFileRounde
 import ImportContactsRoundedIcon from "@material-ui/icons/ImportContactsRounded"
 import PollRoundedIcon from "@material-ui/icons/PollRounded"
 import AlternateEmailIcon from "@material-ui/icons/AlternateEmail"
+import OpenInNewRoundedIcon from "@material-ui/icons/OpenInNewRounded"
 import FaceRoundedIcon from "@material-ui/icons/FaceRounded"
 import { RouterLink, useCurrentUser } from "@features/core"
 
@@ -259,6 +260,21 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
                   <AlternateEmailIcon style={{ color: indigo[500] }} />
                 </ListItemIcon>
                 <ListItemText primary="Подписчики" />
+              </RouterLink>
+            </ListItem>
+          </Tooltip>
+          <Tooltip title={openedDrawer ? "" : "Редиректы"}>
+            <ListItem
+              aria-current={
+                isCurrentMenu("admin.redirects") ? "page" : undefined
+              }
+              className={classes.listitem}
+            >
+              <RouterLink routeName="admin.redirects" className={classes.link}>
+                <ListItemIcon style={{ paddingLeft: "7px" }}>
+                  <OpenInNewRoundedIcon style={{ color: indigo[500] }} />
+                </ListItemIcon>
+                <ListItemText primary="Редиректы" />
               </RouterLink>
             </ListItem>
           </Tooltip>

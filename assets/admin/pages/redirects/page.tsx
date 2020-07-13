@@ -1,22 +1,22 @@
 import React, { useEffect, useState, useCallback } from "react"
 import Container from "@material-ui/core/Container"
-import { subscribersApi } from "@api/subscribers"
-import { SubscribersTable } from "@features/subscribers"
+import { redirectsApi } from "@api/redirects"
 import type { OrderDirection, Pagination } from "@api/common/types"
-import type { Subscriber } from "@api/subscribers"
+import type { Redirect } from "@api/redirects"
 import type { RequestStatus } from "@features/core"
+import { RedirectsTable } from "@features/redirects"
 
-type SubscribersPageState = {
+type RedirectsPageState = {
   request_status: RequestStatus
   error: string | null
-  data: Subscriber[]
+  data: Redirect[]
   pagination: Pagination
   orderDirection: OrderDirection
-  orderBy: keyof Subscriber
+  orderBy: keyof Redirect
 }
 
-export function SubscribersPage() {
-  const [state, setState] = useState<SubscribersPageState>({
+export function RedirectsPage() {
+  const [state, setState] = useState<RedirectsPageState>({
     request_status: "pending",
     error: null,
     data: [],
@@ -39,7 +39,7 @@ export function SubscribersPage() {
       orderBy: state.orderBy,
     } as const
 
-    subscribersApi
+    redirectsApi
       .get(params)
       .then(({ data: { data, meta } }) =>
         setState((state) => ({
@@ -83,7 +83,7 @@ export function SubscribersPage() {
   )
 
   const handleTableOrderChange = useCallback(
-    (orderBy: keyof Subscriber, orderDirection: OrderDirection) => {
+    (orderBy: keyof Redirect, orderDirection: OrderDirection) => {
       setState((state) => ({ ...state, orderDirection, orderBy }))
     },
     [],
@@ -91,7 +91,7 @@ export function SubscribersPage() {
 
   return (
     <Container maxWidth="lg">
-      <SubscribersTable
+      <RedirectsTable
         data={state.data}
         isLoading={state.request_status === "pending"}
         pagination={state.pagination}
