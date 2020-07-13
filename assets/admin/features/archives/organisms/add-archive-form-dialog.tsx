@@ -20,7 +20,7 @@ import PictureAsPdfOutlinedIcon from "@material-ui/icons/PictureAsPdfOutlined"
 import { getBlobUrl } from "@lib/blob"
 import { DropZone } from "@features/core"
 
-import { ArchiveCreationSchema } from "../schemes"
+import { ArchiveSchema } from "../schemes"
 
 type AddArchiveFormDialogProps = {
   isOpened: boolean
@@ -46,7 +46,7 @@ export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
       cover: null,
       pdf: null,
     },
-    validationSchema: ArchiveCreationSchema,
+    validationSchema: ArchiveSchema,
     onSubmit: async ({ cover, pdf }, { setSubmitting, resetForm }) => {
       await onSubmit(cover as File, pdf as File)
       setSubmitting(false)

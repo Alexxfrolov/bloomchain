@@ -12,11 +12,11 @@ import {
 import { Column } from "material-table"
 import IconCheck from "@material-ui/icons/Check"
 import IconClear from "@material-ui/icons/Clear"
-import { Pagination, OrderDirection } from "@api/common"
+import type { Pagination, OrderDirection } from "@api/common"
 import { Tag } from "@api/tags"
 import { Table, TableRowActionMode } from "@features/core"
 
-import { TagCreationSchema } from "../schemes"
+import { TagSchema } from "../schemes"
 
 type TagsTableProps = {
   isLoading: boolean
@@ -98,7 +98,6 @@ const columns: Column<Tag>[] = [
   {
     title: "Дата создания",
     field: "inserted_at",
-    defaultSort: "desc",
     render: (tag) => format(new Date(tag.inserted_at), "dd.MM.yyyy"),
   },
   {
@@ -145,7 +144,7 @@ const TagsTableEditRow = (props: TagsTableEditRowProps) => {
     initialValues: {
       name: data?.name ?? "",
     },
-    validationSchema: TagCreationSchema,
+    validationSchema: TagSchema,
     validateOnBlur: false,
     onSubmit: async (values, actions) => {
       await onEditingApproved(mode, values, data)

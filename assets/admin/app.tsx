@@ -8,6 +8,7 @@ import {
   ArticlesViewPage,
   AuthorsPage,
   MediaPage,
+  SectionsPage,
   SubscribersPage,
   TagsPage,
   UserAccountPage,
@@ -44,6 +45,8 @@ export const App = () => {
         return <UsersPage />
       case "admin.subscribers":
         return <SubscribersPage />
+      case "admin.sections":
+        return <SectionsPage />
       default:
         return null
     }
