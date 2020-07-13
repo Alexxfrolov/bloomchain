@@ -4,7 +4,7 @@ import { Column } from "material-table"
 import { Link, Select, MenuItem, TableRow, TableCell } from "@material-ui/core"
 import IconEdit from "@material-ui/icons/EditRounded"
 import { encodeHTMLEntities } from "@lib/html"
-import { Pagination, OrderDirection } from "@api/common"
+import type { Pagination, OrderDirection } from "@api/common"
 import { Article } from "@api/articles"
 import { Table } from "@features/core"
 
@@ -176,7 +176,6 @@ const columns: Column<Article>[] = [
   {
     field: "published_at",
     title: "Дата публикации",
-    defaultSort: "desc",
     filtering: false,
     type: "date",
     render: (article) =>

@@ -3,7 +3,7 @@ alias Bloomchain.Content.Section
 
 Repo.insert_all(Section, [
   %{
-    name: "По умолчанию",
+    name: "Главная",
     slug: "default",
     inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
     updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
@@ -32,7 +32,7 @@ Repo.insert_all(Section, [
     updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
     seo_settings: %{
       title: "Статьи о криптовалютах, блокчейне и финтехе",
-      desctiption:
+      description:
         "Аналитические статьи про криптовалюты, блокчейн и финтех. Подробные обзоры и комментарии экспертов на портале Блумчейн.ру."
     }
   },
@@ -43,7 +43,7 @@ Repo.insert_all(Section, [
     updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
     seo_settings: %{
       title: "Биткоин к доллару | График BTC/USD | Анализ криптовалют | Статистика)",
-      desctiption:
+      description:
         "График биткоина к доллару (BTC/USD) на сегодня. Технический анализ криптовалют bitcoin, ethereum, ripple и других от специалистов рынка на портале Блумчейн.ру. Криптовалютная статистика, аналитика, мнения экспертов."
     }
   },
@@ -54,7 +54,7 @@ Repo.insert_all(Section, [
     updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
     seo_settings: %{
       title: "Новости блокчейна и криптовалют в России - Bloomchain",
-      desctiption:
+      description:
         "Читайте эксклюзивные новости о блокчейне и криптовалютах в России. Аналитические статьи, исследования, комментарии экспертов на Блумчейн.ру."
     }
   },
@@ -65,7 +65,7 @@ Repo.insert_all(Section, [
     updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
     seo_settings: %{
       title: "Люди из мира криптовалют, блокчейна и финтеха",
-      desctiption:
+      description:
         "Последние новости о людях из мира криптовалют, блокчейна и финтеха. Аналитические статьи, комментарии экспертов на сайте Блумчейн.ру."
     }
   },
@@ -76,7 +76,7 @@ Repo.insert_all(Section, [
     updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
     seo_settings: %{
       title: "Календарь событий в сфере блокчейна и криптовалют — Bloomchain",
-      desctiption:
+      description:
         "Календарь предстоящих событий в сфере криптовалют и блокчейна. Следите за ближайшими событиями в криптовалютном мире на Блумчейн.ру."
     }
   },
@@ -87,7 +87,7 @@ Repo.insert_all(Section, [
     updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
     seo_settings: %{
       title: "Исследования — Bloomchain",
-      desctiption:
+      description:
         "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
     }
   },
@@ -98,7 +98,7 @@ Repo.insert_all(Section, [
     updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
     seo_settings: %{
       title: "Исследования — Bloomchain",
-      desctiption:
+      description:
         "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
     }
   }

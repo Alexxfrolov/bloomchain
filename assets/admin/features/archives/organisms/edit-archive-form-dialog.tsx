@@ -22,7 +22,7 @@ import { Archive } from "@api/archives"
 import { MediaFile } from "@api/media"
 import { DropZone } from "@features/core"
 
-import { ArchiveCreationSchema } from "../schemes"
+import { ArchiveSchema } from "../schemes"
 
 type EditArchiveFormDialogProps = {
   data: Archive
@@ -55,7 +55,7 @@ export function EditArchiveFormDialog(props: EditArchiveFormDialogProps) {
       cover: data.cover,
       pdf: data.pdf,
     },
-    validationSchema: ArchiveCreationSchema,
+    validationSchema: ArchiveSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       const files = Object.keys(values).reduce(
         (acc, key) =>

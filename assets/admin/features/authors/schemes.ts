@@ -1,5 +1,5 @@
 import { object, string } from "yup"
 
-export const AuthorCreationSchema = object().shape({
+export const AuthorSchema = object().shape({
   name: string().required("Укажите имя автора"),
 })

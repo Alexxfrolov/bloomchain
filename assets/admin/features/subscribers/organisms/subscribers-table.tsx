@@ -1,7 +1,7 @@
 import React, { memo, useCallback } from "react"
 import format from "date-fns/format"
 import { Column } from "material-table"
-import { Pagination, OrderDirection } from "@api/common"
+import type { Pagination, OrderDirection } from "@api/common"
 import { Subscriber } from "@api/subscribers"
 import { Table } from "@features/core"
 
@@ -68,7 +68,6 @@ const columns: Column<Subscriber>[] = [
   {
     field: "inserted_at",
     title: "Дата подписки",
-    defaultSort: "desc",
     render: (subscriber) =>
       format(new Date(subscriber.inserted_at), "dd.MM.yyyy HH:mm"),
   },

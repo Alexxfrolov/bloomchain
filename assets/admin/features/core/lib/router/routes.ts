@@ -53,6 +53,10 @@ export const routes: Route[] = [
         path: "/media",
       },
       {
+        name: "sections",
+        path: "/sections",
+      },
+      {
         name: "archives",
         path: "/archives",
       },

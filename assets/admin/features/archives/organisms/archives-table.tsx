@@ -2,7 +2,7 @@ import React, { memo, useCallback } from "react"
 import format from "date-fns/format"
 import { Column } from "material-table"
 import IconEdit from "@material-ui/icons/EditRounded"
-import { Pagination, OrderDirection } from "@api/common"
+import type { Pagination, OrderDirection } from "@api/common"
 import { Archive } from "@api/archives"
 import { Table } from "@features/core"
 
@@ -120,7 +120,6 @@ const columns: Column<Archive>[] = [
   {
     title: "Дата публикации",
     field: "inserted_at",
-    defaultSort: "desc",
     render: (archive) => format(new Date(archive.inserted_at), "dd.MM.yyyy"),
   },
 ]
