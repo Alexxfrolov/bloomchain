@@ -1,7 +1,7 @@
 defmodule BloomchainWeb.Admin.Api.V1.MediaController do
   use BloomchainWeb, :controller
 
-  import Bloomchain.Plug.ValidParams
+  import BloomchainWeb.Plug.ValidParams
   import Bloomchain.Paginator
 
   alias Bloomchain.{Repo, Content.Media}

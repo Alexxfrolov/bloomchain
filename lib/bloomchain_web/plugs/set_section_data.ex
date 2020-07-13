@@ -1,4 +1,4 @@
-defmodule Bloomchain.Plug.SetSectionData do
+defmodule BloomchainWeb.Plug.SetSectionData do
   import Plug.Conn, only: [assign: 3]
 
   alias Bloomchain.Content.Section

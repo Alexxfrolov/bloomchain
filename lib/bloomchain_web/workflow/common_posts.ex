@@ -1,6 +1,6 @@
 defmodule BloomchainWeb.Workflow.CommonPosts do
   alias Bloomchain.Repo
-  alias Bloomchain.Content.{Article, Section}
+  alias Bloomchain.Content.Article
 
   @limit 6
 

@@ -30,7 +30,7 @@ defmodule BloomchainWeb.Workflow.RecomendationPosts do
               must_not: [%{terms: %{id: ids}}]
             }
           },
-          functions: date_functions ++ type_functions(types) ++ tag_functions(tags),
+          functions: date_functions() ++ type_functions(types) ++ tag_functions(tags),
           score_mode: "sum"
         }
       },

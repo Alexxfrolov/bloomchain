@@ -1,8 +1,9 @@
 defmodule Bloomchain.Content.Article do
   import Ecto.Query
 
+  alias Ecto.Multi
   alias Bloomchain.Repo
-  alias Bloomchain.Content.Post
+  alias Bloomchain.Content.{Post, Redirect}
   alias Bloomchain.ElasticsearchCluster, as: ES
 
   def published_posts(type) do
@@ -34,9 +35,31 @@ defmodule Bloomchain.Content.Article do
     end
   end
 
-  def update(%Post{} = post, %{} = params) do
-    with {:ok, post} <- post |> Post.changeset(params) |> Repo.update() do
+  def update(%Post{status: "published", type: old_type} = struct, %{type: new_type} = params)
+      when old_type != new_type do
+    update_post_and_redirect =
+      Multi.new()
+      |> Multi.update(:post, Post.changeset(struct, params))
+      |> Multi.insert(:redirect, Redirect.changeset(struct, params))
+
+    case Repo.transaction(update_post_and_redirect) do
+      {:ok, %{post: post, redirect: _redirect}} ->
+        post = post |> Repo.preload([:tags, :cover, :authors], force: true)
+        Task.async(fn -> ES.reindex(post) end)
+        {:ok, post}
+
+      {:error, :post, changeset, _} ->
+        {:error, changeset}
+
+      {:error, :redirect, changeset, _} ->
+        {:error, changeset}
+    end
+  end
+
+  def update(%Post{} = struct, %{} = params) do
+    with {:ok, post} <- struct |> Post.changeset(params) |> Repo.update() do
       post = post |> Repo.preload([:tags, :cover, :authors], force: true)
+
       Task.async(fn -> ES.reindex(post) end)
       {:ok, post}
     else

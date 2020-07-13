@@ -1,4 +1,4 @@
-defmodule BloomchainWeb.Admin.Api.V1.SectionView do
+defmodule BloomchainWeb.Admin.Api.V1.RedirectView do
   use BloomchainWeb, :view
 
   def render("index.json", %{items: items, meta: meta}) do
@@ -11,11 +11,10 @@ defmodule BloomchainWeb.Admin.Api.V1.SectionView do
   def render("show.json", %{item: item}) do
     %{
       id: item.id,
-      name: item.name,
-      slug: item.slug,
+      path_from: item.path_from,
+      path_to: item.path_to,
       inserted_at: item.inserted_at |> Timex.local(),
-      updated_at: item.updated_at |> Timex.local(),
-      seo_settings: item.seo_settings
+      updated_at: item.updated_at |> Timex.local()
     }
   end
 end
