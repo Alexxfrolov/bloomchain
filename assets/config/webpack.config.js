@@ -183,7 +183,6 @@ module.exports = (env, options) => {
               exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
               options: {
                 name: "[name].[ext]",
-                outputPath: "fonts/",
                 esModule: false,
               },
             },
@@ -197,7 +196,10 @@ module.exports = (env, options) => {
       isEnvDevelopment && new CaseSensitivePathsPlugin(),
       isEnvDevelopment &&
         new WatchMissingNodeModulesPlugin(paths.appNodeModules),
-      new MiniCssExtractPlugin({ filename: "[name].css" }),
+      new MiniCssExtractPlugin({
+        filename: "[name].css",
+        chunkFilename: "[id].css",
+      }),
       new CopyPlugin({
         patterns: [{ from: "./customer/static", to: "./customer" }],
       }),
