@@ -8,6 +8,7 @@
       </div>
       <div class="pb-3" id="js-chart-bitcoin" style="min-width: 300px; max-width: 800px;"></div>
       <div class="pt-3" id="js-chart-top10-cryptocurrency" style="min-width: 300px; max-width: 800px"></div>
+      <script src="<%= static_path(@conn, "/customer/charts.js") %>"></script>
     </div>
 
     <div class="col-md-3 mt-5 mt-md-0">
@@ -20,7 +21,6 @@
         </a>
       </nav>
     </div>
-
   </div>
 </div>
 

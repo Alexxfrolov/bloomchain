@@ -29,13 +29,14 @@ module.exports = (env, options) => {
       ? "source-map"
       : isEnvDevelopment && "eval-source-map",
     entry: {
-      "customer/bundle": path.resolve("./customer/src/index.js"),
+      "customer/charts": path.resolve("./customer/src/charts.js"),
+      "customer/bundle": path.resolve("./customer/src/app.js"),
       "admin/bundle": path.resolve("./admin/index.tsx"),
     },
     output: {
       filename: "[name].js",
       path: path.resolve(__dirname, "../../priv/static"),
-      publicPath: "/js/",
+      publicPath: "",
     },
     optimization: {
       minimize: isEnvProduction,
@@ -177,13 +178,22 @@ module.exports = (env, options) => {
               ],
               sideEffects: true,
             },
+            {
+              loader: require.resolve("file-loader"),
+              exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+              options: {
+                name: "[name].[ext]",
+                outputPath: "fonts/",
+                esModule: false,
+              },
+            },
           ],
         },
       ],
     },
     plugins: [
       new ModuleNotFoundPlugin(paths.appPath),
-      isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
+      // isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
       isEnvDevelopment && new CaseSensitivePathsPlugin(),
       isEnvDevelopment &&
         new WatchMissingNodeModulesPlugin(paths.appNodeModules),

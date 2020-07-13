@@ -23,7 +23,7 @@ config :bloomchain, BloomchainWeb.Endpoint,
 config :bloomchain, BloomchainWeb.Endpoint,
   live_reload: [
     patterns: [
-      ~r{priv/static/customer/*/*.*(js|css|jpg|svg|png|ico|txt)$},
+      ~r{priv/static/customer/*/*.*(js|css|jpg|svg|png|ico|txt|ttf|woff|woff2|eot)$},
       ~r{priv/static/admin/*/*.*(js|css|jpg|svg|png|ico|txt)$},
       ~r{priv/gettext/.*(po)$},
       ~r{lib/bloomchain_web/views/.*(ex)$},
