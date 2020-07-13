@@ -63,22 +63,30 @@ const columns: Column<Redirect>[] = [
     field: "path_from",
     title: "Path from",
     sorting: false,
+    render: (redirect) => (
+      <a href={redirect.path_from} target="_blank" rel="noopener noreferrer">
+        {redirect.path_from}
+      </a>
+    ),
   },
   {
     field: "path_to",
     title: "Path to",
     sorting: false,
+    render: (redirect) => (
+      <a href={redirect.path_to} target="_blank" rel="noopener noreferrer">
+        {redirect.path_to}
+      </a>
+    ),
   },
   {
     field: "inserted_at",
     title: "Дата создания",
-    render: (subscriber) =>
-      format(new Date(subscriber.inserted_at), "dd.MM.yyyy"),
+    render: (redirect) => format(new Date(redirect.inserted_at), "dd.MM.yyyy"),
   },
   {
     field: "updated_at",
     title: "Дата обновления",
-    render: (subscriber) =>
-      format(new Date(subscriber.updated_at), "dd.MM.yyyy"),
+    render: (redirect) => format(new Date(redirect.updated_at), "dd.MM.yyyy"),
   },
 ]
