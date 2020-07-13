@@ -3,7 +3,7 @@ defmodule Bloomchain.Content.Article do
 
   alias Ecto.Multi
   alias Bloomchain.Repo
-  alias Bloomchain.Content.{Post, Redirect, Section}
+  alias Bloomchain.Content.{Post, Redirect}
   alias Bloomchain.ElasticsearchCluster, as: ES
 
   def published_posts(type) do

@@ -17,6 +17,13 @@ defmodule Bloomchain.Content.Redirect do
   @required_fields ~w(path_from path_to)a
   @optional_fields ~w(section_id)a
 
+  def changeset(%Redirect{} = struct, params) do
+    struct
+    |> cast(params, @required_fields ++ @optional_fields)
+    |> validate_required(@required_fields)
+    |> unique_constraint(:path_from)
+  end
+
   def changeset(%Post{type: old_type} = post, %{type: new_type}) do
     # when post type is changed we create redirect to keep old urls active
 
@@ -27,12 +34,5 @@ defmodule Bloomchain.Content.Redirect do
     }
 
     changeset(%Redirect{}, params)
-  end
-
-  def changeset(%Redirect{} = struct, params \\ %{}) do
-    struct
-    |> cast(params, @required_fields ++ @optional_fields)
-    |> validate_required(@required_fields)
-    |> unique_constraint(:path_from)
   end
 end
