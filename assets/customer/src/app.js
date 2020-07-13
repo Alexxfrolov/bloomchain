@@ -3,7 +3,6 @@ import { Sharer } from "./lib/share-social"
 import { parseHTML, throwback_by_history } from "./lib/dom"
 
 import "./app.css"
-import { doc } from "prettier"
 
 const subscription = new Subscription()
 

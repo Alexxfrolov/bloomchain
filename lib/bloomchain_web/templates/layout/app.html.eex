@@ -43,7 +43,6 @@
     <%= render "_footer.html", conn: @conn %>
     <%= render "_privacy_police_dialog.html", conn: @conn %>
 
-    <script async rel="dns-prefetch" src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
     <script src="<%= static_path(@conn, "/customer/bundle.js") %>"></script>
   </body>
 </html>
