@@ -2,22 +2,22 @@ import React, { useCallback } from "react"
 import format from "date-fns/format"
 import { Column } from "material-table"
 import type { Pagination, OrderDirection } from "@api/common"
-import type { Subscriber } from "@api/subscribers"
+import type { Redirect } from "@api/redirects"
 import { Table } from "@features/core"
 
-type SubscribersTableProps = {
+type RedirectsTableProps = {
   isLoading: boolean
-  data: Subscriber[]
+  data: Redirect[]
   pagination: Pagination
   onChangePage: (page: number) => void
   onChangeRowsPerPage: (pageSize: number) => void
   onOrderChange: (
-    orderBy: keyof Subscriber,
+    orderBy: keyof Redirect,
     orderDirection: OrderDirection,
   ) => void
 }
 
-export function SubscribersTable(props: SubscribersTableProps) {
+export function RedirectsTable(props: RedirectsTableProps) {
   const {
     data,
     isLoading,
@@ -30,7 +30,7 @@ export function SubscribersTable(props: SubscribersTableProps) {
   const handleOrderChange = useCallback(
     (orderBy: number, orderDirection: OrderDirection) => {
       const { field } = columns[orderBy]
-      onOrderChange(field as keyof Subscriber, orderDirection)
+      onOrderChange(field as keyof Redirect, orderDirection)
     },
     [onOrderChange],
   )
@@ -39,7 +39,7 @@ export function SubscribersTable(props: SubscribersTableProps) {
 
   return (
     <Table
-      title="Подписчики"
+      title="Редиректы"
       data={data}
       columns={columns}
       isLoading={isLoading}
@@ -58,15 +58,27 @@ export function SubscribersTable(props: SubscribersTableProps) {
   )
 }
 
-const columns: Column<Subscriber>[] = [
+const columns: Column<Redirect>[] = [
   {
-    field: "email",
-    title: "Email",
+    field: "path_from",
+    title: "Path from",
+    sorting: false,
+  },
+  {
+    field: "path_to",
+    title: "Path to",
+    sorting: false,
   },
   {
     field: "inserted_at",
-    title: "Дата подписки",
+    title: "Дата создания",
     render: (subscriber) =>
-      format(new Date(subscriber.inserted_at), "dd.MM.yyyy HH:mm"),
+      format(new Date(subscriber.inserted_at), "dd.MM.yyyy"),
+  },
+  {
+    field: "updated_at",
+    title: "Дата обновления",
+    render: (subscriber) =>
+      format(new Date(subscriber.updated_at), "dd.MM.yyyy"),
   },
 ]
