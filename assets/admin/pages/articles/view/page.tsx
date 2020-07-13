@@ -5,19 +5,17 @@ import {
   Paper,
   Typography,
   Toolbar,
-  FormControl,
-  Button,
   makeStyles,
   createStyles,
 } from "@material-ui/core"
-import DateFnsUtils from "@date-io/date-fns"
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
-import { ru } from "date-fns/locale"
 import { SearchField } from "@ui/molecules/search-field"
-import { OrderDirection, Pagination } from "@api/common/types"
-import { articlesApi, Article } from "@api/articles"
-import { RequestStatus } from "@features/core"
-import { ArticlesTable } from "@features/articles"
+import type { OrderDirection, Pagination } from "@api/common/types"
+import { articlesApi } from "@api/articles"
+import type { Article } from "@api/articles"
+import { sectionsApi } from "@api/sections"
+import type { Section } from "@api/sections"
+import type { RequestStatus } from "@features/core"
+import { ArticlesTable, ARTICLE_TYPES } from "@features/articles"
 
 type ArticlesViewPageState = {
   data: Article[]
@@ -27,6 +25,7 @@ type ArticlesViewPageState = {
   pagination: Pagination
   query: string
   request_status: RequestStatus
+  sections: Section[]
   since: Date | null
   status: Article["status"] | null
   type: Article["type"]
@@ -57,9 +56,26 @@ export function ArticlesViewPage() {
     since: null,
     status: initialStatus,
     request_status: "pending",
+    sections: [],
     type: "newsfeed",
     until: null,
   })
+
+  useEffect(() => {
+    sectionsApi
+      .getAll()
+      .then((response) => {
+        setState((state) => ({
+          ...state,
+          sections: response.data.data.filter((section) =>
+            ARTICLE_TYPES.includes(section.slug),
+          ),
+        }))
+      })
+      .catch((error) =>
+        setState((state) => ({ ...state, error, request_status: "error" })),
+      )
+  }, [])
 
   useEffect(() => {
     const status = route.name.split(".")[2] as Article["status"]
@@ -75,6 +91,12 @@ export function ArticlesViewPage() {
         since: state.since,
         until: state.until,
       } as const
+
+      setState((state) => ({
+        ...state,
+        error: null,
+        request_status: "pending",
+      }))
 
       articlesApi
         .get(params)
@@ -168,15 +190,6 @@ export function ArticlesViewPage() {
     }))
   }, [state.type, route.name])
 
-  const handleDateSinceChange = (date: Date | null) =>
-    setState((state) => ({ ...state, since: date }))
-
-  const handleDateUntilChange = (date: Date | null) =>
-    setState((state) => ({ ...state, until: date }))
-
-  const handleResetButtonClick = () =>
-    setState((state) => ({ ...state, since: null, until: null }))
-
   const handleTablePageChange = (page: number) =>
     setState((state) => ({
       ...state,
@@ -250,52 +263,11 @@ export function ArticlesViewPage() {
             />
           </div>
         </Toolbar>
-        {/* <Toolbar>
-          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
-            <div className={classes.toolbarDate}>
-              <FormControl>
-                <DatePicker
-                  variant="inline"
-                  margin="none"
-                  inputVariant="outlined"
-                  label="Дата начала"
-                  format="dd/MM/yyyy"
-                  disableFuture={true}
-                  size="small"
-                  value={state.since}
-                  onChange={handleDateSinceChange}
-                />
-              </FormControl>
-              <FormControl>
-                <DatePicker
-                  variant="inline"
-                  margin="none"
-                  inputVariant="outlined"
-                  label="Дата окончания"
-                  format="dd/MM/yyyy"
-                  disableFuture={true}
-                  size="small"
-                  value={state.until}
-                  onChange={handleDateUntilChange}
-                />
-              </FormControl>
-              <FormControl>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  color="primary"
-                  onClick={handleResetButtonClick}
-                >
-                  Сбросить
-                </Button>
-              </FormControl>
-            </div>
-          </MuiPickersUtilsProvider>
-        </Toolbar> */}
         <ArticlesTable
           data={state.data}
           isLoading={state.request_status === "pending"}
           pagination={state.pagination}
+          sections={state.sections}
           type={state.type}
           onChangePage={handleTablePageChange}
           onChangeRowsPerPage={handleChangeTableRowsPerPage}

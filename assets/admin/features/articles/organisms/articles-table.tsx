@@ -1,19 +1,19 @@
-import React, { memo, useCallback, ChangeEvent } from "react"
+import React, { memo, useMemo, useCallback, ChangeEvent } from "react"
 import format from "date-fns/format"
 import { Column } from "material-table"
 import { Link, Select, MenuItem, TableRow, TableCell } from "@material-ui/core"
 import IconEdit from "@material-ui/icons/EditRounded"
 import { encodeHTMLEntities } from "@lib/html"
 import type { Pagination, OrderDirection } from "@api/common"
+import type { Section } from "@api/sections"
 import { Article } from "@api/articles"
 import { Table } from "@features/core"
-
-import { ARTICLE_TYPES_RECORD } from "../lib"
 
 type ArticlesTableProps = {
   data: Article[]
   isLoading: boolean
   pagination: Pagination
+  sections: Section[]
   type: Article["type"]
   onChangePage: (page: number) => void
   onChangeRowsPerPage: (pageSize: number) => void
@@ -31,6 +31,7 @@ export function ArticlesTable(props: ArticlesTableProps) {
     data,
     isLoading,
     pagination,
+    sections,
     type,
     onChangePage,
     onChangeRowsPerPage,
@@ -39,6 +40,8 @@ export function ArticlesTable(props: ArticlesTableProps) {
     onOrderChange,
     onRowDelete,
   } = props
+
+  const columns = useMemo(() => createColumns(sections), [sections])
 
   const handleOrderChange = (
     orderBy: number,
@@ -71,6 +74,7 @@ export function ArticlesTable(props: ArticlesTableProps) {
         FilterRow: () => (
           <ArticlesTableFilters
             type={type}
+            sections={sections}
             onFilterChanged={onChangeSelectFilter}
           />
         ),
@@ -103,12 +107,13 @@ export function ArticlesTable(props: ArticlesTableProps) {
 }
 
 type ArticlesTableFiltersProps = {
+  sections: Section[]
   type: Article["type"]
   onFilterChanged: (type: Article["type"]) => void
 }
 
 const ArticlesTableFilters = memo((props: ArticlesTableFiltersProps) => {
-  const { type, onFilterChanged } = props
+  const { sections, type, onFilterChanged } = props
 
   const handleSelectChange = useCallback(
     (event: ChangeEvent<{ name?: string; value: unknown }>) =>
@@ -126,9 +131,9 @@ const ArticlesTableFilters = memo((props: ArticlesTableFiltersProps) => {
           fullWidth={true}
           onChange={handleSelectChange}
         >
-          {Object.keys(ARTICLE_TYPES_RECORD).map((type) => (
-            <MenuItem key={type} value={type}>
-              {ARTICLE_TYPES_RECORD[type]}
+          {sections.map((section) => (
+            <MenuItem key={section.slug} value={section.slug}>
+              {section.name}
             </MenuItem>
           ))}
         </Select>
@@ -142,61 +147,73 @@ const ArticlesTableFilters = memo((props: ArticlesTableFiltersProps) => {
   )
 })
 
-const columns: Column<Article>[] = [
-  {
-    field: "type",
-    title: "Раздел",
-    sorting: false,
-    render: (article) => ARTICLE_TYPES_RECORD[article.type],
-  },
-  {
-    field: "title",
-    title: "Заголовок",
-    filtering: false,
-    cellStyle: { whiteSpace: "nowrap" },
-    render: (article) =>
-      article.url ? (
-        <Link href={article.url} target="_blank">
-          {encodeHTMLEntities(article.title)}
-        </Link>
-      ) : (
-        encodeHTMLEntities(article.title)
-      ),
-  },
-  {
-    field: "authors",
-    title: "Автор(ы)",
-    sorting: false,
-    filtering: false,
-    render: (article) =>
-      article.authors
-        .reduce<string[]>((names, author) => [...names, author.name], [])
-        .join(", "),
-  },
-  {
-    field: "published_at",
-    title: "Дата публикации",
-    filtering: false,
-    type: "date",
-    render: (article) =>
-      article.published_at
-        ? format(new Date(article.published_at), "dd.MM.yyyy HH:mm")
-        : null,
-  },
-  {
-    field: "updated_at",
-    title: "Дата обновления",
-    filtering: false,
-    type: "date",
-    render: (article) =>
-      article.updated_at
-        ? format(new Date(article.updated_at), "dd.MM.yyyy HH:mm")
-        : null,
-  },
-  {
-    field: "total_views",
-    title: "Просмотров",
-    type: "numeric",
-    filtering: false,
-  },
-]
+function createColumns(sections: Section[]): Column<Article>[] {
+  return [
+    {
+      field: "type",
+      title: "Раздел",
+      sorting: false,
+      render: (article) => getArticleTypeName(sections, article.type),
+    },
+    {
+      field: "title",
+      title: "Заголовок",
+      filtering: false,
+      cellStyle: { whiteSpace: "nowrap" },
+      render: (article) =>
+        article.url ? (
+          <Link href={article.url} target="_blank">
+            {encodeHTMLEntities(article.title)}
+          </Link>
+        ) : (
+          encodeHTMLEntities(article.title)
+        ),
+    },
+    {
+      field: "authors",
+      title: "Автор(ы)",
+      sorting: false,
+      filtering: false,
+      render: (article) =>
+        article.authors
+          .reduce<string[]>((names, author) => [...names, author.name], [])
+          .join(", "),
+    },
+    {
+      field: "published_at",
+      title: "Дата публикации",
+      filtering: false,
+      type: "date",
+      render: (article) =>
+        article.published_at
+          ? format(new Date(article.published_at), "dd.MM.yyyy HH:mm")
+          : null,
+    },
+    {
+      field: "updated_at",
+      title: "Дата обновления",
+      filtering: false,
+      type: "date",
+      render: (article) =>
+        article.updated_at
+          ? format(new Date(article.updated_at), "dd.MM.yyyy HH:mm")
+          : null,
+    },
+    {
+      field: "total_views",
+      title: "Просмотров",
+      type: "numeric",
+      filtering: false,
+    },
+  ]
+}
+
+function getArticleTypeName(
+  sections: Section[],
+  article_type: Article["type"],
+) {
+  return (
+    sections.find((section) => section.slug === article_type)?.name ??
+    "По умолчанию"
+  )
+}

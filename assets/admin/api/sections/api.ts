@@ -1,6 +1,7 @@
 import { request } from "@features/core"
 
-import { OrderParams, Pagination, PaginationParams } from "../common"
+import type { OrderParams, Pagination, PaginationParams } from "../common"
+import type { Article } from "../articles"
 
 export interface Section {
   id: number
@@ -10,7 +11,7 @@ export interface Section {
     description: string
     title: string
   }
-  slug: string
+  slug: Article["type"]
   updated_at: Date | string
 }
 
@@ -31,6 +32,10 @@ function get({
   })
 }
 
+function getAll() {
+  return request<{ data: Section[] }>("GET", "/sections")
+}
+
 function update(section: Section) {
   return request<Section>("PATCH", `/sections/${section.id}`, {
     data: {
@@ -41,5 +46,6 @@ function update(section: Section) {
 
 export const sectionsApi = {
   get,
+  getAll,
   update,
 }
