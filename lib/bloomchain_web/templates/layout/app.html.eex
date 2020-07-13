@@ -26,7 +26,10 @@
 
     <%= render "_critical_css.html", conn: @conn %>
 
-    <link rel= "preconnect" href="https://min-api.cryptocompare.com" />
+    <link rel= "preconnect" href="https://min-api.cryptocompare.com" crossorigin />
+    <link rel= "preconnect" href="http://cdn.embedly.com" crossorigin />
+    <link rel= "dns-prefetch" href="http://r.analytic.press" crossorigin />
+    <link rel= "dns-prefetch" href="http://d.analytic.press" crossorigin />
     <link rel="preload" href='<%= static_path(@conn, "/customer/bundle.css") %>' as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="styles.css"></noscript>
   </head>
