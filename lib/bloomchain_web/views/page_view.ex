@@ -43,7 +43,7 @@ defmodule BloomchainWeb.PageView do
         content_tag(
           :span,
           date_time_format(item.published_at),
-          class: "bc-news__time"
+          class: "bc-news__time bc-news__time--wide"
         ),
         link(
           Phoenix.HTML.raw(item.title),

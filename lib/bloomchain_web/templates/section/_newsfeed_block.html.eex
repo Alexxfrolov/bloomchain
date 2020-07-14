@@ -10,7 +10,7 @@
 
       <%= for item <- @articles[date] do %>
         <div class="bc-news__item">
-          <span class="bc-news__time"><%= formatted_time(item.published_at) %></span>
+          <span class="bc-news__time bc-news__time--short"><%= formatted_time(item.published_at) %></span>
           <%= link(raw(item.title), to: article_path(@conn, :show, "newsfeed", item.slug), class: "bc-news__title bc-article__heading font-weight-medium") %>
         </div>
       <% end %>
