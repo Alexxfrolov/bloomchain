@@ -23,11 +23,20 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="alternate" type="application/rss+xml" title="Bloomchain Лента" href="<%= rss_link(@conn) %>" />
     <link rel="icon" type="image/png" href='<%= static_path(@conn, "/customer/favicon.png") %>'>
+    <link rel= "preload" href=url('<%= static_path(@conn, "/customer/fonts/Montserrat-Regular.woff2") as="font" type="font/woff2" crossorigin="anonymooius" />
+    <link rel= "preload" href=url('<%= static_path(@conn, "/customer/fonts/Montserrat-Bold.woff2") as="font" type="font/woff2" crossorigin="anonymooius" />
+    <link rel= "preload" href=url('<%= static_path(@conn, "/customer/fonts/Montserrat-Light.woff2") as="font" type="font/woff2" crossorigin="anonymooius" />
+    <link rel= "preload" href=url('<%= static_path(@conn, "/customer/fonts/Montserrat-Medium.woff2") as="font" type="font/woff2" crossorigin="anonymooius" />
+    <link rel= "preload" href=url('<%= static_path(@conn, "/customer/fonts/Montserrat-SemiBold.woff2") as="font" type="font/woff2" crossorigin="anonymooius" />
 
     <%= render "_critical_css.html", conn: @conn %>
 
     <link rel= "preconnect" href="https://min-api.cryptocompare.com" crossorigin />
     <link rel= "preconnect" href="http://cdn.embedly.com" crossorigin />
+    <link rel= "preconnect" href="https://api-cdn.embed.ly" crossorigin />
+    <link rel= "preconnect" href="https://syndication.twitter.com" crossorigin />
+    <link rel= "preconnect" href="https://platform.twitter.com" crossorigin />
+    <link rel= "preconnect" href="https://bloomchain-cdn.s3.amazonaws.com" crossorigin />
     <link rel= "dns-prefetch" href="http://r.analytic.press" crossorigin />
     <link rel= "dns-prefetch" href="http://d.analytic.press" crossorigin />
     <link rel="preload" href='<%= static_path(@conn, "/customer/bundle.css") %>' as="style" onload="this.onload=null;this.rel='stylesheet'">
