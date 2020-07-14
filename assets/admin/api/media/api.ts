@@ -7,13 +7,14 @@ export type MediaFileType = "image" | "pdf" | "video"
 
 export interface MediaFile {
   alt: string | null
-  inserted_at: string
   id: number
-  url: string
+  inserted_at: string
   source: string | null
+  srcset?: Record<string, string>
   title: string | null
   type: MediaFileType
   updated_at: string
+  url: string
 }
 
 interface Params extends Partial<PaginationParams> {

@@ -87,21 +87,16 @@ export const config = {
   imageManagerToggleTags: false,
   imageManagerDeleteParams: "",
   videoAllowedTypes: ["mp4", "avi"],
+  imageUploadURL: "/admin/api/v1/media",
+  imageUploadParams: {
+    type: "image",
+  },
   events: {
-    "image.beforeUpload": function (fileList: FileList) {
-      const uploadImage = async () => {
-        const image = {
-          file: fileList[0],
-          type: "image",
-        }
-        const response = await mediaApi.create(image)
-
-        this.image.insert(response.data.url, false, null, this.image.get())
-        this.popups.hideAll()
-      }
-
-      uploadImage()
-
+    "image.uploaded": function (response) {
+      const { url, srcset } = JSON.parse(response)
+      const sizes=['1600w', '1000w', '600w']
+      const newSrcset = Object.values(srcset).map((item,index) => item.split(', ')[1].replace(/ 2x/, ` ${sizes[index]}`)).join(', ')
+      this.image.insert(url, false, null, this.image.get(), newSrcset)
       return false
     },
     "video.beforeUpload": function (fileList: FileList) {
