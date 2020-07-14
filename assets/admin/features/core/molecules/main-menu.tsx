@@ -106,7 +106,8 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
           <ListItem
             aria-current={
               isCurrentMenu("admin.articles.create") ||
-              isCurrentMenu("admin.articles")
+              isCurrentMenu("admin.articles") ||
+              isCurrentMenu("admin")
                 ? "page"
                 : undefined
             }

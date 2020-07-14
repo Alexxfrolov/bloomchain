@@ -36,7 +36,8 @@
     <link rel= "preconnect" href="https://api-cdn.embed.ly" crossorigin />
     <link rel= "preconnect" href="https://syndication.twitter.com" crossorigin />
     <link rel= "preconnect" href="https://platform.twitter.com" crossorigin />
-    <link rel= "preconnect" href="https://bloomchain-cdn.s3.amazonaws.com" crossorigin />
+    <link rel= "preconnect" href="https://aws.amazon.com/" crossorigin />
+    <link rel= "preconnect" href="https://unpkg.com/" crossorigin />
     <link rel= "dns-prefetch" href="http://r.analytic.press" crossorigin />
     <link rel= "dns-prefetch" href="http://d.analytic.press" crossorigin />
     <link rel="preload" href='<%= static_path(@conn, "/customer/bundle.css") %>' as="style" onload="this.onload=null;this.rel='stylesheet'">
