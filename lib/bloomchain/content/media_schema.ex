@@ -47,8 +47,7 @@ defmodule Bloomchain.Content.Media do
 
   def delete!(id) do
     item = Repo.get!(Media, id)
-    require IEx
-    IEx.pry()
+
     File.delete({item.file, item})
     Repo.delete!(item)
   end
