@@ -36,7 +36,7 @@
     <link rel= "preconnect" href="https://api-cdn.embed.ly" crossorigin />
     <link rel= "preconnect" href="https://syndication.twitter.com" crossorigin />
     <link rel= "preconnect" href="https://platform.twitter.com" crossorigin />
-    <link rel= "preconnect" href="https://aws.amazon.com/" crossorigin />
+    <link rel= "preconnect" href="https://s3.amazonaws.com" crossorigin />
     <link rel= "preconnect" href="https://unpkg.com/" crossorigin />
     <link rel= "dns-prefetch" href="http://r.analytic.press" crossorigin />
     <link rel= "dns-prefetch" href="http://d.analytic.press" crossorigin />
