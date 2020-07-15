@@ -3,8 +3,9 @@
   font-family: Montserrat;
   font-style: normal;
   font-weight: 400;
-  src: local("Montserrat"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Regular.ttf") %>') format("ttf"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Regular.woff") %>') format("woff"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Regular.woff2") %>') format("woff2");
-  font-display: swap
+  src: local("Montserrat"), local("montserrat"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Regular.ttf") %>') format("ttf"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Regular.woff2") %>') format("woff2");
+  font-display: swap;
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
 @font-face {
@@ -12,32 +13,27 @@
   font-style: normal;
   font-weight: 400;
   font-style: italic;
-  src: local("Montserrat"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Italic.ttf") %>') format("ttf"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Italic.eot") %>') format("eot"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Italic.woff") %>') format("woff"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Italic.woff2") %>') format("woff2");
-  font-display: swap
+  src: local("Montserrat"), local("montserrat"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Italic.ttf") %>') format("ttf"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Italic.woff2") %>') format("woff2");
+  font-display: swap;
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
 @font-face {
   font-family: Montserrat;
   font-style: normal;
   font-weight: 500;
-  src: local("Montserrat"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Medium.ttf") %>') format("ttf"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Medium.woff") %>') format("woff"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Medium.woff2") %>') format("woff2");
-  font-display: swap
+  src: local("Montserrat"), local("montserrat"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Medium.ttf") %>') format("ttf"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Medium.woff2") %>') format("woff2");
+  font-display: swap;
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
 @font-face {
   font-family: Montserrat;
   font-style: normal;
   font-weight: 600;
-  src: local("Montserrat"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-SemiBold.ttf") %>') format("ttf"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-SemiBold.woff") %>') format("woff"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-SemiBold.woff2") %>') format("woff2");
-  font-display: swap
-}
-
-@font-face {
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: 700;
-  src: local("Montserrat"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Bold.ttf") %>') format("ttf"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Bold.woff") %>') format("woff"), url(../fonts/Montserrat-Bold.woff2) format("woff2");
-  font-display: swap
+  src: local("Montserrat"), local("montserrat"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-SemiBold.ttf") %>') format("ttf"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-SemiBold.woff2") %>') format("woff2");
+  font-display: swap;
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
 .hamburger,
@@ -474,19 +470,21 @@ h1.highlight.highlight-date:after,
 
 .btn {
   display: inline-block;
-  font-weight: 700;
+  font-weight: 600;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
+  user-select: none;
   border: 1px solid transparent;
   text-transform: uppercase;
-  letter-spacing: .6px;
+  letter-spacing: 0.6px;
   font-style: normal;
   font-stretch: normal;
-  padding: .75rem 2rem;
-  font-size: .75rem;
+  padding: 0.75rem 2rem;
+  font-size: 0.75rem;
   line-height: 1.25rem;
-  border-radius: 0
+  border-radius: 0;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .btn-link {
@@ -501,7 +499,7 @@ h1.highlight.highlight-date:after,
 }
 
 .btn-title {
-  font-weight: 700;
+  font-weight: 600;
   color: #fff;
   background-color: #000;
   letter-spacing: .2px;
@@ -515,8 +513,8 @@ h1.highlight.highlight-date:after,
   align-items: center
 }
 
-.btn-title:after,
-.btn-title:before {
+.btn-title:before,
+.btn-title:after {
   content: '';
   display: block;
   width: 0;
@@ -524,17 +522,53 @@ h1.highlight.highlight-date:after,
   position: absolute;
   left: -10px;
   border-left: 10px solid transparent;
-  border-right: 0 solid transparent
+  border-right: 0px solid transparent;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+@media screen and (prefers-reduced-motion: reduce) {
+  .btn-title:before,
+  .btn-title:after {
+    transition: none;
+  }
 }
 
 .btn-title:before {
   border-top: 14px solid #000;
-  top: 0
+  top: 0;
 }
 
 .btn-title:after {
   border-bottom: 14px solid #000;
-  bottom: 0
+  bottom: 0;
+}
+
+.btn-title:hover {
+  color: #fff;
+  text-decoration: none;
+  background-color: #4d67ec;
+  border: none;
+}
+
+.btn-title:hover:after {
+  border-bottom-color: #4d67ec;
+}
+
+.btn-title:hover:before {
+  border-top-color: #4d67ec;
+}
+
+.btn-title:focus,
+.btn-title.focus {
+  text-decoration: none;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.btn-title:disabled,
+.btn-title.disabled {
+  color: #838383;
+  pointer-events: none;
 }
 
 .fade:not(.show) {
@@ -658,32 +692,30 @@ h1.highlight.highlight-date:after,
   flex-direction: column !important;
 }
 
-@media (min-width:768px) {
-  .navbar-expand-md {
-    flex-flow: row nowrap;
-    justify-content: flex-start
-  }
-  .navbar-expand-md .navbar-nav {
-    flex-direction: row
-  }
-  .navbar-expand-md .navbar-nav .nav-link {
-    padding-right: .8375rem;
-    padding-left: .8375rem
-  }
-  .navbar-expand-md>.container {
-    flex-wrap: nowrap
-  }
-  .navbar-expand-md .navbar-collapse {
-    display: flex!important;
-    flex-basis: auto
-  }
-  .navbar-expand-md .navbar-toggler {
-    display: none
-  }
-}
+
 
 .navbar-light .navbar-nav .nav-link {
   color: #000
+}
+
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:focus {
+  color: #2633E2;
+}
+
+.navbar-light .navbar-nav .nav-link.nav-link--active {
+  color: #2633E2;
+}
+
+.navbar-light .navbar-nav .nav-link.disabled {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.navbar-light .navbar-nav .show>.nav-link,
+.navbar-light .navbar-nav .active>.nav-link,
+.navbar-light .navbar-nav .nav-link.show,
+.navbar-light .navbar-nav .nav-link.active {
+  color: #4d67ec;
 }
 
 .navbar-light .navbar-toggler {
@@ -1008,7 +1040,7 @@ h1.highlight.highlight-date:after,
 
 .bc-article__heading {
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 600;
   color: #000;
   line-height: 1.35;
   letter-spacing: .1px
@@ -1018,6 +1050,14 @@ h1.highlight.highlight-date:after,
   .bc-article__heading {
     font-size: 16px
   }
+}
+
+.navbar>.container,
+.navbar>.container-fluid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
 }
 
 @media (min-width:768px) and (max-width:991.98px) {
@@ -1532,4 +1572,34 @@ h1.highlight.highlight-date:after,
     height: 200px
   }
 }
+
+@media (min-width:768px) {
+  .navbar-expand-md {
+    flex-flow: row nowrap;
+    justify-content: flex-start
+  }
+  .navbar-expand-md .navbar-nav {
+    flex-direction: row
+  }
+  .navbar-expand-md .navbar-nav .nav-link {
+    padding-right: .8375rem;
+    padding-left: .8375rem
+  }
+  .navbar-expand-md>.container {
+    flex-wrap: nowrap
+  }
+  .navbar-expand-md .navbar-collapse {
+    display: flex!important;
+    flex-basis: auto
+  }
+  .navbar-expand-md .navbar-toggler {
+    display: none
+  }
+}
+
+@media (min-width: 768px)
+.navbar-expand-md > .container, .navbar-expand-md > .container-fluid {
+    flex-wrap: nowrap;
+}
+
 </style>
