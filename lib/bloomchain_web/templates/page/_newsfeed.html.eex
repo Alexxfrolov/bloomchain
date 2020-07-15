@@ -1,6 +1,6 @@
 <div class="bc-news col-lg-6 mt-lg-0 mt-5">
     <h1 class="highlight">
-      Коротко
+      <%= @conn.assigns.sections["newsfeed"].name %>
       <%= link("Больше", to: section_path(@conn, :index, "newsfeed"), class: "btn btn-title") %>
     </h1>
 

@@ -1,6 +1,6 @@
 <div class="col-lg-6">
     <h1 class="highlight mb-4">
-      В Деталях
+      <%= @conn.assigns.sections["detailed"].name %>
       <%= link("Больше", to: section_path(@conn, :index, "detailed"), class: "btn btn-title") %>
     </h1>
 

@@ -1,6 +1,6 @@
 <div class="col-lg-6 mt-lg-0 mt-5">
     <h1 class="bc-article__z-index highlight mb-4">
-      События
+      <%= @conn.assigns.sections["calendar"].name %>
       <%= link("Больше", to: section_path(@conn, :index, "calendar"), class: "btn btn-title") %>
     </h1>
 
