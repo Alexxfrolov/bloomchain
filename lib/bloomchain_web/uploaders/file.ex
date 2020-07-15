@@ -33,22 +33,23 @@ defmodule BloomchainWeb.Uploaders.File do
     ]
   end
 
-  def transform(:"380", %{type: "image"}) do
+  def transform(:"380", {_, %{type: "image"}}) do
     {:convert, "-geometry 380 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
   end
 
-  def transform(:"540", %{type: "image"}) do
+  def transform(:"540", {_, %{type: "image"}}) do
     {:convert, "-geometry 540 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
   end
 
-  def transform(:"800", %{type: "image"}) do
+  def transform(:"800", {_, %{type: "image"}}) do
     {:convert, "-geometry 800 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
   end
 
-  def transform(:original, %{type: "image"}) do
+  def transform(:original, {_, %{type: "image"}}) do
     {:convert, "-geometry 800 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
   end
 
-  def transform(:original, %{type: "pdf"}), do: {:noaction}
-  def transform(_version, %{type: "pdf"}), do: {:skip}
+  def transform(:original, {_, %{type: "pdf"}}), do: :noaction
+
+  def transform(_version, {_, %{type: "pdf"}} = scope), do: :skip
 end
