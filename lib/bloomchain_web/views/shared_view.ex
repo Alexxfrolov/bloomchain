@@ -120,10 +120,12 @@ defmodule BloomchainWeb.SharedView do
   defp do_image_tag(%{cover: nil}), do: ""
 
   defp do_image_tag(%{cover: cover}) do
+    alt = if Map.has_key?(cover, :name), do: cover.alt, else: ""
+
     img_tag(File.url({cover.file, cover}, :original),
       sizes: "100vw",
       srcset: Media.srcset(cover),
-      alt: cover[:alt]
+      alt: alt
     )
   end
 
