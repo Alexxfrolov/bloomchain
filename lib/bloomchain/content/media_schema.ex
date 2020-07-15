@@ -47,10 +47,18 @@ defmodule Bloomchain.Content.Media do
 
   def delete!(id) do
     item = Repo.get!(Media, id)
-    require IEx
-    IEx.pry()
+
     File.delete({item.file, item})
     Repo.delete!(item)
+  end
+
+  def srcset(cover) do
+    [
+      File.url({cover.file, cover}, :"380") <> " 600w",
+      File.url({cover.file, cover}, :"540") <> " 1000w",
+      File.url({cover.file, cover}, :"800") <> " 1600w"
+    ]
+    |> Enum.join(", ")
   end
 
   defp check_uuid(changeset) do

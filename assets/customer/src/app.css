@@ -2383,6 +2383,8 @@ select.form-control-lg:not([size]):not([multiple]),
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
+@media only screen and (max-width:375px){.btn{padding:.75rem 1rem}}
+
 @media screen and (prefers-reduced-motion: reduce) {
   .btn {
     transition: none;

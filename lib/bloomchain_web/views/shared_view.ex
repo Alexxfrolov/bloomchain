@@ -1,6 +1,7 @@
 defmodule BloomchainWeb.SharedView do
   use BloomchainWeb, :view
 
+  alias Bloomchain.Content.Media
   alias BloomchainWeb.Uploaders.File
 
   def load_more_button(%{after: nil}) do
@@ -119,7 +120,11 @@ defmodule BloomchainWeb.SharedView do
   defp do_image_tag(%{cover: nil}), do: ""
 
   defp do_image_tag(%{cover: cover}) do
-    img_tag(File.url({cover.file, cover}))
+    img_tag(File.url({cover.file, cover}, :original),
+      sizes: "100vw",
+      srcset: Media.srcset(cover),
+      alt: ""
+    )
   end
 
   defp href_path(item), do: "/#{item.type}/#{item.slug}"

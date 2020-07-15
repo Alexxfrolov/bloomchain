@@ -1,5 +1,6 @@
 defmodule BloomchainWeb.Admin.Api.V1.MediaView do
   use BloomchainWeb, :view
+  alias Bloomchain.Content.Media
   alias BloomchainWeb.Uploaders.File
 
   def render("index.json", %{media: media, meta: meta}) do
@@ -29,6 +30,7 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
       title: media.title,
       source: media.source,
       url: File.url({media.file, media}, :original),
+      srcset: Media.srcset(media),
       inserted_at: media.inserted_at |> Timex.local(),
       updated_at: media.updated_at |> Timex.local()
     }
@@ -36,7 +38,31 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
 
   def editor_media_json(media) do
     %{
-      url: File.url({media.file, media}, :original)
+      url: File.url({media.file, media}, :original),
+      srcset: Media.srcset(media)
+    }
+  end
+
+  defp do_srcset(media) do
+    %{
+      "800px" =>
+        [
+          File.url({media.file, media}, :desktop),
+          File.url({media.file, media}, :desktop_2x) <> " 2x"
+        ]
+        |> Enum.join(", "),
+      "540px" =>
+        [
+          File.url({media.file, media}, :tablet),
+          File.url({media.file, media}, :tablet_2x) <> " 2x"
+        ]
+        |> Enum.join(", "),
+      "320px" =>
+        [
+          File.url({media.file, media}, :mobile),
+          File.url({media.file, media}, :mobile_2x) <> " 2x"
+        ]
+        |> Enum.join(", ")
     }
   end
 end
