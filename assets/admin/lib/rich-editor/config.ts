@@ -94,9 +94,7 @@ export const config = {
   events: {
     "image.uploaded": function (response) {
       const { url, srcset } = JSON.parse(response)
-      const sizes=['1600w', '1000w', '600w']
-      const newSrcset = Object.values(srcset).map((item,index) => item.split(', ')[1].replace(/ 2x/, ` ${sizes[index]}`)).join(', ')
-      this.image.insert(url, false, null, this.image.get(), newSrcset)
+      this.image.insert(url, false, null, this.image.get(), srcset)
       return false
     },
     "video.beforeUpload": function (fileList: FileList) {
