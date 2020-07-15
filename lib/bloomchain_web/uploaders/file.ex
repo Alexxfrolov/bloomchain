@@ -2,7 +2,7 @@ defmodule BloomchainWeb.Uploaders.File do
   use Waffle.Definition
   use Waffle.Ecto.Definition
 
-  @versions [:original, :mobile, :tablet, :desktop, :mobile_2x, :tablet_2x, :desktop_2x]
+  @versions [:original, :"380", :"540", :"800"]
   @acl :public_read_write
 
   def validate({file, %{type: "image"}}) do
@@ -33,27 +33,19 @@ defmodule BloomchainWeb.Uploaders.File do
     ]
   end
 
-  def transform(:mobile, _) do
-    {:convert, "-resize 50% -geometry 380 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
+  def transform(:"380", _) do
+    {:convert, "-geometry 380 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
   end
 
-  def transform(:tablet, _) do
-    {:convert, "-resize 50% -geometry 540 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
+  def transform(:"540", _) do
+    {:convert, "-geometry 540 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
   end
 
-  def transform(:desktop, _) do
-    {:convert, "-resize 50% -geometry 800 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
+  def transform(:"800", _) do
+    {:convert, "-geometry 800 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
   end
 
-  def transform(:mobile_2x, _) do
-    {:convert, "-geometry 380 -sampling-factor 4:2:0 -quality 85 -interlace JPEG"}
-  end
-
-  def transform(:tablet_2x, _) do
-    {:convert, "-geometry 540 -sampling-factor 4:2:0 -quality 85 -interlace JPEG"}
-  end
-
-  def transform(:desktop_2x, _) do
-    {:convert, "-geometry 800 -sampling-factor 4:2:0 -quality 85 -interlace JPEG"}
+  def transform(:original, _) do
+    {:convert, "-geometry 800 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
   end
 end

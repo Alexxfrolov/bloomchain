@@ -1,6 +1,7 @@
 defmodule BloomchainWeb.SharedView do
   use BloomchainWeb, :view
 
+  alias Bloomchain.Content.Media
   alias BloomchainWeb.Uploaders.File
 
   def load_more_button(%{after: nil}) do
@@ -119,38 +120,11 @@ defmodule BloomchainWeb.SharedView do
   defp do_image_tag(%{cover: nil}), do: ""
 
   defp do_image_tag(%{cover: cover}) do
-    content_tag(:picture, class: "picture") do
-      [
-        tag(:source,
-          media: "(min-width: 800px)",
-          srcset:
-            [
-              File.url({cover.file, cover}, :desktop),
-              File.url({cover.file, cover}, :desktop_2x) <> " 2x"
-            ]
-            |> Enum.join(", ")
-        ),
-        tag(:source,
-          media: "(min-width: 540px)",
-          srcset:
-            [
-              File.url({cover.file, cover}, :tablet),
-              File.url({cover.file, cover}, :tablet_2x) <> " 2x"
-            ]
-            |> Enum.join(", ")
-        ),
-        tag(:source,
-          media: "(min-width: 320px)",
-          srcset:
-            [
-              File.url({cover.file, cover}, :mobile),
-              File.url({cover.file, cover}, :mobile_2x) <> " 2x"
-            ]
-            |> Enum.join(", ")
-        ),
-        img_tag(File.url({cover.file, cover}, :original))
-      ]
-    end
+    img_tag(File.url({cover.file, cover}, :original),
+      sizes: "100vw",
+      srcset: Media.srcset(cover),
+      alt: ""
+    )
   end
 
   defp href_path(item), do: "/#{item.type}/#{item.slug}"

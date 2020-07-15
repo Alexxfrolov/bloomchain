@@ -52,6 +52,15 @@ defmodule Bloomchain.Content.Media do
     Repo.delete!(item)
   end
 
+  def srcset(cover) do
+    [
+      File.url({cover.file, cover}, :"380") <> " 600w",
+      File.url({cover.file, cover}, :"540") <> " 1000w",
+      File.url({cover.file, cover}, :"800") <> " 1600w"
+    ]
+    |> Enum.join(", ")
+  end
+
   defp check_uuid(changeset) do
     case get_field(changeset, :uuid) do
       nil ->

@@ -1,5 +1,6 @@
 defmodule BloomchainWeb.Admin.Api.V1.MediaView do
   use BloomchainWeb, :view
+  alias Bloomchain.Content.Media
   alias BloomchainWeb.Uploaders.File
 
   def render("index.json", %{media: media, meta: meta}) do
@@ -29,7 +30,7 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
       title: media.title,
       source: media.source,
       url: File.url({media.file, media}, :original),
-      srcset: do_srcset(media),
+      srcset: Media.srcset(media),
       inserted_at: media.inserted_at |> Timex.local(),
       updated_at: media.updated_at |> Timex.local()
     }
@@ -38,7 +39,7 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
   def editor_media_json(media) do
     %{
       url: File.url({media.file, media}, :original),
-      srcset: do_srcset(media)
+      srcset: Media.srcset(media)
     }
   end
 
