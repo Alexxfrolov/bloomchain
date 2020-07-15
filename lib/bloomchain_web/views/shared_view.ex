@@ -123,7 +123,7 @@ defmodule BloomchainWeb.SharedView do
     img_tag(File.url({cover.file, cover}, :original),
       sizes: "100vw",
       srcset: Media.srcset(cover),
-      alt: cover.alt
+      alt: cover[:alt]
     )
   end
 
