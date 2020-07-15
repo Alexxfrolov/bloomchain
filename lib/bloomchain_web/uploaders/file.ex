@@ -33,19 +33,22 @@ defmodule BloomchainWeb.Uploaders.File do
     ]
   end
 
-  def transform(:"380", _) do
+  def transform(:"380", %{type: "image"}) do
     {:convert, "-geometry 380 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
   end
 
-  def transform(:"540", _) do
+  def transform(:"540", %{type: "image"}) do
     {:convert, "-geometry 540 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
   end
 
-  def transform(:"800", _) do
+  def transform(:"800", %{type: "image"}) do
     {:convert, "-geometry 800 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
   end
 
-  def transform(:original, _) do
+  def transform(:original, %{type: "image"}) do
     {:convert, "-geometry 800 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
   end
+
+  def transform(:original, %{type: "pdf"}), do: {:noaction}
+  def transform(_version, %{type: "pdf"}), do: {:skip}
 end

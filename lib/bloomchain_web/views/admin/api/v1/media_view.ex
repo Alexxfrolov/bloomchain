@@ -22,7 +22,18 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
     nil
   end
 
-  def media_json(media) do
+  def media_json(%{type: "image"} = media) do
+    media
+    |> do_media_json
+    |> Map.merge(%{srcset: Media.srcset(media)})
+  end
+
+  def media_json(%{type: "pdf"} = media) do
+    media
+    |> do_media_json
+  end
+
+  def do_media_json(media) do
     %{
       id: media.id,
       type: media.type,
@@ -30,9 +41,8 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
       title: media.title,
       source: media.source,
       url: File.url({media.file, media}, :original),
-      srcset: Media.srcset(media),
-      inserted_at: media.inserted_at |> Timex.local(),
-      updated_at: media.updated_at |> Timex.local()
+      inserted_at: media.inserted_at,
+      updated_at: media.updated_at
     }
   end
 
@@ -40,29 +50,6 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
     %{
       url: File.url({media.file, media}, :original),
       srcset: Media.srcset(media)
-    }
-  end
-
-  defp do_srcset(media) do
-    %{
-      "800px" =>
-        [
-          File.url({media.file, media}, :desktop),
-          File.url({media.file, media}, :desktop_2x) <> " 2x"
-        ]
-        |> Enum.join(", "),
-      "540px" =>
-        [
-          File.url({media.file, media}, :tablet),
-          File.url({media.file, media}, :tablet_2x) <> " 2x"
-        ]
-        |> Enum.join(", "),
-      "320px" =>
-        [
-          File.url({media.file, media}, :mobile),
-          File.url({media.file, media}, :mobile_2x) <> " 2x"
-        ]
-        |> Enum.join(", ")
     }
   end
 end

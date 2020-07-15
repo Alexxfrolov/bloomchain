@@ -22,8 +22,8 @@ defmodule BloomchainWeb.Admin.Api.V1.AuthorView do
     %{
       id: author.id,
       name: author.name,
-      inserted_at: author.inserted_at |> Timex.local(),
-      updated_at: author.updated_at |> Timex.local()
+      inserted_at: author.inserted_at,
+      updated_at: author.updated_at
     }
   end
 end
