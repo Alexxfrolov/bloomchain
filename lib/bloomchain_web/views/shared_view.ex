@@ -122,11 +122,13 @@ defmodule BloomchainWeb.SharedView do
   defp do_image_tag(%{cover: cover}) do
     alt = if Map.has_key?(cover, :name), do: cover.alt, else: ""
 
-    img_tag(File.url({cover.file, cover}, :original),
-      sizes: "100vw",
-      srcset: Media.srcset(cover),
-      alt: alt
-    )
+    content_tag(:picture) do
+      [
+        tag(:source, type: "image/webp", sizes: "100vw", srcset: Media.srcset(cover, :webp)),
+        tag(:source, type: "image/jp2", sizes: "100vw", srcset: Media.srcset(cover, :jp2)),
+        img_tag(File.url({cover.file, cover}, :original), alt: alt)
+      ]
+    end
   end
 
   defp href_path(item), do: "/#{item.type}/#{item.slug}"

@@ -61,6 +61,24 @@ defmodule Bloomchain.Content.Media do
     |> Enum.join(", ")
   end
 
+  def srcset(cover, :webp) do
+    [
+      File.url({cover.file, cover}, :"380_webp") <> " 600w",
+      File.url({cover.file, cover}, :"540_webp") <> " 1000w",
+      File.url({cover.file, cover}, :"800_webp") <> " 1600w"
+    ]
+    |> Enum.join(", ")
+  end
+
+  def srcset(cover, :jp2) do
+    [
+      File.url({cover.file, cover}, :"380_jp2") <> " 600w",
+      File.url({cover.file, cover}, :"540_jp2") <> " 1000w",
+      File.url({cover.file, cover}, :"800_jp2") <> " 1600w"
+    ]
+    |> Enum.join(", ")
+  end
+
   defp check_uuid(changeset) do
     case get_field(changeset, :uuid) do
       nil ->

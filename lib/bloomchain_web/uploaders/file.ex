@@ -2,7 +2,18 @@ defmodule BloomchainWeb.Uploaders.File do
   use Waffle.Definition
   use Waffle.Ecto.Definition
 
-  @versions [:original, :"380", :"540", :"800"]
+  @versions [
+    :original,
+    :"380",
+    :"540",
+    :"800",
+    :"380_webp",
+    :"540_webp",
+    :"800_webp",
+    :"380_jp2",
+    :"540_jp2",
+    :"800_jp2"
+  ]
   @acl :public_read_write
 
   def validate({file, %{type: "image"}}) do
@@ -29,7 +40,7 @@ defmodule BloomchainWeb.Uploaders.File do
     [
       content_type: MIME.from_path(file.file_name),
       content_disposition: "inline; filename=\"#{file.file_name}\"",
-      cache_control: "public, max-age=86400"
+      cache_control: "immutable"
     ]
   end
 
@@ -45,8 +56,32 @@ defmodule BloomchainWeb.Uploaders.File do
     {:convert, "-geometry 800 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
   end
 
+  def transform(:"380_webp", {_, %{type: "image"}}) do
+    {:convert, "-quality 40 -geometry 380", :webp}
+  end
+
+  def transform(:"540_webp", {_, %{type: "image"}}) do
+    {:convert, "-quality 40 -geometry 540", :webp}
+  end
+
+  def transform(:"800_webp", {_, %{type: "image"}}) do
+    {:convert, "-quality 40 -geometry 800", :webp}
+  end
+
+  def transform(:"380_jp2", {_, %{type: "image"}}) do
+    {:convert, "-quality 40 -geometry 380", :jp2}
+  end
+
+  def transform(:"540_jp2", {_, %{type: "image"}}) do
+    {:convert, "-quality 40 -geometry 540", :jp2}
+  end
+
+  def transform(:"800_jp2", {_, %{type: "image"}}) do
+    {:convert, "-quality 40 -geometry 800", :jp2}
+  end
+
   def transform(:original, {_, %{type: "image"}}) do
-    {:convert, "-geometry 800 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
+    {:convert, "-sampling-factor 4:2:0 -quality 80 -interlace JPEG"}
   end
 
   def transform(:original, {_, %{type: "pdf"}}), do: :noaction
