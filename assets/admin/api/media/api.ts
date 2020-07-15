@@ -10,7 +10,7 @@ export interface MediaFile {
   id: number
   inserted_at: string
   source: string | null
-  srcset?: string[]
+  srcset?: string
   title: string | null
   type: MediaFileType
   updated_at: string
