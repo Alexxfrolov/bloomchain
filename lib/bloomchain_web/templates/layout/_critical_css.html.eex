@@ -5,7 +5,7 @@
   font-weight: 400;
   src: local("Montserrat"), local("montserrat"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Regular.ttf") %>') format("ttf"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Regular.woff2") %>') format("woff2");
   font-display: swap;
-  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+  unicode-range: U+0410-044FF, U+0020-007F;
 }
 
 @font-face {
@@ -15,7 +15,7 @@
   font-style: italic;
   src: local("Montserrat"), local("montserrat"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Italic.ttf") %>') format("ttf"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Italic.woff2") %>') format("woff2");
   font-display: swap;
-  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+  unicode-range: U+0410-044FF, U+0020-007F;
 }
 
 @font-face {
@@ -24,7 +24,7 @@
   font-weight: 500;
   src: local("Montserrat"), local("montserrat"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Medium.ttf") %>') format("ttf"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-Medium.woff2") %>') format("woff2");
   font-display: swap;
-  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+  unicode-range: U+0410-044FF, U+0020-007F;
 }
 
 @font-face {
@@ -33,7 +33,7 @@
   font-weight: 600;
   src: local("Montserrat"), local("montserrat"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-SemiBold.ttf") %>') format("ttf"), url('<%= static_path(@conn, "/customer/fonts/Montserrat-SemiBold.woff2") %>') format("woff2");
   font-display: swap;
-  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+  unicode-range: U+0410-044FF, U+0020-007F;
 }
 
 .hamburger,
@@ -1046,6 +1046,10 @@ h1.highlight.highlight-date:after,
   letter-spacing: .1px
 }
 
+.bc-article__heading:hover {
+  color: #2633E2;
+}
+
 @media (min-width:992px) and (max-width:1199.98px) {
   .bc-article__heading {
     font-size: 16px
@@ -1069,12 +1073,9 @@ h1.highlight.highlight-date:after,
     padding-right: .625rem;
     padding-left: .625rem
   }
-  .bc-article__heading {
-    font-size: 14px
-  }
 }
 
-@media (min-width:576px) and (max-width:767.98px) {
+@media (min-width:576px) and (max-width:991.98px) {
   .bc-article__heading {
     font-size: 14px
   }

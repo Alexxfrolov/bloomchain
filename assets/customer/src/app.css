@@ -2571,18 +2571,6 @@ button.close {
   }
 }
 
-.bc-article__heading {
-  font-size: 18px;
-  font-weight: 600;
-  color: #000;
-  line-height: 1.35;
-  letter-spacing: 0.1px;
-}
-
-.bc-article__heading:hover {
-  color: #2633E2;
-}
-
 .bc-article__heading__h2 {
   font-size: 26px !important;
 }
@@ -2608,30 +2596,6 @@ button.close {
 @media (max-width: 575.98px) {
   .bc-article__heading__h2 {
     font-size: 14px !important;
-  }
-}
-
-@media (min-width: 992px) and (max-width: 1199.98px) {
-  .bc-article__heading {
-    font-size: 16px;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 991.98px) {
-  .bc-article__heading {
-    font-size: 14px;
-  }
-}
-
-@media (min-width: 576px) and (max-width: 767.98px) {
-  .bc-article__heading {
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .bc-article__heading {
-    font-size: 14px;
   }
 }
 
