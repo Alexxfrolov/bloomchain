@@ -40,7 +40,7 @@ defmodule BloomchainWeb.Uploaders.File do
     [
       content_type: MIME.from_path(file.file_name),
       content_disposition: "inline; filename=\"#{file.file_name}\"",
-      cache_control: "immutable"
+      cache_control: "max-age=31536000, immutable"
     ]
   end
 
