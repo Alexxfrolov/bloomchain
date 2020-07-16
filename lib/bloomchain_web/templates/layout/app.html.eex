@@ -41,6 +41,7 @@
     <link rel= "dns-prefetch" href="http://r.analytic.press" crossorigin />
     <link rel= "dns-prefetch" href="http://d.analytic.press" crossorigin />
     <link rel="preload" href='<%= static_path(@conn, "/customer/bundle.css") %>' as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="script" src='<%= static_path(@conn, "/customer/bundle.js") %>'></link>
     <noscript><link rel="stylesheet" href="styles.css"></noscript>
   </head>
   <body class="bg-light">
@@ -53,12 +54,17 @@
     <%= render "_footer.html", conn: @conn %>
     <%= render "_privacy_police_dialog.html", conn: @conn %>
 
-    <script src='<%= static_path(@conn, "/customer/bundle.js") %>' rel="preload" as="script"></script>
     <script src="https://unpkg.com/quicklink@2.0.0/dist/quicklink.umd.js" defer></script>
     <script>
       window.addEventListener('load', () =>{
         quicklink.listen();
       });
+    </script>
+    <script>
+      var script = document.createElement("script");
+      script.src = '<%= static_path(@conn, "/customer/bundle.js") %>';
+      script.defer = true;
+      document.body.appendChild(script);
     </script>
   </body>
 </html>
