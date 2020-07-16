@@ -39,7 +39,8 @@ defmodule BloomchainWeb.LayoutView do
   end
 
   def meta(:og_image, assigns) do
-    assigns[:og_image] || get_in(assigns, [:article, :seo_settings, "og_image"]) || ""
+    assigns[:og_image] || get_in(assigns, [:article, :seo_settings, "og_image"]) ||
+      "/customer/static/images/logo.svg"
   end
 
   def meta(:twitter_title, assigns) do
@@ -55,7 +56,8 @@ defmodule BloomchainWeb.LayoutView do
   end
 
   def meta(:twitter_image, assigns) do
-    assigns[:twitter_image] || get_in(assigns, [:article, :seo_settings, "twitter_image"]) || ""
+    assigns[:twitter_image] || get_in(assigns, [:article, :seo_settings, "twitter_image"]) ||
+      "/customer/static/images/logo.svg"
   end
 
   def rss_link(conn) do
