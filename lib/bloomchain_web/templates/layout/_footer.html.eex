@@ -37,7 +37,7 @@
           <img
             class="bc-footer__img js-lazy"
             data-src='<%= static_path(@conn, "/customer/images/logo-white.svg") %>'
-            src='<%= static_path(@conn, "/customer/images/footer_logo_placeholder.png") %>'
+            src='<%= static_path(@conn, "/customer/images/footer_logo_placeholder.jpg") %>'
           >
         </a>
       </div>
