@@ -66,5 +66,33 @@
       script.defer = true;
       document.body.appendChild(script);
     </script>
+    <script>
+      function imageLazyLoad(entries, imgObserver) {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.target.tagName === 'IMG') {
+            const lazyImage = entry.target
+            lazyImage.src = lazyImage.dataset.src
+            return
+          }
+
+          if (entry.isIntersecting && entry.target.tagName === 'PICTURE') {
+            const lazyPicture = entry.target
+            const sources = lazyPicture.querySelectorAll('source')
+            sources.forEach(source => {
+              source.srcset = source.dataset.srcset
+            })
+          }
+        })
+      }
+
+      const imageObserver = new IntersectionObserver(imageLazyLoad);
+
+      document.addEventListener("DOMContentLoaded", function() {
+        const images = document.querySelectorAll('.js-lazy')
+        images.forEach((image) => {
+          imageObserver.observe(image);
+        })
+      })
+    </script>
   </body>
 </html>

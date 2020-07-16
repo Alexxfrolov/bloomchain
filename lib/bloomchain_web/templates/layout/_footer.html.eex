@@ -33,7 +33,13 @@
   <div class="bc-footer__info container mt-4 pt-2 pb-5">
     <div class="row">
       <div class="bc-footer__logo col-xl-3 col-lg-3 col-md-3">
-        <img class="bc-footer__img" src="/customer/images/logo-white.svg">
+        <a href="/">
+          <img
+            class="bc-footer__img js-lazy"
+            data-src='<%= static_path(@conn, "/customer/images/logo-white.svg") %>'
+            src='<%= static_path(@conn, "/customer/images/footer_logo_placeholder.png") %>'
+          >
+        </a>
       </div>
       <div class="bc-footer__links col-xl-6 col-lg-5 col-md-6">
         <div class="row no-gutters flex-column flex-sm-row">

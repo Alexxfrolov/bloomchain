@@ -6,7 +6,9 @@ import "./app.css"
 
 const subscription = new Subscription()
 
-document.addEventListener("DOMContentLoaded", () => {
+if (document.readyState === "complete" || document.readyState !== "loading") {
+  Sharer.init()
+
   subscription.init()
 
   const throwback_buttons = document.querySelectorAll(".js-throwback")
@@ -98,15 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     }
   }
-})
 
-if (document.readyState === "complete" || document.readyState !== "loading") {
-  Sharer.init()
-} else {
-  document.addEventListener("DOMContentLoaded", Sharer.init)
-}
-
-document.addEventListener("DOMContentLoaded", () => {
   const search_button_open = document.querySelector(".js-open-search-button")
   const header_nav = document.querySelector(".bc-header__nav")
   const search_form = document.querySelector(".js-search-form")
@@ -215,4 +209,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     menu.classList.toggle("show")
   })
-})
+} else {
+  document.addEventListener("DOMContentLoaded", Sharer.init)
+}

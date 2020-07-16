@@ -1,7 +1,7 @@
 <header class="bc-header navbar navbar-expand-md navbar-light">
   <div class="container py-2 py-md-4">
     <a href="/">
-      <img class="bc-header__logo" src="/customer/images/logo.svg">
+      <img class="bc-header__logo" src='<%= static_path(@conn, "/customer/images/logo.svg") %>'>
     </a>
     <div class="d-none d-md-block">
       <div class="bc-header__converter">
