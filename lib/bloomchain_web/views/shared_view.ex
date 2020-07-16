@@ -134,13 +134,21 @@ defmodule BloomchainWeb.SharedView do
           srcset: "/customer/images/cover_placeholder.jp2",
           data_srcset: Media.srcset(cover, :jp2)
         ),
-        img_tag(File.url({cover.file, cover}, :original), alt: cover[:alt], class: "js-lazy")
+        img_tag("/customer/images/cover_placeholder.png",
+          data_src: File.url({cover.file, cover}, :original),
+          alt: cover[:alt],
+          class: "js-lazy"
+        )
       ]
     end
   end
 
   defp do_image_tag(%{cover: cover}) do
-    img_tag(File.url({cover.file, cover}, :original), alt: cover[:alt])
+    img_tag("/customer/images/cover_placeholder.png",
+      data_src: File.url({cover.file, cover}, :original),
+      alt: cover[:alt],
+      class: "js-lazy"
+    )
   end
 
   defp href_path(item), do: "/#{item.type}/#{item.slug}"
