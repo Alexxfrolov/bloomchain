@@ -9,6 +9,12 @@ defmodule Bloomchain.Content.Media do
   alias Bloomchain.Content.{Media}
   alias BloomchainWeb.Uploaders.File
 
+  def fetch(term, key) do
+    term
+    |> Map.from_struct()
+    |> Map.fetch(key)
+  end
+
   schema "media" do
     field(:file, File.Type)
     field(:uuid, :string)

@@ -6,7 +6,9 @@ import "./app.css"
 
 const subscription = new Subscription()
 
-document.addEventListener("DOMContentLoaded", () => {
+if (document.readyState === "complete" || document.readyState !== "loading") {
+  Sharer.init()
+
   subscription.init()
 
   const throwback_buttons = document.querySelectorAll(".js-throwback")
@@ -98,16 +100,8 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     }
   }
-})
 
-if (document.readyState === "complete" || document.readyState !== "loading") {
-  Sharer.init()
-} else {
-  document.addEventListener("DOMContentLoaded", Sharer.init)
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const search_button_open = document.querySelector(".js-open-search-button")
+  const search_button_open = document.querySelectorAll(".js-open-search-button")
   const header_nav = document.querySelector(".bc-header__nav")
   const search_form = document.querySelector(".js-search-form")
   const search_field_input = search_form.querySelector('input[type="search"]')
@@ -164,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
   Array.from(document.getElementsByClassName("js-close-search-button")).forEach(
     (element) =>
       element.addEventListener("click", function (event) {
-        search_button_open.style.display = ""
+        search_button_open.forEach((node) => (node.style.display = ""))
         header_nav.style.display = ""
         Array.from(
           document.getElementsByClassName("js-search-container"),
@@ -177,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
           search_form.classList.toggle(cssClass),
         )
         ;["pr-0", "px-0"].forEach((cssClass) =>
-          search_button_open.classList.toggle(cssClass),
+          search_button_open.forEach((node) => node.classList.toggle(cssClass)),
         )
 
         if (
@@ -215,4 +209,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     menu.classList.toggle("show")
   })
-})
+} else {
+  document.addEventListener("DOMContentLoaded", Sharer.init)
+}
