@@ -91,6 +91,8 @@ export const MediaUploadForm = memo(function MediaUploadForm(
         .then((response) =>
           setState((state) => ({ ...state, uploadedFile: response.data })),
         )
+    } else {
+      setState((state) => ({ ...state, uploadedFile: null }))
     }
   }, [cover_id])
 
