@@ -132,7 +132,7 @@ export function ActicleEditPage() {
             keywords:
               typeof seo_settings.keywords === "string"
                 ? seo_settings.keywords.split(/[ ,]+/)
-                : [],
+                : seo_settings.keywords,
           },
         }
 
