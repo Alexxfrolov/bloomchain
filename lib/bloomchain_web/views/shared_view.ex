@@ -134,7 +134,7 @@ defmodule BloomchainWeb.SharedView do
           srcset: "/customer/images/cover_placeholder.jp2",
           data_srcset: Media.srcset(cover, :jp2)
         ),
-        img_tag("/customer/images/cover_placeholder.png",
+        img_tag("/customer/images/cover_placeholder.jpg",
           data_src: File.url({cover.file, cover}, :original),
           alt: cover[:alt],
           class: "js-lazy"
@@ -143,9 +143,10 @@ defmodule BloomchainWeb.SharedView do
     end
   end
 
+  # remove this func after all media is reloaded
   defp do_image_tag(%{cover: cover}) do
     img_tag("/customer/images/cover_placeholder.jpg",
-      data_src: File.url({cover.file, cover}),
+      data_src: File.url({cover.file, cover}, :original),
       alt: cover[:alt],
       class: "js-lazy"
     )
