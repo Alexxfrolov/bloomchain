@@ -32,7 +32,7 @@ defmodule BloomchainWeb.Uploaders.File do
     Path.basename(file_name, Path.extname(file_name))
   end
 
-  def filename(version, {_file, scope}) do
+  def filename(version, {_file, _scope}) do
     version
   end
 
@@ -90,5 +90,5 @@ defmodule BloomchainWeb.Uploaders.File do
 
   def transform(:original, {_, %{type: "pdf"}}), do: :noaction
 
-  def transform(_version, {_, %{type: "pdf"}} = scope), do: :skip
+  def transform(_version, {_, %{type: "pdf"}}), do: :skip
 end
