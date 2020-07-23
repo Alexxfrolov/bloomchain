@@ -51,7 +51,7 @@ defmodule Bloomchain.Mixfile do
       {:httpoison, "~> 1.6"},
 
       # scheduler for cronjobs
-      {:quantum, "~> 3.0-rc"},
+      {:quantum, "~> 3.0"},
 
       # User authentication
       {:guardian, "~> 2.0"},

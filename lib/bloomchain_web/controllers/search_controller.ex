@@ -5,6 +5,8 @@ defmodule BloomchainWeb.SearchController do
 
   @size 6
 
+  @size 6
+
   def index(conn, %{query: query, scroll: scroll}) do
     %{entries: articles, metadata: meta} = do_query(query, scroll) |> ES.search()
 
