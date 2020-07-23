@@ -173,15 +173,16 @@ defmodule Bloomchain.Content.Post do
       keywords: seo[:keywords] || [],
       # twitter fields
       twitter_card: seo[:twitter_card] || "summary_large_image",
-      twitter_description: seo[:twitter_description] || seo[:description] || changes[:lead],
-      twitter_title: seo[:twitter_title] || title,
       twitter_creator: seo[:twitter_creator] || "@BloomChainNews",
       twitter_site: seo[:twitter_site] || "@BloomChainNews",
-      twitter_image: seo[:twitter_image] || cover_url,
+      # meta fields for social nets
+      twitter_title: seo[:og_title] || title,
+      twitter_description: seo[:og_description] || seo[:description] || changes[:lead],
+      twitter_image: cover_url,
       # open graph fields
       og_title: seo[:og_title] || title,
       og_description: seo[:og_description] || seo[:description] || changes[:lead],
-      og_image: seo[:og_image] || cover_url,
+      og_image: cover_url,
       og_type: seo[:og_type] || "article"
     }
 
