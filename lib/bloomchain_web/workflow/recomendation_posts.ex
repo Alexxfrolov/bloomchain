@@ -13,6 +13,8 @@ defmodule BloomchainWeb.Workflow.RecomendationPosts do
     |> ES.search()
   end
 
+  def run([]), do: %{entries: [], metadata: %{error: true, after: nil}}
+
   def run(post) do
     %{ids: [post.id], types: [post.type], tags: post.tags}
     |> do_query()

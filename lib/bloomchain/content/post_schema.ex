@@ -156,8 +156,7 @@ defmodule Bloomchain.Content.Post do
   defp process_authors(changeset, _), do: changeset
 
   defp process_seo(
-         %Ecto.Changeset{valid?: true, changes: %{title: title, seo_settings: seo} = changes} =
-           changeset
+         %Ecto.Changeset{valid?: true, changes: %{seo_settings: seo} = changes} = changeset
        ) do
     cover_url =
       if changes[:cover_id] do
@@ -176,11 +175,11 @@ defmodule Bloomchain.Content.Post do
       twitter_creator: seo[:twitter_creator] || "@BloomChainNews",
       twitter_site: seo[:twitter_site] || "@BloomChainNews",
       # meta fields for social nets
-      twitter_title: seo[:og_title] || title,
+      twitter_title: seo[:og_title] || changes[:title],
       twitter_description: seo[:og_description] || seo[:description] || changes[:lead],
       twitter_image: cover_url,
       # open graph fields
-      og_title: seo[:og_title] || title,
+      og_title: seo[:og_title] || changes[:title],
       og_description: seo[:og_description] || seo[:description] || changes[:lead],
       og_image: cover_url,
       og_type: seo[:og_type] || "article"
