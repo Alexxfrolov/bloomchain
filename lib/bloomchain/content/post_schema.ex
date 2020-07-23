@@ -177,11 +177,11 @@ defmodule Bloomchain.Content.Post do
       # meta fields for social nets
       twitter_title: seo[:og_title] || changes[:title],
       twitter_description: seo[:og_description] || seo[:description] || changes[:lead],
-      twitter_image: cover_url,
+      twitter_image: cover_url || seo[:twitter_image],
       # open graph fields
       og_title: seo[:og_title] || changes[:title],
       og_description: seo[:og_description] || seo[:description] || changes[:lead],
-      og_image: cover_url,
+      og_image: cover_url || seo[:og_image],
       og_type: seo[:og_type] || "article"
     }
 
