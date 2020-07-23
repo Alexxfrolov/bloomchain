@@ -145,7 +145,7 @@ defmodule BloomchainWeb.SharedView do
 
   defp do_image_tag(%{cover: cover}) do
     img_tag("/customer/images/cover_placeholder.jpg",
-      data_src: File.url({cover.file, cover}, :original),
+      data_src: File.url({cover.file, cover}),
       alt: cover[:alt],
       class: "js-lazy"
     )
