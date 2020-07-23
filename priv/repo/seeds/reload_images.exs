@@ -35,7 +35,8 @@ from(
 |> Task.async_stream(&convert_images.(&1),
   timeout: 15_000,
   on_timeout: :kill_task,
-  ordered: false
+  ordered: false,
+  max_concurrency: 1
 )
 |> Enum.to_list()
 
