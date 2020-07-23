@@ -43,7 +43,7 @@
       </div>
       <div class="bc-footer__links col-xl-6 col-lg-5 col-md-6">
         <div class="row no-gutters flex-column flex-sm-row">
-          <a class="bc-footer__link" target="_blank" href="https://bloomchain-cdn.s3.amazonaws.com/uploads/pdf/5ae3ffb6-b07d-11ea-a5de-0242ac130004/BloomChain-Mediakit-2019.pdf?v=63759605503">Медиа-кит</a>
+          <a class="bc-footer__link" target="_blank" href="https://bloomchain-cdn.s3.amazonaws.com/uploads/pdf/5ae3ffb6-b07d-11ea-a5de-0242ac130004/BloomChain-Mediakit-2019.pdf?v=63759605503">Реклама на сайте</a>
           <a class="bc-footer__link" target="_blank" href="mailto:contact@bloomchain.ru">contact@bloomchain.ru</a>
           <a class="bc-footer__link" target="_blank" href="tel:+79516564156">+7 (951) 656-41-56</a>
           <a class="bc-footer__link" target="_blank" href="<%= rss_link(@conn) %>">RSS</a>

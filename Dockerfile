@@ -11,6 +11,8 @@ RUN \
     wget \
     curl \
     inotify-tools \
+    file \
+    imagemagick \
     nodejs \
     nodejs-npm && \
     npm install npm -g --no-progress && \
