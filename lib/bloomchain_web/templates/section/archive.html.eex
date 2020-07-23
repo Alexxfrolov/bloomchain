@@ -4,8 +4,7 @@
       <%= for item <- @data do %>
         <p>
           <%=
-            File.url({item.cover.file, item.cover})
-            |> img_tag(class: "alignnone size-full")
+            SharedView.image_tag(item)
             |> link(to: File.url({item.pdf.file, item.pdf}), target: "_blank")
           %>
         </p>

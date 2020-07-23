@@ -38,7 +38,7 @@ defmodule BloomchainWeb.SharedView do
     content_tag(:a, class: "bc-article__overlay-link", href: href_path(item)) do
       content_tag(:div, class: "bc-article__image") do
         [
-          do_image_tag(item),
+          image_tag(item),
           content_tag(:p, Phoenix.HTML.raw(item.title), class: "line-clamp line-clamp__size_2"),
           content_tag(:div, class: "d-flex align-items-center") do
             article_attrs(item)
@@ -117,9 +117,9 @@ defmodule BloomchainWeb.SharedView do
     item.authors |> Enum.map(fn i -> i.name end) |> Enum.join(", ")
   end
 
-  defp do_image_tag(%{cover: nil}), do: ""
+  def image_tag(%{cover: nil}), do: ""
 
-  defp do_image_tag(%{cover: %{reloaded: true} = cover}) do
+  def image_tag(%{cover: %{reloaded: true} = cover}) do
     content_tag(:picture, class: "js-lazy") do
       [
         tag(:source,
@@ -144,7 +144,7 @@ defmodule BloomchainWeb.SharedView do
   end
 
   # remove this func after all media is reloaded
-  defp do_image_tag(%{cover: cover}) do
+  def image_tag(%{cover: cover}) do
     img_tag("/customer/images/cover_placeholder.jpg",
       data_src: File.url({cover.file, cover}, :original),
       alt: cover[:alt],
