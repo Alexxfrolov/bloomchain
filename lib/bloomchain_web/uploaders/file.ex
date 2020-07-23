@@ -2,18 +2,18 @@ defmodule BloomchainWeb.Uploaders.File do
   use Waffle.Definition
   use Waffle.Ecto.Definition
 
-  @versions [
-    :original,
-    :"380",
-    :"540",
-    :"800",
-    :"380_webp",
-    :"540_webp",
-    :"800_webp",
-    :"380_jp2",
-    :"540_jp2",
-    :"800_jp2"
-  ]
+  # @versions [
+  #   :original,
+  #   :"380",
+  #   :"540",
+  #   :"800",
+  #   :"380_webp",
+  #   :"540_webp",
+  #   :"800_webp",
+  #   :"380_jp2",
+  #   :"540_jp2",
+  #   :"800_jp2"
+  # ]
   @acl :public_read_write
 
   def validate({file, %{type: "image"}}) do
@@ -28,9 +28,9 @@ defmodule BloomchainWeb.Uploaders.File do
     ~w(.mp4 .avi) |> Enum.member?(String.downcase(Path.extname(file.file_name)))
   end
 
-  def filename(version, _) do
-    version
-  end
+  # def filename(version, _) do
+  #   version
+  # end
 
   def storage_dir(_version, {_file, scope}) do
     "uploads/#{scope.type}/#{scope.uuid}"
