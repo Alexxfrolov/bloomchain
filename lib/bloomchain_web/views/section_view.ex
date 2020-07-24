@@ -33,7 +33,7 @@ defmodule BloomchainWeb.SectionView do
   end
 
   # used for archives
-  def image_tag(%{cover: %{reloaded: true} = cover}, class: class) do
+  def image_tag(%{cover: cover}, class: class) do
     content_tag(:picture) do
       [
         tag(:source,

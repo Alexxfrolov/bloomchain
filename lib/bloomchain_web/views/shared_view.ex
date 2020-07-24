@@ -119,7 +119,7 @@ defmodule BloomchainWeb.SharedView do
 
   def image_tag(%{cover: nil}), do: ""
 
-  def image_tag(%{cover: %{reloaded: true} = cover}) do
+  def image_tag(%{cover: cover}) do
     content_tag(:picture, class: "js-lazy") do
       [
         tag(:source,
@@ -141,15 +141,6 @@ defmodule BloomchainWeb.SharedView do
         )
       ]
     end
-  end
-
-  # remove this func after all media is reloaded
-  def image_tag(%{cover: cover}) do
-    img_tag("/customer/images/cover_placeholder.jpg",
-      data_src: File.url({cover.file, cover}, :original),
-      alt: cover[:alt],
-      class: "js-lazy"
-    )
   end
 
   defp href_path(item), do: "/#{item.type}/#{item.slug}"
