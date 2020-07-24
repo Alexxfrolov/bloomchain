@@ -38,7 +38,7 @@ RUN mix do local.hex --force, local.rebar --force
 
 WORKDIR /opt/app
 
-RUN mix do deps.get, deps.compile, ecto.migrate, mix run priv/repo/seeds.exs
+RUN mix do deps.get, deps.compile
 
 WORKDIR /opt/app/assets
 
@@ -49,3 +49,5 @@ WORKDIR /opt/app
 
 RUN mix compile
 RUN mix phx.digest
+RUN mix ecto.migrate
+RUN mix run priv/repo/seeds.exs
