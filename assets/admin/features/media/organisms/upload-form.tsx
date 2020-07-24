@@ -91,6 +91,8 @@ export const MediaUploadForm = memo(function MediaUploadForm(
         .then((response) =>
           setState((state) => ({ ...state, uploadedFile: response.data })),
         )
+    } else {
+      setState((state) => ({ ...state, uploadedFile: null }))
     }
   }, [cover_id])
 
@@ -332,8 +334,8 @@ const useStyles = makeStyles((theme) =>
       transform: "translateZ(0)",
     },
     img: {
-      maxWidth: "100%",
-      maxHeight: "250px",
+      maxWidth: "200px",
+      maxHeight: "200px",
       objectFit: "contain",
     },
     titleBar: {

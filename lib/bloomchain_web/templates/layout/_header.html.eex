@@ -1,7 +1,7 @@
 <header class="bc-header navbar navbar-expand-md navbar-light">
   <div class="container py-2 py-md-4">
     <a href="/">
-      <img class="bc-header__logo" src="/customer/images/logo.svg">
+      <img class="bc-header__logo" src='<%= static_path(@conn, "/customer/images/logo.svg") %>'>
     </a>
     <div class="d-none d-md-block">
       <div class="bc-header__converter">
@@ -37,28 +37,28 @@
       <a class="icon-tg ml-3" href="tg://resolve?domain=bloomchain" target="_blank"></a>
       <a class="icon-tw ml-3" href="https://twitter.com/BloomChainNews" target="_blank"></a>
     </div>
-    <div class="d-inline-flex d-md-none">
-      <button type="button" class="bc-header__search__icon bc-header__search__icon_mobile btn-link nav-link px-0">
+    <div class="d-inline-flex d-md-none js-search-container">
+      <button type="button" class="bc-header__search__icon bc-header__search__icon_mobile btn-link nav-link px-0 js-open-search-button js-mobile-open-search-button">
         <i class="icon-search"></i>
       </button>
 
-      <%= form_for @conn, search_path(@conn, :index), [method: :get, class: "bc-header__search__box bc-header__search__box_mobile d-none"], fn f-> %>
+      <%= form_for @conn, search_path(@conn, :index), [method: :get, class: "bc-header__search__box bc-header__search__box_mobile d-none js-mobile-search-form"], fn f-> %>
 
-        <%= submit class: "bc-header__search__icon btn-link nav-link pr-0" do %>
+        <%= submit class: "bc-header__search__icon btn-link nav-link pr-0 js-mobile-search-icon" do %>
           <i class="icon-search"></i>
         <% end %>
 
         <%= text_input f, :query, placeholder: "Поиск по сайту", aria_label: "Search", type: "search", class: "bc-header__search__input_mobile form-control" %>
 
-        <a class="bc-header__search__close bc-header__search__close_mobile hamburger hamburger--slider-r is-active">
+        <button type="button" class="bc-header__search__close bc-header__search__close_mobile hamburger hamburger--slider-r is-active js-close-search-button js-mobile-open-search-button">
           <div class="hamburger-box">
             <div class="hamburger-inner"></div>
           </div>
-        </a>
+        </button>
 
       <% end %>
 
-      <button class="bc-article__z-index-100 navbar-toggler hamburger--slider-r px-0 ml-4" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="bc-article__z-index-100 navbar-toggler hamburger--slider-r px-0 ml-4 js-mobile-menu-button" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="hamburger-box">
           <span class="hamburger-inner"></span>
         </span>
@@ -68,35 +68,19 @@
   <hr class="bc-header__separator m-0 d-none d-md-block" />
   <div class="container navbar-collapse collapse py-2" id="navbarSupportedContent">
     <nav class="navbar-nav bc-header__nav">
-      <div class="nav-item">
-        <%= link("Коротко", to: newsfeed_path(@conn, :index), class: active_navlink_class(@conn, newsfeed_path(@conn, :index))) %>
-      </div>
-      <div class="nav-item">
-        <%= link("В Деталях", to: detailed_path(@conn, :index), class: active_navlink_class(@conn, detailed_path(@conn, :index))) %>
-      </div>
-      <div class="nav-item">
-        <%= link("Статистика", to: analysis_path(@conn, :index), class: active_navlink_class(@conn, analysis_path(@conn, :index))) %>
-      </div>
-      <div class="nav-item">
-        <%= link("Персона", to: person_path(@conn, :index), class: active_navlink_class(@conn, person_path(@conn, :index))) %>
-      </div>
-      <div class="nav-item">
-        <%= link("Что в России", to: in_russia_path(@conn, :index), class: active_navlink_class(@conn, in_russia_path(@conn, :index))) %>
-      </div>
-      <div class="nav-item">
-        <%= link("События", to: calendar_path(@conn, :index), class: active_navlink_class(@conn, calendar_path(@conn, :index))) %>
-      </div>
-      <div class="nav-item">
-        <%= link("Исследования (Архив)", to: archive_path(@conn, :index), class: active_navlink_class(@conn, archive_path(@conn, :index))) %>
-      </div>
+      <%= for i <- ~w(newsfeed detailed analysis people in-russia calendar research-archive) do %>
+        <div class="nav-item">
+          <%= link(@conn.assigns.sections[i].name, to: section_path(@conn, :index, i), class: active_navlink_class(@conn, section_path(@conn, :index, i))) %>
+        </div>
+      <% end %>
     </nav>
-    <ul class="navbar-nav d-none d-md-flex bc-header__search">
+    <ul class="navbar-nav d-none d-md-flex bc-header__search js-search-container">
       <li class="nav-item d-flex align-items-center w-100">
-        <button type="button" class="bc-header__search__icon btn-link nav-link pr-0">
+        <button type="button" class="bc-header__search__icon btn-link nav-link pr-0 js-open-search-button">
           <i class="icon-search"></i>
         </button>
 
-        <%= form_for @conn, search_path(@conn, :index), [method: :get, class: "bc-header__search__box d-none"], fn f-> %>
+        <%= form_for @conn, search_path(@conn, :index), [method: :get, class: "bc-header__search__box d-none js-search-form"], fn f-> %>
 
           <%= submit class: "bc-header__search__icon btn-link nav-link pr-0" do %>
             <i class="icon-search"></i>
@@ -104,11 +88,11 @@
 
           <%= text_input f, :query, placeholder: "Поиск по сайту (по релевантности)", aria_label: "Search", type: "search", class: "bc-header__search__input form-control" %>
 
-          <a class="bc-header__search__close hamburger hamburger--slider-r is-active">
+          <button type="button" class="bc-header__search__close hamburger hamburger--slider-r is-active js-close-search-button">
             <div class="hamburger-box">
               <div class="hamburger-inner"></div>
             </div>
-          </a>
+          </button>
 
         <% end %>
       </li>

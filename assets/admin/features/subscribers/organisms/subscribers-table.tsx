@@ -1,8 +1,8 @@
-import React, { memo, useCallback } from "react"
+import React, { useCallback } from "react"
 import format from "date-fns/format"
 import { Column } from "material-table"
-import { Pagination, OrderDirection } from "@api/common"
-import { Subscriber } from "@api/subscribers"
+import type { Pagination, OrderDirection } from "@api/common"
+import type { Subscriber } from "@api/subscribers"
 import { Table } from "@features/core"
 
 type SubscribersTableProps = {
@@ -17,9 +17,7 @@ type SubscribersTableProps = {
   ) => void
 }
 
-export const SubscribersTable = memo(function SubscribersTable(
-  props: SubscribersTableProps,
-) {
+export function SubscribersTable(props: SubscribersTableProps) {
   const {
     data,
     isLoading,
@@ -58,7 +56,7 @@ export const SubscribersTable = memo(function SubscribersTable(
       onChangeRowsPerPage={onChangeRowsPerPage}
     />
   )
-})
+}
 
 const columns: Column<Subscriber>[] = [
   {
@@ -68,7 +66,6 @@ const columns: Column<Subscriber>[] = [
   {
     field: "inserted_at",
     title: "Дата подписки",
-    defaultSort: "desc",
     render: (subscriber) =>
       format(new Date(subscriber.inserted_at), "dd.MM.yyyy HH:mm"),
   },

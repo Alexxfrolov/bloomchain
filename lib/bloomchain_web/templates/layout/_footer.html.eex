@@ -23,13 +23,9 @@
     <div class="row">
       <div class="col">
         <nav class="bc-footer__nav">
-          <%= link("Коротко", to: newsfeed_path(@conn, :index), class: "bc-footer__nav-link") %>
-          <%= link("В Деталях", to: detailed_path(@conn, :index), class: "bc-footer__nav-link") %>
-          <%= link("Статистика", to: analysis_path(@conn, :index), class: "bc-footer__nav-link") %>
-          <%= link("Персона", to: person_path(@conn, :index), class: "bc-footer__nav-link") %>
-          <%= link("Что в России", to: in_russia_path(@conn, :index), class: "bc-footer__nav-link") %>
-          <%= link("События", to: calendar_path(@conn, :index), class: "bc-footer__nav-link") %>
-          <%= link("Исследования (архив)", to: archive_path(@conn, :index), class: "bc-footer__nav-link") %>
+          <%= for i <- ~w(newsfeed detailed analysis people in-russia calendar research-archive) do %>
+            <%= link(@conn.assigns.sections[i].name, to: section_path(@conn, :index, i), class: "bc-footer__nav-link") %>
+          <% end %>
         </nav>
       </div>
     </div>
@@ -37,13 +33,17 @@
   <div class="bc-footer__info container mt-4 pt-2 pb-5">
     <div class="row">
       <div class="bc-footer__logo col-xl-3 col-lg-3 col-md-3">
-        <img class="bc-footer__img" src="/customer/images/logo-white.svg">
+        <a href="/">
+          <img
+            class="bc-footer__img js-lazy"
+            data-src='<%= static_path(@conn, "/customer/images/logo-white.svg") %>'
+            src='<%= static_path(@conn, "/customer/images/footer_logo_placeholder.jpg") %>'
+          >
+        </a>
       </div>
       <div class="bc-footer__links col-xl-6 col-lg-5 col-md-6">
-        <div class="row flex-column flex-sm-row">
-          <a class="bc-footer__link" target="_blank" href="https://bloomchain-cdn.s3.amazonaws.com/uploads/pdf/5ae3ffb6-b07d-11ea-a5de-0242ac130004/BloomChain-Mediakit-2019.pdf?v=63759605503">Медиа-кит</a>
-          <%# <a class="bc-footer__link" target="_blank" href="#">О нас</a> %>
-          <%# <a class="bc-footer__link" target="_blank" href="#">Контакты</a> %>
+        <div class="row no-gutters flex-column flex-sm-row">
+          <a class="bc-footer__link" target="_blank" href="https://bloomchain-cdn.s3.amazonaws.com/uploads/pdf/5ae3ffb6-b07d-11ea-a5de-0242ac130004/BloomChain-Mediakit-2019.pdf?v=63759605503">Реклама на сайте</a>
           <a class="bc-footer__link" target="_blank" href="mailto:contact@bloomchain.ru">contact@bloomchain.ru</a>
           <a class="bc-footer__link" target="_blank" href="tel:+79516564156">+7 (951) 656-41-56</a>
           <a class="bc-footer__link" target="_blank" href="<%= rss_link(@conn) %>">RSS</a>
@@ -59,7 +59,6 @@
         <a class="icon-fb-round" href="https://www.facebook.com/BloomChainNews" target="_blank"></a>
         <a class="icon-tw-round" href="https://twitter.com/BloomChainNews" target="_blank"></a>
         <a class="icon-tg-round" href="tg://resolve?domain=bloomchain" target="_blank"></a>
-        <%# <a class="icon-yt-round" href="#"></a> %>
       </div>
     </div>
   </div>

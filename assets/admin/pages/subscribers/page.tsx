@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react"
 import Container from "@material-ui/core/Container"
-import { OrderDirection, Pagination } from "@api/common/types"
-import { subscribersApi, Subscriber } from "@api/subscribers"
-import { RequestStatus } from "@features/core"
+import { subscribersApi } from "@api/subscribers"
 import { SubscribersTable } from "@features/subscribers"
+import type { OrderDirection, Pagination } from "@api/common/types"
+import type { Subscriber } from "@api/subscribers"
+import type { RequestStatus } from "@features/core"
 
 type SubscribersPageState = {
   request_status: RequestStatus

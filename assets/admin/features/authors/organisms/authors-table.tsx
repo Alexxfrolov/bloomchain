@@ -12,11 +12,11 @@ import {
 import { Column } from "material-table"
 import IconCheck from "@material-ui/icons/Check"
 import IconClear from "@material-ui/icons/Clear"
-import { Pagination, OrderDirection } from "@api/common"
+import type { Pagination, OrderDirection } from "@api/common"
 import { Author } from "@api/authors"
 import { Table, TableRowActionMode } from "@features/core"
 
-import { AuthorCreationSchema } from "../schemes"
+import { AuthorSchema } from "../schemes"
 
 type AuthorsTableProps = {
   isLoading: boolean
@@ -108,7 +108,6 @@ const columns: Column<Author>[] = [
   {
     title: "Дата создания",
     field: "inserted_at",
-    defaultSort: "desc",
     render: (author) => format(new Date(author.inserted_at), "dd.MM.yyyy"),
   },
 ]
@@ -152,7 +151,7 @@ const AuthorsTableEditRow = memo((props: AuthorsTableEditRowProps) => {
     initialValues: {
       name: data?.name ?? "",
     },
-    validationSchema: AuthorCreationSchema,
+    validationSchema: AuthorSchema,
     onSubmit: async (values, actions) => {
       await onEditingApproved(mode, values, data)
       actions.setSubmitting(false)

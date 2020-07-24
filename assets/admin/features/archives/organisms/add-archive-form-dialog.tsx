@@ -20,7 +20,7 @@ import PictureAsPdfOutlinedIcon from "@material-ui/icons/PictureAsPdfOutlined"
 import { getBlobUrl } from "@lib/blob"
 import { DropZone } from "@features/core"
 
-import { ArchiveCreationSchema } from "../schemes"
+import { ArchiveSchema } from "../schemes"
 
 type AddArchiveFormDialogProps = {
   isOpened: boolean
@@ -46,15 +46,13 @@ export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
       cover: null,
       pdf: null,
     },
-    validationSchema: ArchiveCreationSchema,
+    validationSchema: ArchiveSchema,
     onSubmit: async ({ cover, pdf }, { setSubmitting, resetForm }) => {
       await onSubmit(cover as File, pdf as File)
       setSubmitting(false)
       resetForm()
     },
   })
-
-  console.log(isSubmitting)
 
   const handleDropImage = useCallback(
     (files: File[]) => {
@@ -97,19 +95,23 @@ export function AddArchiveFormDialog(props: AddArchiveFormDialogProps) {
               <FormHelperText error={true}>{errors.cover}</FormHelperText>
             )}
           </FormControl>
-          {values.cover && getBlobUrl(values.cover) && (
-            <FormControl margin="normal" fullWidth={true}>
-              <Typography variant="h6" component="h6" gutterBottom={true}>
-                Предварительный просмотр:
-              </Typography>
+          <FormControl margin="normal" fullWidth={true}>
+            <Typography variant="h6" component="h6" gutterBottom={true}>
+              Предварительный просмотр:
+            </Typography>
+            {values.cover && getBlobUrl(values.cover) && (
               <img
-                style={{ objectFit: "contain" }}
+                style={{
+                  maxWidth: "200px",
+                  maxHeight: "200px",
+                  objectFit: "contain",
+                }}
                 width="100%"
                 src={getBlobUrl(values.cover)}
                 alt=""
               />
-            </FormControl>
-          )}
+            )}
+          </FormControl>
           <FormControl margin="normal" fullWidth={true}>
             <Typography variant="h6" component="h6">
               PDF

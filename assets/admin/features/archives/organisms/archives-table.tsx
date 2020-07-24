@@ -1,7 +1,8 @@
 import React, { memo, useCallback } from "react"
 import format from "date-fns/format"
 import { Column } from "material-table"
-import { Pagination, OrderDirection } from "@api/common"
+import IconEdit from "@material-ui/icons/EditRounded"
+import type { Pagination, OrderDirection } from "@api/common"
 import { Archive } from "@api/archives"
 import { Table } from "@features/core"
 
@@ -15,7 +16,8 @@ type ArchivesTableProps = {
     orderBy: keyof Archive,
     orderDirection: OrderDirection,
   ) => void
-  onRowDelete: (tag: Archive) => Promise<void>
+  onRowDelete: (archive: Archive) => Promise<void>
+  onRowEdit: (archive: Archive) => void
 }
 
 export const ArchivesTable = memo(function ArchivesTable(
@@ -29,6 +31,7 @@ export const ArchivesTable = memo(function ArchivesTable(
     onChangeRowsPerPage,
     onOrderChange,
     onRowDelete,
+    onRowEdit,
   } = props
 
   const handleOrderChange = useCallback(
@@ -44,6 +47,16 @@ export const ArchivesTable = memo(function ArchivesTable(
   ])
 
   const notEmptyData = !!data.length
+
+  const handleClickEditAtion = (
+    _event: unknown,
+    archive: Archive | Archive[],
+  ) => {
+    if (Array.isArray(archive)) {
+      return
+    }
+    onRowEdit(archive)
+  }
 
   return (
     <Table
@@ -62,6 +75,13 @@ export const ArchivesTable = memo(function ArchivesTable(
       editable={{
         onRowDelete: handleRowDelete,
       }}
+      actions={[
+        {
+          icon: () => <IconEdit />,
+          tooltip: "Редактирование архива",
+          onClick: handleClickEditAtion,
+        },
+      ]}
       onOrderChange={handleOrderChange}
       onChangePage={onChangePage}
       onChangeRowsPerPage={onChangeRowsPerPage}
@@ -71,13 +91,12 @@ export const ArchivesTable = memo(function ArchivesTable(
 
 const columns: Column<Archive>[] = [
   {
-    title: "Наименование",
+    title: "Баннер",
     field: "banner",
     sorting: false,
     render: (archive) => (
       <img
-        width="100%"
-        style={{ objectFit: "contain" }}
+        style={{ maxHeight: "200px", objectFit: "contain" }}
         src={archive.cover.url}
         alt={archive.cover.alt ?? ""}
         title={archive.cover.title ?? ""}
@@ -85,7 +104,7 @@ const columns: Column<Archive>[] = [
     ),
   },
   {
-    title: "Описание",
+    title: "PDF",
     field: "PDF",
     sorting: false,
     render: (archive) => (
@@ -101,7 +120,6 @@ const columns: Column<Archive>[] = [
   {
     title: "Дата публикации",
     field: "inserted_at",
-    defaultSort: "desc",
     render: (archive) => format(new Date(archive.inserted_at), "dd.MM.yyyy"),
   },
 ]

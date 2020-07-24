@@ -14,7 +14,7 @@ import {
 import { Column } from "material-table"
 import IconCheck from "@material-ui/icons/Check"
 import IconClear from "@material-ui/icons/Clear"
-import { Pagination, OrderDirection } from "@api/common"
+import type { Pagination, OrderDirection } from "@api/common"
 import { User } from "@api/user"
 import { Table, TableRowActionMode } from "@features/core"
 
@@ -125,7 +125,6 @@ const columns: Column<User>[] = [
   {
     title: "Дата создания",
     field: "inserted_at",
-    defaultSort: "desc",
     render: (user) => format(new Date(user.inserted_at), "dd.MM.yyyy"),
   },
 ]

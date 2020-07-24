@@ -1,7 +1,7 @@
 defmodule BloomchainWeb.Admin.Api.V1.ArticleController do
   use BloomchainWeb, :controller
 
-  import Bloomchain.Plug.ValidParams
+  import BloomchainWeb.Plug.ValidParams
   import Bloomchain.Paginator
 
   alias Bloomchain.Repo

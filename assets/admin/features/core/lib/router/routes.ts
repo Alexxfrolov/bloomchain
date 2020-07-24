@@ -41,6 +41,10 @@ export const routes: Route[] = [
         path: "/subscribers",
       },
       {
+        name: "redirects",
+        path: "/redirects",
+      },
+      {
         name: "authors",
         path: "/authors",
       },
@@ -51,6 +55,10 @@ export const routes: Route[] = [
       {
         name: "media",
         path: "/media",
+      },
+      {
+        name: "sections",
+        path: "/sections",
       },
       {
         name: "archives",

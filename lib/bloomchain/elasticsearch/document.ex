@@ -35,6 +35,8 @@ defimpl Elasticsearch.Document, for: Bloomchain.Content.Post do
       source: cover.source,
       content_type: cover.content_type,
       file: cover.file,
+      alt: cover.alt,
+      reloaded: cover.reloaded,
       inserted_at: cover.inserted_at,
       updated_at: cover.updated_at
     }

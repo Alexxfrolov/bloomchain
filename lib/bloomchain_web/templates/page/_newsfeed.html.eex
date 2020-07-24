@@ -1,7 +1,7 @@
 <div class="bc-news col-lg-6 mt-lg-0 mt-5">
-    <h1 class="highlight">Коротко<%= link("Больше", to: newsfeed_path(@conn, :index), class: "btn btn-title") %></h1>
+    <h1 class="highlight"><%= @conn.assigns.sections["newsfeed"].name %><%= link("Больше", to: section_path(@conn, :index, "newsfeed"), class: "btn btn-title") %></h1>
 
-    <%= for short <- @articles do %>
-      <%= render_short(short, conn: @conn) %>
+    <%= for article <- @articles do %>
+      <%= render_short(article, conn: @conn, path: article_path(@conn, :show, "newsfeed", article.slug)) %>
     <% end %>
 </div>

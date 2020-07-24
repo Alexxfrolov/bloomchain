@@ -2,17 +2,23 @@ import React, { useState, useEffect } from "react"
 import { useSnackbar } from "notistack"
 import { Container, Paper, Typography, Toolbar, Box } from "@material-ui/core"
 import { AxiosResponse } from "axios"
-import { articlesApi, Article } from "@api/articles"
-import { tagsApi, Tag } from "@api/tags"
-import { authorsApi, Author } from "@api/authors"
-import { RequestStatus } from "@features/core"
-import { ArticleForm } from "@features/articles"
+import { articlesApi } from "@api/articles"
+import type { Article } from "@api/articles"
+import { tagsApi } from "@api/tags"
+import type { Tag } from "@api/tags"
+import { authorsApi } from "@api/authors"
+import type { Author } from "@api/authors"
+import { sectionsApi } from "@api/sections"
+import type { Section } from "@api/sections"
+import type { RequestStatus } from "@features/core"
+import { ArticleForm, ARTICLE_TYPES } from "@features/articles"
 
 type ActicleCreatePageState = {
   request_status: RequestStatus
   error: string | null
-  tags: Tag[]
   authors: Author[]
+  sections: Section[]
+  tags: Tag[]
 }
 
 export function ActicleCreatePage() {
@@ -21,22 +27,27 @@ export function ActicleCreatePage() {
   const [state, setState] = useState<ActicleCreatePageState>({
     request_status: "pending",
     error: null,
-    tags: [],
     authors: [],
+    sections: [],
+    tags: [],
   })
 
   useEffect(() => {
     Promise.all<
+      AxiosResponse<{ data: Section[] }>,
       AxiosResponse<{ data: Tag[] }>,
       AxiosResponse<{ data: Author[] }>
-    >([tagsApi.getAll(), authorsApi.getAll()])
-      .then(([tagsResponse, authorsResponse]) =>
+    >([sectionsApi.getAll(), tagsApi.getAll(), authorsApi.getAll()])
+      .then(([sectionsResponse, tagsResponse, authorsResponse]) =>
         setState((state) => ({
           ...state,
           request_status: "success",
           error: null,
-          tags: tagsResponse.data.data,
           authors: authorsResponse.data.data,
+          sections: sectionsResponse.data.data.filter((section) =>
+            ARTICLE_TYPES.includes(section.slug),
+          ),
+          tags: tagsResponse.data.data,
         })),
       )
       .catch((error) => {
@@ -99,8 +110,9 @@ export function ActicleCreatePage() {
         </Toolbar>
         <Box marginLeft={3} marginRight={3}>
           <ArticleForm
-            tags={state.tags}
             authors={state.authors}
+            sections={state.sections}
+            tags={state.tags}
             onSubmit={createArticle}
           />
         </Box>

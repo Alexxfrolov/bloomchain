@@ -7,7 +7,7 @@ defmodule BloomchainWeb.FeedController do
     |> put_resp_content_type("application/rss+xml")
     |> render("index.xml",
       posts: MainPosts.run() |> Keyword.values() |> List.flatten(),
-      type: nil
+      type: "default"
     )
   end
 

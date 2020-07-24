@@ -3,18 +3,25 @@ import { useRoute } from "react-router5"
 import { useSnackbar } from "notistack"
 import { AxiosResponse } from "axios"
 import { Container, Paper, Typography, Toolbar, Box } from "@material-ui/core"
-import { articlesApi, Article } from "@api/articles"
-import { tagsApi, Tag } from "@api/tags"
-import { authorsApi, Author } from "@api/authors"
-import { MediaFile } from "@api/media"
-import { RequestStatus } from "@features/core"
-import { ArticleForm, ArticleStore } from "@features/articles"
+import { articlesApi } from "@api/articles"
+import type { Article } from "@api/articles"
+import { tagsApi } from "@api/tags"
+import type { Tag } from "@api/tags"
+import { authorsApi } from "@api/authors"
+import type { Author } from "@api/authors"
+import { sectionsApi } from "@api/sections"
+import type { Section } from "@api/sections"
+import type { MediaFile } from "@api/media"
+import type { RequestStatus } from "@features/core"
+import { ArticleForm, ARTICLE_TYPES } from "@features/articles"
+import type { ArticleStore } from "@features/articles"
 
 type ActicleEditPageState = {
   request_status: RequestStatus
   error: string | null
-  tags: Tag[]
   authors: Author[]
+  sections: Section[]
+  tags: Tag[]
 }
 
 export function ActicleEditPage() {
@@ -26,6 +33,7 @@ export function ActicleEditPage() {
     error: null,
     tags: [],
     authors: [],
+    sections: [],
   })
 
   const [article, setArticle] = useState<ArticleStore & { id: number }>({
@@ -53,41 +61,53 @@ export function ActicleEditPage() {
 
   useEffect(() => {
     Promise.all<
+      AxiosResponse<{ data: Section[] }>,
       AxiosResponse<{ data: Tag[] }>,
       AxiosResponse<{ data: Author[] }>,
       AxiosResponse<Article>
     >([
+      sectionsApi.getAll(),
       tagsApi.getAll(),
       authorsApi.getAll(),
       articlesApi.getById(route.params.id),
     ])
-      .then(([tagsResponse, authorsResponse, articleResponse]) => {
-        setState((state) => ({
-          ...state,
-          request_status: "success",
-          error: null,
-          tags: tagsResponse.data.data,
-          authors: authorsResponse.data.data,
-        }))
+      .then(
+        ([
+          sectionsResponse,
+          tagsResponse,
+          authorsResponse,
+          articleResponse,
+        ]) => {
+          setState((state) => ({
+            ...state,
+            request_status: "success",
+            error: null,
+            authors: authorsResponse.data.data,
+            sections: sectionsResponse.data.data.filter((section) =>
+              ARTICLE_TYPES.includes(section.slug),
+            ),
+            tags: tagsResponse.data.data,
+          }))
 
-        const {
-          cover,
-          ...restData
-        }: Partial<ArticleStore & { cover: MediaFile }> = Object.entries(
-          articleResponse.data,
-        )
-          .filter((arr) => arr.every((item) => item))
-          .reduce(
-            (acc, item) => Object.assign({}, acc, { [item[0]]: item[1] }),
-            {},
+          const {
+            cover,
+            ...restData
+          }: Partial<ArticleStore & { cover: MediaFile }> = Object.entries(
+            articleResponse.data,
           )
+            .filter((arr) => arr.every((item) => item))
+            .reduce(
+              (acc, item) => Object.assign({}, acc, { [item[0]]: item[1] }),
+              {},
+            )
 
-        setArticle((article) => ({
-          ...article,
-          ...restData,
-          cover_id: cover?.id ?? null,
-        }))
-      })
+          setArticle((article) => ({
+            ...article,
+            ...restData,
+            cover_id: cover?.id ?? null,
+          }))
+        },
+      )
       .catch((error) => {
         setState((state) => ({ ...state, request_status: "error", error }))
         enqueueSnackbar("Произошла ошибка", {
@@ -112,7 +132,7 @@ export function ActicleEditPage() {
             keywords:
               typeof seo_settings.keywords === "string"
                 ? seo_settings.keywords.split(/[ ,]+/)
-                : [],
+                : seo_settings.keywords,
           },
         }
 
@@ -158,8 +178,9 @@ export function ActicleEditPage() {
           {state.request_status === "success" ? (
             <ArticleForm
               initialArticle={article}
-              tags={state.tags}
               authors={state.authors}
+              sections={state.sections}
+              tags={state.tags}
               onSubmit={updateArticle}
             />
           ) : null}

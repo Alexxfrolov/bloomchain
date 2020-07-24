@@ -104,7 +104,7 @@ export const AddMediaFormDialog = memo(function (
               <div
                 style={{
                   display: "flex",
-                  maxWidth: "100%",
+                  maxWidth: "200px",
                   maxHeight: "200px",
                 }}
               >

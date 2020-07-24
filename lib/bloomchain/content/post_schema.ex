@@ -156,13 +156,8 @@ defmodule Bloomchain.Content.Post do
   defp process_authors(changeset, _), do: changeset
 
   defp process_seo(
-         %Ecto.Changeset{valid?: true, changes: %{title: title, seo_settings: seo} = changes} =
-           changeset
+         %Ecto.Changeset{valid?: true, changes: %{seo_settings: seo} = changes} = changeset
        ) do
-    default_description =
-      changes[:lead] ||
-        "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
-
     cover_url =
       if changes[:cover_id] do
         cover = Repo.get(Media, changes[:cover_id])
@@ -173,19 +168,20 @@ defmodule Bloomchain.Content.Post do
 
     default = %{
       # base seo tags
-      description: seo[:description] || default_description,
+      description: seo[:description] || changes[:lead],
       keywords: seo[:keywords] || [],
       # twitter fields
       twitter_card: seo[:twitter_card] || "summary_large_image",
-      twitter_description: seo[:twitter_description] || seo[:description] || default_description,
-      twitter_title: seo[:twitter_title] || title,
       twitter_creator: seo[:twitter_creator] || "@BloomChainNews",
       twitter_site: seo[:twitter_site] || "@BloomChainNews",
-      twitter_image: seo[:twitter_image] || cover_url,
+      # meta fields for social nets
+      twitter_title: seo[:og_title] || changes[:title],
+      twitter_description: seo[:og_description] || seo[:description] || changes[:lead],
+      twitter_image: cover_url || seo[:twitter_image],
       # open graph fields
-      og_title: seo[:og_title] || title,
-      og_description: seo[:og_description] || seo[:description] || default_description,
-      og_image: seo[:og_image] || cover_url,
+      og_title: seo[:og_title] || changes[:title],
+      og_description: seo[:og_description] || seo[:description] || changes[:lead],
+      og_image: cover_url || seo[:og_image],
       og_type: seo[:og_type] || "article"
     }
 

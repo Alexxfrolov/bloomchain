@@ -1,6 +1,7 @@
 defmodule BloomchainWeb.SharedView do
   use BloomchainWeb, :view
 
+  alias Bloomchain.Content.Media
   alias BloomchainWeb.Uploaders.File
 
   def load_more_button(%{after: nil}) do
@@ -37,7 +38,7 @@ defmodule BloomchainWeb.SharedView do
     content_tag(:a, class: "bc-article__overlay-link", href: href_path(item)) do
       content_tag(:div, class: "bc-article__image") do
         [
-          do_image_tag(item),
+          image_tag(item),
           content_tag(:p, Phoenix.HTML.raw(item.title), class: "line-clamp line-clamp__size_2"),
           content_tag(:div, class: "d-flex align-items-center") do
             article_attrs(item)
@@ -104,27 +105,56 @@ defmodule BloomchainWeb.SharedView do
     ]
   end
 
-  defp do_image_tag(%{cover: nil}), do: ""
+  def timestamp(nil), do: ""
 
-  defp do_image_tag(%{cover: cover}) do
-    img_tag(File.url({cover.file, cover}))
+  def timestamp(datetime) do
+    datetime
+    |> Timex.local()
+    |> Timex.format!("%d.%m.%Y %H:%M", :strftime)
+  end
+
+  def author(item) do
+    item.authors |> Enum.map(fn i -> i.name end) |> Enum.join(", ")
+  end
+
+  def image_tag(%{cover: nil}), do: ""
+
+  def image_tag(%{cover: %{reloaded: true} = cover}) do
+    content_tag(:picture, class: "js-lazy") do
+      [
+        tag(:source,
+          type: "image/webp",
+          sizes: "100vw",
+          srcset: "/customer/images/cover_placeholder.webp",
+          data_srcset: Media.srcset(cover, :webp)
+        ),
+        tag(:source,
+          type: "image/jp2",
+          sizes: "100vw",
+          srcset: "/customer/images/cover_placeholder.jp2",
+          data_srcset: Media.srcset(cover, :jp2)
+        ),
+        img_tag("/customer/images/cover_placeholder.jpg",
+          data_src: File.url({cover.file, cover}, :original),
+          alt: cover[:alt],
+          class: "js-lazy"
+        )
+      ]
+    end
+  end
+
+  # remove this func after all media is reloaded
+  def image_tag(%{cover: cover}) do
+    img_tag("/customer/images/cover_placeholder.jpg",
+      data_src: File.url({cover.file, cover}, :original),
+      alt: cover[:alt],
+      class: "js-lazy"
+    )
   end
 
   defp href_path(item), do: "/#{item.type}/#{item.slug}"
 
   defp time_from(datetime) do
     Timex.lformat!(datetime, "{relative}", "ru", :relative)
-  end
-
-  defp timestamp(nil), do: ""
-
-  defp timestamp(datetime) do
-    datetime
-    |> Timex.local()
-    |> Timex.format!("%d.%m.%Y %H:%M", :strftime)
-  end
-
-  defp author(item) do
-    item.authors |> Enum.map(fn i -> i.name end) |> Enum.join(", ")
   end
 end

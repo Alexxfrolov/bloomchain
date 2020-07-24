@@ -1,0 +1,3 @@
+<%= render "_post.html", assigns %>
+
+<%= render BloomchainWeb.SharedView, "_recomendation_block.html", articles: @recomendations, conn: @conn %>

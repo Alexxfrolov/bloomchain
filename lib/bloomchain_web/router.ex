@@ -12,9 +12,14 @@ defmodule BloomchainWeb.Router do
     plug(:put_secure_browser_headers)
   end
 
+  pipeline :customer do
+    plug(BloomchainWeb.Plug.Redirect)
+    plug(BloomchainWeb.Plug.SetSectionData)
+  end
+
   pipeline :admin do
-    plug(Bloomchain.Plug.Authentication)
-    plug(Bloomchain.Plug.EnsureAuthentication)
+    plug(BloomchainWeb.Plug.Authentication)
+    plug(BloomchainWeb.Plug.EnsureAuthentication)
     plug(:put_layout, {BloomchainWeb.LayoutView, :admin})
   end
 
@@ -50,6 +55,8 @@ defmodule BloomchainWeb.Router do
       resources("/subscribers", Admin.Api.V1.SubscriberController, only: [:index])
       resources("/archives", Admin.Api.V1.ArchiveController)
       resources("/authors", Admin.Api.V1.AuthorController)
+      resources("/sections", Admin.Api.V1.SectionController)
+      resources("/redirects", Admin.Api.V1.RedirectController)
     end
 
     scope "/preview" do
@@ -74,6 +81,13 @@ defmodule BloomchainWeb.Router do
     resources("/", SitemapController, only: [:show], param: "property")
   end
 
+  scope "/api", BloomchainWeb do
+    pipe_through [:api]
+
+    resources("/index", Api.IndexController, only: [:index])
+    resources("/subscription", Api.SubscriptionController, only: [:create])
+  end
+
   scope "/", BloomchainWeb do
     pipe_through([:xml])
 
@@ -82,26 +96,14 @@ defmodule BloomchainWeb.Router do
   end
 
   scope "/", BloomchainWeb do
-    pipe_through(:browser)
+    pipe_through([:browser, :customer])
 
     get("/", PageController, :index)
 
-    resources("/newsfeed", NewsfeedController, only: [:index, :show], param: "slug")
-    resources("/detailed", DetailedController, only: [:index, :show], param: "slug")
-    resources("/analysis", AnalysisController, only: [:index, :show], param: "slug")
-    resources("/people", PersonController, only: [:index, :show], param: "slug")
-    resources("/in-russia", InRussiaController, only: [:index, :show], param: "slug")
-    resources("/calendar", CalendarController, only: [:index, :show], param: "slug")
-    resources("/research", ResearchController, only: [:index, :show], param: "slug")
-    resources("/research-archive", ArchiveController, only: [:index], param: "slug")
-    resources("/search", SearchController, only: [:index, :create])
-    resources("/tag", TagController, only: [:show], param: "tag")
+    get("/search", SearchController, :index)
+    get("/tag/:slug", TagController, :show)
 
-    scope "/api" do
-      pipe_through [:api]
-
-      resources("/index", Api.IndexController, only: [:index])
-      resources("/subscription", Api.SubscriptionController, only: [:create])
-    end
+    get("/:type/:slug", ArticleController, :show)
+    get("/:type", SectionController, :index)
   end
 end

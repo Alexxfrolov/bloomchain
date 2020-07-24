@@ -1,8 +1,9 @@
 defmodule Bloomchain.Content.Article do
   import Ecto.Query
 
+  alias Ecto.Multi
   alias Bloomchain.Repo
-  alias Bloomchain.Content.Post
+  alias Bloomchain.Content.{Post, Redirect}
   alias Bloomchain.ElasticsearchCluster, as: ES
 
   def published_posts(type) do
@@ -34,9 +35,31 @@ defmodule Bloomchain.Content.Article do
     end
   end
 
-  def update(%Post{} = post, %{} = params) do
-    with {:ok, post} <- post |> Post.changeset(params) |> Repo.update() do
+  def update(%Post{status: "published", type: old_type} = struct, %{type: new_type} = params)
+      when old_type != new_type do
+    update_post_and_redirect =
+      Multi.new()
+      |> Multi.update(:post, Post.changeset(struct, params))
+      |> Multi.insert(:redirect, Redirect.changeset(struct, params))
+
+    case Repo.transaction(update_post_and_redirect) do
+      {:ok, %{post: post, redirect: _redirect}} ->
+        post = post |> Repo.preload([:tags, :cover, :authors], force: true)
+        Task.async(fn -> ES.reindex(post) end)
+        {:ok, post}
+
+      {:error, :post, changeset, _} ->
+        {:error, changeset}
+
+      {:error, :redirect, changeset, _} ->
+        {:error, changeset}
+    end
+  end
+
+  def update(%Post{} = struct, %{} = params) do
+    with {:ok, post} <- struct |> Post.changeset(params) |> Repo.update() do
       post = post |> Repo.preload([:tags, :cover, :authors], force: true)
+
       Task.async(fn -> ES.reindex(post) end)
       {:ok, post}
     else
@@ -63,55 +86,5 @@ defmodule Bloomchain.Content.Article do
     end)
 
     post
-  end
-
-  def recomendations_for(post) do
-    query = %{
-      query: %{
-        function_score: %{
-          query: %{
-            bool: %{
-              must: %{match_all: %{}},
-              filter: [%{term: %{status: "published"}}],
-              must_not: [%{term: %{id: post.id}}]
-            }
-          },
-          functions:
-            [
-              %{
-                gauss: %{
-                  published_at: %{
-                    origin: Timex.now() |> Timex.shift(days: -1),
-                    scale: "24h",
-                    offset: "4h",
-                    decay: 0.5
-                  }
-                }
-              },
-              %{
-                filter: %{term: %{type: post.type}},
-                weight: 4
-              }
-            ] ++ tags_functions(post.tags),
-          score_mode: "sum"
-        }
-      },
-      size: 4
-    }
-
-    ES.search(query)[:entries]
-  end
-
-  defp tags_functions([]), do: []
-
-  defp tags_functions(tags) do
-    weight = 10 / length(tags)
-
-    Enum.map(tags, fn tag ->
-      %{
-        filter: %{term: %{"tags.slug": tag.slug}},
-        weight: weight
-      }
-    end)
   end
 end

@@ -20,7 +20,9 @@ import LabelRoundedIcon from "@material-ui/icons/LabelRounded"
 import DraftsRoundedIcon from "@material-ui/icons/DraftsRounded"
 import InsertDriveFileRoundedIcon from "@material-ui/icons/InsertDriveFileRounded"
 import ImportContactsRoundedIcon from "@material-ui/icons/ImportContactsRounded"
+import PollRoundedIcon from "@material-ui/icons/PollRounded"
 import AlternateEmailIcon from "@material-ui/icons/AlternateEmail"
+import OpenInNewRoundedIcon from "@material-ui/icons/OpenInNewRounded"
 import FaceRoundedIcon from "@material-ui/icons/FaceRounded"
 import { RouterLink, useCurrentUser } from "@features/core"
 
@@ -104,7 +106,8 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
           <ListItem
             aria-current={
               isCurrentMenu("admin.articles.create") ||
-              isCurrentMenu("admin.articles")
+              isCurrentMenu("admin.articles") ||
+              isCurrentMenu("admin")
                 ? "page"
                 : undefined
             }
@@ -197,6 +200,19 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
       <Divider />
       <List>
         {openedDrawer && <ListSubheader inset={true}>Страницы</ListSubheader>}
+        <Tooltip title={openedDrawer ? "" : "Все разделы"}>
+          <ListItem
+            aria-current={isCurrentMenu("admin.sections") ? "page" : undefined}
+            className={classes.listitem}
+          >
+            <RouterLink routeName="admin.sections" className={classes.link}>
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <ImportContactsRoundedIcon style={{ color: indigo[500] }} />
+              </ListItemIcon>
+              <ListItemText primary="Все разделы" />
+            </RouterLink>
+          </ListItem>
+        </Tooltip>
         <Tooltip title={openedDrawer ? "" : "Исследования Архив"}>
           <ListItem
             aria-current={isCurrentMenu("admin.archives") ? "page" : undefined}
@@ -204,7 +220,7 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
           >
             <RouterLink routeName="admin.archives" className={classes.link}>
               <ListItemIcon style={{ paddingLeft: "7px" }}>
-                <ImportContactsRoundedIcon style={{ color: indigo[500] }} />
+                <PollRoundedIcon style={{ color: indigo[500] }} />
               </ListItemIcon>
               <ListItemText primary="Исследования (архив)" />
             </RouterLink>
@@ -212,7 +228,7 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
         </Tooltip>
       </List>
       <Divider />
-      {user.role === "admin" && (
+      {user && user.role === "admin" && (
         <List>
           {openedDrawer && (
             <ListSubheader inset={true}>Управление</ListSubheader>
@@ -245,6 +261,21 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
                   <AlternateEmailIcon style={{ color: indigo[500] }} />
                 </ListItemIcon>
                 <ListItemText primary="Подписчики" />
+              </RouterLink>
+            </ListItem>
+          </Tooltip>
+          <Tooltip title={openedDrawer ? "" : "Редиректы"}>
+            <ListItem
+              aria-current={
+                isCurrentMenu("admin.redirects") ? "page" : undefined
+              }
+              className={classes.listitem}
+            >
+              <RouterLink routeName="admin.redirects" className={classes.link}>
+                <ListItemIcon style={{ paddingLeft: "7px" }}>
+                  <OpenInNewRoundedIcon style={{ color: indigo[500] }} />
+                </ListItemIcon>
+                <ListItemText primary="Редиректы" />
               </RouterLink>
             </ListItem>
           </Tooltip>

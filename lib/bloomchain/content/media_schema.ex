@@ -9,6 +9,12 @@ defmodule Bloomchain.Content.Media do
   alias Bloomchain.Content.{Media}
   alias BloomchainWeb.Uploaders.File
 
+  def fetch(term, key) do
+    term
+    |> Map.from_struct()
+    |> Map.fetch(key)
+  end
+
   schema "media" do
     field(:file, File.Type)
     field(:uuid, :string)
@@ -17,12 +23,13 @@ defmodule Bloomchain.Content.Media do
     field(:source, :string)
     field(:content_type, :string, null: false)
     field(:type, :string, null: false)
+    field(:reloaded, :boolean, default: true)
 
     timestamps()
   end
 
   @required_fields ~w(type)a
-  @optional_fields ~w(title source uuid content_type alt)a
+  @optional_fields ~w(title source uuid content_type alt reloaded)a
 
   def list_all(type) do
     from(
@@ -47,10 +54,36 @@ defmodule Bloomchain.Content.Media do
 
   def delete!(id) do
     item = Repo.get!(Media, id)
-    require IEx
-    IEx.pry()
+
     File.delete({item.file, item})
     Repo.delete!(item)
+  end
+
+  def srcset(cover) do
+    [
+      File.url({cover.file, cover}, :"380") <> " 600w",
+      File.url({cover.file, cover}, :"540") <> " 1000w",
+      File.url({cover.file, cover}, :"800") <> " 1600w"
+    ]
+    |> Enum.join(", ")
+  end
+
+  def srcset(cover, :webp) do
+    [
+      File.url({cover.file, cover}, :"380_webp") <> " 600w",
+      File.url({cover.file, cover}, :"540_webp") <> " 1000w",
+      File.url({cover.file, cover}, :"800_webp") <> " 1600w"
+    ]
+    |> Enum.join(", ")
+  end
+
+  def srcset(cover, :jp2) do
+    [
+      File.url({cover.file, cover}, :"380_jp2") <> " 600w",
+      File.url({cover.file, cover}, :"540_jp2") <> " 1000w",
+      File.url({cover.file, cover}, :"800_jp2") <> " 1600w"
+    ]
+    |> Enum.join(", ")
   end
 
   defp check_uuid(changeset) do

@@ -3,3 +3,5 @@ build
 config
 .git
 .vscode
+*.html.eex
+admin/lib/rich-editor/plugins/*

@@ -1,6 +1,8 @@
 import React, { Fragment, useCallback } from "react"
 import { useRoute } from "react-router5"
 import CssBaseline from "@material-ui/core/CssBaseline"
+import { CommonTemplate, MainMenu } from "@features/core"
+
 import {
   ActicleCreatePage,
   ActicleEditPage,
@@ -8,12 +10,13 @@ import {
   ArticlesViewPage,
   AuthorsPage,
   MediaPage,
+  RedirectsPage,
+  SectionsPage,
   SubscribersPage,
   TagsPage,
   UserAccountPage,
   UsersPage,
 } from "@pages"
-import { CommonTemplate, MainMenu } from "@features/core"
 
 export const App = () => {
   const { route } = useRoute()
@@ -44,6 +47,10 @@ export const App = () => {
         return <UsersPage />
       case "admin.subscribers":
         return <SubscribersPage />
+      case "admin.redirects":
+        return <RedirectsPage />
+      case "admin.sections":
+        return <SectionsPage />
       default:
         return null
     }

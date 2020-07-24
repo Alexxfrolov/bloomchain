@@ -8,18 +8,15 @@ export const ARTICLE_STATUSES_RECORD: Record<
   archive: "Архив",
 }
 
-export const ARTICLE_TYPES_RECORD: Record<
-  import("@api/articles").Article["type"],
-  string
-> = {
-  newsfeed: "Коротко",
-  detailed: "В Деталях",
-  analysis: "Аналитика",
-  "in-russia": "Что в России",
-  calendar: "События",
-  people: "Персона",
-  research: "Исследования",
-}
+export const ARTICLE_TYPES: import("@api/articles").Article["type"][] = [
+  "newsfeed",
+  "detailed",
+  "analysis",
+  "in-russia",
+  "calendar",
+  "people",
+  "research",
+]
 
 export const ARTICLE_OG_TYPES: import("@api/articles").SeoSettings["og_type"][] = [
   "music.song",

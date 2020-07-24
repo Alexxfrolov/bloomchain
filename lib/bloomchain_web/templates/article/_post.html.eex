@@ -1,0 +1,47 @@
+<div class="container py-4">
+  <div class="row">
+    <div class="offset-lg-2 col-lg-8">
+      <article class="article">
+        <header class="article__header">
+          <h1 class="article__heading"><%= raw(@article.title) %></h1>
+          <div class="d-flex align-items-center flex-wrap">
+            <time pubdate datetime="<%= @article.published_at %>" title="<%= @article.published_at %>" class="article__time mr-sm-4 mr-2">
+              <small><%= SharedView.timestamp(@article.published_at) %></small>
+            </time>
+            <i class="mr-1 icon-user"></i>
+            <address class="article__author mr-sm-4 mr-2">
+              <small class="small"><%= SharedView.author(@article) %></small>
+            </address>
+            <%= if @article.time do %>
+              <i class="mr-1 icon-clock"></i>
+              <time class="mr-sm-4 mr-2">
+                <small class="small"><%= "#{@article.time} мин" %></small>
+              </time>
+            <% end %>
+          </div>
+          <div class="mt-3">
+            <small class="small mr-2">Теги:</small>
+            <%= for tag <- @article.tags do %>
+              <%= link(tag.name, to: tag_path(@conn, :show, tag.slug), class: "span badge badge-primary-inverse") %>
+            <% end %>
+          </div>
+        </header>
+
+        <div class="article__body pt-4">
+          <p class="font-italic"><%= raw(@article.lead) %></p>
+          <%= raw(@article.body) %>
+        </div>
+      </article>
+
+      <div class="d-flex align-items-center mt-4">
+        <a class="btn btn-link font-weight-medium pl-0 js-throwback" style="color: #4d67ec">&larr; Назад</a>
+        <span class="small ml-auto mr-1">Поделиться:</span>
+        <a data-social-share="vk" class="icon-vk-round-primary mx-1"></a>
+        <a data-social-share="facebook" class="icon-fb-round-primary mx-1"></a>
+        <a data-social-share="twitter" data-title="<%= @article.title %>" class="icon-tw-round-primary mx-1"></a>
+        <a data-social-share="telegram" data-title="<%= @article.title %>" class="icon-tg-round-primary mx-1"></a>
+      </div>
+    </div>
+  </div>
+  <script defer src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
+</div>

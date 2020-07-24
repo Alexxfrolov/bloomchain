@@ -17,9 +17,10 @@ import { ru } from "date-fns/locale"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import { useFormik } from "formik"
 import { RichEditor } from "@lib/rich-editor"
-import { Article } from "@api/articles"
-import { Author } from "@api/authors"
-import { Tag } from "@api/tags"
+import type { Article } from "@api/articles"
+import type { Author } from "@api/authors"
+import type { Tag } from "@api/tags"
+import type { Section } from "@api/sections"
 import { MediaUploadForm } from "@features/media"
 
 import { articleStore, ArticleStore } from "../model"
@@ -27,19 +28,25 @@ import { ArticleSchema } from "../schemes"
 import {
   computedUnusedOptionsByInitialOptionsList,
   ARTICLE_STATUSES_RECORD,
-  ARTICLE_TYPES_RECORD,
   ARTICLE_OG_TYPES,
 } from "../lib"
 
 type ArticleFormProps = {
-  authors: Author[]
   initialArticle?: ArticleStore
+  authors: Author[]
+  sections: Section[]
   tags: Tag[]
   onSubmit: (article: Article, cb?: () => void) => Promise<void>
 }
 
 export function ArticleForm(props: ArticleFormProps) {
-  const { authors, initialArticle = articleStore, tags, onSubmit } = props
+  const {
+    authors,
+    initialArticle = articleStore,
+    sections,
+    tags,
+    onSubmit,
+  } = props
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
 
@@ -165,9 +172,9 @@ export function ArticleForm(props: ArticleFormProps) {
               onBlur={handleBlur}
               variant="outlined"
             >
-              {Object.keys(ARTICLE_TYPES_RECORD).map((type) => (
-                <MenuItem key={type} value={type as Article["type"]}>
-                  {ARTICLE_TYPES_RECORD[type]}
+              {sections.map((section) => (
+                <MenuItem key={section.slug} value={section.slug}>
+                  {section.name}
                 </MenuItem>
               ))}
             </TextField>

@@ -11,10 +11,14 @@ import {
 import { useSnackbar } from "notistack"
 import AddBoxIcon from "@material-ui/icons/AddBox"
 import { OrderDirection, Pagination } from "@api/common/types"
-import { mediaApi, UploadableMediaFile } from "@api/media"
-import { archivesApi, Archive } from "@api/archives"
+import { mediaApi, UploadableMediaFile, MediaFile } from "@api/media"
+import { archivesApi, Archive, UpdateArchiveData } from "@api/archives"
 import { RequestStatus } from "@features/core"
-import { ArchivesTable, AddArchiveFormDialog } from "@features/archives"
+import {
+  ArchivesTable,
+  AddArchiveFormDialog,
+  EditArchiveFormDialog,
+} from "@features/archives"
 
 type ArchivesPageState = {
   request_status: RequestStatus
@@ -24,6 +28,8 @@ type ArchivesPageState = {
   orderDirection: OrderDirection
   orderBy: keyof Archive
   isOpenedAddFormDialog: boolean
+  isOpenedEditFormDialog: boolean
+  modifyingArchive: Archive | null
 }
 
 export function ArchivesPage() {
@@ -44,6 +50,8 @@ export function ArchivesPage() {
     orderDirection: "desc",
     orderBy: "inserted_at",
     isOpenedAddFormDialog: false,
+    isOpenedEditFormDialog: false,
+    modifyingArchive: null,
   })
 
   useEffect(() => {
@@ -104,6 +112,14 @@ export function ArchivesPage() {
     [],
   )
 
+  const handleClickRowEdit = useCallback((modifyingArchive: Archive) => {
+    setState((state) => ({
+      ...state,
+      isOpenedEditFormDialog: true,
+      modifyingArchive,
+    }))
+  }, [])
+
   const createArchive = useCallback(
     async (cover: File, pdf: File) => {
       setState((state) => ({ ...state, request_status: "pending" }))
@@ -136,6 +152,68 @@ export function ArchivesPage() {
           error,
           request_status: "error",
           isOpenedAddFormDialog: false,
+        }))
+        enqueueSnackbar("Произошла ошибка", {
+          variant: "error",
+        })
+      }
+    },
+    [enqueueSnackbar],
+  )
+
+  const updateArchive = useCallback(
+    async (data: { id: number; cover?: File | null; pdf?: File | null }) => {
+      const { id, ...files } = data
+      const mediaToUpload: UploadableMediaFile[] = [
+        { type: "image", file: files.cover },
+        { type: "pdf", file: files.pdf },
+      ].filter((media) => media.file)
+      setState((state) => ({ ...state, request_status: "pending" }))
+      try {
+        const responses = await Promise.all(
+          mediaToUpload.map(async (file) => {
+            return await mediaApi.create(file)
+          }),
+        )
+        const archiveDataIds = responses.reduce<{ [key: string]: number }>(
+          (acc, item) => {
+            if (item.data.type === "image") {
+              return Object.assign(acc, { cover_id: item.data.id })
+            }
+            if (item.data.type === "pdf") {
+              return Object.assign(acc, { pdf_id: item.data.id })
+            }
+            return acc
+          },
+          {},
+        )
+        const archiveResponse = await archivesApi.update({
+          id: data.id,
+          ...archiveDataIds,
+        })
+        setState((state) => ({
+          ...state,
+          error: null,
+          request_status: "success",
+          data: state.data.map((item) =>
+            item.id === archiveResponse.data.id
+              ? {
+                  ...item,
+                  ...archiveResponse.data,
+                }
+              : item,
+          ),
+          isOpenedEditFormDialog: false,
+        }))
+        enqueueSnackbar("Архив успешно отредактирован", {
+          variant: "success",
+        })
+      } catch (error) {
+        setState((state) => ({
+          ...state,
+          error,
+          request_status: "error",
+          isOpenedEditFormDialog: false,
         }))
         enqueueSnackbar("Произошла ошибка", {
           variant: "error",
@@ -191,6 +269,7 @@ export function ArchivesPage() {
           onChangeRowsPerPage={handleChangeTableRowsPerPage}
           onOrderChange={handleTableOrderChange}
           onRowDelete={deleteArchive}
+          onRowEdit={handleClickRowEdit}
         />
         <AddArchiveFormDialog
           isOpened={state.isOpenedAddFormDialog}
@@ -199,6 +278,16 @@ export function ArchivesPage() {
           }
           onSubmit={createArchive}
         />
+        {state.modifyingArchive && (
+          <EditArchiveFormDialog
+            data={state.modifyingArchive}
+            isOpened={state.isOpenedEditFormDialog}
+            onClose={() =>
+              setState((state) => ({ ...state, isOpenedEditFormDialog: false }))
+            }
+            onSubmit={updateArchive}
+          />
+        )}
       </Paper>
     </Container>
   )
