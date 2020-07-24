@@ -30,12 +30,14 @@ defmodule BloomchainWeb.LayoutView do
   def meta(:og_title, assigns) do
     assigns[:og_title] || assigns[:title] ||
       get_in(assigns, [:article, :seo_settings, "og_title"]) ||
+      get_in(assigns, [:sections, assigns.conn.path_params["type"], :seo, "title"]) ||
       get_in(assigns, [:sections, "default", :seo, "title"])
   end
 
   def meta(:og_description, assigns) do
     assigns[:og_description] || assigns[:description] ||
       get_in(assigns, [:article, :seo_settings, "og_description"]) ||
+      get_in(assigns, [:sections, assigns.conn.path_params["type"], :seo, "description"]) ||
       get_in(assigns, [:sections, "default", :seo, "description"])
   end
 
@@ -47,12 +49,14 @@ defmodule BloomchainWeb.LayoutView do
   def meta(:twitter_title, assigns) do
     assigns[:twitter_title] || assigns[:title] ||
       get_in(assigns, [:article, :seo_settings, "twitter_title"]) ||
+      get_in(assigns, [:sections, assigns.conn.path_params["type"], :seo, "title"]) ||
       get_in(assigns, [:sections, "default", :seo, "title"])
   end
 
   def meta(:twitter_description, assigns) do
     assigns[:twitter_description] || assigns[:description] ||
       get_in(assigns, [:article, :seo_settings, "twitter_description"]) ||
+      get_in(assigns, [:sections, assigns.conn.path_params["type"], :seo, "description"]) ||
       get_in(assigns, [:sections, "default", :seo, "description"])
   end
 

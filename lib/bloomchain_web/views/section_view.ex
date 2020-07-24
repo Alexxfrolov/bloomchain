@@ -1,7 +1,6 @@
 defmodule BloomchainWeb.SectionView do
   use BloomchainWeb, :view
   alias BloomchainWeb.SharedView
-  alias Bloomchain.Content.Media
   alias BloomchainWeb.Uploaders.File
 
   def item_tag(item) do

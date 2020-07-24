@@ -4,7 +4,7 @@ defmodule Bloomchain.Content.Section do
 
   alias Bloomchain.{Repo, Content.Section}
 
-  @required_fields ~w(slug name)a
+  @required_fields ~w(slug name seo_settings)a
 
   schema "sections" do
     field(:slug, :string)
@@ -31,22 +31,5 @@ defmodule Bloomchain.Content.Section do
     |> validate_required(@required_fields)
     |> unique_constraint(:slug)
     |> unique_constraint(:name)
-    |> process_seo()
   end
-
-  defp process_seo(
-         %Ecto.Changeset{valid?: true, changes: %{seo_settings: seo} = changes} = changeset
-       ) do
-    default_description =
-      "Информационно-аналитическое сообщество о блокчейне, криптовалютах, ICO и финтехе"
-
-    settings = %{
-      title: seo[:title] || changes[:name],
-      description: seo[:description] || default_description
-    }
-
-    put_change(changeset, :seo_settings, settings)
-  end
-
-  defp process_seo(changeset), do: changeset
 end
