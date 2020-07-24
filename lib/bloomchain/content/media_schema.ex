@@ -23,13 +23,12 @@ defmodule Bloomchain.Content.Media do
     field(:source, :string)
     field(:content_type, :string, null: false)
     field(:type, :string, null: false)
-    field(:reloaded, :boolean, default: true)
 
     timestamps()
   end
 
   @required_fields ~w(type)a
-  @optional_fields ~w(title source uuid content_type alt reloaded)a
+  @optional_fields ~w(title source uuid content_type alt)a
 
   def list_all(type) do
     from(
