@@ -49,5 +49,3 @@ WORKDIR /opt/app
 
 RUN mix compile
 RUN mix phx.digest
-RUN mix ecto.migrate
-RUN mix run priv/repo/seeds.exs
