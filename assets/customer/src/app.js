@@ -215,6 +215,28 @@ if (document.readyState === "complete" || document.readyState !== "loading") {
   images.forEach((image) => {
     imageObserver.observe(image)
   })
+
+  const main = document.querySelector(".js-main")
+  const config = {
+    attributes: false,
+    childList: true,
+    subtree: true,
+  }
+  const callback = function (mutationsList, observer) {
+    for (let mutation of mutationsList) {
+      if (mutation.type === "childList") {
+        const nodes = mutation.addedNodes
+        Array.from(nodes).forEach(function (node) {
+          const images = node.querySelectorAll(".js-lazy")
+          images.forEach((image) => {
+            imageObserver.observe(image)
+          })
+        })
+      }
+    }
+  }
+  const observer = new MutationObserver(callback)
+  observer.observe(main, config)
 } else {
   document.addEventListener("DOMContentLoaded", Sharer.init)
 }

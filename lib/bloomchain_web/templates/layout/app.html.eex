@@ -27,7 +27,6 @@
     <%= render "_critical_css.html", conn: @conn %>
 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link rel= "preconnect" href="https://min-api.cryptocompare.com" crossorigin />
     <link rel= "preconnect" href="https://mc.yandex.ru" crossorigin />
     <link rel= "preconnect" href="https://www.googletagmanager.com" crossorigin />
