@@ -91,12 +91,12 @@ const columns: Column<Section>[] = [
   },
   {
     field: "seo_settings.title",
-    title: "Заголовок",
+    title: "Title страницы",
     sorting: false,
   },
   {
     field: "seo_settings.description",
-    title: "Описание",
+    title: "Description страницы",
     sorting: false,
   },
   {
@@ -220,17 +220,12 @@ const SectionsTableEditRow = (props: SectionsTableEditRowProps) => {
       <TableCell>
         <TextField
           type="text"
-          name="name"
+          name="seo_settings.description"
           multiline={true}
           value={values.seo_settings.description}
-          error={
-            !!errors.seo_settings?.description &&
-            touched.seo_settings?.description
-          }
+          error={!!errors.seo_settings?.description && touched.seo_settings?.description}
           helperText={
-            touched.seo_settings?.description
-              ? errors.seo_settings?.description
-              : undefined
+            touched.seo_settings?.description ? errors.seo_settings?.description : undefined
           }
           inputProps={{ maxLength: 255 }}
           fullWidth={true}
