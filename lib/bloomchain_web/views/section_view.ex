@@ -35,19 +35,31 @@ defmodule BloomchainWeb.SectionView do
 
   # used for archives
   def image_tag(%{cover: %{reloaded: true} = cover}, class: class) do
-    content_tag(:picture, class: class) do
+    content_tag(:picture) do
       [
         tag(:source,
           type: "image/webp",
           sizes: "100vw",
-          srcset: Media.srcset(cover, :webp)
+          srcset:
+            [
+              File.url({cover.file, cover}, :"380_webp") <> " 600w",
+              File.url({cover.file, cover}, :"540_webp") <> " 1000w",
+              File.url({cover.file, cover}, :original) <> " 1600w"
+            ]
+            |> Enum.join(", ")
         ),
         tag(:source,
           type: "image/jp2",
           sizes: "100vw",
-          srcset: Media.srcset(cover, :jp2)
+          srcset:
+            [
+              File.url({cover.file, cover}, :"380_jp2") <> " 600w",
+              File.url({cover.file, cover}, :"540_jp2") <> " 1000w",
+              File.url({cover.file, cover}, :original) <> " 1600w"
+            ]
+            |> Enum.join(", ")
         ),
-        img_tag(File.url({cover.file, cover}, :original), alt: cover[:alt])
+        img_tag(File.url({cover.file, cover}, :original), class: class, alt: cover[:alt])
       ]
     end
   end
