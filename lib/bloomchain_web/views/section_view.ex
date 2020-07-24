@@ -1,6 +1,7 @@
 defmodule BloomchainWeb.SectionView do
   use BloomchainWeb, :view
   alias BloomchainWeb.SharedView
+  alias Bloomchain.Content.Media
   alias BloomchainWeb.Uploaders.File
 
   def item_tag(item) do
@@ -29,6 +30,25 @@ defmodule BloomchainWeb.SectionView do
         data_scroll: after_cursor,
         data_date: date
       )
+    end
+  end
+
+  # used for archives
+  def image_tag(%{cover: %{reloaded: true} = cover}, class: class) do
+    content_tag(:picture, class: class) do
+      [
+        tag(:source,
+          type: "image/webp",
+          sizes: "100vw",
+          srcset: Media.srcset(cover, :webp)
+        ),
+        tag(:source,
+          type: "image/jp2",
+          sizes: "100vw",
+          srcset: Media.srcset(cover, :jp2)
+        ),
+        img_tag(File.url({cover.file, cover}, :original), alt: cover[:alt])
+      ]
     end
   end
 
