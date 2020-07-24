@@ -49,43 +49,43 @@ defmodule BloomchainWeb.Uploaders.File do
   end
 
   def transform(:"380", {_, %{type: "image"}}) do
-    {:convert, "-geometry 380 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
+    {:convert, "-geometry 380 -sampling-factor 4:2:0 -quality 70 -depth 8"}
   end
 
   def transform(:"540", {_, %{type: "image"}}) do
-    {:convert, "-geometry 540 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
+    {:convert, "-geometry 540 -sampling-factor 4:2:0 -quality 70 -depth 8"}
   end
 
   def transform(:"800", {_, %{type: "image"}}) do
-    {:convert, "-geometry 800 -sampling-factor 4:2:0 -quality 70 -interlace JPEG"}
+    {:convert, "-geometry 800 -sampling-factor 4:2:0 -quality 70 -depth 8"}
   end
 
   def transform(:"380_webp", {_, %{type: "image"}}) do
-    {:convert, "-quality 40 -geometry 380", :webp}
+    {:convert, "-quality 50 -geometry 380", :webp}
   end
 
   def transform(:"540_webp", {_, %{type: "image"}}) do
-    {:convert, "-quality 40 -geometry 540", :webp}
+    {:convert, "-quality 50 -geometry 540", :webp}
   end
 
   def transform(:"800_webp", {_, %{type: "image"}}) do
-    {:convert, "-quality 40 -geometry 800", :webp}
+    {:convert, "-quality 50 -geometry 800", :webp}
   end
 
   def transform(:"380_jp2", {_, %{type: "image"}}) do
-    {:convert, "-quality 40 -geometry 380", :jp2}
+    {:convert, "-quality 50 -geometry 380", :jp2}
   end
 
   def transform(:"540_jp2", {_, %{type: "image"}}) do
-    {:convert, "-quality 40 -geometry 540", :jp2}
+    {:convert, "-quality 50 -geometry 540", :jp2}
   end
 
   def transform(:"800_jp2", {_, %{type: "image"}}) do
-    {:convert, "-quality 40 -geometry 800", :jp2}
+    {:convert, "-quality 50 -geometry 800", :jp2}
   end
 
   def transform(:original, {_, %{type: "image"}}) do
-    {:convert, "-sampling-factor 4:2:0 -quality 80 -interlace JPEG"}
+    {:convert, "-sampling-factor 4:2:0 -quality 80"}
   end
 
   def transform(:original, {_, %{type: "pdf"}}), do: :noaction
