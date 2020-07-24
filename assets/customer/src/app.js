@@ -209,6 +209,30 @@ if (document.readyState === "complete" || document.readyState !== "loading") {
     }
     menu.classList.toggle("show")
   })
+
+  const imageObserver = new IntersectionObserver(imageLazyLoad)
+  const images = document.querySelectorAll(".js-lazy")
+  images.forEach((image) => {
+    imageObserver.observe(image)
+  })
 } else {
   document.addEventListener("DOMContentLoaded", Sharer.init)
+}
+
+function imageLazyLoad(entries, imgObserver) {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting && entry.target.tagName === "IMG") {
+      const lazyImage = entry.target
+      lazyImage.src = lazyImage.dataset.src
+      return
+    }
+
+    if (entry.isIntersecting && entry.target.tagName === "PICTURE") {
+      const lazyPicture = entry.target
+      const sources = lazyPicture.querySelectorAll("source")
+      sources.forEach((source) => {
+        source.srcset = source.dataset.srcset
+      })
+    }
+  })
 }
