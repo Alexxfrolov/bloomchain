@@ -85,7 +85,7 @@ defmodule BloomchainWeb.Uploaders.File do
   end
 
   def transform(:original, {_, %{type: "image"}}) do
-    {:convert, "-sampling-factor 4:2:0 -quality 80"}
+    {:convert, "-sampling-factor 4:2:0 -quality 85"}
   end
 
   def transform(:original, {_, %{type: "pdf"}}), do: :noaction
