@@ -10,6 +10,7 @@ RUN \
     g++ \
     wget \
     curl \
+    git \
     inotify-tools \
     file \
     imagemagick \
