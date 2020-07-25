@@ -216,12 +216,6 @@ if (document.readyState === "complete" || document.readyState !== "loading") {
     imageObserver.observe(image)
   })
 
-  const main = document.querySelector(".js-main")
-  const config = {
-    attributes: false,
-    childList: true,
-    subtree: true,
-  }
   const callback = function (mutationsList, observer) {
     for (let mutation of mutationsList) {
       if (mutation.type === "childList") {
@@ -235,8 +229,16 @@ if (document.readyState === "complete" || document.readyState !== "loading") {
       }
     }
   }
-  const observer = new MutationObserver(callback)
-  observer.observe(main, config)
+  const pagination_container = document.querySelector(".js-pagination-list")
+  if (pagination_container) {
+    const config = {
+      attributes: false,
+      childList: true,
+      subtree: true,
+    }
+    const observer = new MutationObserver(callback)
+    observer.observe(pagination_container, config)
+  }
 } else {
   document.addEventListener("DOMContentLoaded", Sharer.init)
 }
