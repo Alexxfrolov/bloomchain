@@ -23,6 +23,7 @@ defmodule Bloomchain.Content.Media do
     field(:source, :string)
     field(:content_type, :string, null: false)
     field(:type, :string, null: false)
+    field(:reloaded, :boolean, default: true)
 
     timestamps()
   end
