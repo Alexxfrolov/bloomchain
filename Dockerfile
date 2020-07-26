@@ -14,6 +14,7 @@ RUN \
     inotify-tools \
     file \
     imagemagick \
+    openjpeg \
     nodejs \
     nodejs-npm && \
     npm install npm -g --no-progress && \

@@ -69,15 +69,15 @@ defmodule BloomchainWeb.Uploaders.File do
   end
 
   def transform(:"380_jp2", {_, %{type: "image"}}) do
-    {:magick, "-geometry 380 -define jp2:quality=50", :jp2}
+    {:convert, "-geometry 380 -define jp2:quality=50", :jp2}
   end
 
   def transform(:"540_jp2", {_, %{type: "image"}}) do
-    {:magick, "-geometry 540 -define jp2:quality=50", :jp2}
+    {:convert, "-geometry 540 -define jp2:quality=50", :jp2}
   end
 
   def transform(:"800_jp2", {_, %{type: "image"}}) do
-    {:magick, "-geometry 800 -define jp2:quality=50", :jp2}
+    {:convert, "-geometry 800 -define jp2:quality=50", :jp2}
   end
 
   def transform(:original, {_, %{type: "image"}}) do
