@@ -28,10 +28,6 @@ defmodule BloomchainWeb.Uploaders.File do
     ~w(.mp4 .avi) |> Enum.member?(String.downcase(Path.extname(file.file_name)))
   end
 
-  def filename(_, {%{file_name: file_name}, %{reloaded: false}}) do
-    Path.basename(file_name, Path.extname(file_name))
-  end
-
   def filename(version, {_file, _scope}) do
     version
   end
@@ -73,15 +69,15 @@ defmodule BloomchainWeb.Uploaders.File do
   end
 
   def transform(:"380_jp2", {_, %{type: "image"}}) do
-    {:convert, "-quality 50 -geometry 380", :jp2}
+    {:convert, "-geometry 380 -define jp2:quality=50", :jp2}
   end
 
   def transform(:"540_jp2", {_, %{type: "image"}}) do
-    {:convert, "-quality 50 -geometry 540", :jp2}
+    {:convert, "-geometry 540 -define jp2:quality=50", :jp2}
   end
 
   def transform(:"800_jp2", {_, %{type: "image"}}) do
-    {:convert, "-quality 50 -geometry 800", :jp2}
+    {:convert, "-geometry 800 -define jp2:quality=50", :jp2}
   end
 
   def transform(:original, {_, %{type: "image"}}) do

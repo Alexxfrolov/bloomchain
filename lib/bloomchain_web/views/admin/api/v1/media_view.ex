@@ -33,7 +33,20 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
     |> do_media_json
   end
 
-  def do_media_json(media) do
+  def do_media_json(%{type: "image"} = media) do
+    %{
+      id: media.id,
+      type: media.type,
+      alt: media.alt,
+      title: media.title,
+      source: media.source,
+      url: File.url({media.file, media}, :"540"),
+      inserted_at: media.inserted_at,
+      updated_at: media.updated_at
+    }
+  end
+
+  def do_media_json(%{type: "pdf"} = media) do
     %{
       id: media.id,
       type: media.type,
