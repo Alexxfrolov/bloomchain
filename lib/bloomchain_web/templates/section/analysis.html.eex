@@ -28,7 +28,7 @@
   <div class="container py-5">
     <a name="analitics"></a>
     <h1 class="bc-analitics__h1">Аналитика</h1>
-    <div class="js-article-list">
+    <div class="js-article-list js-pagination-container">
       <%= render SharedView, "_article_block.html", assigns %>
     </div>
   </div>

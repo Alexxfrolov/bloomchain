@@ -229,7 +229,9 @@ if (document.readyState === "complete" || document.readyState !== "loading") {
       }
     }
   }
-  const pagination_container = document.querySelector(".js-pagination-list")
+  const pagination_container = document.querySelector(
+    ".js-pagination-container",
+  )
   if (pagination_container) {
     const config = {
       attributes: false,

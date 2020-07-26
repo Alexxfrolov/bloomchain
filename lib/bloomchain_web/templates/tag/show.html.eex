@@ -1,17 +1,19 @@
-<div class="container py-5">
-  <h1 class="bc-analitics__h1">Статьи по тэгу: <%= @tag %></h1>
+<div class="js-pagination-container">
+  <div class="container py-5">
+    <h1 class="bc-analitics__h1">Статьи по тэгу: <%= @tag %></h1>
 
-  <%= if Enum.empty?(@articles) do %>
-    <p>Извините, по вашему запросу ничего не найдено.</p>
-  <% else %>
-    <div class="js-article-list">
-      <%= render SharedView, "_article_block.html", assigns %>
-    </div>
+    <%= if Enum.empty?(@articles) do %>
+      <p>Извините, по вашему запросу ничего не найдено.</p>
+    <% else %>
+      <div class="js-article-list">
+        <%= render SharedView, "_article_block.html", assigns %>
+      </div>
+    <% end %>
+  </div>
+
+  <%= SharedView.load_more_button(@meta) %>
+
+  <%= if @meta[:after] == nil do %>
+    <%= render BloomchainWeb.SharedView, "_recomendation_block.html", articles: @recomendations, conn: @conn %>
   <% end %>
 </div>
-
-<%= SharedView.load_more_button(@meta) %>
-
-<%= if @meta[:after] == nil do %>
-  <%= render BloomchainWeb.SharedView, "_recomendation_block.html", articles: @recomendations, conn: @conn %>
-<% end %>

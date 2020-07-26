@@ -1,10 +1,12 @@
-<div class="container py-5">
-  <h1 class="bc-analitics__h1"><%= get_in(assigns, [:sections, assigns.conn.path_params["type"], :name]) %></h1>
+<div class="js-pagination-container">
+  <div class="container py-5">
+    <h1 class="bc-analitics__h1"><%= get_in(assigns, [:sections, assigns.conn.path_params["type"], :name]) %></h1>
 
-  <div class="js-article-list">
-    <%= render SharedView, "_article_block.html", assigns %>
+    <div class="js-article-list">
+      <%= render SharedView, "_article_block.html", assigns %>
+    </div>
+
   </div>
 
+  <%= SharedView.load_more_button(@meta) %>
 </div>
-
-<%= SharedView.load_more_button(@meta) %>
