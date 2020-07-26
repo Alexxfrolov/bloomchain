@@ -14,8 +14,6 @@ RUN \
     inotify-tools \
     file \
     imagemagick \
-    pngcrush \
-    optipng \
     nodejs \
     nodejs-npm && \
     npm install npm -g --no-progress && \

@@ -69,15 +69,21 @@ defmodule BloomchainWeb.Uploaders.File do
   end
 
   def transform(:"380_jp2", {_, %{type: "image"}}) do
-    {:convert, "-geometry 380 -define jp2:quality=50", :jp2}
+    {:convert,
+     "-geometry 380 -depth 4 -define jp2:quality-layers=5 -define jp2:number-resolutions=5 -define jp2:quality=40 -define jp2:rate=0.015625",
+     :jp2}
   end
 
   def transform(:"540_jp2", {_, %{type: "image"}}) do
-    {:convert, "-geometry 540 -define jp2:quality=50", :jp2}
+    {:convert,
+     "-geometry 540 -depth 4 -define jp2:quality-layers=5 -define jp2:number-resolutions=5 -define jp2:quality=40 -define jp2:rate=0.015625",
+     :jp2}
   end
 
   def transform(:"800_jp2", {_, %{type: "image"}}) do
-    {:convert, "-geometry 800 -define jp2:quality=50", :jp2}
+    {:convert,
+     "-geometry 800 -depth 4 -define jp2:quality-layers=5 -define jp2:number-resolutions=5 -define jp2:quality=40 -define jp2:rate=0.015625",
+     :jp2}
   end
 
   def transform(:original, {_, %{type: "image"}}) do
