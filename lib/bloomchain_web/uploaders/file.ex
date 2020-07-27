@@ -45,15 +45,15 @@ defmodule BloomchainWeb.Uploaders.File do
   end
 
   def transform(:"380", {_, %{type: "image"}}) do
-    {:convert, "-geometry 380 -sampling-factor 4:2:0 -quality 70 -depth 8"}
+    {:convert, "-geometry 380 -sampling-factor 4:2:0 -quality 70 -depth 8 -format jpg", :jpg}
   end
 
   def transform(:"540", {_, %{type: "image"}}) do
-    {:convert, "-geometry 540 -sampling-factor 4:2:0 -quality 70 -depth 8"}
+    {:convert, "-geometry 540 -sampling-factor 4:2:0 -quality 70 -depth 8 -format jpg", :jpg}
   end
 
   def transform(:"800", {_, %{type: "image"}}) do
-    {:convert, "-geometry 800 -sampling-factor 4:2:0 -quality 70 -depth 8"}
+    {:convert, "-geometry 800 -sampling-factor 4:2:0 -quality 70 -depth 8 -format jpg", :jpg}
   end
 
   def transform(:"380_webp", {_, %{type: "image"}}) do
@@ -70,19 +70,19 @@ defmodule BloomchainWeb.Uploaders.File do
 
   def transform(:"380_jp2", {_, %{type: "image"}}) do
     {:convert,
-     "-geometry 380 -depth 4 -define jp2:quality-layers=5 -define jp2:number-resolutions=5 -define jp2:quality=40 -define jp2:rate=0.015625",
+     "-geometry 380 -depth 8 -define jp2:quality-layers=5 -define jp2:number-resolutions=5 -define jp2:quality=40 -define jp2:rate=0.015625",
      :jp2}
   end
 
   def transform(:"540_jp2", {_, %{type: "image"}}) do
     {:convert,
-     "-geometry 540 -depth 4 -define jp2:quality-layers=5 -define jp2:number-resolutions=5 -define jp2:quality=40 -define jp2:rate=0.015625",
+     "-geometry 540 -depth 8 -define jp2:quality-layers=5 -define jp2:number-resolutions=5 -define jp2:quality=40 -define jp2:rate=0.015625",
      :jp2}
   end
 
   def transform(:"800_jp2", {_, %{type: "image"}}) do
     {:convert,
-     "-geometry 800 -depth 4 -define jp2:quality-layers=5 -define jp2:number-resolutions=5 -define jp2:quality=40 -define jp2:rate=0.015625",
+     "-geometry 800 -depth 8 -define jp2:quality-layers=5 -define jp2:number-resolutions=5 -define jp2:quality=40 -define jp2:rate=0.015625",
      :jp2}
   end
 
