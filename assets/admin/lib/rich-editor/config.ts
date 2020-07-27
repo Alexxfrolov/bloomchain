@@ -75,6 +75,8 @@ export const config = {
     },
   },
   quickInsertButtons: ["image", "ul", "table"],
+  imageAddNewLine: false,
+  imageDefaultWidth: "760",
   imageManagerDeleteURL: "/admin/api/v1/media",
   imageManagerDeleteMethod: "DELETE",
   imageManagerLoadURL: "/admin/api/v1/media",
