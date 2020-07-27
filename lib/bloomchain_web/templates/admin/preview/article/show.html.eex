@@ -1,1 +1,1 @@
-<%= render SharedView, "_article.html", assigns %>
+<%= render ArticleView, "_post.html", assigns %>

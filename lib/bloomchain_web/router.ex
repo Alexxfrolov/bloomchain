@@ -60,6 +60,8 @@ defmodule BloomchainWeb.Router do
     end
 
     scope "/preview" do
+      pipe_through [:customer]
+
       get "/articles/:type/:slug", Admin.Preview.ArticleController, :show
     end
 
