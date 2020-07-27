@@ -13,8 +13,8 @@ defmodule BloomchainWeb.Admin.Api.V1.RedirectView do
       id: item.id,
       path_from: item.path_from,
       path_to: item.path_to,
-      inserted_at: item.inserted_at,
-      updated_at: item.updated_at
+      inserted_at: item.inserted_at |> Timex.local(),
+      updated_at: item.updated_at |> Timex.local()
     }
   end
 end

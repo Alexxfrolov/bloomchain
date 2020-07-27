@@ -40,9 +40,9 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
       alt: media.alt,
       title: media.title,
       source: media.source,
-      url: File.url({media.file, media}, :"540"),
-      inserted_at: media.inserted_at,
-      updated_at: media.updated_at
+      url: File.url({media.file, media}, :original),
+      inserted_at: media.inserted_at |> Timex.local(),
+      updated_at: media.updated_at |> Timex.local()
     }
   end
 
@@ -54,8 +54,8 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
       title: media.title,
       source: media.source,
       url: File.url({media.file, media}, :original),
-      inserted_at: media.inserted_at,
-      updated_at: media.updated_at
+      inserted_at: media.inserted_at |> Timex.local(),
+      updated_at: media.updated_at |> Timex.local()
     }
   end
 

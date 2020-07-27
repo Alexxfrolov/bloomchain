@@ -13,8 +13,8 @@ defmodule BloomchainWeb.Admin.Api.V1.SectionView do
       id: item.id,
       name: item.name,
       slug: item.slug,
-      inserted_at: item.inserted_at,
-      updated_at: item.updated_at,
+      inserted_at: item.inserted_at |> Timex.local(),
+      updated_at: item.updated_at |> Timex.local(),
       seo_settings: item.seo_settings
     }
   end

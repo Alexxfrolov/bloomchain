@@ -12,8 +12,8 @@ defmodule BloomchainWeb.Admin.Api.V1.SubscriberView do
     %{
       id: subscriber.id,
       email: subscriber.email,
-      inserted_at: subscriber.inserted_at,
-      updated_at: subscriber.updated_at
+      inserted_at: subscriber.inserted_at |> Timex.local(),
+      updated_at: subscriber.updated_at |> Timex.local()
     }
   end
 end
