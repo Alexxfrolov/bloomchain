@@ -1,9 +1,8 @@
 import decamelize from "decamelize"
 import { request } from "@features/core"
 
-import { Pagination, PaginationParams } from "../common"
-
-export type MediaFileType = "image" | "pdf" | "video" | "banner"
+import type { Pagination, PaginationParams } from "../common"
+import type { MediaFileType } from "../media"
 
 export interface MediaFile {
   alt: string | null
@@ -22,13 +21,9 @@ interface Params extends Partial<PaginationParams> {
 }
 
 function get(params: Params) {
-  return request<{ data: MediaFile[]; meta: Pagination }>("GET", "/media", {
+  return request<{ data: MediaFile[]; meta: Pagination }>("GET", "/banners", {
     params,
   })
-}
-
-function getById(id: number) {
-  return request<MediaFile>("GET", `/media/${id}`)
 }
 
 export interface UploadableMediaFile {
@@ -67,9 +62,8 @@ function remove(id: number) {
   return request<MediaFile>("DELETE", `/media/${id}`)
 }
 
-export const mediaApi = {
+export const bannersApi = {
   get,
-  getById,
   create,
   update,
   remove,

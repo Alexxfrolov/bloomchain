@@ -1,0 +1,1 @@
+export { bannersApi } from "./api"

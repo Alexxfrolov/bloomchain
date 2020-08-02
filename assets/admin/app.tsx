@@ -9,6 +9,7 @@ import {
   ArchivesPage,
   ArticlesViewPage,
   AuthorsPage,
+  BannersPage,
   MediaPage,
   RedirectsPage,
   SectionsPage,
@@ -51,6 +52,11 @@ export const App = () => {
         return <RedirectsPage />
       case "admin.sections":
         return <SectionsPage />
+      case "admin.banners":
+      case "admin.banners.active":
+      case "admin.banners.waiting":
+      case "admin.banners.unactive":
+        return <BannersPage />
       default:
         return null
     }

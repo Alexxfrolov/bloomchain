@@ -101,7 +101,11 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
     <Fragment>
       <Divider />
       <List>
-        {openedDrawer && <ListSubheader inset={true}>Публикации</ListSubheader>}
+        {openedDrawer && (
+          <ListSubheader inset={true} disableSticky={true}>
+            Публикации
+          </ListSubheader>
+        )}
         <Tooltip title={openedDrawer ? "" : "Создать статью"}>
           <ListItem
             aria-current={
@@ -199,7 +203,11 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
       </List>
       <Divider />
       <List>
-        {openedDrawer && <ListSubheader inset={true}>Страницы</ListSubheader>}
+        {openedDrawer && (
+          <ListSubheader inset={true} disableSticky={true}>
+            Страницы
+          </ListSubheader>
+        )}
         <Tooltip title={openedDrawer ? "" : "Все разделы"}>
           <ListItem
             aria-current={isCurrentMenu("admin.sections") ? "page" : undefined}
@@ -231,7 +239,9 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
       {user && user.role === "admin" && (
         <List>
           {openedDrawer && (
-            <ListSubheader inset={true}>Управление</ListSubheader>
+            <ListSubheader inset={true} disableSticky={true}>
+              Управление
+            </ListSubheader>
           )}
           <Tooltip title={openedDrawer ? "" : "Пользователи"}>
             <ListItem
@@ -283,7 +293,11 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
       )}
       <Divider />
       <List>
-        {openedDrawer && <ListSubheader inset={true}>Словари</ListSubheader>}
+        {openedDrawer && (
+          <ListSubheader inset={true} disableSticky={true}>
+            Словари
+          </ListSubheader>
+        )}
         <Tooltip title={openedDrawer ? "" : "Авторы"}>
           <ListItem
             aria-current={isCurrentMenu("admin.authors") ? "page" : undefined}
@@ -320,6 +334,68 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
                 <PermMediaRoundedIcon style={{ color: indigo[500] }} />
               </ListItemIcon>
               <ListItemText primary="Медиа" />
+            </RouterLink>
+          </ListItem>
+        </Tooltip>
+      </List>
+      <Divider />
+      <List>
+        {openedDrawer && (
+          <ListSubheader inset={true} disableSticky={true}>
+            Баннеры
+          </ListSubheader>
+        )}
+        <Tooltip title={openedDrawer ? "" : "Активные"}>
+          <ListItem
+            aria-current={
+              isCurrentMenu("admin.banners.active") ? "page" : undefined
+            }
+            className={classes.listitem}
+          >
+            <RouterLink
+              routeName="admin.banners.active"
+              className={classes.link}
+            >
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <FaceRoundedIcon style={{ color: indigo[500] }} />
+              </ListItemIcon>
+              <ListItemText primary="Активные" />
+            </RouterLink>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title={openedDrawer ? "" : "В ожидании"}>
+          <ListItem
+            aria-current={
+              isCurrentMenu("admin.banners.waiting") ? "page" : undefined
+            }
+            className={classes.listitem}
+          >
+            <RouterLink
+              routeName="admin.banners.waiting"
+              className={classes.link}
+            >
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <LabelRoundedIcon style={{ color: indigo[500] }} />
+              </ListItemIcon>
+              <ListItemText primary="В ожидании" />
+            </RouterLink>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title={openedDrawer ? "" : "Неактинвые"}>
+          <ListItem
+            aria-current={
+              isCurrentMenu("admin.banners.unactive") ? "page" : undefined
+            }
+            className={classes.listitem}
+          >
+            <RouterLink
+              routeName="admin.banners.unactive"
+              className={classes.link}
+            >
+              <ListItemIcon style={{ paddingLeft: "7px" }}>
+                <PermMediaRoundedIcon style={{ color: indigo[500] }} />
+              </ListItemIcon>
+              <ListItemText primary="Неактинвые" />
             </RouterLink>
           </ListItem>
         </Tooltip>

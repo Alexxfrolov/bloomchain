@@ -68,6 +68,25 @@ export const routes: Route[] = [
         name: "account",
         path: "/account",
       },
+      {
+        name: "banners",
+        path: "/banners",
+        forwardTo: "active",
+        children: [
+          {
+            name: "active",
+            path: "/active",
+          },
+          {
+            name: "unactive",
+            path: "/unactive",
+          },
+          {
+            name: "waiting",
+            path: "/waiting",
+          },
+        ],
+      },
     ],
   },
 ]
