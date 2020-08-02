@@ -28,25 +28,12 @@ defmodule BloomchainWeb.Admin.Api.V1.MediaView do
     |> Map.merge(%{srcset: Media.srcset(media)})
   end
 
-  def media_json(%{type: "pdf"} = media) do
+  def media_json(media) do
     media
     |> do_media_json
   end
 
-  def do_media_json(%{type: "image"} = media) do
-    %{
-      id: media.id,
-      type: media.type,
-      alt: media.alt,
-      title: media.title,
-      source: media.source,
-      url: File.url({media.file, media}, :original),
-      inserted_at: media.inserted_at |> Timex.local(),
-      updated_at: media.updated_at |> Timex.local()
-    }
-  end
-
-  def do_media_json(%{type: "pdf"} = media) do
+  def do_media_json(media) do
     %{
       id: media.id,
       type: media.type,

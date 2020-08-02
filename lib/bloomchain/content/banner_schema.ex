@@ -13,19 +13,16 @@ defmodule Bloomchain.Content.Banner do
     field(:date_start, :utc_datetime)
     field(:date_end, :utc_datetime)
 
-    field(:total_views, :integer)
-    field(:total_clicks, :integer)
-
-    belongs_to(:cover_desktop, Media, foreign_key: :cover_desktop_id)
-    belongs_to(:cover_mobile, Media, foreign_key: :cover_mobile_id)
+    belongs_to(:desktop_cover, Media, foreign_key: :desktop_cover_id)
+    belongs_to(:mobile_cover, Media, foreign_key: :mobile_cover_id)
 
     timestamps()
   end
 
   @required_fields ~w(type target_url date_start date_end)a
-  @optional_fields ~w(client cover_desktop_id cover_mobile_id)a
-  @types ~w(header article)a
-  @statuses ~w(waiting active unactive)a
+  @optional_fields ~w(client status desktop_cover_id mobile_cover_id)a
+  @types ~w(header article)
+  @statuses ~w(waiting active unactive)
 
   @doc """
   Builds a changeset based on the `struct` and `params`.
@@ -33,9 +30,8 @@ defmodule Bloomchain.Content.Banner do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, @required_fields ++ @optional_fields)
-    |> cast_assoc(:cover_desktop)
-    |> cast_assoc(:cover_tablet)
-    |> cast_assoc(:cover_mobile)
+    |> cast_assoc(:desktop_cover)
+    |> cast_assoc(:mobile_cover)
     |> validate_required(@required_fields)
     |> validate_inclusion(:type, @types)
     |> validate_inclusion(:status, @statuses)

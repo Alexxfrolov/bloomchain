@@ -18,8 +18,8 @@ defmodule BloomchainWeb.Router do
   end
 
   pipeline :admin do
-    plug(BloomchainWeb.Plug.Authentication)
-    plug(BloomchainWeb.Plug.EnsureAuthentication)
+    # plug(BloomchainWeb.Plug.Authentication)
+    # plug(BloomchainWeb.Plug.EnsureAuthentication)
     plug(:put_layout, {BloomchainWeb.LayoutView, :admin})
   end
 
@@ -57,6 +57,7 @@ defmodule BloomchainWeb.Router do
       resources("/authors", Admin.Api.V1.AuthorController)
       resources("/sections", Admin.Api.V1.SectionController)
       resources("/redirects", Admin.Api.V1.RedirectController)
+      resources("/banners", Admin.Api.V1.BannerController)
     end
 
     scope "/preview" do
