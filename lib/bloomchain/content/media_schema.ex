@@ -30,6 +30,7 @@ defmodule Bloomchain.Content.Media do
 
   @required_fields ~w(type)a
   @optional_fields ~w(title source uuid content_type alt)a
+  @types ~w(image pdf)a
 
   def list_all(type) do
     from(
@@ -50,6 +51,7 @@ defmodule Bloomchain.Content.Media do
     |> cast_attachments(params, [:file])
     |> set_content_type(params)
     |> validate_required(@required_fields)
+    |> validate_inclusion(:type, @types)
   end
 
   def delete!(id) do
