@@ -1,46 +1,54 @@
-import decamelize from "decamelize"
 import { request } from "@features/core"
 
-import type { Pagination, PaginationParams } from "../common"
-import type { MediaFileType } from "../media"
+import type { Pagination, PaginationParams, OrderParams } from "../common"
+import type { MediaFile } from "../media"
 
-export interface MediaFile {
-  alt: string | null
+export type BannerType = "header" | "article"
+export type BannerStatus = "active" | "waiting" | "unactive"
+
+export interface Banner {
+  updated_at: string | Date | number | null
+  type: BannerType
+  target_url: string
+  status: "active"
+  mobile_cover: MediaFile
+  inserted_at: string | Date | number | null
   id: number
-  inserted_at: string
-  source: string | null
-  srcset?: string
-  title: string | null
-  type: MediaFileType
-  updated_at: string
-  url: string
+  desktop_cover: MediaFile
+  date_start: string | Date | number
+  date_end: string | Date | number
+  client: string
 }
 
-interface Params extends Partial<PaginationParams> {
-  type: MediaFile["type"]
-}
+type Params = Partial<OrderParams<Banner>> & Partial<PaginationParams>
 
 function get(params: Params) {
-  return request<{ data: MediaFile[]; meta: Pagination }>("GET", "/banners", {
+  return request<{ data: Banner[]; meta: Pagination }>("GET", "/banners", {
     params,
   })
 }
 
-export interface UploadableMediaFile {
-  alt?: string
-  file: File
-  source?: string | null
-  title?: string | null
-  type: MediaFile["type"]
+export interface UploadableBanner
+  extends Omit<
+    Banner,
+    "id" | "updated_at" | "inserted_at" | "mobile_cover" | "desktop_cover"
+  > {
+  mobile_cover: {
+    file: File
+  }
+  desktop_cover: {
+    file: File
+  }
 }
 
-function create(data: UploadableMediaFile) {
+function create(data: UploadableBanner) {
   const formData = new FormData()
   Object.keys(data).forEach((key) =>
-    formData.append(decamelize(key), data[key]),
+    typeof data[key] !== "string"
+      ? formData.append(key, JSON.stringify(data[key]))
+      : formData.append(key, data[key]),
   )
-  if (!data.title) formData.append("title", data.file.name)
-  return request<MediaFile>("POST", "/media", { data: formData })
+  return request<Banner>("POST", "/banners", { data: formData })
 }
 
 export interface EditableMediaFile {
@@ -50,16 +58,16 @@ export interface EditableMediaFile {
   title?: string | null
 }
 
-function update(media: EditableMediaFile) {
-  return request<MediaFile>("PATCH", `/media/${media.id}`, {
+function update(banner: EditableMediaFile) {
+  return request<MediaFile>("PATCH", `/banners/${banner.id}`, {
     data: {
-      ...media,
+      ...banner,
     },
   })
 }
 
 function remove(id: number) {
-  return request<MediaFile>("DELETE", `/media/${id}`)
+  return request<MediaFile>("DELETE", `/banners/${id}`)
 }
 
 export const bannersApi = {

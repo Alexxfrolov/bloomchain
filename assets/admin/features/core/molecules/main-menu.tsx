@@ -359,11 +359,11 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
               <ListItemIcon style={{ paddingLeft: "7px" }}>
                 <FaceRoundedIcon style={{ color: indigo[500] }} />
               </ListItemIcon>
-              <ListItemText primary="Активные" />
+              <ListItemText primary="Активные баннеры" />
             </RouterLink>
           </ListItem>
         </Tooltip>
-        <Tooltip title={openedDrawer ? "" : "В ожидании"}>
+        <Tooltip title={openedDrawer ? "" : "Баннеры в ожидании"}>
           <ListItem
             aria-current={
               isCurrentMenu("admin.banners.waiting") ? "page" : undefined
@@ -381,7 +381,7 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
             </RouterLink>
           </ListItem>
         </Tooltip>
-        <Tooltip title={openedDrawer ? "" : "Неактинвые"}>
+        <Tooltip title={openedDrawer ? "" : "Неактинвые баннеры"}>
           <ListItem
             aria-current={
               isCurrentMenu("admin.banners.unactive") ? "page" : undefined

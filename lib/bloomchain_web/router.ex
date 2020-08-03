@@ -18,8 +18,8 @@ defmodule BloomchainWeb.Router do
   end
 
   pipeline :admin do
-    # plug(BloomchainWeb.Plug.Authentication)
-    # plug(BloomchainWeb.Plug.EnsureAuthentication)
+    plug(BloomchainWeb.Plug.Authentication)
+    plug(BloomchainWeb.Plug.EnsureAuthentication)
     plug(:put_layout, {BloomchainWeb.LayoutView, :admin})
   end
 

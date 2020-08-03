@@ -11,8 +11,8 @@ import {
 import { useSnackbar } from "notistack"
 import AddBoxIcon from "@material-ui/icons/AddBox"
 import { OrderDirection, Pagination } from "@api/common/types"
-import { mediaApi, UploadableMediaFile, MediaFile } from "@api/media"
-import { archivesApi, Archive, UpdateArchiveData } from "@api/archives"
+import { mediaApi, UploadableMediaFile } from "@api/media"
+import { archivesApi, Archive } from "@api/archives"
 import { RequestStatus } from "@features/core"
 import {
   ArchivesTable,
