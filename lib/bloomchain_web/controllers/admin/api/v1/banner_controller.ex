@@ -22,10 +22,7 @@ defmodule BloomchainWeb.Admin.Api.V1.BannerController do
     )
   end
 
-  def create(
-        conn,
-        %{desktop_cover: %Plug.Upload{}, mobile_cover: %Plug.Upload{}, type: _} = params
-      ) do
+  def create(conn, params) do
     item =
       Banner.changeset(%Banner{}, params)
       |> Repo.insert!()
