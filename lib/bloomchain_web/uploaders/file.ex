@@ -28,6 +28,10 @@ defmodule BloomchainWeb.Uploaders.File do
     ~w(.mp4 .avi) |> Enum.member?(String.downcase(Path.extname(file.file_name)))
   end
 
+  def filename(_version, {%{file_name: file_name}, %{type: "banner"}}) do
+    Path.basename(file_name, Path.extname(file_name))
+  end
+
   def filename(version, {_file, _scope}) do
     version
   end

@@ -1,8 +1,9 @@
 defmodule Bloomchain.Content.Banner do
   use Ecto.Schema
-  import Ecto.Changeset
+  import Ecto.{Changeset, Query}
 
-  alias Bloomchain.Content.Media
+  alias Bloomchain.Repo
+  alias Bloomchain.Content.{Banner, Media}
 
   schema "banners" do
     field(:type, :string)
@@ -35,5 +36,19 @@ defmodule Bloomchain.Content.Banner do
     |> validate_required(@required_fields)
     |> validate_inclusion(:type, @types)
     |> validate_inclusion(:status, @statuses)
+  end
+
+  def rand(type) do
+    id =
+      from(
+        b in Banner,
+        where: b.type == ^type and b.status == "active",
+        select: b.id
+      )
+      |> Repo.all()
+      |> Enum.random()
+
+    Repo.get!(Banner, id)
+    |> Repo.preload([:desktop_cover, :mobile_cover])
   end
 end

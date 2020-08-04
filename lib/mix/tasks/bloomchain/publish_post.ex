@@ -8,8 +8,6 @@ defmodule Mix.Tasks.Bloomchain.PublishPost do
 
   @shortdoc "Проставляет статус \"Опубликовано\" для отложенных публикаций"
   def run(_) do
-    # start the Repo for interacting with data
-    Mix.Task.run("app.start")
     time_now = Timex.now()
 
     {count, _} =

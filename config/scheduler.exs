@@ -4,7 +4,8 @@ config :bloomchain, Bloomchain.Scheduler,
   jobs: [
     # Every minute
     {"* * * * *", {Mix.Task, :rerun, ["bloomchain.publish_post"]}},
-    # # Every 15 minutes
+    {"* * * * *", {Mix.Task, :rerun, ["bloomchain.banner_timer"]}},
+    # Every 15 minutes
     {"*/15 * * * *",
      fn ->
        # При первом запуске обязательно надо иметь 2 значание монеты из-за неверной логики в алгоритме
