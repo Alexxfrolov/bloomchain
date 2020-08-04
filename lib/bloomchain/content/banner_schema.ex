@@ -39,16 +39,17 @@ defmodule Bloomchain.Content.Banner do
   end
 
   def rand(type) do
-    id =
-      from(
-        b in Banner,
-        where: b.type == ^type and b.status == "active",
-        select: b.id
-      )
+    ids =
+      from(b in Banner, where: b.type == ^type and b.status == "active", select: b.id)
       |> Repo.all()
-      |> Enum.random()
 
-    Repo.get!(Banner, id)
-    |> Repo.preload([:desktop_cover, :mobile_cover])
+    if length(ids) > 0 do
+      id = Enum.random(ids)
+
+      Repo.get!(Banner, id)
+      |> Repo.preload([:desktop_cover, :mobile_cover])
+    else
+      nil
+    end
   end
 end

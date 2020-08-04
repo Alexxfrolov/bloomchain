@@ -1,0 +1,16 @@
+<%= if @banner do %>
+  <div class="bc-advertising__image-hot mx-auto">
+    <%=
+      content_tag(:picture, class: "js-lazy") do
+        img_tag(File.url({@banner.desktop_cover.file, @banner.desktop_cover}))
+        [
+          img_tag("/customer/images/cover_placeholder.jpg",
+            data_src: File.url({@banner.desktop_cover.file, @banner.desktop_cover}),
+            class: "js-lazy"
+          )
+        ]
+      end
+      |> link(to: @banner.target_url)
+    %>
+  </div>
+<% end %>

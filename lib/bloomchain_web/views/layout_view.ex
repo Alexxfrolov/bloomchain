@@ -1,6 +1,8 @@
 defmodule BloomchainWeb.LayoutView do
   use BloomchainWeb, :view
   alias BloomchainWeb.Router.Helpers
+  alias Bloomchain.Content.Banner
+  alias BloomchainWeb.Uploaders.File
 
   def title(assigns) do
     assigns[:title] || get_in(assigns, [:article, :title]) ||
