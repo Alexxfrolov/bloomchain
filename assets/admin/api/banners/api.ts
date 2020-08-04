@@ -1,3 +1,4 @@
+import { serialize } from "object-to-formdata"
 import { request } from "@features/core"
 
 import type { Pagination, PaginationParams, OrderParams } from "../common"
@@ -34,20 +35,26 @@ export interface UploadableBanner
     "id" | "updated_at" | "inserted_at" | "mobile_cover" | "desktop_cover"
   > {
   mobile_cover: {
+    type: "banner"
     file: File
   }
   desktop_cover: {
+    type: "banner"
     file: File
   }
 }
 
 function create(data: UploadableBanner) {
-  const formData = new FormData()
-  Object.keys(data).forEach((key) =>
-    typeof data[key] !== "string"
-      ? formData.append(key, JSON.stringify(data[key]))
-      : formData.append(key, data[key]),
-  )
+  const formData = serialize(data)
+  // const formData = new FormData()
+  // Object.keys(data).forEach((key) =>
+  //   typeof data[key] === "object"
+  //     ? formData.append(
+  //         key,
+  //         new Blob([JSON.stringify(data[key])], { type: "application/json" }),
+  //       )
+  //     : formData.append(key, data[key]),
+  // )
   return request<Banner>("POST", "/banners", { data: formData })
 }
 
