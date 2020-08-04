@@ -30,7 +30,7 @@ defmodule Bloomchain.Content.Media do
 
   @required_fields ~w(type)a
   @optional_fields ~w(title source uuid content_type alt)a
-  @types ~w(image pdf)a
+  @types ~w(image pdf banner)
 
   def list_all(type) do
     from(
