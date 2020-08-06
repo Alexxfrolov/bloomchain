@@ -43,9 +43,9 @@ defmodule BloomchainWeb.Admin.Api.V1.BannerController do
   def update(conn, %{id: id} = params) do
     item =
       Repo.get!(Banner, id)
+      |> Repo.preload([:desktop_cover, :mobile_cover])
       |> Banner.changeset(params)
       |> Repo.update!()
-      |> Repo.preload([:desktop_cover, :mobile_cover])
 
     conn
     |> render("show.json", item: item)
