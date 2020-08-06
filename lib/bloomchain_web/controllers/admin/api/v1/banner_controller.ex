@@ -6,7 +6,7 @@ defmodule BloomchainWeb.Admin.Api.V1.BannerController do
 
   alias Bloomchain.{Repo, Content.Banner}
 
-  plug :valid_filters, [:type, :since, :until] when action in [:index]
+  plug :valid_filters, [:type, :status, :since, :until] when action in [:index]
   plug :valid_sort_params when action in [:index]
 
   def index(conn, params) do
