@@ -94,6 +94,10 @@ const useStyles = makeStyles((theme) => ({
   contentFull: {
     maxWidth: `calc(100% - ${theme.spacing(7)}px)`,
     transform: `translateX(${theme.spacing(7)}px)`,
+    [theme.breakpoints.up("sm")]: {
+      maxWidth: `calc(100% - ${theme.spacing(9)}px)`,
+      transform: `translateX(${theme.spacing(9)}px)`,
+    },
   },
   paper: {
     padding: theme.spacing(2),

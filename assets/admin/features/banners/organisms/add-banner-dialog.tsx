@@ -2,11 +2,13 @@ import React, { useCallback } from "react"
 import { useFormik } from "formik"
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   FormControl,
+  FormControlLabel,
   FormHelperText,
   MenuItem,
   TextField,
@@ -281,6 +283,14 @@ export function AddBannerDialog(props: AddBannerDialogProps) {
               />
             </FormControl>
           </MuiPickersUtilsProvider>
+          <FormControlLabel
+            value="start"
+            control={
+              <Checkbox defaultChecked={true} color="primary" disabled={true} />
+            }
+            label="Размещается"
+            labelPlacement="end"
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">

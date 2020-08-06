@@ -1,2 +1,8 @@
 export { bannersApi } from "./api"
-export type { BannerType, BannerStatus, Banner, UploadableBanner } from "./api"
+export type {
+  BannerType,
+  BannerStatus,
+  Banner,
+  EditableBanner,
+  UploadableBanner,
+} from "./api"

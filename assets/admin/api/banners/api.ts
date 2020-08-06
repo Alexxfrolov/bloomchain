@@ -52,7 +52,31 @@ function create(data: UploadableBanner) {
   return request<Banner>("POST", "/banners", { data: formData })
 }
 
-function update(banner: Banner) {
+export interface EditableBanner extends Banner {
+  desktop_cover: {
+    file: File | null
+  } & Banner["desktop_cover"]
+  mobile_cover: {
+    file: File | null
+  } & Banner["mobile_cover"]
+}
+
+function update(banner: EditableBanner) {
+  if (banner.desktop_cover.url !== null) {
+    delete banner.desktop_cover.file
+  }
+
+  if (banner.mobile_cover.url !== null) {
+    delete banner.mobile_cover.file
+  }
+
+  if (banner.desktop_cover.file || banner.mobile_cover.file) {
+    const formData = serialize(banner)
+    return request<Banner>("PATCH", `/banners/${banner.id}`, {
+      data: formData,
+    })
+  }
+
   return request<Banner>("PATCH", `/banners/${banner.id}`, {
     data: {
       ...banner,

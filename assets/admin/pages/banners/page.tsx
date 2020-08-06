@@ -1,10 +1,13 @@
-import React, { useEffect, useState, useCallback } from "react"
+import React, { useEffect, useState, useCallback, ChangeEvent } from "react"
 import {
+  AppBar,
   Container,
+  IconButton,
   Paper,
+  Tab,
+  Tabs,
   Toolbar,
   Typography,
-  IconButton,
   makeStyles,
   createStyles,
 } from "@material-ui/core"
@@ -17,9 +20,8 @@ import {
   EditBannerDialog,
 } from "@features/banners"
 import type { OrderDirection, Pagination } from "@api/common/types"
-import type { Banner, UploadableBanner } from "@api/banners"
+import type { Banner, EditableBanner, UploadableBanner } from "@api/banners"
 import type { RequestStatus } from "@features/core"
-import type { EditableBanner } from "@features/banners"
 
 type BannersPageState = {
   data: Banner[]
@@ -31,7 +33,7 @@ type BannersPageState = {
   orderDirection: OrderDirection
   pagination: Pagination
   request_status: RequestStatus
-  status: Banner["status"]
+  tabIndex: number
 }
 
 export function BannersPage() {
@@ -54,7 +56,7 @@ export function BannersPage() {
     isOpenedAddFormDialog: false,
     isOpenedEditFormDialog: false,
     modifyingBanner: null,
-    status: "active",
+    tabIndex: 0,
   })
 
   useEffect(() => {
@@ -63,7 +65,7 @@ export function BannersPage() {
       page: state.pagination.page,
       orderDirection: state.orderDirection,
       orderBy: state.orderBy,
-      status: state.status,
+      status: mapTabNumberToBannerStatus[state.tabIndex],
     } as const
 
     bannersApi
@@ -85,7 +87,7 @@ export function BannersPage() {
     state.pagination.page,
     state.orderDirection,
     state.orderBy,
-    state.status,
+    state.tabIndex,
   ])
 
   const handleTablePageChange = useCallback(
@@ -135,6 +137,10 @@ export function BannersPage() {
     }))
   }, [])
 
+  const handleChangeTabs = (_event: ChangeEvent<{}>, tabIndex: number) => {
+    setState((state) => ({ ...state, tabIndex }))
+  }
+
   const createBanner = useCallback(
     async (banner: UploadableBanner) => {
       setState((state) => ({ ...state, request_status: "pending" }))
@@ -166,7 +172,7 @@ export function BannersPage() {
   )
 
   const updateBanner = useCallback(
-    async (banner: Banner) => {
+    async (banner: EditableBanner) => {
       setState((state) => ({ ...state, request_status: "pending" }))
       try {
         const response = await bannersApi.update(banner)
@@ -174,14 +180,17 @@ export function BannersPage() {
           ...state,
           error: null,
           request_status: "success",
-          data: state.data.map((item) =>
-            item.id === response.data.id
-              ? {
-                  ...item,
-                  ...response.data,
-                }
-              : item,
-          ),
+          data:
+            response.data.status === mapTabNumberToBannerStatus[state.tabIndex]
+              ? state.data.map((item) =>
+                  item.id === response.data.id
+                    ? {
+                        ...item,
+                        ...response.data,
+                      }
+                    : item,
+                )
+              : state.data.filter((item) => item.id !== response.data.id),
           isOpenedEditFormDialog: false,
         }))
         enqueueSnackbar("Баннер успешно отредактирован", {
@@ -202,19 +211,29 @@ export function BannersPage() {
     [enqueueSnackbar],
   )
 
-  const deteleBanner = useCallback(async () => {
-    setState((state) => ({ ...state, request_status: "pending" }))
-    try {
-      enqueueSnackbar("Баннер удален", {
-        variant: "success",
-      })
-    } catch (error) {
-      setState((state) => ({ ...state, error, request_status: "error" }))
-      enqueueSnackbar("Произошла ошибка", {
-        variant: "error",
-      })
-    }
-  }, [enqueueSnackbar])
+  const deteleBanner = useCallback(
+    async (banner: Banner) => {
+      setState((state) => ({ ...state, request_status: "pending" }))
+      try {
+        await bannersApi.remove(banner.id)
+        setState((state) => ({
+          ...state,
+          error: null,
+          request_status: "success",
+          data: state.data.filter((item) => item.id !== banner.id),
+        }))
+        enqueueSnackbar("Баннер удален", {
+          variant: "success",
+        })
+      } catch (error) {
+        setState((state) => ({ ...state, error, request_status: "error" }))
+        enqueueSnackbar("Произошла ошибка", {
+          variant: "error",
+        })
+      }
+    },
+    [enqueueSnackbar],
+  )
 
   return (
     <Container maxWidth="lg">
@@ -233,6 +252,20 @@ export function BannersPage() {
             <AddBoxIcon color="action" />
           </IconButton>
         </Toolbar>
+        <AppBar position="static" color="default">
+          <Tabs
+            value={state.tabIndex}
+            onChange={handleChangeTabs}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+            aria-label="full width tabs example"
+          >
+            <Tab label="Активные" {...a11yProps(0)} />
+            <Tab label="Неактивные" {...a11yProps(1)} />
+            <Tab label="В ожидании" {...a11yProps(2)} />
+          </Tabs>
+        </AppBar>
         <BannersTable
           data={state.data}
           isLoading={state.request_status === "pending"}
@@ -275,3 +308,16 @@ const useStyles = makeStyles((theme) =>
     },
   }),
 )
+
+function a11yProps(index: number) {
+  return {
+    id: `banner-type-${index}`,
+    "aria-controls": `banner-tabpanel-${index}`,
+  }
+}
+
+const mapTabNumberToBannerStatus: Record<number, Banner["status"]> = {
+  0: "active",
+  1: "unactive",
+  2: "waiting",
+}

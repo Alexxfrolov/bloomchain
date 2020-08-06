@@ -18,9 +18,8 @@ import DateFnsUtils from "@date-io/date-fns"
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import { ru } from "date-fns/locale"
 import { getBlobUrl } from "@lib/blob"
-import type { Banner } from "@api/banners"
+import type { Banner, EditableBanner } from "@api/banners"
 import { DropZone } from "@features/core"
-import type { EditableBanner } from "@features/banners"
 
 import { BannerEditSchema } from "../schemes"
 
@@ -28,7 +27,7 @@ type EditBannerDialogProps = {
   data: EditableBanner
   isOpened: boolean
   onClose: () => void
-  onSubmit: (data: Banner) => Promise<void>
+  onSubmit: (data: EditableBanner) => Promise<void>
 }
 
 export function EditBannerDialog(props: EditBannerDialogProps) {
@@ -60,6 +59,7 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
   const handleDropCover = useCallback(
     (field: "desktop_cover.file" | "mobile_cover.file") => (files: File[]) => {
       setFieldValue(field, files[0])
+      setFieldValue(field.split(".")[0] + ".url", null)
     },
     [setFieldValue],
   )
@@ -74,12 +74,10 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
 
   const handleChangeCheckbox = useCallback(
     (status: Banner["status"]) => () => {
-      setFieldValue("status", status === "active" ? "unacitve" : "active")
+      setFieldValue("status", status === "active" ? "unactive" : "active")
     },
     [setFieldValue],
   )
-
-  console.log(errors)
 
   return (
     <Dialog
