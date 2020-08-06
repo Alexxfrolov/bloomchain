@@ -37,16 +37,10 @@ export const Table = <T extends object>(props: MaterialTableProps<T>) => {
       backgroundColor: indigo[600],
       color: "#fff",
     },
-    rowStyle: (_data: unknown, index: number, _level: number) => {
-      if (index % 2 > 0) {
-        return {
-          backgroundColor: grey[150],
-        }
-      }
-      return {
-        backgroundColor: grey[50],
-      }
-    },
+    rowStyle: (_data: unknown, index: number, _level: number) =>
+      index % 2 > 0
+        ? { backgroundColor: grey[150] }
+        : { backgroundColor: grey[50] },
     ...options,
   }
 

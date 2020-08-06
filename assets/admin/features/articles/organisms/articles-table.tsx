@@ -123,13 +123,14 @@ const ArticlesTableFilters = memo((props: ArticlesTableFiltersProps) => {
 
   return (
     <TableRow>
-      <TableCell />
-      <TableCell>
+      <TableCell style={{ padding: "8px 5px" }} />
+      <TableCell colSpan={6} style={{ padding: "8px 5px" }}>
         <Select
           name="type"
           value={type}
-          fullWidth={true}
+          fullWidth={false}
           onChange={handleSelectChange}
+          style={{ fontSize: "14px" }}
         >
           {sections.map((section) => (
             <MenuItem key={section.slug} value={section.slug}>
@@ -138,11 +139,6 @@ const ArticlesTableFilters = memo((props: ArticlesTableFiltersProps) => {
           ))}
         </Select>
       </TableCell>
-      <TableCell />
-      <TableCell />
-      <TableCell></TableCell>
-      <TableCell />
-      <TableCell />
     </TableRow>
   )
 })
@@ -153,13 +149,19 @@ function createColumns(sections: Section[]): Column<Article>[] {
       field: "type",
       title: "Раздел",
       sorting: false,
+      cellStyle: {
+        padding: "8px 5px",
+      },
       render: (article) => getArticleTypeName(sections, article.type),
     },
     {
       field: "title",
       title: "Заголовок",
       filtering: false,
-      cellStyle: { whiteSpace: "nowrap" },
+      cellStyle: {
+        padding: "8px 5px",
+        width: "40%",
+      },
       render: (article) =>
         article.url ? (
           <Link href={article.url} target="_blank">
@@ -174,6 +176,9 @@ function createColumns(sections: Section[]): Column<Article>[] {
       title: "Автор(ы)",
       sorting: false,
       filtering: false,
+      cellStyle: {
+        padding: "8px 5px",
+      },
       render: (article) =>
         article.authors
           .reduce<string[]>((names, author) => [...names, author.name], [])
@@ -184,6 +189,9 @@ function createColumns(sections: Section[]): Column<Article>[] {
       title: "Дата публикации",
       filtering: false,
       type: "date",
+      cellStyle: {
+        padding: "8px 5px",
+      },
       render: (article) =>
         article.published_at
           ? format(new Date(article.published_at), "dd.MM.yyyy HH:mm")
@@ -194,6 +202,9 @@ function createColumns(sections: Section[]): Column<Article>[] {
       title: "Дата обновления",
       filtering: false,
       type: "date",
+      cellStyle: {
+        padding: "8px 5px",
+      },
       render: (article) =>
         article.updated_at
           ? format(new Date(article.updated_at), "dd.MM.yyyy HH:mm")
@@ -203,6 +214,9 @@ function createColumns(sections: Section[]): Column<Article>[] {
       field: "total_views",
       title: "Просмотров",
       type: "numeric",
+      cellStyle: {
+        padding: "8px 16px 8px 5px",
+      },
       filtering: false,
     },
   ]
