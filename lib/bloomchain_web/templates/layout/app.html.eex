@@ -56,7 +56,9 @@
     <script src="https://unpkg.com/quicklink@2.0.0/dist/quicklink.umd.js" defer></script>
     <script>
       window.addEventListener('load', () =>{
-        quicklink.listen();
+        quicklink.listen({
+          timeout: 6000,
+        });
       });
     </script>
     <script>
@@ -69,12 +71,12 @@
     <script type="text/javascript">
     setTimeout(function() {
       !function(e,t,m,n,a,c,i){e.ym=e.ym||function(){(e.ym.a=e.ym.a||[]).push(arguments)},e.ym.l=1*new Date,c=t.createElement(m),i=t.getElementsByTagName(m)[0],c.async=1,c.src="https://mc.yandex.ru/metrika/tag.js",i.parentNode.insertBefore(c,i)}(window,document,"script"),ym(46112067,"init",{clickmap:!0}),ym(52762162,"init",{clickmap:!0});
-    }, 10000)
+    }, 6000)
     </script>
     <script defer src="https://www.googletagmanager.com/gtag/js?id=UA-107257260-1"></script>
     <script>
     setTimeout(function() {
       function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-107257260-1");
-    }, 10000)
+    }, 6000)
     </script>
 </html>

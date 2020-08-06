@@ -142,7 +142,7 @@
     "highcharts": "~8.1.0",
     "history": "~4.10.1",
     "humps": "~2.0.1",
-    "material-table": "~1.66.0",
+    "material-table": "1.57.2",
     "nanoid": "~2.1.8",
     "notistack": "~0.9.16",
     "object-to-formdata": "^4.1.0",
