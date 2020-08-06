@@ -24,6 +24,7 @@ import PollRoundedIcon from "@material-ui/icons/PollRounded"
 import AlternateEmailIcon from "@material-ui/icons/AlternateEmail"
 import OpenInNewRoundedIcon from "@material-ui/icons/OpenInNewRounded"
 import FaceRoundedIcon from "@material-ui/icons/FaceRounded"
+import LocalOfferRoundedIcon from "@material-ui/icons/LocalOfferRounded"
 import { RouterLink, useCurrentUser } from "@features/core"
 
 const useStyles = makeStyles((theme) => ({
@@ -342,60 +343,19 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
       <List>
         {openedDrawer && (
           <ListSubheader inset={true} disableSticky={true}>
-            Баннеры
+            Реклама
           </ListSubheader>
         )}
-        <Tooltip title={openedDrawer ? "" : "Активные"}>
+        <Tooltip title={openedDrawer ? "" : "Баннеры"}>
           <ListItem
-            aria-current={
-              isCurrentMenu("admin.banners.active") ? "page" : undefined
-            }
+            aria-current={isCurrentMenu("admin.banners") ? "page" : undefined}
             className={classes.listitem}
           >
-            <RouterLink
-              routeName="admin.banners.active"
-              className={classes.link}
-            >
+            <RouterLink routeName="admin.banners" className={classes.link}>
               <ListItemIcon style={{ paddingLeft: "7px" }}>
-                <FaceRoundedIcon style={{ color: indigo[500] }} />
+                <LocalOfferRoundedIcon style={{ color: indigo[500] }} />
               </ListItemIcon>
-              <ListItemText primary="Активные баннеры" />
-            </RouterLink>
-          </ListItem>
-        </Tooltip>
-        <Tooltip title={openedDrawer ? "" : "Баннеры в ожидании"}>
-          <ListItem
-            aria-current={
-              isCurrentMenu("admin.banners.waiting") ? "page" : undefined
-            }
-            className={classes.listitem}
-          >
-            <RouterLink
-              routeName="admin.banners.waiting"
-              className={classes.link}
-            >
-              <ListItemIcon style={{ paddingLeft: "7px" }}>
-                <LabelRoundedIcon style={{ color: indigo[500] }} />
-              </ListItemIcon>
-              <ListItemText primary="В ожидании" />
-            </RouterLink>
-          </ListItem>
-        </Tooltip>
-        <Tooltip title={openedDrawer ? "" : "Неактинвые баннеры"}>
-          <ListItem
-            aria-current={
-              isCurrentMenu("admin.banners.unactive") ? "page" : undefined
-            }
-            className={classes.listitem}
-          >
-            <RouterLink
-              routeName="admin.banners.unactive"
-              className={classes.link}
-            >
-              <ListItemIcon style={{ paddingLeft: "7px" }}>
-                <PermMediaRoundedIcon style={{ color: indigo[500] }} />
-              </ListItemIcon>
-              <ListItemText primary="Неактинвые" />
+              <ListItemText primary="Баннеры" />
             </RouterLink>
           </ListItem>
         </Tooltip>

@@ -2747,3 +2747,7 @@ input:focus-within {
 .hamburger--slider-r.hamburger[aria-expanded=true] .hamburger-inner:after, .hamburger--slider-r.is-active .hamburger-inner:after, .hamburger--slider-r.navbar-toggler[aria-expanded=true] .hamburger-inner:after {
   transform: translate3d(0,-12px,0) rotate(90deg);
 }
+
+.fr-img-space-wrap + p {
+  margin-top: 1rem;
+}

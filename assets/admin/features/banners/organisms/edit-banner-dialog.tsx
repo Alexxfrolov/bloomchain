@@ -1,92 +1,104 @@
 import React, { useCallback } from "react"
 import { useFormik } from "formik"
 import {
+  Button,
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
-  Typography,
+  DialogContent,
+  DialogTitle,
   FormControl,
   FormHelperText,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-  Link,
-  Button,
+  MenuItem,
+  TextField,
+  Typography,
 } from "@material-ui/core"
-import PictureAsPdfOutlinedIcon from "@material-ui/icons/PictureAsPdfOutlined"
+import DateFnsUtils from "@date-io/date-fns"
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
+import { ru } from "date-fns/locale"
 import { getBlobUrl } from "@lib/blob"
-import { Banner } from "@api/banners"
-import { MediaFile } from "@api/media"
+import type { Banner, UploadableBanner } from "@api/banners"
 import { DropZone } from "@features/core"
 
 import { BannerSchema } from "../schemes"
 
+interface InitialBanner {
+  client: string | null
+  desktop_cover: {
+    type: "banner"
+    file: File | null
+  }
+  mobile_cover: {
+    type: "banner"
+    file: File | null
+  }
+  date_start: string | Date | null
+  date_end: string | Date | null
+  status: Banner["status"]
+  target_url: string | null
+  type: Banner["type"] | null
+}
+
+const initialBanner: InitialBanner = {
+  client: null,
+  desktop_cover: {
+    type: "banner",
+    file: null,
+  },
+  mobile_cover: {
+    type: "banner",
+    file: null,
+  },
+  date_start: null,
+  date_end: null,
+  status: "active",
+  target_url: null,
+  type: null,
+}
+
 type EditBannerDialogProps = {
-  data: Banner
   isOpened: boolean
-  onSubmit: (data: {
-    id: number
-    cover?: File | null
-    pdf?: File | null
-  }) => Promise<void>
+  onSubmit: (banner: UploadableBanner) => Promise<void>
   onClose: () => void
 }
 
 export function EditBannerDialog(props: EditBannerDialogProps) {
-  const { data, isOpened, onClose, onSubmit } = props
+  const { isOpened, onClose, onSubmit } = props
 
   const {
     values,
     touched,
     errors,
     isSubmitting,
+    handleChange,
+    handleBlur,
     handleSubmit,
     setFieldValue,
     setFieldTouched,
-  } = useFormik<{
-    cover: File | MediaFile | null
-    pdf: File | MediaFile | null
-  }>({
-    enableReinitialize: true,
+  } = useFormik<InitialBanner>({
     initialValues: {
-      cover: data.cover,
-      pdf: data.pdf,
+      ...initialBanner,
     },
+    validateOnChange: true,
+    validateOnBlur: false,
     validationSchema: BannerSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      const files = Object.keys(values).reduce(
-        (acc, key) =>
-          values[key] instanceof File
-            ? Object.assign(acc, { [key]: values[key] })
-            : acc,
-        {},
-      ) as {
-        cover?: File | null
-        pdf?: File | null
-      }
-      if (Object.keys(files).length) {
-        await onSubmit({ id: data.id, ...files })
-      }
+      await onSubmit(values as UploadableBanner)
       setSubmitting(false)
       resetForm()
     },
   })
 
-  const handleDropImage = useCallback(
-    (files: File[]) => {
-      setFieldValue("cover", files[0])
-      setFieldTouched("cover", true)
+  const handleDropCover = useCallback(
+    (field: "desktop_cover.file" | "mobile_cover.file") => (files: File[]) => {
+      setFieldValue(field, files[0])
     },
-    [setFieldValue, setFieldTouched],
+    [setFieldValue],
   )
 
-  const handleDropPdf = useCallback(
-    (files: File[]) => {
-      setFieldValue("pdf", files[0])
-      setFieldTouched("pdf", true)
+  const handleDateChange = useCallback(
+    (field: "date_start" | "date_end") => (date: Date | null) => {
+      setFieldValue(field, date)
+      setFieldTouched(field, true)
     },
     [setFieldValue, setFieldTouched],
   )
@@ -99,101 +111,180 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
     >
       <form onSubmit={handleSubmit} noValidate={true}>
         <DialogTitle id="add-archive-form-dialog">
-          Редактирование архива
+          Добавить новый баннер
         </DialogTitle>
         <DialogContent dividers={true}>
+          <TextField
+            name="client"
+            label="Имя клиента"
+            required={true}
+            value={values.client ?? ""}
+            error={"client" in errors && touched.client}
+            helperText={touched.client ? errors.client : undefined}
+            disabled={isSubmitting}
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            autoComplete="new-banner-client"
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <TextField
+            name="target_url"
+            label="Ссылка для перехода"
+            required={true}
+            value={values.target_url ?? ""}
+            error={"target_url" in errors && touched.target_url}
+            helperText={touched.target_url ? errors.target_url : undefined}
+            disabled={isSubmitting}
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            autoComplete="new-banner-target-url"
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <FormControl margin="normal" fullWidth={true}>
+            <TextField
+              id="type"
+              name="type"
+              select={true}
+              label="Расположение баннера"
+              required={true}
+              disabled={isSubmitting}
+              value={values.type ?? ""}
+              error={"type" in errors && touched.type}
+              helperText={touched.type ? errors.type : undefined}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              variant="outlined"
+            >
+              {["header", "article"].map((type) => (
+                <MenuItem key={type} value={type}>
+                  {type}
+                </MenuItem>
+              ))}
+            </TextField>
+          </FormControl>
           <FormControl margin="normal" fullWidth={true}>
             <Typography variant="h6" component="h6">
-              Обложка
+              Баннер для desktop *
             </Typography>
           </FormControl>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <DropZone
               title="Переместите сюда изображение"
-              accept={["image/jpeg", "image/jpg", "image/png"]}
+              accept={["image/jpeg", "image/png", "image/jpg"]}
               disabled={isSubmitting}
-              onDrop={handleDropImage}
+              onDrop={handleDropCover("desktop_cover.file")}
             />
-            {"cover" in errors && touched.cover && (
-              <FormHelperText error={true}>{errors.cover}</FormHelperText>
+            {"desktop_cover" in errors && touched.desktop_cover?.file && (
+              <FormHelperText error={true}>
+                {errors.desktop_cover?.file}
+              </FormHelperText>
             )}
           </FormControl>
           <FormControl margin="normal" fullWidth={true}>
             <Typography variant="h6" component="h6" gutterBottom={true}>
               Предварительный просмотр:
             </Typography>
-            {values.cover && values.cover instanceof File ? (
-              <img
-                style={{
-                  maxWidth: "200px",
-                  maxHeight: "200px",
-                  objectFit: "contain",
-                }}
-                width="100%"
-                src={getBlobUrl(values.cover)}
-                alt=""
-              />
-            ) : (
-              <img
-                style={{
-                  maxWidth: "200px",
-                  maxHeight: "200px",
-                  objectFit: "contain",
-                }}
-                width="100%"
-                src={data.cover.url}
-                alt=""
-              />
-            )}
+            {values.desktop_cover?.file &&
+              getBlobUrl(values.desktop_cover.file) && (
+                <img
+                  style={{
+                    maxWidth: "200px",
+                    maxHeight: "200px",
+                    objectFit: "contain",
+                  }}
+                  width="100%"
+                  src={getBlobUrl(values.desktop_cover.file)}
+                  alt=""
+                />
+              )}
           </FormControl>
           <FormControl margin="normal" fullWidth={true}>
             <Typography variant="h6" component="h6">
-              PDF
+              Баннер для mobile *
             </Typography>
           </FormControl>
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <DropZone
-              title="Переместите сюда пдф"
-              accept="application/pdf"
+              title="Переместите сюда изображение"
+              accept={["image/jpeg", "image/png", "image/jpg"]}
               disabled={isSubmitting}
-              onDrop={handleDropPdf}
+              onDrop={handleDropCover("mobile_cover.file")}
             />
-            {"pdf" in errors && touched.pdf && (
-              <FormHelperText error={true}>{errors.pdf}</FormHelperText>
+            {"mobile_cover" in errors && touched.mobile_cover?.file && (
+              <FormHelperText error={true}>
+                {errors.mobile_cover?.file}
+              </FormHelperText>
             )}
           </FormControl>
           <FormControl margin="normal" fullWidth={true}>
-            <List>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <PictureAsPdfOutlinedIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText>
-                  {values.pdf && values.pdf instanceof File ? (
-                    <Link href={getBlobUrl(values.pdf)} target="_blank">
-                      {values.pdf.name}
-                    </Link>
-                  ) : (
-                    <Link href={data.pdf.url} target="_blank">
-                      {data.pdf.title}
-                    </Link>
-                  )}
-                </ListItemText>
-              </ListItem>
-            </List>
+            <Typography variant="h6" component="h6" gutterBottom={true}>
+              Предварительный просмотр:
+            </Typography>
+            {values.mobile_cover?.file && getBlobUrl(values.mobile_cover.file) && (
+              <img
+                style={{
+                  maxWidth: "200px",
+                  maxHeight: "200px",
+                  objectFit: "contain",
+                }}
+                width="100%"
+                src={getBlobUrl(values.mobile_cover.file)}
+                alt=""
+              />
+            )}
           </FormControl>
+          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
+            <FormControl margin="normal" fullWidth={true} variant="outlined">
+              <DatePicker
+                name="date_start"
+                variant="dialog"
+                margin="none"
+                fullWidth={true}
+                required={true}
+                error={"date_start" in errors && "date_start" in touched}
+                helperText={
+                  "date_start" in errors && "date_start" in touched
+                    ? errors.date_start
+                    : null
+                }
+                inputVariant="outlined"
+                label="Дата начала показов"
+                format="dd/MM/yyyy"
+                value={values.date_start}
+                onChange={handleDateChange("date_start")}
+              />
+            </FormControl>
+            <FormControl margin="normal" fullWidth={true} variant="outlined">
+              <DatePicker
+                name="date_end"
+                variant="dialog"
+                required={true}
+                margin="none"
+                fullWidth={true}
+                error={"date_end" in errors && "date_end" in touched}
+                helperText={
+                  "date_end" in errors && "date_end" in touched
+                    ? errors.date_end
+                    : null
+                }
+                inputVariant="outlined"
+                label="Дата окончания показов"
+                format="dd/MM/yyyy"
+                value={values.date_end}
+                onChange={handleDateChange("date_end")}
+              />
+            </FormControl>
+          </MuiPickersUtilsProvider>
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">
             Отменить
           </Button>
-          <Button
-            type="submit"
-            disabled={isSubmitting || !Object.keys(touched).length}
-            color="primary"
-          >
+          <Button type="submit" disabled={isSubmitting} color="primary">
             Сохранить
           </Button>
         </DialogActions>
