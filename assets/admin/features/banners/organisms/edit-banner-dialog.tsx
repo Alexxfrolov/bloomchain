@@ -2,11 +2,13 @@ import React, { useCallback } from "react"
 import { useFormik } from "formik"
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   FormControl,
+  FormControlLabel,
   FormHelperText,
   MenuItem,
   TextField,
@@ -16,53 +18,21 @@ import DateFnsUtils from "@date-io/date-fns"
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import { ru } from "date-fns/locale"
 import { getBlobUrl } from "@lib/blob"
-import type { Banner, UploadableBanner } from "@api/banners"
+import type { Banner } from "@api/banners"
 import { DropZone } from "@features/core"
+import type { EditableBanner } from "@features/banners"
 
-import { BannerSchema } from "../schemes"
-
-interface InitialBanner {
-  client: string | null
-  desktop_cover: {
-    type: "banner"
-    file: File | null
-  }
-  mobile_cover: {
-    type: "banner"
-    file: File | null
-  }
-  date_start: string | Date | null
-  date_end: string | Date | null
-  status: Banner["status"]
-  target_url: string | null
-  type: Banner["type"] | null
-}
-
-const initialBanner: InitialBanner = {
-  client: null,
-  desktop_cover: {
-    type: "banner",
-    file: null,
-  },
-  mobile_cover: {
-    type: "banner",
-    file: null,
-  },
-  date_start: null,
-  date_end: null,
-  status: "active",
-  target_url: null,
-  type: null,
-}
+import { BannerEditSchema } from "../schemes"
 
 type EditBannerDialogProps = {
+  data: EditableBanner
   isOpened: boolean
-  onSubmit: (banner: UploadableBanner) => Promise<void>
   onClose: () => void
+  onSubmit: (data: Banner) => Promise<void>
 }
 
 export function EditBannerDialog(props: EditBannerDialogProps) {
-  const { isOpened, onClose, onSubmit } = props
+  const { data, isOpened, onClose, onSubmit } = props
 
   const {
     values,
@@ -74,17 +44,16 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
     handleSubmit,
     setFieldValue,
     setFieldTouched,
-  } = useFormik<InitialBanner>({
+  } = useFormik<EditableBanner>({
     initialValues: {
-      ...initialBanner,
+      ...data,
     },
     validateOnChange: true,
     validateOnBlur: false,
-    validationSchema: BannerSchema,
-    onSubmit: async (values, { setSubmitting, resetForm }) => {
-      await onSubmit(values as UploadableBanner)
+    validationSchema: BannerEditSchema,
+    onSubmit: async (values, { setSubmitting }) => {
+      await onSubmit(values)
       setSubmitting(false)
-      resetForm()
     },
   })
 
@@ -103,6 +72,15 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
     [setFieldValue, setFieldTouched],
   )
 
+  const handleChangeCheckbox = useCallback(
+    (status: Banner["status"]) => () => {
+      setFieldValue("status", status === "active" ? "unacitve" : "active")
+    },
+    [setFieldValue],
+  )
+
+  console.log(errors)
+
   return (
     <Dialog
       open={isOpened}
@@ -111,14 +89,14 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
     >
       <form onSubmit={handleSubmit} noValidate={true}>
         <DialogTitle id="add-archive-form-dialog">
-          Добавить новый баннер
+          Редактирование баннера
         </DialogTitle>
         <DialogContent dividers={true}>
           <TextField
             name="client"
             label="Имя клиента"
             required={true}
-            value={values.client ?? ""}
+            value={values.client}
             error={"client" in errors && touched.client}
             helperText={touched.client ? errors.client : undefined}
             disabled={isSubmitting}
@@ -133,7 +111,7 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
             name="target_url"
             label="Ссылка для перехода"
             required={true}
-            value={values.target_url ?? ""}
+            value={values.target_url}
             error={"target_url" in errors && touched.target_url}
             helperText={touched.target_url ? errors.target_url : undefined}
             disabled={isSubmitting}
@@ -152,7 +130,7 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
               label="Расположение баннера"
               required={true}
               disabled={isSubmitting}
-              value={values.type ?? ""}
+              value={values.type}
               error={"type" in errors && touched.type}
               helperText={touched.type ? errors.type : undefined}
               onChange={handleChange}
@@ -189,18 +167,29 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
               Предварительный просмотр:
             </Typography>
             {values.desktop_cover?.file &&
-              getBlobUrl(values.desktop_cover.file) && (
-                <img
-                  style={{
-                    maxWidth: "200px",
-                    maxHeight: "200px",
-                    objectFit: "contain",
-                  }}
-                  width="100%"
-                  src={getBlobUrl(values.desktop_cover.file)}
-                  alt=""
-                />
-              )}
+            getBlobUrl(values.desktop_cover.file) ? (
+              <img
+                style={{
+                  maxWidth: "200px",
+                  maxHeight: "200px",
+                  objectFit: "contain",
+                }}
+                width="100%"
+                src={getBlobUrl(values.desktop_cover.file)}
+                alt=""
+              />
+            ) : (
+              <img
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "200px",
+                  objectFit: "contain",
+                }}
+                width="100%"
+                src={values.desktop_cover.url}
+                alt=""
+              />
+            )}
           </FormControl>
           <FormControl margin="normal" fullWidth={true}>
             <Typography variant="h6" component="h6">
@@ -224,7 +213,8 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
             <Typography variant="h6" component="h6" gutterBottom={true}>
               Предварительный просмотр:
             </Typography>
-            {values.mobile_cover?.file && getBlobUrl(values.mobile_cover.file) && (
+            {values.mobile_cover?.file &&
+            getBlobUrl(values.mobile_cover.file) ? (
               <img
                 style={{
                   maxWidth: "200px",
@@ -233,6 +223,17 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
                 }}
                 width="100%"
                 src={getBlobUrl(values.mobile_cover.file)}
+                alt=""
+              />
+            ) : (
+              <img
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "200px",
+                  objectFit: "contain",
+                }}
+                width="100%"
+                src={values.mobile_cover.url}
                 alt=""
               />
             )}
@@ -245,6 +246,7 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
                 margin="none"
                 fullWidth={true}
                 required={true}
+                disablePast={true}
                 error={"date_start" in errors && "date_start" in touched}
                 helperText={
                   "date_start" in errors && "date_start" in touched
@@ -263,6 +265,7 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
                 name="date_end"
                 variant="dialog"
                 required={true}
+                disablePast={true}
                 margin="none"
                 fullWidth={true}
                 error={"date_end" in errors && "date_end" in touched}
@@ -279,6 +282,18 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
               />
             </FormControl>
           </MuiPickersUtilsProvider>
+          <FormControlLabel
+            value="start"
+            control={
+              <Checkbox
+                checked={values.status === "active"}
+                color="primary"
+                onChange={handleChangeCheckbox(values.status)}
+              />
+            }
+            label="Размещается"
+            labelPlacement="end"
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">

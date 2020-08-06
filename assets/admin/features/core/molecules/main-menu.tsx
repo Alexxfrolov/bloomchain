@@ -339,27 +339,33 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
           </ListItem>
         </Tooltip>
       </List>
-      <Divider />
-      <List>
-        {openedDrawer && (
-          <ListSubheader inset={true} disableSticky={true}>
-            Реклама
-          </ListSubheader>
-        )}
-        <Tooltip title={openedDrawer ? "" : "Баннеры"}>
-          <ListItem
-            aria-current={isCurrentMenu("admin.banners") ? "page" : undefined}
-            className={classes.listitem}
-          >
-            <RouterLink routeName="admin.banners" className={classes.link}>
-              <ListItemIcon style={{ paddingLeft: "7px" }}>
-                <LocalOfferRoundedIcon style={{ color: indigo[500] }} />
-              </ListItemIcon>
-              <ListItemText primary="Баннеры" />
-            </RouterLink>
-          </ListItem>
-        </Tooltip>
-      </List>
+      {user && user.role === "admin" && (
+        <Fragment>
+          <Divider />
+          <List>
+            {openedDrawer && (
+              <ListSubheader inset={true} disableSticky={true}>
+                Реклама
+              </ListSubheader>
+            )}
+            <Tooltip title={openedDrawer ? "" : "Баннеры"}>
+              <ListItem
+                aria-current={
+                  isCurrentMenu("admin.banners") ? "page" : undefined
+                }
+                className={classes.listitem}
+              >
+                <RouterLink routeName="admin.banners" className={classes.link}>
+                  <ListItemIcon style={{ paddingLeft: "7px" }}>
+                    <LocalOfferRoundedIcon style={{ color: indigo[500] }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Баннеры" />
+                </RouterLink>
+              </ListItem>
+            </Tooltip>
+          </List>
+        </Fragment>
+      )}
     </Fragment>
   )
 })

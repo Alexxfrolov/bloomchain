@@ -19,17 +19,19 @@ import {
 import type { OrderDirection, Pagination } from "@api/common/types"
 import type { Banner, UploadableBanner } from "@api/banners"
 import type { RequestStatus } from "@features/core"
+import type { EditableBanner } from "@features/banners"
 
 type BannersPageState = {
-  request_status: RequestStatus
-  error: string | null
   data: Banner[]
-  pagination: Pagination
-  orderDirection: OrderDirection
-  orderBy: keyof Banner
+  error: string | null
   isOpenedAddFormDialog: boolean
   isOpenedEditFormDialog: boolean
-  modifyingArchive: Banner | null
+  modifyingBanner: EditableBanner | null
+  orderBy: keyof Banner
+  orderDirection: OrderDirection
+  pagination: Pagination
+  request_status: RequestStatus
+  status: Banner["status"]
 }
 
 export function BannersPage() {
@@ -51,7 +53,8 @@ export function BannersPage() {
     orderBy: "inserted_at",
     isOpenedAddFormDialog: false,
     isOpenedEditFormDialog: false,
-    modifyingArchive: null,
+    modifyingBanner: null,
+    status: "active",
   })
 
   useEffect(() => {
@@ -60,6 +63,7 @@ export function BannersPage() {
       page: state.pagination.page,
       orderDirection: state.orderDirection,
       orderBy: state.orderBy,
+      status: state.status,
     } as const
 
     bannersApi
@@ -81,6 +85,7 @@ export function BannersPage() {
     state.pagination.page,
     state.orderDirection,
     state.orderBy,
+    state.status,
   ])
 
   const handleTablePageChange = useCallback(
@@ -112,11 +117,21 @@ export function BannersPage() {
     [],
   )
 
-  const handleClickRowEdit = useCallback((modifyingArchive: Banner) => {
+  const handleClickRowEdit = useCallback((modifyingBanner: Banner) => {
     setState((state) => ({
       ...state,
       isOpenedEditFormDialog: true,
-      modifyingArchive,
+      modifyingBanner: {
+        ...modifyingBanner,
+        desktop_cover: {
+          ...modifyingBanner.desktop_cover,
+          file: null,
+        },
+        mobile_cover: {
+          ...modifyingBanner.mobile_cover,
+          file: null,
+        },
+      },
     }))
   }, [])
 
@@ -150,24 +165,42 @@ export function BannersPage() {
     [enqueueSnackbar],
   )
 
-  const updateBanner = useCallback(async () => {
-    setState((state) => ({ ...state, request_status: "pending" }))
-    try {
-      enqueueSnackbar("Баннер успешно отредактирован", {
-        variant: "success",
-      })
-    } catch (error) {
-      setState((state) => ({
-        ...state,
-        error,
-        request_status: "error",
-        isOpenedEditFormDialog: false,
-      }))
-      enqueueSnackbar("Произошла ошибка", {
-        variant: "error",
-      })
-    }
-  }, [enqueueSnackbar])
+  const updateBanner = useCallback(
+    async (banner: Banner) => {
+      setState((state) => ({ ...state, request_status: "pending" }))
+      try {
+        const response = await bannersApi.update(banner)
+        setState((state) => ({
+          ...state,
+          error: null,
+          request_status: "success",
+          data: state.data.map((item) =>
+            item.id === response.data.id
+              ? {
+                  ...item,
+                  ...response.data,
+                }
+              : item,
+          ),
+          isOpenedEditFormDialog: false,
+        }))
+        enqueueSnackbar("Баннер успешно отредактирован", {
+          variant: "success",
+        })
+      } catch (error) {
+        setState((state) => ({
+          ...state,
+          error,
+          request_status: "error",
+          isOpenedEditFormDialog: false,
+        }))
+        enqueueSnackbar("Произошла ошибка", {
+          variant: "error",
+        })
+      }
+    },
+    [enqueueSnackbar],
+  )
 
   const deteleBanner = useCallback(async () => {
     setState((state) => ({ ...state, request_status: "pending" }))
@@ -217,9 +250,9 @@ export function BannersPage() {
           }
           onSubmit={createBanner}
         />
-        {state.modifyingArchive && (
+        {state.modifyingBanner && (
           <EditBannerDialog
-            data={state.modifyingArchive}
+            data={state.modifyingBanner}
             isOpened={state.isOpenedEditFormDialog}
             onClose={() =>
               setState((state) => ({ ...state, isOpenedEditFormDialog: false }))

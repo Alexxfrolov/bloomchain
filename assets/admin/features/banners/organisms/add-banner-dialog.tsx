@@ -19,7 +19,7 @@ import { getBlobUrl } from "@lib/blob"
 import type { Banner, UploadableBanner } from "@api/banners"
 import { DropZone } from "@features/core"
 
-import { BannerSchema } from "../schemes"
+import { BannerCreateSchema } from "../schemes"
 
 interface InitialBanner {
   client: string | null
@@ -80,7 +80,7 @@ export function AddBannerDialog(props: AddBannerDialogProps) {
     },
     validateOnChange: true,
     validateOnBlur: false,
-    validationSchema: BannerSchema,
+    validationSchema: BannerCreateSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       await onSubmit(values as UploadableBanner)
       setSubmitting(false)
@@ -192,7 +192,7 @@ export function AddBannerDialog(props: AddBannerDialogProps) {
               getBlobUrl(values.desktop_cover.file) && (
                 <img
                   style={{
-                    maxWidth: "200px",
+                    maxWidth: "100%",
                     maxHeight: "200px",
                     objectFit: "contain",
                   }}
@@ -227,7 +227,7 @@ export function AddBannerDialog(props: AddBannerDialogProps) {
             {values.mobile_cover?.file && getBlobUrl(values.mobile_cover.file) && (
               <img
                 style={{
-                  maxWidth: "200px",
+                  maxWidth: "100%",
                   maxHeight: "200px",
                   objectFit: "contain",
                 }}
@@ -245,6 +245,7 @@ export function AddBannerDialog(props: AddBannerDialogProps) {
                 margin="none"
                 fullWidth={true}
                 required={true}
+                disablePast={true}
                 error={"date_start" in errors && "date_start" in touched}
                 helperText={
                   "date_start" in errors && "date_start" in touched
@@ -264,6 +265,7 @@ export function AddBannerDialog(props: AddBannerDialogProps) {
                 variant="dialog"
                 required={true}
                 margin="none"
+                disablePast={true}
                 fullWidth={true}
                 error={"date_end" in errors && "date_end" in touched}
                 helperText={

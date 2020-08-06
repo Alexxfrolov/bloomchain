@@ -89,14 +89,14 @@ const columns: Column<Banner>[] = [
     title: "Клиент",
     field: "client",
     cellStyle: {
-      padding: "5px",
+      padding: "16px 8px",
     },
   },
   {
     title: "Ссылка перехода",
     field: "target_url",
     cellStyle: {
-      padding: "5px",
+      padding: "16px 8px",
     },
     render: (banner) => (
       <a href={banner.target_url} target="_blank" rel="noopener noreferrer">
@@ -108,14 +108,14 @@ const columns: Column<Banner>[] = [
     title: "Расположение баннера",
     field: "type",
     cellStyle: {
-      padding: "5px",
+      padding: "16px 8px",
     },
   },
   {
     title: "Desktop картинка",
     field: "desktop_cover",
     cellStyle: {
-      padding: "5px",
+      padding: "16px 8px",
     },
     render: (banner) => (
       <img
@@ -129,7 +129,7 @@ const columns: Column<Banner>[] = [
     title: "Mobile картинка",
     field: "mobile_cover",
     cellStyle: {
-      padding: "5px",
+      padding: "16px 8px",
     },
     render: (banner) => (
       <img
@@ -143,7 +143,7 @@ const columns: Column<Banner>[] = [
     title: "Дата начала показов",
     field: "date_start",
     cellStyle: {
-      padding: "5px",
+      padding: "16px 8px",
     },
     render: (banner) => format(new Date(banner.date_start), "dd.MM.yyyy"),
   },
@@ -151,15 +151,8 @@ const columns: Column<Banner>[] = [
     title: "Дата окончания показов",
     field: "date_end",
     cellStyle: {
-      padding: "5px",
+      padding: "16px 8px",
     },
     render: (banner) => format(new Date(banner.date_end), "dd.MM.yyyy"),
-  },
-  {
-    title: "Статус",
-    field: "status",
-    cellStyle: {
-      padding: "5px",
-    },
   },
 ]

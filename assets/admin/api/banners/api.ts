@@ -11,7 +11,7 @@ export interface Banner {
   updated_at: string | Date | number | null
   type: BannerType
   target_url: string
-  status: "active"
+  status: BannerStatus
   mobile_cover: MediaFile
   inserted_at: string | Date | number | null
   id: number
@@ -21,7 +21,10 @@ export interface Banner {
   client: string
 }
 
-type Params = Partial<OrderParams<Banner>> & Partial<PaginationParams>
+type Params = Partial<OrderParams<Banner>> &
+  Partial<PaginationParams> & {
+    status: BannerStatus
+  }
 
 function get(params: Params) {
   return request<{ data: Banner[]; meta: Pagination }>("GET", "/banners", {
@@ -46,27 +49,11 @@ export interface UploadableBanner
 
 function create(data: UploadableBanner) {
   const formData = serialize(data)
-  // const formData = new FormData()
-  // Object.keys(data).forEach((key) =>
-  //   typeof data[key] === "object"
-  //     ? formData.append(
-  //         key,
-  //         new Blob([JSON.stringify(data[key])], { type: "application/json" }),
-  //       )
-  //     : formData.append(key, data[key]),
-  // )
   return request<Banner>("POST", "/banners", { data: formData })
 }
 
-export interface EditableMediaFile {
-  alt: string | null
-  id: MediaFile["id"]
-  source?: string | null
-  title?: string | null
-}
-
-function update(banner: EditableMediaFile) {
-  return request<MediaFile>("PATCH", `/banners/${banner.id}`, {
+function update(banner: Banner) {
+  return request<Banner>("PATCH", `/banners/${banner.id}`, {
     data: {
       ...banner,
     },
