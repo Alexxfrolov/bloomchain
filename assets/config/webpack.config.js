@@ -31,6 +31,7 @@ module.exports = (env, options) => {
     entry: {
       "customer/charts": path.resolve("./customer/src/charts.js"),
       "customer/bundle": path.resolve("./customer/src/app.js"),
+      "customer/metrics": path.resolve("./customer/src/metrics.js"),
       "admin/bundle": path.resolve("./admin/index.tsx"),
     },
     output: {

@@ -88,3 +88,8 @@ export class Metrics {
     )
   }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  const metrics = new Metrics(".js-banner")
+  metrics.init()
+})
