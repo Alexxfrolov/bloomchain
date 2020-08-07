@@ -64,8 +64,8 @@ export class Metrics {
     })
   }
 
-  view = (event) => {
-    const { banner_id } = this.getOptions(event.target)
+  view = (element) => {
+    const { banner_id } = this.getOptions(element)
     this.request({ banner_id, type: "view" })
     // const imageObserver = new IntersectionObserver(this.bannerObserver)
     // imageObserver.observe(event.target)
@@ -76,15 +76,13 @@ export class Metrics {
     this.request({ banner_id, type: "click" }).then(() => {
       setTimeout(() => {
         window.location.href = target_url
-      }, 50)
+      }, 200)
     })
   }
 
   init() {
     const elements = this.getElements()
-    Array.from(elements).forEach((element) =>
-      element.addEventListener("load", this.view),
-    )
+    Array.from(elements).forEach((element) => this.view(element))
     Array.from(elements).forEach((element) =>
       element.addEventListener("click", this.click),
     )

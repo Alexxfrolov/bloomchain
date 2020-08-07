@@ -242,12 +242,11 @@ if (document.readyState === "complete" || document.readyState !== "loading") {
     const observer = new MutationObserver(callback)
     observer.observe(pagination_container, config)
   }
+  const metrics = new Metrics(".js-banner")
+  metrics.init()
 } else {
   document.addEventListener("DOMContentLoaded", Sharer.init)
 }
-
-const metrics = new Metrics(".js-banner")
-metrics.init()
 
 function imageLazyLoad(entries, _imgObserver) {
   entries.forEach((entry) => {
