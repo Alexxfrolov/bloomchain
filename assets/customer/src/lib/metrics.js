@@ -65,8 +65,11 @@ export class Metrics {
   }
 
   view = (event) => {
-    const imageObserver = new IntersectionObserver(this.bannerObserver)
-    imageObserver.observe(event.target)
+    console.log(event.target)
+    const { banner_id } = this.getOptions(event.target)
+    this.request({ banner_id, type: "view" })
+    // const imageObserver = new IntersectionObserver(this.bannerObserver)
+    // imageObserver.observe(event.target)
   }
 
   click = (event) => {
