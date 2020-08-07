@@ -12,7 +12,7 @@ defmodule BloomchainWeb.Admin.Api.V1.StatisticView do
   def statistic_json(item) do
     %{
       banner: banner_json(item.banner),
-      statistics: stats_json(item)
+      metrics: stats_json(item)
     }
   end
 
