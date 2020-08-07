@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/alexmoisdeveloper/bloomchain-admin",
   "engines": {
-    "node": ">=10.16.0"
+    "node": ">=10.18.1"
   },
   "size-limit": [
     {
