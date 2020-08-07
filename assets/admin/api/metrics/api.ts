@@ -8,18 +8,18 @@ export interface Metrics {
   ctr: string
 }
 
-export type FiltersParams = {
+export type MetricsParams = {
   since?: Date | string | null
   until?: Date | string | null
 }
 
-function get(filters: FiltersParams) {
+function get(params?: MetricsParams) {
   return request<{ data: { metrics: Metrics; banner: Banner }[] }>(
     "GET",
     "/statistics",
     {
       params: {
-        ...filters,
+        ...params,
       },
     },
   )

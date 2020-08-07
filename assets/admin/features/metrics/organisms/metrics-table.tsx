@@ -14,11 +14,11 @@ export function MetricsTable(props: MetricsTableProps) {
 
   return (
     <Table
-      title="Метрики"
       data={data}
       columns={columns}
       isLoading={isLoading}
       options={{
+        toolbar: false,
         sorting: false,
         paging: false,
         headerStyle: {
@@ -33,7 +33,18 @@ export function MetricsTable(props: MetricsTableProps) {
 const columns: Column<{ metrics: Metrics; banner: Banner }>[] = [
   { field: "banner.client", title: "Клиент" },
   { field: "banner.type", title: "Тип баннера" },
-  { field: "metrics.total_views", title: "Просмотры" },
-  { field: "metrics.total_clicks", title: "Клики" },
-  { field: "metrics.ctr", title: "CTR" },
+  {
+    field: "banner.desktop_cover",
+    title: "Тип баннера",
+    render: (data) => (
+      <img
+        style={{ maxWidth: "200px", objectFit: "contain" }}
+        src={data.banner.desktop_cover.url}
+        alt=""
+      />
+    ),
+  },
+  { field: "metrics.total_views", title: "Просмотры", type: "numeric" },
+  { field: "metrics.total_clicks", title: "Клики", type: "numeric" },
+  { field: "metrics.ctr", title: "CTR", type: "numeric" },
 ]
