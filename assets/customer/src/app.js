@@ -1,5 +1,6 @@
 import { Subscription } from "./subscription"
 import { Sharer } from "./lib/share-social"
+import { Metrics } from "./lib/metrics"
 import { parseHTML, throwback_by_history } from "./lib/dom"
 
 import "./app.css"
@@ -241,6 +242,9 @@ if (document.readyState === "complete" || document.readyState !== "loading") {
     const observer = new MutationObserver(callback)
     observer.observe(pagination_container, config)
   }
+
+  const metrics = new Metrics(".js-banner")
+  metrics.init()
 } else {
   document.addEventListener("DOMContentLoaded", Sharer.init)
 }

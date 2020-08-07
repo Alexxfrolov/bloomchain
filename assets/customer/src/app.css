@@ -2706,3 +2706,7 @@ input:focus-within {
 .fr-img-space-wrap + p {
   margin-top: 1rem;
 }
+
+.bc-advertising__image-large img {
+  max-height: none;
+}

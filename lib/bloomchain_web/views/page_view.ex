@@ -49,7 +49,7 @@ defmodule BloomchainWeb.PageView do
           Phoenix.HTML.raw(item.title),
           to: path,
           class:
-            "bc-news__title bc-article__heading font-weight-medium line-clamp line-clamp__size_2"
+            "bc-news__title bc-article__heading font-weight-medium line-clamp line-clamp__size_3"
         )
       ]
     end

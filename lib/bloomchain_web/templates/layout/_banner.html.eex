@@ -3,11 +3,10 @@
     <%=
       content_tag(:picture) do
         [
-          tag(:source, srcset: File.url({@banner.mobile_cover.file, @banner.mobile_cover}), media: "(min-width: 980px)"),
-          img_tag(File.url({@banner.mobile_cover.file, @banner.mobile_cover}))
+          tag(:source, srcset: File.url({@banner.desktop_cover.file, @banner.desktop_cover}), media: "(min-width: 980px)"),
+          img_tag(File.url({@banner.mobile_cover.file, @banner.mobile_cover}), class: "js-banner", data_banner_id: @banner.id, data_target_url: @banner.target_url)
         ]
       end
-      |> link(to: @banner.target_url)
     %>
   </div>
 <% end %>

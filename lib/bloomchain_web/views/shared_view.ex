@@ -39,7 +39,7 @@ defmodule BloomchainWeb.SharedView do
       content_tag(:div, class: "bc-article__image") do
         [
           image_tag(item),
-          content_tag(:p, Phoenix.HTML.raw(item.title), class: "line-clamp line-clamp__size_2"),
+          content_tag(:p, Phoenix.HTML.raw(item.title), class: "line-clamp line-clamp__size_3"),
           content_tag(:div, class: "d-flex align-items-center") do
             article_attrs(item)
           end
@@ -55,7 +55,7 @@ defmodule BloomchainWeb.SharedView do
       [
         link(Phoenix.HTML.raw(item.title),
           to: href_path(item),
-          class: "bc-article__heading bc-article__heading__h2 line-clamp line-clamp__size_2"
+          class: "bc-article__heading bc-article__heading__h2 line-clamp line-clamp__size_3"
         ),
         content_tag(:p, Phoenix.HTML.raw(item.lead),
           class: "bc-article__paragraph mt-2 line-clamp line-clamp__size_3"
@@ -75,7 +75,7 @@ defmodule BloomchainWeb.SharedView do
         content_tag(:hr, nil, class: "bc-article__separator mx-0 my-3"),
         link(Phoenix.HTML.raw(item.title),
           to: href_path(item),
-          class: "bc-article__heading line-clamp line-clamp__size_2"
+          class: "bc-article__heading line-clamp line-clamp__size_3"
         ),
         content_tag(:p, Phoenix.HTML.raw(item.lead),
           class: "bc-article__paragraph mt-1 line-clamp line-clamp__size_3"
