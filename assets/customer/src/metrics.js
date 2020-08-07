@@ -9,6 +9,10 @@ export class Metrics {
     this.viewsState = [].concat(data, this.viewsState)
   }
 
+  clearViewsState = () => {
+    this.viewsState = []
+  }
+
   getElements = () => {
     return document.querySelectorAll(this.selector)
   }
@@ -73,6 +77,7 @@ export class Metrics {
     const { banner_id, target_url } = this.getOptions(event.target)
     this.request({ banner_id, type: "click" }).then(() => {
       setTimeout(() => {
+        this.clearViewsState()
         window.location.href = target_url
       }, 200)
     })
