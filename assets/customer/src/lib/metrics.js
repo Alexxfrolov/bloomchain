@@ -18,7 +18,7 @@ export class Metrics {
     return { banner_id, target_url }
   }
 
-  bannerObserver = (entries, imgObserver) => {
+  bannerObserver = (entries, _imgObserver) => {
     entries.forEach((entry) => {
       if (
         entry.isIntersecting &&
@@ -46,9 +46,11 @@ export class Metrics {
     })
   }
 
-  async request(data, target_url) {
+  async request(data) {
     fetch(this.apiURL, {
       method: "POST",
+      mode: "cors",
+      cache: "no-cache",
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -67,11 +69,13 @@ export class Metrics {
     imageObserver.observe(event.target)
   }
 
-  click = async (event) => {
+  click = (event) => {
     const { banner_id, target_url } = this.getOptions(event.target)
-    this.request({ banner_id, type: "click" }, target_url).then(
-      () => (window.location.href = target_url),
-    )
+    this.request({ banner_id, type: "click" }).then(() => {
+      setTimeout(() => {
+        window.location.href = target_url
+      }, 50)
+    })
   }
 
   init() {

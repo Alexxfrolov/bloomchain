@@ -217,7 +217,7 @@ if (document.readyState === "complete" || document.readyState !== "loading") {
     imageObserver.observe(image)
   })
 
-  const callback = function (mutationsList, observer) {
+  const callback = function (mutationsList, _observer) {
     for (let mutation of mutationsList) {
       if (mutation.type === "childList") {
         const nodes = mutation.addedNodes
@@ -249,7 +249,7 @@ if (document.readyState === "complete" || document.readyState !== "loading") {
   document.addEventListener("DOMContentLoaded", Sharer.init)
 }
 
-function imageLazyLoad(entries, imgObserver) {
+function imageLazyLoad(entries, _imgObserver) {
   entries.forEach((entry) => {
     if (entry.isIntersecting && entry.target.tagName === "IMG") {
       const lazyImage = entry.target
