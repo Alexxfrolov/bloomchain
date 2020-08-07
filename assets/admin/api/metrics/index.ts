@@ -1,2 +1,2 @@
 export { metricsApi } from "./api"
-export type { Metrics, FiltersParams } from "./api"
+export type { Metrics, MetricsParams } from "./api"
