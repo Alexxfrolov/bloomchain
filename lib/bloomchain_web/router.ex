@@ -58,6 +58,7 @@ defmodule BloomchainWeb.Router do
       resources("/sections", Admin.Api.V1.SectionController)
       resources("/redirects", Admin.Api.V1.RedirectController)
       resources("/banners", Admin.Api.V1.BannerController)
+      resources("/statistics", Admin.Api.V1.StatisticController, only: [:index])
     end
 
     scope "/preview" do
