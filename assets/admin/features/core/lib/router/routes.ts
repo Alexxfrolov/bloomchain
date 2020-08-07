@@ -72,6 +72,10 @@ export const routes: Route[] = [
         name: "banners",
         path: "/banners",
       },
+      {
+        name: "metrics",
+        path: "/metrics",
+      },
     ],
   },
 ]

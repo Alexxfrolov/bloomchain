@@ -25,6 +25,7 @@ import AlternateEmailIcon from "@material-ui/icons/AlternateEmail"
 import OpenInNewRoundedIcon from "@material-ui/icons/OpenInNewRounded"
 import FaceRoundedIcon from "@material-ui/icons/FaceRounded"
 import LocalOfferRoundedIcon from "@material-ui/icons/LocalOfferRounded"
+import AssessmentRoundedIcon from "@material-ui/icons/AssessmentRounded"
 import { RouterLink, useCurrentUser } from "@features/core"
 
 const useStyles = makeStyles((theme) => ({
@@ -360,6 +361,21 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
                     <LocalOfferRoundedIcon style={{ color: indigo[500] }} />
                   </ListItemIcon>
                   <ListItemText primary="Баннеры" />
+                </RouterLink>
+              </ListItem>
+            </Tooltip>
+            <Tooltip title={openedDrawer ? "" : "Метрики"}>
+              <ListItem
+                aria-current={
+                  isCurrentMenu("admin.metrics") ? "page" : undefined
+                }
+                className={classes.listitem}
+              >
+                <RouterLink routeName="admin.metrics" className={classes.link}>
+                  <ListItemIcon style={{ paddingLeft: "7px" }}>
+                    <AssessmentRoundedIcon style={{ color: indigo[500] }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Метрики" />
                 </RouterLink>
               </ListItem>
             </Tooltip>

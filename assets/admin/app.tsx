@@ -11,6 +11,7 @@ import {
   AuthorsPage,
   BannersPage,
   MediaPage,
+  MetricsPage,
   RedirectsPage,
   SectionsPage,
   SubscribersPage,
@@ -54,6 +55,8 @@ export const App = () => {
         return <SectionsPage />
       case "admin.banners":
         return <BannersPage />
+      case "admin.metrics":
+        return <MetricsPage />
       default:
         return null
     }
