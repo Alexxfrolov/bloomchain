@@ -89,6 +89,7 @@ defmodule BloomchainWeb.Router do
 
     resources("/index", Api.IndexController, only: [:index])
     resources("/subscription", Api.SubscriptionController, only: [:create])
+    resources("/events", Api.EventController, only: [:create])
   end
 
   scope "/", BloomchainWeb do

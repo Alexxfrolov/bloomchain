@@ -3,7 +3,7 @@ defmodule Bloomchain.Content.Banner do
   import Ecto.{Changeset, Query}
 
   alias Bloomchain.Repo
-  alias Bloomchain.Content.{Banner, Media}
+  alias Bloomchain.Content.{Banner, Media, Statistic, Event}
 
   schema "banners" do
     field(:type, :string)
@@ -16,6 +16,9 @@ defmodule Bloomchain.Content.Banner do
 
     belongs_to(:desktop_cover, Media, foreign_key: :desktop_cover_id)
     belongs_to(:mobile_cover, Media, foreign_key: :mobile_cover_id)
+
+    has_one(:statistic, Statistic)
+    has_many(:events, Event)
 
     timestamps()
   end
