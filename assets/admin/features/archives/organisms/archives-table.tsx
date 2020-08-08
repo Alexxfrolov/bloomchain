@@ -78,7 +78,7 @@ export const ArchivesTable = memo(function ArchivesTable(
       actions={[
         {
           icon: () => <IconEdit />,
-          tooltip: "Редактирование архива",
+          tooltip: "Редактировать",
           onClick: handleClickEditAtion,
         },
       ]}

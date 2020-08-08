@@ -73,7 +73,7 @@ export function BannersTable(props: AuthorsTableProps) {
       actions={[
         {
           icon: () => <IconEdit />,
-          tooltip: "Редактирование архива",
+          tooltip: "Редактировать",
           onClick: handleClickEditAtion,
         },
       ]}

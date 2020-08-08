@@ -95,7 +95,7 @@ export function ArticlesTable(props: ArticlesTableProps) {
       actions={[
         {
           icon: () => <IconEdit />,
-          tooltip: "Редактирование статьи",
+          tooltip: "Редактировать",
           onClick: handleClickEditAtion,
         },
       ]}
