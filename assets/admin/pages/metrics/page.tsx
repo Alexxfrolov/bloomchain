@@ -45,6 +45,8 @@ export function MetricsPage() {
 
   useEffect(() => {
     const params = {
+      since: state.since,
+      until: state.until,
       status: mapTabNumberToBannerStatus[state.tabIndex] as Exclude<
         Banner["status"],
         "waiting"
@@ -64,7 +66,7 @@ export function MetricsPage() {
       .catch((error) =>
         setState((state) => ({ ...state, error, request_status: "error" })),
       )
-  }, [state.tabIndex])
+  }, [state.until, state.since, state.tabIndex])
 
   const handleDateChange = useCallback(
     (field: "since" | "until") => (date: Date | null) => {
@@ -80,35 +82,13 @@ export function MetricsPage() {
     setState((state) => ({ ...state, tabIndex }))
   }
 
-  const doFilter = useCallback(
-    (event: FormEvent) => {
-      event.preventDefault()
-
-      const params = {
-        since: state.since,
-        until: state.until,
-        status: mapTabNumberToBannerStatus[state.tabIndex] as Exclude<
-          Banner["status"],
-          "waiting"
-        >,
-      } as const
-
-      metricsApi
-        .get(params)
-        .then(({ data: { data } }) =>
-          setState((state) => ({
-            ...state,
-            data,
-            error: null,
-            request_status: "success",
-          })),
-        )
-        .catch((error) =>
-          setState((state) => ({ ...state, error, request_status: "error" })),
-        )
-    },
-    [state.since, state.until, state.tabIndex],
-  )
+  const doResetFilter = useCallback(() => {
+    setState((state) => ({
+      ...state,
+      since: null,
+      until: null,
+    }))
+  }, [])
 
   return (
     <Container maxWidth="lg">
@@ -119,45 +99,48 @@ export function MetricsPage() {
           </Typography>
         </Toolbar>
         <Toolbar style={{ marginBottom: "20px" }}>
-          <form onSubmit={doFilter} style={{ width: "100%" }}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
-              <Grid container={true} spacing={2}>
-                <Grid item={true}>
-                  <DatePicker
-                    name="since"
-                    disableToolbar={true}
-                    variant="dialog"
-                    margin="none"
-                    inputVariant="outlined"
-                    size="small"
-                    label="Дата с"
-                    format="dd/MM/yyyy"
-                    value={state.since}
-                    onChange={handleDateChange("since")}
-                  />
-                </Grid>
-                <Grid item={true}>
-                  <DatePicker
-                    name="until"
-                    disableToolbar={true}
-                    variant="dialog"
-                    margin="none"
-                    inputVariant="outlined"
-                    size="small"
-                    label="Дата по"
-                    format="dd/MM/yyyy"
-                    value={state.until}
-                    onChange={handleDateChange("until")}
-                  />
-                </Grid>
-                <Grid item={true} style={{ display: "flex" }}>
-                  <Button type="submit" variant="contained" color="primary">
-                    Показать
-                  </Button>
-                </Grid>
+          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
+            <Grid container={true} spacing={2}>
+              <Grid item={true}>
+                <DatePicker
+                  name="since"
+                  disableToolbar={true}
+                  variant="dialog"
+                  margin="none"
+                  inputVariant="outlined"
+                  size="small"
+                  label="Дата с"
+                  format="dd/MM/yyyy"
+                  value={state.since}
+                  onChange={handleDateChange("since")}
+                />
               </Grid>
-            </MuiPickersUtilsProvider>
-          </form>
+              <Grid item={true}>
+                <DatePicker
+                  name="until"
+                  disableToolbar={true}
+                  variant="dialog"
+                  margin="none"
+                  inputVariant="outlined"
+                  size="small"
+                  label="Дата по"
+                  format="dd/MM/yyyy"
+                  value={state.until}
+                  onChange={handleDateChange("until")}
+                />
+              </Grid>
+              <Grid item={true} style={{ display: "flex" }}>
+                <Button
+                  type="button"
+                  variant="contained"
+                  color="primary"
+                  onClick={doResetFilter}
+                >
+                  Сбросить
+                </Button>
+              </Grid>
+            </Grid>
+          </MuiPickersUtilsProvider>
         </Toolbar>
         <AppBar position="static" color="default">
           <Tabs
