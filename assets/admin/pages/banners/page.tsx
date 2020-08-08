@@ -141,6 +141,14 @@ export function BannersPage() {
     setState((state) => ({ ...state, tabIndex }))
   }
 
+  const handleCloseEditDialog = useCallback(() => {
+    setState((state) => ({
+      ...state,
+      modifyingBanner: null,
+      isOpenedEditFormDialog: false,
+    }))
+  }, [])
+
   const createBanner = useCallback(
     async (banner: UploadableBanner) => {
       setState((state) => ({ ...state, request_status: "pending" }))
@@ -287,9 +295,8 @@ export function BannersPage() {
           <EditBannerDialog
             data={state.modifyingBanner}
             isOpened={state.isOpenedEditFormDialog}
-            onClose={() =>
-              setState((state) => ({ ...state, isOpenedEditFormDialog: false }))
-            }
+            status={mapTabNumberToBannerStatus[state.tabIndex]}
+            onClose={handleCloseEditDialog}
             onSubmit={updateBanner}
           />
         )}

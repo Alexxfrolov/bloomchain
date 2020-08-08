@@ -26,12 +26,13 @@ import { BannerEditSchema } from "../schemes"
 type EditBannerDialogProps = {
   data: EditableBanner
   isOpened: boolean
+  status: Banner["status"]
   onClose: () => void
   onSubmit: (data: EditableBanner) => Promise<void>
 }
 
 export function EditBannerDialog(props: EditBannerDialogProps) {
-  const { data, isOpened, onClose, onSubmit } = props
+  const { data, isOpened, status, onClose, onSubmit } = props
 
   const {
     values,
@@ -280,18 +281,24 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
               />
             </FormControl>
           </MuiPickersUtilsProvider>
-          <FormControlLabel
-            value="start"
-            control={
-              <Checkbox
-                checked={values.status === "active"}
-                color="primary"
-                onChange={handleChangeCheckbox(values.status)}
-              />
-            }
-            label="Размещается"
-            labelPlacement="end"
-          />
+          {status !== "waiting" ? (
+            <FormControlLabel
+              value="start"
+              control={
+                <Checkbox
+                  checked={values.status === "active"}
+                  color="primary"
+                  onChange={handleChangeCheckbox(values.status)}
+                />
+              }
+              label={
+                values.status === "active"
+                  ? "Снять с публикации"
+                  : "Опубликовать"
+              }
+              labelPlacement="end"
+            />
+          ) : null}
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">
