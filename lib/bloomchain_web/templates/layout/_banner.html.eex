@@ -1,7 +1,7 @@
 <%= if @banner do %>
   <div class="bc-advertising__image-hot mx-auto">
     <%=
-      content_tag(:picture) do
+      content_tag(:picture, class: "w-100") do
         [
           tag(:source, srcset: File.url({@banner.desktop_cover.file, @banner.desktop_cover}), media: "(min-width: 980px)"),
           img_tag(File.url({@banner.mobile_cover.file, @banner.mobile_cover}), class: "js-banner", data_banner_id: @banner.id, data_target_url: @banner.target_url)
