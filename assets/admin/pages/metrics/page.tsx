@@ -92,16 +92,17 @@ export function MetricsPage() {
           </Typography>
         </Toolbar>
         <Toolbar style={{ marginBottom: "20px" }}>
-          <form onSubmit={doFilter}>
+          <form onSubmit={doFilter} style={{ width: "100%" }}>
             <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
               <Grid container={true} spacing={2}>
                 <Grid item={true}>
                   <DatePicker
-                    id="since"
                     name="since"
+                    disableToolbar={true}
                     variant="dialog"
                     margin="none"
                     inputVariant="outlined"
+                    size="small"
                     label="Дата с"
                     format="dd/MM/yyyy"
                     value={state.since}
@@ -110,11 +111,12 @@ export function MetricsPage() {
                 </Grid>
                 <Grid item={true}>
                   <DatePicker
-                    id="until"
                     name="until"
+                    disableToolbar={true}
                     variant="dialog"
                     margin="none"
                     inputVariant="outlined"
+                    size="small"
                     label="Дата по"
                     format="dd/MM/yyyy"
                     value={state.until}
