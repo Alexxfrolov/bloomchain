@@ -200,6 +200,7 @@ export function BannersPage() {
                 )
               : state.data.filter((item) => item.id !== response.data.id),
           isOpenedEditFormDialog: false,
+          modifyingBanner: null,
         }))
         enqueueSnackbar("Баннер успешно отредактирован", {
           variant: "success",
@@ -210,6 +211,7 @@ export function BannersPage() {
           error,
           request_status: "error",
           isOpenedEditFormDialog: false,
+          modifyingBanner: null,
         }))
         enqueueSnackbar("Произошла ошибка", {
           variant: "error",
