@@ -52,7 +52,7 @@ defmodule BloomchainWeb.Admin.Api.V1.BannerController do
   end
 
   def delete(conn, %{id: id}) do
-    Repo.get!(Banner, id) |> Repo.delete!()
+    Banner.delete!(id)
 
     send_resp(conn, :no_content, "")
   end

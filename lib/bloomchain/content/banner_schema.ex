@@ -17,8 +17,7 @@ defmodule Bloomchain.Content.Banner do
     belongs_to(:desktop_cover, Media, foreign_key: :desktop_cover_id)
     belongs_to(:mobile_cover, Media, foreign_key: :mobile_cover_id)
 
-    has_one(:statistic, Statistic)
-    has_many(:events, Event)
+    has_many(:events, Event, on_delete: :delete_all)
 
     timestamps()
   end
@@ -54,5 +53,15 @@ defmodule Bloomchain.Content.Banner do
     else
       nil
     end
+  end
+
+  def delete!(id) do
+    Repo.transaction(fn ->
+      item = Repo.get!(Banner, id)
+
+      Repo.delete!(item)
+      Media.delete!(item.desktop_cover_id)
+      Media.delete!(item.mobile_cover_id)
+    end)
   end
 end
