@@ -8,7 +8,7 @@ defmodule Bloomchain.Content.Banner do
   schema "banners" do
     field(:type, :string)
     field(:target_url, :string)
-    field(:status, :string)
+    field(:status, :string, default: "waiting")
     field(:client, :string)
 
     field(:date_start, :utc_datetime)
