@@ -174,7 +174,7 @@ export function AddBannerDialog(props: AddBannerDialogProps) {
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <DropZone
               title="Переместите сюда изображение"
-              accept={["image/jpeg", "image/png", "image/jpg"]}
+              accept={["image/jpeg", "image/png", "image/jpg", "image/gif"]}
               disabled={isSubmitting}
               onDrop={handleDropCover("desktop_cover.file")}
             />
@@ -210,7 +210,7 @@ export function AddBannerDialog(props: AddBannerDialogProps) {
           <FormControl margin="normal" fullWidth={true} variant="outlined">
             <DropZone
               title="Переместите сюда изображение"
-              accept={["image/jpeg", "image/png", "image/jpg"]}
+              accept={["image/jpeg", "image/png", "image/jpg", "image/gif"]}
               disabled={isSubmitting}
               onDrop={handleDropCover("mobile_cover.file")}
             />
