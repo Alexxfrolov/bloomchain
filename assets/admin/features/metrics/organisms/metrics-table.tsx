@@ -35,11 +35,22 @@ const columns: Column<{ metrics: Metrics; banner: Banner }>[] = [
   { field: "banner.type", title: "Тип баннера" },
   {
     field: "banner.desktop_cover",
-    title: "Тип баннера",
+    title: "Desktop баннер",
     render: (data) => (
       <img
         style={{ maxWidth: "200px", objectFit: "contain" }}
         src={data.banner.desktop_cover.url}
+        alt=""
+      />
+    ),
+  },
+  {
+    field: "banner.mobile_cover",
+    title: "Mobile баннер",
+    render: (data) => (
+      <img
+        style={{ maxWidth: "200px", objectFit: "contain" }}
+        src={data.banner.mobile_cover.url}
         alt=""
       />
     ),
