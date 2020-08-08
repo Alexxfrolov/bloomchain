@@ -9,6 +9,14 @@ defmodule BloomchainWeb.Plug.ValidParams do
     conn |> assign(:filters, filters)
   end
 
+  def valid_assoc_filters(conn, params) do
+    filters =
+      conn.params
+      |> Enum.filter(fn {key, _value} -> Enum.member?(params, key) end)
+
+    conn |> assign(:assoc_filters, filters)
+  end
+
   def valid_sort_params(%{params: %{sort_by: str}} = conn, _params) do
     sort_params =
       str

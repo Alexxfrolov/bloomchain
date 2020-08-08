@@ -3,7 +3,7 @@ defmodule Bloomchain.Content.Banner do
   import Ecto.{Changeset, Query}
 
   alias Bloomchain.Repo
-  alias Bloomchain.Content.{Banner, Media, Statistic, Event}
+  alias Bloomchain.Content.{Banner, Media, Event}
 
   schema "banners" do
     field(:type, :string)
