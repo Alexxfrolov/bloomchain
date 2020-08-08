@@ -16,8 +16,12 @@ defmodule BloomchainWeb.Uploaders.File do
   ]
   @acl :public_read_write
 
-  def validate({file, %{type: type}}) when type in ~w(image banner) do
+  def validate({file, %{type: "image"}}) do
     ~w(.jpg .jpeg .png) |> Enum.member?(String.downcase(Path.extname(file.file_name)))
+  end
+
+  def validate({file, %{type: "banner"}}) do
+    ~w(.jpg .jpeg .png .gif) |> Enum.member?(String.downcase(Path.extname(file.file_name)))
   end
 
   def validate({file, %{type: "pdf"}}) do
