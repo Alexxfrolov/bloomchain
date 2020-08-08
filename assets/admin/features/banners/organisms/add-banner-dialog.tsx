@@ -90,6 +90,7 @@ export function AddBannerDialog(props: AddBannerDialogProps) {
 
   const handleDropCover = useCallback(
     (field: "desktop_cover.file" | "mobile_cover.file") => (files: File[]) => {
+      console.log(files)
       setFieldValue(field, files[0])
     },
     [setFieldValue],
