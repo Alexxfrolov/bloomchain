@@ -9,6 +9,7 @@ export interface Metrics {
 }
 
 export type MetricsParams = {
+  status: Exclude<Banner["status"], "waiting">
   since?: Date | string | null
   until?: Date | string | null
 }

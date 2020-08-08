@@ -18,6 +18,7 @@ import {
   AddBannerDialog,
   BannersTable,
   EditBannerDialog,
+  mapTabNumberToBannerStatus,
 } from "@features/banners"
 import type { OrderDirection, Pagination } from "@api/common/types"
 import type { Banner, EditableBanner, UploadableBanner } from "@api/banners"
@@ -323,10 +324,4 @@ function a11yProps(index: number) {
     id: `banner-type-${index}`,
     "aria-controls": `banner-tabpanel-${index}`,
   }
-}
-
-const mapTabNumberToBannerStatus: Record<number, Banner["status"]> = {
-  0: "active",
-  1: "unactive",
-  2: "waiting",
 }

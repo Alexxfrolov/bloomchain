@@ -1,11 +1,20 @@
-import React, { useEffect, useState, useCallback, FormEvent } from "react"
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  FormEvent,
+  ChangeEvent,
+} from "react"
 import {
+  AppBar,
+  Button,
   Container,
-  Typography,
-  Toolbar,
   Grid,
   Paper,
-  Button,
+  Tab,
+  Tabs,
+  Toolbar,
+  Typography,
 } from "@material-ui/core"
 import DateFnsUtils from "@date-io/date-fns"
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
@@ -14,13 +23,15 @@ import { metricsApi } from "@api/metrics"
 import type { Metrics, MetricsParams } from "@api/metrics"
 import type { Banner } from "@api/banners"
 import { MetricsTable } from "@features/metrics"
+import { mapTabNumberToBannerStatus } from "@features/banners"
 import type { RequestStatus } from "@features/core"
 
 type MetricsPageState = {
   request_status: RequestStatus
   error: string | null
   data: { metrics: Metrics; banner: Banner }[]
-} & MetricsParams
+  tabIndex: number
+} & Omit<MetricsParams, "status">
 
 export function MetricsPage() {
   const [state, setState] = useState<MetricsPageState>({
@@ -29,11 +40,19 @@ export function MetricsPage() {
     data: [],
     since: null,
     until: null,
+    tabIndex: 0,
   })
 
   useEffect(() => {
+    const params = {
+      status: mapTabNumberToBannerStatus[state.tabIndex] as Exclude<
+        Banner["status"],
+        "waiting"
+      >,
+    } as const
+
     metricsApi
-      .get()
+      .get(params)
       .then(({ data: { data } }) =>
         setState((state) => ({
           ...state,
@@ -45,7 +64,7 @@ export function MetricsPage() {
       .catch((error) =>
         setState((state) => ({ ...state, error, request_status: "error" })),
       )
-  }, [])
+  }, [state.tabIndex])
 
   const handleDateChange = useCallback(
     (field: "since" | "until") => (date: Date | null) => {
@@ -57,6 +76,10 @@ export function MetricsPage() {
     [],
   )
 
+  const handleChangeTabs = (_event: ChangeEvent<{}>, tabIndex: number) => {
+    setState((state) => ({ ...state, tabIndex }))
+  }
+
   const doFilter = useCallback(
     (event: FormEvent) => {
       event.preventDefault()
@@ -64,6 +87,10 @@ export function MetricsPage() {
       const params = {
         since: state.since,
         until: state.until,
+        status: mapTabNumberToBannerStatus[state.tabIndex] as Exclude<
+          Banner["status"],
+          "waiting"
+        >,
       } as const
 
       metricsApi
@@ -80,7 +107,7 @@ export function MetricsPage() {
           setState((state) => ({ ...state, error, request_status: "error" })),
         )
     },
-    [state.since, state.until],
+    [state.since, state.until, state.tabIndex],
   )
 
   return (
@@ -132,6 +159,19 @@ export function MetricsPage() {
             </MuiPickersUtilsProvider>
           </form>
         </Toolbar>
+        <AppBar position="static" color="default">
+          <Tabs
+            value={state.tabIndex}
+            onChange={handleChangeTabs}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+            aria-label="full width tabs example"
+          >
+            <Tab label="Активные баннеры" {...a11yProps(0)} />
+            <Tab label="Неактивные баннеры" {...a11yProps(1)} />
+          </Tabs>
+        </AppBar>
         <MetricsTable
           data={state.data}
           isLoading={state.request_status === "pending"}
@@ -139,4 +179,11 @@ export function MetricsPage() {
       </Paper>
     </Container>
   )
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `banner-metrics-${index}`,
+    "aria-controls": `banner-metrics-tabpanel-${index}`,
+  }
 }
