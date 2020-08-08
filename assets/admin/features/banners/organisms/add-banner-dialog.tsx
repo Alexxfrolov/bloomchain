@@ -50,7 +50,7 @@ const initialBanner: InitialBanner = {
   },
   date_start: null,
   date_end: null,
-  status: "active",
+  status: "waiting",
   target_url: null,
   type: null,
 }
