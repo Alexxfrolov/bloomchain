@@ -46,7 +46,6 @@ defmodule Bloomchain.Content.Banner do
       |> Repo.all()
 
     if length(ids) > 0 do
-      :rand.seed(:exrop, {101, 102, 103})
       id = Enum.random(ids)
 
       Repo.get!(Banner, id)
