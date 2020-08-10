@@ -50,7 +50,8 @@
         </div>
         <div class="mt-3">
           <div class="bc-footer__p">Все права защищены © ООО Ворк Майл, 2016-2020</div>
-          <div class="bc-footer__p mt-2 mb-3">Любое использование материалов допускается только с согласия редакции. Новости, аналитика и другие материалы, представленные на сайте bloomchain.ru, не являются офертой или рекомендацией к покупке или продаже.</div>
+          <div class="bc-footer__p mt-2 mb-1">Любое использование материалов допускается только с согласия редакции. Новости, аналитика и другие материалы, представленные на сайте bloomchain.ru, не являются офертой или рекомендацией к покупке или продаже.</div>
+          <p class="text-white mb-0" style="font-size: 11px">18&#43;</p>
           <button class="btn bg-transparent border-0 bc-footer__link bc-footer__link_small px-0" type="button" data-toggle="modal" data-target="#privacy-policy-dialog">Политика конфиденциальности</button>
         </div>
       </div>
