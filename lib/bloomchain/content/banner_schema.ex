@@ -5,6 +5,12 @@ defmodule Bloomchain.Content.Banner do
   alias Bloomchain.Repo
   alias Bloomchain.Content.{Banner, Media, Event}
 
+  def fetch(term, key) do
+    term
+    |> Map.from_struct()
+    |> Map.fetch(key)
+  end
+
   schema "banners" do
     field(:type, :string)
     field(:target_url, :string)
@@ -69,9 +75,12 @@ defmodule Bloomchain.Content.Banner do
   end
 
   defp process_total_views(
-         %Ecto.Changeset{valid?: true, changes: %{status: "active"}, data: %{id: id}} = changeset
+         %Ecto.Changeset{valid?: true, changes: %{status: "active"} = changes, data: data} =
+           changeset
        ) do
-    from(b in Banner, where: b.status == "active" or b.id == ^id)
+    type = changes[:type] || data[:type]
+
+    from(b in Banner, where: (b.status == "active" or b.id == ^data[:id]) and b.type == ^type)
     |> Repo.update_all(set: [total_views: 0])
 
     changeset
