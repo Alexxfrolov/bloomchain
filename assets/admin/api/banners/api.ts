@@ -1,3 +1,4 @@
+import format from "date-fns/format"
 import { serialize } from "object-to-formdata"
 import { request } from "@features/core"
 
@@ -48,7 +49,11 @@ export interface UploadableBanner
 }
 
 function create(data: UploadableBanner) {
-  const formData = serialize(data)
+  const data_with_zero_time_date_end = {
+    ...data,
+    date_end: format(new Date(data.date_end), "yyyy-MM-dd") + "T00:00:00Z",
+  }
+  const formData = serialize(data_with_zero_time_date_end)
   return request<Banner>("POST", "/banners", { data: formData })
 }
 
@@ -62,26 +67,42 @@ export interface EditableBanner extends Banner {
 }
 
 function update(banner: EditableBanner) {
-  if (banner.desktop_cover.url !== null) {
-    delete banner.desktop_cover.file
+  const banner_with_zero_time_date_end = {
+    ...banner,
+    date_end: format(new Date(banner.date_end), "yyyy-MM-dd") + "T00:00:00Z",
   }
 
-  if (banner.mobile_cover.url !== null) {
-    delete banner.mobile_cover.file
+  if (banner_with_zero_time_date_end.desktop_cover.url !== null) {
+    delete banner_with_zero_time_date_end.desktop_cover.file
   }
 
-  if (banner.desktop_cover.file || banner.mobile_cover.file) {
-    const formData = serialize(banner)
-    return request<Banner>("PATCH", `/banners/${banner.id}`, {
-      data: formData,
-    })
+  if (banner_with_zero_time_date_end.mobile_cover.url !== null) {
+    delete banner_with_zero_time_date_end.mobile_cover.file
   }
 
-  return request<Banner>("PATCH", `/banners/${banner.id}`, {
-    data: {
-      ...banner,
+  if (
+    banner_with_zero_time_date_end.desktop_cover.file ||
+    banner_with_zero_time_date_end.mobile_cover.file
+  ) {
+    const formData = serialize(banner_with_zero_time_date_end)
+    return request<Banner>(
+      "PATCH",
+      `/banners/${banner_with_zero_time_date_end.id}`,
+      {
+        data: formData,
+      },
+    )
+  }
+
+  return request<Banner>(
+    "PATCH",
+    `/banners/${banner_with_zero_time_date_end.id}`,
+    {
+      data: {
+        ...banner_with_zero_time_date_end,
+      },
     },
-  })
+  )
 }
 
 function remove(id: number) {
