@@ -17,6 +17,8 @@ defmodule Bloomchain.Content.Banner do
     belongs_to(:desktop_cover, Media, foreign_key: :desktop_cover_id)
     belongs_to(:mobile_cover, Media, foreign_key: :mobile_cover_id)
 
+    field(:total_views, :integer)
+
     has_many(:events, Event, on_delete: :delete_all)
 
     timestamps()
@@ -38,21 +40,17 @@ defmodule Bloomchain.Content.Banner do
     |> validate_required(@required_fields)
     |> validate_inclusion(:type, @types)
     |> validate_inclusion(:status, @statuses)
+    |> process_total_views()
   end
 
-  def rand(type) do
-    ids =
-      from(b in Banner, where: b.type == ^type and b.status == "active", select: b.id)
-      |> Repo.all()
-
-    if length(ids) > 0 do
-      id = Enum.random(ids)
-
-      Repo.get!(Banner, id)
-      |> Repo.preload([:desktop_cover, :mobile_cover])
-    else
-      nil
-    end
+  def next(type) do
+    from(b in Banner,
+      where: b.type == ^type and b.status == "active",
+      preload: [:desktop_cover, :mobile_cover],
+      order_by: [asc: :total_views],
+      limit: 1
+    )
+    |> Repo.one()
   end
 
   def delete!(id) do
@@ -64,4 +62,20 @@ defmodule Bloomchain.Content.Banner do
       Media.delete!(item.mobile_cover_id)
     end)
   end
+
+  def inc_total_views(%{id: id}) do
+    from(p in Banner, where: p.id == ^id, select: [:total_views])
+    |> Repo.update_all(inc: [total_views: 1])
+  end
+
+  defp process_total_views(
+         %Ecto.Changeset{valid?: true, changes: %{status: "active"}, data: %{id: id}} = changeset
+       ) do
+    from(b in Banner, where: b.status == "active" or b.id == ^id)
+    |> Repo.update_all(set: [total_views: 0])
+
+    changeset
+  end
+
+  defp process_total_views(changeset), do: changeset
 end

@@ -4,12 +4,12 @@ defmodule BloomchainWeb.Admin.Api.V1.StatisticController do
   import BloomchainWeb.Plug.ValidParams
 
   alias Bloomchain.Repo
-  alias Bloomchain.{Content.Banner, Content.Event}
+  alias Bloomchain.Content.Event
 
   plug :valid_filters, [:banner_id, :since, :until] when action in [:index]
   plug :valid_assoc_filters, [:status] when action in [:index]
 
-  def index(conn, params) do
+  def index(conn, _params) do
     items =
       Event
       |> Repo.q_filter_by(conn.assigns.filters)

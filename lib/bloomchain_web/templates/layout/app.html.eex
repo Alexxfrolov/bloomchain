@@ -43,7 +43,7 @@
     <noscript><link rel="stylesheet" href="styles.css"></noscript>
   </head>
   <body class="bg-light">
-    <%= render "_banner.html", banner: Banner.rand("header") %>
+    <%= render "_banner.html", banner: Banner.next("header") %>
     <%= render "_header.html", conn: @conn %>
 
     <main class="main">
