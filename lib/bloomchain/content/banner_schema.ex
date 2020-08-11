@@ -75,13 +75,17 @@ defmodule Bloomchain.Content.Banner do
   end
 
   defp process_total_views(
-         %Ecto.Changeset{valid?: true, changes: %{status: "active"} = changes, data: data} =
-           changeset
+         %Ecto.Changeset{valid?: true, changes: changes, data: data} = changeset
        ) do
+    status = changes[:status] || data[:status]
     type = changes[:type] || data[:type]
 
-    from(b in Banner, where: (b.status == "active" or b.id == ^data[:id]) and b.type == ^type)
-    |> Repo.update_all(set: [total_views: 0])
+    if (changes[:type] && status == "active") || changes[:status] == "active" do
+      from(b in Banner,
+        where: (b.status == "active" and b.type == ^type) or b.id == ^data[:id]
+      )
+      |> Repo.update_all(set: [total_views: 0])
+    end
 
     changeset
   end
