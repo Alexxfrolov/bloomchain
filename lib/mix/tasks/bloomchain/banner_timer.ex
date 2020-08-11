@@ -15,18 +15,15 @@ defmodule Mix.Tasks.Bloomchain.BannerTimer do
     )
     |> Repo.update_all(set: [status: "unactive"])
 
-    Repo.transaction(fn ->
-      {count, _} =
-        from(
-          p in Banner,
-          where: p.status == "waiting" and field(p, :date_start) <= ^time_now
-        )
-        |> Repo.update_all(set: [status: "active"])
-
-      if count > 0 do
-        from(b in Banner, where: b.status == "active")
-        |> Repo.update_all(set: [total_views: 0])
-      end
+    from(
+      p in Banner,
+      where: p.status == "waiting" and field(p, :date_start) <= ^time_now
+    )
+    |> Repo.all()
+    |> Enum.each(fn item ->
+      item
+      |> Banner.changeset(%{status: "active"})
+      |> Repo.update!()
     end)
   end
 end

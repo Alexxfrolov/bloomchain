@@ -51,3 +51,5 @@ config :bloomchain, Bloomchain.Repo,
 # # Waffle Image Upload
 config :waffle,
   storage: Waffle.Storage.Local
+
+import_config "scheduler.exs"
