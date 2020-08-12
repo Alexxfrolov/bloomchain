@@ -66,10 +66,7 @@ defmodule Bloomchain.Mixfile do
       {:paginator, "~> 0.6"},
 
       # File attachment deps
-      # replace after PR from fork is merged
-      # https://github.com/elixir-waffle/waffle/pull/51
-      {:waffle,
-       git: "https://github.com/oldmenonwheels/waffle", branch: "master", override: true},
+      {:waffle, "1.1.1"},
       {:waffle_ecto, "~> 0.0.9"},
 
       # If using Amazon S3:
