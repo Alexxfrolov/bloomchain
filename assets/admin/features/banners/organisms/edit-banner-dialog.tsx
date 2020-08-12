@@ -291,11 +291,7 @@ export function EditBannerDialog(props: EditBannerDialogProps) {
                   onChange={handleChangeCheckbox(values.status)}
                 />
               }
-              label={
-                values.status === "active"
-                  ? "Снять с публикации"
-                  : "Опубликовать"
-              }
+              label="Опубликовано"
               labelPlacement="end"
             />
           ) : null}
