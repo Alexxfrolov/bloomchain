@@ -2710,3 +2710,19 @@ input:focus-within {
 .bc-advertising__image-large img {
   max-height: none;
 }
+
+img.fr-dib {
+  margin: 5px auto;
+  display: block;
+  float: none;
+}
+
+img.fr-dib.fr-fil {
+  margin-left: 0;
+  text-align: left;
+}
+
+img.fr-dib.fr-fir {
+  margin-right: 0;
+  text-align: right;
+}
