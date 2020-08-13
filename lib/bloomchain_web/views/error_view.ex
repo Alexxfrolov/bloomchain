@@ -5,7 +5,7 @@ defmodule BloomchainWeb.ErrorView do
     Phoenix.Controller.status_message_from_template(template)
   end
 
-  def render("404.html", assigns) do
+  def render("404.html", _assigns) do
     render("not_found.html")
   end
 
