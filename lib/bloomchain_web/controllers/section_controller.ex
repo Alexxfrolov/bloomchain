@@ -52,7 +52,8 @@ defmodule BloomchainWeb.SectionController do
   def index(conn, _params) do
     conn
     |> put_status(404)
-    |> render(ErrorView, "404.html")
+    |> put_view(ErrorView)
+    |> render("404.html")
   end
 
   defp group(items) do

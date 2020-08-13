@@ -1,5 +1,6 @@
 defmodule BloomchainWeb.FeedController do
   use BloomchainWeb, :controller
+  alias BloomchainWeb.ErrorView
   alias BloomchainWeb.Workflow.{MainPosts, NewsfeedPosts, CommonPosts}
 
   def index(conn, _params) do
@@ -22,7 +23,8 @@ defmodule BloomchainWeb.FeedController do
     )
   end
 
-  def show(conn, %{type: type}) do
+  def show(conn, %{type: type})
+      when type in ~w(detailed analysis people in-russia calendar research) do
     %{entries: posts} = CommonPosts.run(type)
 
     conn
@@ -31,5 +33,12 @@ defmodule BloomchainWeb.FeedController do
       posts: posts,
       type: type
     )
+  end
+
+  def show(conn, _params) do
+    conn
+    |> put_status(404)
+    |> put_view(ErrorView)
+    |> render("404.xml")
   end
 end
