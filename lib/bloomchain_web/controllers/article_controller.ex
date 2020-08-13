@@ -42,7 +42,8 @@ defmodule BloomchainWeb.ArticleController do
     else
       conn
       |> put_status(404)
-      |> render(ErrorView, "404.html")
+      |> put_view(ErrorView)
+      |> render("404.html")
     end
   end
 end
