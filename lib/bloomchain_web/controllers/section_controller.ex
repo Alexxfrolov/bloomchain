@@ -1,5 +1,6 @@
 defmodule BloomchainWeb.SectionController do
   use BloomchainWeb, :controller
+  alias BloomchainWeb.ErrorView
   alias Bloomchain.Content.Archive
   alias BloomchainWeb.Workflow.{CommonPosts, NewsfeedPosts}
 
@@ -42,10 +43,16 @@ defmodule BloomchainWeb.SectionController do
     render(conn, "newsfeed.html", articles: group(articles), meta: meta)
   end
 
-  def index(conn, %{type: type}) do
+  def index(conn, %{type: type}) when type in ~w(detailed people in-russia calendar research) do
     %{entries: articles, metadata: meta} = CommonPosts.run(type)
 
     render(conn, "index.html", articles: articles, meta: meta)
+  end
+
+  def index(conn, _params) do
+    conn
+    |> put_status(404)
+    |> render(ErrorView, "404.html")
   end
 
   defp group(items) do

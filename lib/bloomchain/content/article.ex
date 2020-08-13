@@ -21,7 +21,7 @@ defmodule Bloomchain.Content.Article do
   end
 
   def get(slug, type: type) do
-    Repo.get_by!(Post, slug: slug, type: type, status: "published")
+    Repo.get_by(Post, slug: slug, type: type, status: "published")
     |> Repo.preload([:tags, :cover, :authors])
   end
 
@@ -75,6 +75,8 @@ defmodule Bloomchain.Content.Article do
 
     Task.async(fn -> ES.delete(post) end)
   end
+
+  def inc_total_views(nil), do: nil
 
   def inc_total_views(%Post{} = post) do
     Task.async(fn ->

@@ -6,11 +6,7 @@ defmodule BloomchainWeb.ErrorView do
   end
 
   def render("404.html", assigns) do
-    render(
-      __MODULE__,
-      "not_found.html",
-      Map.merge(assigns, %{layout: {BloomchainWeb.LayoutView, "app.html"}})
-    )
+    render("not_found.html")
   end
 
   def render("404.json", _assigns) do

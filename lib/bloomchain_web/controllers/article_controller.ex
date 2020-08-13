@@ -1,5 +1,6 @@
 defmodule BloomchainWeb.ArticleController do
   use BloomchainWeb, :controller
+  alias BloomchainWeb.ErrorView
   alias Bloomchain.Content.Article
   alias BloomchainWeb.Workflow.CommonPosts
   alias BloomchainWeb.Workflow.RecomendationPosts
@@ -31,11 +32,17 @@ defmodule BloomchainWeb.ArticleController do
       |> Article.get(type: type)
       |> Article.inc_total_views()
 
-    %{entries: recomendations} = RecomendationPosts.run(article)
+    if article do
+      %{entries: recomendations} = RecomendationPosts.run(article)
 
-    render(conn, "show.html",
-      article: article,
-      recomendations: recomendations
-    )
+      render(conn, "show.html",
+        article: article,
+        recomendations: recomendations
+      )
+    else
+      conn
+      |> put_status(404)
+      |> render(ErrorView, "404.html")
+    end
   end
 end
