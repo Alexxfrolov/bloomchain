@@ -1,0 +1,18 @@
+<%= if @banner do %>
+  <div class="container py-4">
+    <div class="row">
+      <div class="offset-lg-2 col-lg-8">   
+        <div class="bc-advertising__image-hot bc-advertising__image-large mx-auto">
+          <%=
+            content_tag(:picture, class: "w-100") do
+              [
+                tag(:source, srcset: File.url({@banner.mobile_cover.file, @banner.mobile_cover}), media: "(min-width: 980px)"),
+                img_tag(File.url({@banner.mobile_cover.file, @banner.mobile_cover}), class: "js-banner", data_banner_id: @banner.id, data_target_url: @banner.target_url)
+              ]
+            end
+          %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

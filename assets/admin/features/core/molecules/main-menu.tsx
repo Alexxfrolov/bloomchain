@@ -24,6 +24,8 @@ import PollRoundedIcon from "@material-ui/icons/PollRounded"
 import AlternateEmailIcon from "@material-ui/icons/AlternateEmail"
 import OpenInNewRoundedIcon from "@material-ui/icons/OpenInNewRounded"
 import FaceRoundedIcon from "@material-ui/icons/FaceRounded"
+import LocalOfferRoundedIcon from "@material-ui/icons/LocalOfferRounded"
+import AssessmentRoundedIcon from "@material-ui/icons/AssessmentRounded"
 import { RouterLink, useCurrentUser } from "@features/core"
 
 const useStyles = makeStyles((theme) => ({
@@ -101,7 +103,11 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
     <Fragment>
       <Divider />
       <List>
-        {openedDrawer && <ListSubheader inset={true}>Публикации</ListSubheader>}
+        {openedDrawer && (
+          <ListSubheader inset={true} disableSticky={true}>
+            Публикации
+          </ListSubheader>
+        )}
         <Tooltip title={openedDrawer ? "" : "Создать статью"}>
           <ListItem
             aria-current={
@@ -199,7 +205,11 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
       </List>
       <Divider />
       <List>
-        {openedDrawer && <ListSubheader inset={true}>Страницы</ListSubheader>}
+        {openedDrawer && (
+          <ListSubheader inset={true} disableSticky={true}>
+            Страницы
+          </ListSubheader>
+        )}
         <Tooltip title={openedDrawer ? "" : "Все разделы"}>
           <ListItem
             aria-current={isCurrentMenu("admin.sections") ? "page" : undefined}
@@ -231,7 +241,9 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
       {user && user.role === "admin" && (
         <List>
           {openedDrawer && (
-            <ListSubheader inset={true}>Управление</ListSubheader>
+            <ListSubheader inset={true} disableSticky={true}>
+              Управление
+            </ListSubheader>
           )}
           <Tooltip title={openedDrawer ? "" : "Пользователи"}>
             <ListItem
@@ -283,7 +295,11 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
       )}
       <Divider />
       <List>
-        {openedDrawer && <ListSubheader inset={true}>Словари</ListSubheader>}
+        {openedDrawer && (
+          <ListSubheader inset={true} disableSticky={true}>
+            Словари
+          </ListSubheader>
+        )}
         <Tooltip title={openedDrawer ? "" : "Авторы"}>
           <ListItem
             aria-current={isCurrentMenu("admin.authors") ? "page" : undefined}
@@ -324,6 +340,48 @@ export const MainMenu = memo(function MainMenu(props: MainMenuProps) {
           </ListItem>
         </Tooltip>
       </List>
+      {user && user.role === "admin" && (
+        <Fragment>
+          <Divider />
+          <List>
+            {openedDrawer && (
+              <ListSubheader inset={true} disableSticky={true}>
+                Реклама
+              </ListSubheader>
+            )}
+            <Tooltip title={openedDrawer ? "" : "Баннеры"}>
+              <ListItem
+                aria-current={
+                  isCurrentMenu("admin.banners") ? "page" : undefined
+                }
+                className={classes.listitem}
+              >
+                <RouterLink routeName="admin.banners" className={classes.link}>
+                  <ListItemIcon style={{ paddingLeft: "7px" }}>
+                    <LocalOfferRoundedIcon style={{ color: indigo[500] }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Баннеры" />
+                </RouterLink>
+              </ListItem>
+            </Tooltip>
+            <Tooltip title={openedDrawer ? "" : "Метрики"}>
+              <ListItem
+                aria-current={
+                  isCurrentMenu("admin.metrics") ? "page" : undefined
+                }
+                className={classes.listitem}
+              >
+                <RouterLink routeName="admin.metrics" className={classes.link}>
+                  <ListItemIcon style={{ paddingLeft: "7px" }}>
+                    <AssessmentRoundedIcon style={{ color: indigo[500] }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Метрики" />
+                </RouterLink>
+              </ListItem>
+            </Tooltip>
+          </List>
+        </Fragment>
+      )}
     </Fragment>
   )
 })

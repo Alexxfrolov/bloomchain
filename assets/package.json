@@ -19,23 +19,16 @@
   },
   "homepage": "https://github.com/alexmoisdeveloper/bloomchain-admin",
   "engines": {
-    "node": ">=10.16.0"
+    "node": ">=10.18.1"
   },
-  "size-limit": [
-    {
-      "limit": "520 KB",
-      "path": "build/js/bundle.*.js"
-    }
-  ],
   "scripts": {
     "commit": "npx git-cz",
     "format": "npx prettier --check --write '**/*.{ts,tsx}'",
     "eslint": "npx eslint './**/*.{ts,tsx}'",
     "typecheck": "npx tsc --noEmit",
     "stylelint": "npx stylelint './**/*.tsx' --color",
-    "size": "node scripts/build.js && size-limit",
     "build": "webpack --mode production --config config/webpack.config.js",
-    "watch": "webpack --mode development --watch-stdin --config config/webpack.config.js"
+    "watch": "yarn install && webpack --mode development --watch-stdin --config config/webpack.config.js"
   },
   "devDependencies": {
     "@babel/core": "7.9.6",
@@ -52,8 +45,6 @@
     "@commitlint/cli": "~8.2.0",
     "@commitlint/config-conventional": "~8.2.0",
     "@hot-loader/react-dom": "~16.13.0",
-    "@size-limit/preset-app": "~4.5.0",
-    "@size-limit/webpack": "~4.5.0",
     "@svgr/webpack": "~5.4.0",
     "@testing-library/jest-dom": "5.5.0",
     "@testing-library/react": "10.0.4",
@@ -112,7 +103,6 @@
     "postcss-safe-parser": "~4.0.1",
     "prettier": "~2.0.5",
     "react-dev-utils": "~9.0.4",
-    "size-limit": "~4.5.0",
     "style-loader": "~0.23.1",
     "terser-webpack-plugin": "~2.3.5",
     "tsconfig-paths-webpack-plugin": "~3.2.0",
@@ -145,6 +135,7 @@
     "material-table": "1.57.2",
     "nanoid": "~2.1.8",
     "notistack": "~0.9.16",
+    "object-to-formdata": "^4.1.0",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "react": "~16.13.0",

@@ -5,6 +5,7 @@ import MaterialTable, {
   Localization,
   Options,
 } from "material-table"
+import deepmerge from "deepmerge"
 import { grey, indigo } from "@material-ui/core/colors"
 import AddBox from "@material-ui/icons/AddBox"
 import ArrowDownward from "@material-ui/icons/ArrowDownward"
@@ -25,24 +26,28 @@ import ViewColumn from "@material-ui/icons/ViewColumn"
 export const Table = <T extends object>(props: MaterialTableProps<T>) => {
   const { options = {}, ...otherProps } = props
 
-  const extendedOptions: Options = {
-    addRowPosition: "first",
-    showEmptyDataSourceMessage: true,
-    search: false,
-    sorting: true,
-    thirdSortClick: false,
-    paginationType: "stepped",
-    emptyRowsWhenPaging: true,
-    headerStyle: {
-      backgroundColor: indigo[600],
-      color: "#fff",
+  const extendedOptions: Options = deepmerge(
+    {
+      addRowPosition: "first",
+      showEmptyDataSourceMessage: true,
+      search: false,
+      sorting: true,
+      thirdSortClick: false,
+      paginationType: "stepped",
+      emptyRowsWhenPaging: true,
+      headerStyle: {
+        padding: "6px 10px",
+        fontSize: "14px",
+        backgroundColor: indigo[600],
+        color: "#fff",
+      },
+      rowStyle: (_data: unknown, index: number, _level: number) =>
+        index % 2 > 0
+          ? { backgroundColor: grey[150] }
+          : { backgroundColor: grey[50] },
     },
-    rowStyle: (_data: unknown, index: number, _level: number) =>
-      index % 2 > 0
-        ? { backgroundColor: grey[150] }
-        : { backgroundColor: grey[50] },
-    ...options,
-  }
+    options,
+  )
 
   return (
     <MaterialTable

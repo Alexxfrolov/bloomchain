@@ -4,7 +4,8 @@ config :bloomchain, Bloomchain.Scheduler,
   jobs: [
     # Every minute
     {"* * * * *", {Mix.Task, :rerun, ["bloomchain.publish_post"]}},
-    # # Every 15 minutes
+    {"* * * * *", {Mix.Task, :rerun, ["bloomchain.banner_timer"]}},
+    # Every 15 minutes
     {"*/15 * * * *",
      fn ->
        # При первом запуске обязательно надо иметь 2 значание монеты из-за неверной логики в алгоритме
@@ -19,6 +20,6 @@ config :bloomchain, Bloomchain.Scheduler,
      end},
     {"*/15 * * * *",
      {Mix.Task, :rerun, ["bloomchain.update_index", [Bloomchain.Service.Index.Bitcoin]]}},
-    # # Every day at 00:00 UTC
+    # Every day at 00:00 UTC
     {"0 0 * * *", {Mix.Task, :rerun, ["bloomchain.update_coin_list"]}}
   ]

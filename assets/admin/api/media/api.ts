@@ -3,7 +3,7 @@ import { request } from "@features/core"
 
 import { Pagination, PaginationParams } from "../common"
 
-export type MediaFileType = "image" | "pdf" | "video"
+export type MediaFileType = "image" | "pdf" | "video" | "banner"
 
 export interface MediaFile {
   alt: string | null
@@ -39,12 +39,14 @@ export interface UploadableMediaFile {
   type: MediaFile["type"]
 }
 
-function create(data: UploadableMediaFile) {
+function create({ title, ...restData }: UploadableMediaFile) {
   const formData = new FormData()
-  Object.keys(data).forEach((key) =>
-    formData.append(decamelize(key), data[key]),
+  Object.keys(restData).forEach((key) =>
+    formData.append(decamelize(key), restData[key]),
   )
-  if (!data.title) formData.append("title", data.file.name)
+  if (!title || title.length) {
+    formData.append("title", restData.file.name)
+  }
   return request<MediaFile>("POST", "/media", { data: formData })
 }
 

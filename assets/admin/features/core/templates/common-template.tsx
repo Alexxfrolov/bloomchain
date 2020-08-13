@@ -54,7 +54,10 @@ const useStyles = makeStyles((theme) => ({
     display: "none",
   },
   drawerPaper: {
-    position: "relative",
+    position: "fixed",
+    zIndex: 10,
+    left: 0,
+    top: 0,
     whiteSpace: "nowrap",
     width: drawerWidth,
     transition: theme.transitions.create("width", {
@@ -78,9 +81,23 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(12),
     paddingBottom: theme.spacing(5),
     flexGrow: 1,
-    height: "100vh",
+    maxWidth: `calc(100% - ${drawerWidth}px)`,
+    minHeight: "100vh",
     overflow: "auto",
     backgroundColor: "white",
+    transform: `translateX(${drawerWidth}px)`,
+    transition: theme.transitions.create(["width", "transform"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  contentFull: {
+    maxWidth: `calc(100% - ${theme.spacing(7)}px)`,
+    transform: `translateX(${theme.spacing(7)}px)`,
+    [theme.breakpoints.up("sm")]: {
+      maxWidth: `calc(100% - ${theme.spacing(9)}px)`,
+      transform: `translateX(${theme.spacing(9)}px)`,
+    },
   },
   paper: {
     padding: theme.spacing(2),
@@ -144,7 +161,9 @@ export const CommonTemplate = ({
           openedDrawer: isOpened,
         })}
       </Drawer>
-      <main className={classes.content}>{children}</main>
+      <main className={clsx(classes.content, !isOpened && classes.contentFull)}>
+        {children}
+      </main>
     </div>
   )
 }

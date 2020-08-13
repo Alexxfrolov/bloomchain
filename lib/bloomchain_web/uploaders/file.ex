@@ -20,12 +20,20 @@ defmodule BloomchainWeb.Uploaders.File do
     ~w(.jpg .jpeg .png) |> Enum.member?(String.downcase(Path.extname(file.file_name)))
   end
 
+  def validate({file, %{type: "banner"}}) do
+    ~w(.jpg .jpeg .png .gif) |> Enum.member?(String.downcase(Path.extname(file.file_name)))
+  end
+
   def validate({file, %{type: "pdf"}}) do
     ~w(.pdf) |> Enum.member?(String.downcase(Path.extname(file.file_name)))
   end
 
   def validate({file, %{type: "video"}}) do
     ~w(.mp4 .avi) |> Enum.member?(String.downcase(Path.extname(file.file_name)))
+  end
+
+  def filename(_version, {%{file_name: file_name}, %{type: "banner"}}) do
+    Path.basename(file_name, Path.extname(file_name))
   end
 
   def filename(version, {_file, _scope}) do

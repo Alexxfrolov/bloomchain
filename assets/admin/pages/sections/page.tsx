@@ -90,7 +90,6 @@ export function SectionsPage() {
 
   const handleTableOrderChange = useCallback(
     (orderBy: keyof Section, orderDirection: OrderDirection) => {
-      console.log(orderBy, orderDirection)
       setState((state) => ({ ...state, orderDirection, orderBy }))
     },
     [],
