@@ -79,5 +79,18 @@
       function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-107257260-1");
     }, 6000)
     </script>
+    <script>
+      const isFirefox = typeof InstallTrigger !== "undefined";
+      if (isFirefox) {
+        const link = document.createElement("link")
+        link.rel = "stylesheet"
+        link.href = '<%= static_path(@conn, "/customer/bundle.css") %>'
+        link.media = "print"
+        link.onload = function() {
+          this.media = "all"
+        }
+        document.head.appendChild(link)
+      }
+    </script>
   </body>
 </html>
