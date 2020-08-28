@@ -26,7 +26,7 @@ defmodule BloomchainWeb.FeedView do
   def guid(item), do: "bloomchain_posts_#{item.type}_#{item.id}"
 
   defp first_paragraph(body) do
-    Regex.run(~r/(?<=<p>)(.*?)(?=<\/p>)/, body, capture: :first)
+    Regex.run(~r/(?=<p)(.*?)(?<=<\/p>)/, body, capture: :first)
     |> List.first()
     |> Floki.text()
   end
