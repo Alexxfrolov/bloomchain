@@ -2753,3 +2753,9 @@ img.fr-dib.fr-fir {
   margin-right: 0;
   text-align: right;
 }
+
+span.fr-img-caption.fr-dii {
+  display: inline-block;
+  float: none;
+  vertical-align: bottom;
+}
