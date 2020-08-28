@@ -63,9 +63,7 @@ defmodule Bloomchain.Content.Media do
 
   def srcset(cover) do
     [
-      File.url({cover.file, cover}, :"380") <> " 600w",
-      File.url({cover.file, cover}, :"540") <> " 1000w",
-      File.url({cover.file, cover}, :"800") <> " 1600w"
+      File.url({cover.file, cover}, :original) <> " 1000w"
     ]
     |> Enum.join(", ")
   end
