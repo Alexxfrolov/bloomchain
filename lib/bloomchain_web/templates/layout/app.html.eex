@@ -40,8 +40,7 @@
     <link rel= "dns-prefetch" href="http://d.analytic.press" crossorigin />
     <link rel="preload" href='<%= static_path(@conn, "/customer/bundle.css") %>' as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" as="script" href='<%= static_path(@conn, "/customer/bundle.js") %>'></link>
-    <noscript><link rel="stylesheet" href="styles.css"></noscript>
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-107257260-1"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107257260-1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
