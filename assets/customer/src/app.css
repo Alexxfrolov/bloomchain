@@ -2648,7 +2648,7 @@ article table tr:nth-child(even) {
 
 .article .fr-img-wrap .fr-inner {
   font-size: 14px;
-  line-height: 1;
+  line-height: 1.5;
   color: #838383;
 }
 
