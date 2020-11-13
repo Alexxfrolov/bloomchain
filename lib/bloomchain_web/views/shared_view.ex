@@ -89,7 +89,7 @@ defmodule BloomchainWeb.SharedView do
 
   def article_attrs(%{time: nil} = item) do
     [
-      content_tag(:span, time_from(item.published_at), class: "small mr-sm-4 mr-2"),
+      # content_tag(:span, time_from(item.published_at), class: "small mr-sm-4 mr-2"),
       content_tag(:i, nil, class: "mr-1 icon-user-white"),
       content_tag(:span, author(item), class: "small mr-sm-4 mr-3")
     ]
@@ -97,7 +97,7 @@ defmodule BloomchainWeb.SharedView do
 
   def article_attrs(%{time: time} = item) do
     [
-      content_tag(:span, time_from(item.published_at), class: "small mr-sm-4 mr-2"),
+      # content_tag(:span, time_from(item.published_at), class: "small mr-sm-4 mr-2"),
       content_tag(:i, nil, class: "mr-1 icon-user-white"),
       content_tag(:span, author(item), class: "small mr-sm-4 mr-3"),
       content_tag(:i, nil, class: "mr-1 icon-clock-white"),
@@ -145,7 +145,7 @@ defmodule BloomchainWeb.SharedView do
 
   defp href_path(item), do: "/#{item.type}/#{item.slug}"
 
-  defp time_from(datetime) do
-    Timex.lformat!(datetime, "{relative}", "ru", :relative)
-  end
+  # defp time_from(datetime) do
+  #   Timex.lformat!(datetime, "{relative}", "ru", :relative)
+  # end
 end

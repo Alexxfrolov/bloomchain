@@ -70,16 +70,15 @@ defmodule Bloomchain.Content.Post do
 
   # Private
 
-  defp process_slug(%Ecto.Changeset{valid?: true, changes: %{title: title} = changes} = changeset) do
-    put_change(
-      changeset,
-      :slug,
-      changes[:slug] ||
-        title |> Translit.to_slug()
-    )
+  defp process_slug(
+         %Ecto.Changeset{valid?: true, changes: %{title: title}, data: %{slug: nil}} = changeset
+       ) do
+    put_change(changeset, :slug, title |> Translit.to_slug())
   end
 
-  defp process_slug(changeset), do: changeset
+  defp process_slug(changeset) do
+    changeset
+  end
 
   defp process_body(%Ecto.Changeset{valid?: true, changes: %{body: body}} = changeset) do
     replace_embedly = fn body ->
@@ -129,7 +128,7 @@ defmodule Bloomchain.Content.Post do
     |> put_assoc(:tags, Enum.map(tags, &%Tag{id: &1[:id]}))
   end
 
-  defp process_tags(%Ecto.Changeset{valid?: true} = changeset, tags) do
+  defp process_tags(%Ecto.Changeset{valid?: true} = changeset, [_ | _] = tags) do
     tags = Repo.all(from(t in Tag, where: t.id in ^tags))
 
     changeset |> put_assoc(:tags, tags)
@@ -147,7 +146,7 @@ defmodule Bloomchain.Content.Post do
     |> put_assoc(:authors, Enum.map(authors, &%Author{id: &1[:id]}))
   end
 
-  defp process_authors(%Ecto.Changeset{valid?: true} = changeset, authors) do
+  defp process_authors(%Ecto.Changeset{valid?: true} = changeset, [_ | _] = authors) do
     authors = Repo.all(from(t in Author, where: t.id in ^authors))
 
     changeset |> put_assoc(:authors, authors)
