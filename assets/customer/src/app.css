@@ -2654,7 +2654,8 @@ article table tr:nth-child(even) {
 
 @media (max-width: 767.98px) {
   .article__heading {
-    font-size: 16px;
+    font-size: 20px;
+    line-height: 1.5;
   }
 }
 
