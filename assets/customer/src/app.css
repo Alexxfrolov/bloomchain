@@ -2646,10 +2646,29 @@ article table tr:nth-child(even) {
   object-fit: contain;
 }
 
+.article .fr-view img.fr-shadow, .fr-view .fr-img-caption.fr-shadow img {
+  -webkit-box-shadow: 10px 10px 5px 0px #cccccc;
+  -moz-box-shadow: 10px 10px 5px 0px #cccccc;
+  box-shadow: 10px 10px 5px 0px #cccccc;
+}
+
+.fr-view img.fr-bordered {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+.fr-view img.fr-bordered, .fr-view .fr-img-caption.fr-bordered img {
+  border: solid 5px #CCC;
+}
+
 .article .fr-img-wrap .fr-inner {
   font-size: 14px;
   line-height: 1.5;
   color: #838383;
+}
+
+.article .badge + .badge {
+  margin-left: 10px;
 }
 
 @media (max-width: 767.98px) {
