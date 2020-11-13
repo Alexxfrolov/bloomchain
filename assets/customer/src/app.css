@@ -2552,15 +2552,21 @@ button.close {
   list-style: none;
 }
 
+.article ul li + li {
+  margin-top: 1em;
+}
+
 .article li {
+  position: relative;
   margin-bottom: 0!important;
   font-size: inherit;
+  line-height: 1.75;
   color: #121212;
 }
 
 .article ul li::before {
+  position: absolute;
   margin-left: -2em;
-  padding-top: 1em;
   display: inline-block;
   font-weight: bolder;
   width: 2em;
