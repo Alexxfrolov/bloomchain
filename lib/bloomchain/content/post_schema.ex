@@ -91,7 +91,15 @@ defmodule Bloomchain.Content.Post do
       Regex.replace(~r/(<p data-f-id=\"pbf\")(.*?)(<\/p>)/, body, "")
     end
 
-    put_change(changeset, :body, body |> replace_embedly.() |> replace_froala.())
+    replace_empty_paragraphs = fn body ->
+      Regex.replace(~r/(<p>(&nbsp;)*<\/p>)/, body, "")
+    end
+
+    put_change(
+      changeset,
+      :body,
+      body |> replace_embedly.() |> replace_froala.() |> replace_empty_paragraphs.()
+    )
   end
 
   defp process_body(changeset), do: changeset
