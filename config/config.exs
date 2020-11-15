@@ -9,7 +9,7 @@ use Mix.Config
 config :bloomchain,
   ecto_repos: [Bloomchain.Repo]
 
-config :bloomchain, Bloomchain.Repo, migration_timestamps: [type: :utc_datetime]
+config :bloomchain, Bloomchain.Repo, migration_timestamps: [type: :timestamptz]
 
 # regiter xml mime types
 config :mime, :types, %{

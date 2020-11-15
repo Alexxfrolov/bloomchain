@@ -10,13 +10,13 @@ defmodule Bloomchain.Repo.Migrations.UpdateTimestampsType do
 
     for table_name <- @tables do
       alter table(table_name) do
-        modify(:inserted_at, :utc_datetime)
-        modify(:updated_at, :utc_datetime)
+        modify(:inserted_at, :timestamptz)
+        modify(:updated_at, :timestamptz)
       end
     end
 
     alter table(:posts) do
-      modify(:published_at, :utc_datetime)
+      modify(:published_at, :timestamptz)
     end
   end
 
@@ -26,6 +26,10 @@ defmodule Bloomchain.Repo.Migrations.UpdateTimestampsType do
         modify(:inserted_at, :timestamp)
         modify(:updated_at, :timestamp)
       end
+    end
+
+    alter table(:posts) do
+      modify(:published_at, :timestamp)
     end
   end
 end

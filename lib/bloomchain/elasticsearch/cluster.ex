@@ -69,7 +69,8 @@ defmodule Bloomchain.ElasticsearchCluster do
     article =
       post
       |> keys_to_atoms
-      |> transform_dates
+
+    # |> transform_dates
 
     struct(Post, article)
   end
@@ -85,31 +86,31 @@ defmodule Bloomchain.ElasticsearchCluster do
 
   defp keys_to_atoms(value), do: value
 
-  defp transform_dates(list) when is_list(list) do
-    list
-    |> Enum.map(&transform_dates/1)
-  end
+  # defp transform_dates(list) when is_list(list) do
+  #   list
+  #   |> Enum.map(&transform_dates/1)
+  # end
 
-  defp transform_dates(%{published_at: _, inserted_at: _, updated_at: _} = item) do
-    struct = %{
-      item
-      | published_at: NaiveDateTime.from_iso8601!(item.published_at),
-        inserted_at: NaiveDateTime.from_iso8601!(item.inserted_at),
-        updated_at: NaiveDateTime.from_iso8601!(item.updated_at)
-    }
+  # defp transform_dates(%{published_at: _, inserted_at: _, updated_at: _} = item) do
+  #   struct = %{
+  #     item
+  #     | published_at: DateTime.from_iso8601!(item.published_at),
+  #       inserted_at: DateTime.from_iso8601!(item.inserted_at),
+  #       updated_at: DateTime.from_iso8601!(item.updated_at)
+  #   }
+  #
+  #   for({key, value} <- struct, into: %{}, do: {key, transform_dates(value)})
+  # end
+  #
+  # defp transform_dates(%{inserted_at: _, updated_at: _} = item) do
+  #   struct = %{
+  #     item
+  #     | inserted_at: DateTime.from_iso8601!(item.inserted_at),
+  #       updated_at: DateTime.from_iso8601!(item.updated_at)
+  #   }
+  #
+  #   for({key, value} <- struct, into: %{}, do: {key, transform_dates(value)})
+  # end
 
-    for({key, value} <- struct, into: %{}, do: {key, transform_dates(value)})
-  end
-
-  defp transform_dates(%{inserted_at: _, updated_at: _} = item) do
-    struct = %{
-      item
-      | inserted_at: NaiveDateTime.from_iso8601!(item.inserted_at),
-        updated_at: NaiveDateTime.from_iso8601!(item.updated_at)
-    }
-
-    for({key, value} <- struct, into: %{}, do: {key, transform_dates(value)})
-  end
-
-  defp transform_dates(value), do: value
+  # defp transform_dates(value), do: value
 end

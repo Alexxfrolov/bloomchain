@@ -46,14 +46,14 @@ config :ex_aws, :hackney_opts,
   follow_redirect: true,
   recv_timeout: 60_000
 
-config :sentry,
-  dsn: "https://4ceb6862d2b6458fa32dd6f4644b57fc@o252637.ingest.sentry.io/5273561",
-  environment_name: :prod,
-  enable_source_code_context: true,
-  root_source_code_path: File.cwd!(),
-  tags: %{
-    env: "production"
-  },
-  included_environments: [:prod]
+# config :sentry,
+#   dsn: "https://4ceb6862d2b6458fa32dd6f4644b57fc@o252637.ingest.sentry.io/5273561",
+#   environment_name: :prod,
+#   enable_source_code_context: true,
+#   root_source_code_path: File.cwd!(),
+#   tags: %{
+#     env: "production"
+#   },
+#   included_environments: [:prod]
 
 import_config "scheduler.exs"

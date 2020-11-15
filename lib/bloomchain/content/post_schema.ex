@@ -48,7 +48,7 @@ defmodule Bloomchain.Content.Post do
     )
 
     timestamps()
-    field(:published_at, :naive_datetime)
+    field(:published_at, :utc_datetime)
   end
 
   @required_fields ~w(title type)a
@@ -110,7 +110,7 @@ defmodule Bloomchain.Content.Post do
     put_change(
       changeset,
       :published_at,
-      changes[:published_at] || NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+      changes[:published_at] || DateTime.utc_now() |> DateTime.truncate(:second)
     )
   end
 
