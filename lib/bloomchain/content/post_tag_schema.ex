@@ -1,5 +1,5 @@
 defmodule Bloomchain.Content.PostTag do
-  use Ecto.Schema
+  use BloomchainWeb, :model
   alias Bloomchain.Content.{Tag, Post}
 
   schema "posts_tags" do

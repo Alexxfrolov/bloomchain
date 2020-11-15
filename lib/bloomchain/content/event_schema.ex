@@ -1,5 +1,5 @@
 defmodule Bloomchain.Content.Event do
-  use Ecto.Schema
+  use BloomchainWeb, :model
   import Ecto.{Changeset, Query}
 
   alias Bloomchain.Content.{Banner, Event}

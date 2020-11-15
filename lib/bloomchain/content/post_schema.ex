@@ -2,7 +2,7 @@ defmodule Bloomchain.Content.Post do
   import Ecto.Changeset
   import Ecto.Query
 
-  use Ecto.Schema
+  use BloomchainWeb, :model
   use Waffle.Ecto.Schema
 
   alias Bloomchain.Content.{Tag, Media, Author}

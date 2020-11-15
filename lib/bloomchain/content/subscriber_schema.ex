@@ -1,7 +1,7 @@
 defmodule Bloomchain.Content.Subscriber do
   import Ecto.Changeset
 
-  use Ecto.Schema
+  use BloomchainWeb, :model
 
   schema "subscribers" do
     field(:email, :string, unique: true)

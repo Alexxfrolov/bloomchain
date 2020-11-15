@@ -1,5 +1,5 @@
 defmodule Bloomchain.Content.PostAuthor do
-  use Ecto.Schema
+  use BloomchainWeb, :model
   alias Bloomchain.Content.{Author, Post}
 
   schema "posts_authors" do

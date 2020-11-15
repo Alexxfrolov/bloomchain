@@ -1,5 +1,5 @@
 defmodule Bloomchain.Content.User do
-  use Ecto.Schema
+  use BloomchainWeb, :model
   import Ecto.Changeset
   alias Bloomchain.Content.Author
 

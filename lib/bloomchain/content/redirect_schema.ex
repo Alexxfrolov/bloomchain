@@ -1,5 +1,5 @@
 defmodule Bloomchain.Content.Redirect do
-  use Ecto.Schema
+  use BloomchainWeb, :model
   import Ecto.Changeset
 
   alias Bloomchain.Repo

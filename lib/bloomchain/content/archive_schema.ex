@@ -1,5 +1,5 @@
 defmodule Bloomchain.Content.Archive do
-  use Ecto.Schema
+  use BloomchainWeb, :model
   import Ecto.{Changeset, Query}
 
   alias Bloomchain.Repo

@@ -1,5 +1,5 @@
 defmodule Bloomchain.Content.CoinPrice do
-  use Ecto.Schema
+  use BloomchainWeb, :model
 
   import Ecto.{Query, Changeset}
 
