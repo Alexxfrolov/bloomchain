@@ -68,7 +68,7 @@
   <hr class="bc-header__separator m-0 d-none d-md-block" />
   <div class="container navbar-collapse collapse py-2" id="navbarSupportedContent">
     <nav class="navbar-nav bc-header__nav">
-      <%= for i <- ~w(newsfeed detailed analysis people calendar research-archive) do %>
+      <%= for i <- ~w(newsfeed detailed analysis people calendar research research-archive) do %>
         <div class="nav-item">
           <%= link(@conn.assigns.sections[i].name, to: section_path(@conn, :index, i), class: active_navlink_class(@conn, section_path(@conn, :index, i))) %>
         </div>

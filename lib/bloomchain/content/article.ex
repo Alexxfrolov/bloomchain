@@ -41,9 +41,16 @@ defmodule Bloomchain.Content.Article do
       Multi.new()
       |> Multi.update(:post, Post.changeset(struct, params))
       |> Multi.insert(:redirect, Redirect.changeset(struct, params))
+      |> Multi.run(:delete_redirects, fn _repo, %{redirect: redirect} ->
+        {number, _} =
+          from(r in Redirect, where: r.path_from == ^redirect.path_to)
+          |> Repo.delete_all()
+
+        {:ok, number}
+      end)
 
     case Repo.transaction(update_post_and_redirect) do
-      {:ok, %{post: post, redirect: _redirect}} ->
+      {:ok, %{post: post, redirect: _, delete_redirects: _}} ->
         post = post |> Repo.preload([:tags, :cover, :authors], force: true)
         Task.async(fn -> ES.reindex(post) end)
         {:ok, post}
@@ -52,6 +59,9 @@ defmodule Bloomchain.Content.Article do
         {:error, changeset}
 
       {:error, :redirect, changeset, _} ->
+        {:error, changeset}
+
+      {:error, :delete_redirects, changeset, _} ->
         {:error, changeset}
     end
   end
