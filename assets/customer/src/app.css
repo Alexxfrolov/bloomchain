@@ -2646,18 +2646,29 @@ article table tr:nth-child(even) {
   object-fit: contain;
 }
 
-.article .fr-view img.fr-shadow, .fr-view .fr-img-caption.fr-shadow img {
+.article img.fr-shadow,
+.article .fr-img-caption.fr-shadow img {
   -webkit-box-shadow: 10px 10px 5px 0px #cccccc;
   -moz-box-shadow: 10px 10px 5px 0px #cccccc;
   box-shadow: 10px 10px 5px 0px #cccccc;
 }
 
-.fr-view img.fr-bordered {
+.article img.fr-bordered {
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
-.fr-view img.fr-bordered, .fr-view .fr-img-caption.fr-bordered img {
+.article img.fr-rounded,
+.article .fr-img-caption.fr-rounded img {
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.article img.fr-bordered,
+.article .fr-img-caption.fr-bordered img {
   border: solid 5px #CCC;
 }
 
@@ -2673,7 +2684,7 @@ article table tr:nth-child(even) {
 
 @media (max-width: 767.98px) {
   .article__heading {
-    font-size: 20px;
+    font-size: 1.875rem;
     line-height: 1.5;
   }
 }
