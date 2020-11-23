@@ -1,4 +1,4 @@
-<div class="col-lg-6">
+<div class="col-lg-6 mt-lg-0 mt-5">
     <h1 class="highlight mb-4"><%= @conn.assigns.sections["detailed"].name %><%= link("Больше", to: section_path(@conn, :index, "detailed"), class: "btn btn-title") %></h1>
 
     <%= SharedView.main_article_tag(List.first(@articles), conn: @conn) %>

@@ -1,9 +1,9 @@
 <div class="container py-4">
     <div class="row">
-      <%= if length( @context[:newsfeed]) > 0 do %>
+      <%= if length(@context[:newsfeed]) > 0 do %>
         <%= render "_newsfeed.html", conn: @conn, articles: @context[:newsfeed] %>
       <% end %>
-      <%= if length( @context[:detailed]) > 0 do %>
+      <%= if length(@context[:detailed]) > 0 do %>
         <%= render "_detailed.html", conn: @conn, articles: @context[:detailed] %>
       <% end %>
     </div>
@@ -12,10 +12,10 @@
 <div class="bg-white">
     <div class="container py-4">
         <div class="row">
-          <%= if length( @context[:analysis]) > 0 do %>
+          <%= if length(@context[:analysis]) > 0 do %>
             <%= render "_analysis.html", conn: @conn, articles: @context[:analysis] %>
           <% end %>
-          <%= if length( @context[:people]) > 0 do %>
+          <%= if length(@context[:people]) > 0 do %>
             <%= render "_people.html", conn: @conn, articles: @context[:people] %>
           <% end %>
         </div>
@@ -24,10 +24,10 @@
 
 <div class="container py-4">
     <div class="row">
-      <%= if length( @context[:research]) > 0 do %>
+      <%= if length(@context[:research]) > 0 do %>
         <%= render "_research.html", conn: @conn, articles: @context[:research] %>
       <% end %>
-      <%= if length( @context[:calendar]) > 0 do %>
+      <%= if length(@context[:calendar]) > 0 do %>
         <%= render "_calendar.html", conn: @conn, articles: @context[:calendar] %>
       <% end %>
     </div>

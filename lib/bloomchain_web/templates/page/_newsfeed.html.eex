@@ -1,4 +1,4 @@
-<div class="bc-news col-lg-6 mt-lg-0 mt-5">
+<div class="bc-news col-lg-6">
     <h1 class="highlight"><%= @conn.assigns.sections["newsfeed"].name %><%= link("Больше", to: section_path(@conn, :index, "newsfeed"), class: "btn btn-title") %></h1>
 
     <%= for article <- @articles do %>
