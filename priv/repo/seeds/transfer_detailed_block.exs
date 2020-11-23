@@ -19,18 +19,18 @@ slugs = ~w(
   kriptovalyuty-uhodyat-na-dno-ico-ne-polzuyutsya-sprosom-rynok-defi-sokrashhaetsya
 )
 
-from(p in Post, where: p.type == "analisys")
-|> Repo.all()
-|> Enum.each(&Article.update(&1, %{type: "analysis"}))
+# from(p in Post, where: p.type == "analisys")
+# |> Repo.all()
+# |> Enum.each(&Article.update(&1, %{type: "analysis"}))
 
 from(p in Post, where: p.type == "detailed" and p.slug in ^slugs)
 |> Repo.all()
 |> Enum.each(&Article.update(&1, %{type: "research"}))
 
-from(p in Post,
-  where:
-    p.type == "analysis" and
-      p.slug == "kriptovalyuty-prinosyat-ubytok-tether-dogonyaet-xrp-obemy-ico-padayut"
-)
-|> Repo.all()
-|> Enum.each(&Article.update(&1, %{type: "research"}))
+# from(p in Post,
+#   where:
+#     p.type == "analysis" and
+#       p.slug == "kriptovalyuty-prinosyat-ubytok-tether-dogonyaet-xrp-obemy-ico-padayut"
+# )
+# |> Repo.all()
+# |> Enum.each(&Article.update(&1, %{type: "research"}))
