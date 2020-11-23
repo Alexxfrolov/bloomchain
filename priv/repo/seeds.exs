@@ -1,1 +1,1 @@
-Code.eval_file("priv/repo/seeds/transfer_detailed_block.exs")
+Code.eval_file("priv/repo/seeds/transfer_analisys.exs")
