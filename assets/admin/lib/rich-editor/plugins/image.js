@@ -2104,7 +2104,7 @@
                 c.attr("class") +
                 '" style="' +
                 (g.opts.useClasses ? "" : e.attr("style")) +
-                '" draggable="false"></span><p class="fr-img-space-wrap2">&nbsp;</p></div>',
+                '" draggable="false"></span></div>',
             ),
               e.wrap('<span class="fr-img-wrap"></span>'),
               c.after(

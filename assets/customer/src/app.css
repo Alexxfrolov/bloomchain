@@ -2552,15 +2552,21 @@ button.close {
   list-style: none;
 }
 
+.article ul li + li {
+  margin-top: 1em;
+}
+
 .article li {
+  position: relative;
   margin-bottom: 0!important;
   font-size: inherit;
+  line-height: 1.75;
   color: #121212;
 }
 
 .article ul li::before {
+  position: absolute;
   margin-left: -2em;
-  padding-top: 1em;
   display: inline-block;
   font-weight: bolder;
   width: 2em;
@@ -2640,15 +2646,46 @@ article table tr:nth-child(even) {
   object-fit: contain;
 }
 
+.article img.fr-shadow,
+.article .fr-img-caption.fr-shadow img {
+  -webkit-box-shadow: 10px 10px 5px 0px #cccccc;
+  -moz-box-shadow: 10px 10px 5px 0px #cccccc;
+  box-shadow: 10px 10px 5px 0px #cccccc;
+}
+
+.article img.fr-bordered {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+.article img.fr-rounded,
+.article .fr-img-caption.fr-rounded img {
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.article img.fr-bordered,
+.article .fr-img-caption.fr-bordered img {
+  border: solid 5px #CCC;
+}
+
 .article .fr-img-wrap .fr-inner {
   font-size: 14px;
-  line-height: 1;
+  line-height: 1.5;
   color: #838383;
+}
+
+.article .badge + .badge {
+  margin-left: 10px;
 }
 
 @media (max-width: 767.98px) {
   .article__heading {
-    font-size: 16px;
+    font-size: 1.875rem;
+    line-height: 1.5;
   }
 }
 

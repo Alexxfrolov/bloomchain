@@ -16,6 +16,14 @@ defmodule BloomchainWeb do
   below. Instead, define any helper function in modules
   and import those modules here.
   """
+  def model do
+    quote do
+      use Ecto.Schema
+
+      # @timestamps_opts [type: Timex.Ecto.DateTime]
+      @timestamps_opts [type: :utc_datetime]
+    end
+  end
 
   def controller do
     quote do

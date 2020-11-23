@@ -2,7 +2,7 @@ defmodule Bloomchain.Content.Post do
   import Ecto.Changeset
   import Ecto.Query
 
-  use Ecto.Schema
+  use BloomchainWeb, :model
   use Waffle.Ecto.Schema
 
   alias Bloomchain.Content.{Tag, Media, Author}
@@ -48,7 +48,7 @@ defmodule Bloomchain.Content.Post do
     )
 
     timestamps()
-    field(:published_at, :naive_datetime)
+    field(:published_at, :utc_datetime)
   end
 
   @required_fields ~w(title type)a
@@ -70,16 +70,15 @@ defmodule Bloomchain.Content.Post do
 
   # Private
 
-  defp process_slug(%Ecto.Changeset{valid?: true, changes: %{title: title} = changes} = changeset) do
-    put_change(
-      changeset,
-      :slug,
-      changes[:slug] ||
-        title |> Translit.to_slug()
-    )
+  defp process_slug(
+         %Ecto.Changeset{valid?: true, changes: %{title: title}, data: %{slug: nil}} = changeset
+       ) do
+    put_change(changeset, :slug, title |> Translit.to_slug())
   end
 
-  defp process_slug(changeset), do: changeset
+  defp process_slug(changeset) do
+    changeset
+  end
 
   defp process_body(%Ecto.Changeset{valid?: true, changes: %{body: body}} = changeset) do
     replace_embedly = fn body ->
@@ -92,7 +91,15 @@ defmodule Bloomchain.Content.Post do
       Regex.replace(~r/(<p data-f-id=\"pbf\")(.*?)(<\/p>)/, body, "")
     end
 
-    put_change(changeset, :body, body |> replace_embedly.() |> replace_froala.())
+    replace_empty_paragraphs = fn body ->
+      Regex.replace(~r/(<p>(&nbsp;)*<\/p>)/, body, "")
+    end
+
+    put_change(
+      changeset,
+      :body,
+      body |> replace_embedly.() |> replace_froala.() |> replace_empty_paragraphs.()
+    )
   end
 
   defp process_body(changeset), do: changeset
@@ -103,7 +110,7 @@ defmodule Bloomchain.Content.Post do
     put_change(
       changeset,
       :published_at,
-      changes[:published_at] || NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+      changes[:published_at] || DateTime.utc_now() |> DateTime.truncate(:second)
     )
   end
 
@@ -129,7 +136,7 @@ defmodule Bloomchain.Content.Post do
     |> put_assoc(:tags, Enum.map(tags, &%Tag{id: &1[:id]}))
   end
 
-  defp process_tags(%Ecto.Changeset{valid?: true} = changeset, tags) do
+  defp process_tags(%Ecto.Changeset{valid?: true} = changeset, [_ | _] = tags) do
     tags = Repo.all(from(t in Tag, where: t.id in ^tags))
 
     changeset |> put_assoc(:tags, tags)
@@ -147,7 +154,7 @@ defmodule Bloomchain.Content.Post do
     |> put_assoc(:authors, Enum.map(authors, &%Author{id: &1[:id]}))
   end
 
-  defp process_authors(%Ecto.Changeset{valid?: true} = changeset, authors) do
+  defp process_authors(%Ecto.Changeset{valid?: true} = changeset, [_ | _] = authors) do
     authors = Repo.all(from(t in Author, where: t.id in ^authors))
 
     changeset |> put_assoc(:authors, authors)

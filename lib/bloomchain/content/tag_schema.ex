@@ -3,7 +3,7 @@ defmodule Bloomchain.Content.Tag do
 
   alias Bloomchain.Content.{Post, PostTag}
 
-  use Ecto.Schema
+  use BloomchainWeb, :model
 
   def fetch(term, key) do
     term

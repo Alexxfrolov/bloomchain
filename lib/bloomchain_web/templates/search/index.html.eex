@@ -1,6 +1,6 @@
 <section class="js-pagination-container">
   <div class="container py-5">
-    <h1 class="bc-analitics__h1">Результаты поиска: <%= @query %></h1>
+    <h1 class="bc-analitics__h1">Результаты поиска: <%= Phoenix.HTML.raw(@query) %></h1>
 
     <%= if Enum.empty?(@articles) do %>
       <p>Извините, по вашему запросу ничего не найдено.</p>

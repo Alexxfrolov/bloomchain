@@ -1,5 +1,5 @@
 defmodule Bloomchain.Content.Media do
-  use Ecto.Schema
+  use BloomchainWeb, :model
   use Waffle.Ecto.Schema
 
   import Ecto.Changeset

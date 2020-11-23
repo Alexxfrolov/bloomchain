@@ -1,5 +1,5 @@
 defmodule Bloomchain.Content.Index do
-  use Ecto.Schema
+  use BloomchainWeb, :model
 
   import Ecto.Changeset
   import Ecto.Query

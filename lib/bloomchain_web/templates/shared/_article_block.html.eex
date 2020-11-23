@@ -1,37 +1,39 @@
-<div class="row mt-3">
-  <div class="container py-4">
-    <div class="row">
-      <div class="col-md-12">
-        <%= main_article_tag(List.first(@articles), conn: @conn) %>
+<%= @articles |> Enum.chunk_every(6) |> Enum.map(fn(articles) -> %>
+  <div class="row mt-3">
+    <div class="container py-4">
+      <div class="row">
+        <div class="col-md-12">
 
-        <div class="mt-4"></div>
+          <%= main_article_tag(List.first(articles), conn: @conn) %>
 
-        <%= case length(@articles) do %>
+          <div class="mt-4"></div>
 
-          <% x when x == 2 or x > 3 -> %>
+          <%= case length(articles) do %>
 
-            <%= main_article_tag(List.first(@articles |> tl()), :without_img, conn: @conn) %>
-            <%= for [first | others] <- @articles |> tl() |> tl() |> Enum.chunk_every(2) do %>
-              <div class="row">
-                <%= article_tag(first, conn: @conn) %>
-                <%= article_tag(List.first(others), conn: @conn) %>
-              </div>
-            <% end %>
+            <% x when x == 2 or x > 3 -> %>
 
-          <% x when x > 0 -> %>
+              <%= main_article_tag(List.first(articles |> tl()), :without_img, conn: @conn) %>
+              <%= for [first | others] <- articles |> tl() |> tl() |> Enum.chunk_every(2) do %>
+                <div class="row">
+                  <%= article_tag(first, conn: @conn) %>
+                  <%= article_tag(List.first(others), conn: @conn) %>
+                </div>
+              <% end %>
 
-            <%= for [first | others] <- @articles |> tl() |> Enum.chunk_every(2) do %>
-              <div class="row">
-                <%= article_tag(first, conn: @conn) %>
-                <%= article_tag(List.first(others), conn: @conn) %>
-              </div>
-            <% end %>
+            <% x when x > 0 -> %>
 
-          <% _ -> %>
+              <%= for [first | others] <- articles |> tl() |> Enum.chunk_every(2) do %>
+                <div class="row">
+                  <%= article_tag(first, conn: @conn) %>
+                  <%= article_tag(List.first(others), conn: @conn) %>
+                </div>
+              <% end %>
 
-        <% end %>
+            <% _ -> %>
 
+          <% end %>
+        </div>
       </div>
     </div>
   </div>
-</div>
+<% end) %>
