@@ -15,16 +15,21 @@ defmodule BloomchainWeb.TagController do
     |> render("_article_block.html", articles: articles, meta: meta, recomendations: [])
   end
 
-  def show(conn, %{slug: tag}) do
-    name = Repo.get_by!(Tag, slug: tag).name
-    %{entries: articles, metadata: meta} = do_query(tag) |> ES.search()
+  def show(conn, %{slug: slug}) do
+    if tag = Repo.get_by(Tag, slug: slug) do
+      %{entries: articles, metadata: meta} = do_query(slug) |> ES.search()
 
-    render(conn, "show.html",
-      articles: articles,
-      meta: meta,
-      tag: name,
-      recomendations: do_recomendations(meta, articles)
-    )
+      render(conn, "show.html",
+        articles: articles,
+        meta: meta,
+        tag: tag.name,
+        recomendations: do_recomendations(meta, articles)
+      )
+    else
+      conn
+      |> put_view(BloomchainWeb.ErrorView)
+      |> render("404.html")
+    end
   end
 
   defp do_query(tag) do
