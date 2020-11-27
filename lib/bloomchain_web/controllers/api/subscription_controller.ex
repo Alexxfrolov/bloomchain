@@ -4,9 +4,13 @@ defmodule BloomchainWeb.Api.SubscriptionController do
   alias Bloomchain.{Repo, Content.Subscriber}
 
   def create(conn, params) do
-    Subscriber.changeset(%Subscriber{}, params) |> Repo.insert!()
-
-    conn
-    |> send_resp(201, "")
+    with {:ok, _} <- Subscriber.changeset(%Subscriber{}, params) |> Repo.insert() do
+      conn
+      |> send_resp(201, "")
+    else
+      {:error, _} ->
+        conn
+        |> send_resp(400, "")
+    end
   end
 end
