@@ -24,8 +24,8 @@ defmodule BloomchainWeb.Admin.Api.V1.BannerView do
       date_end: item.date_end,
       desktop_cover: media_json(item.desktop_cover),
       mobile_cover: media_json(item.mobile_cover),
-      inserted_at: item.inserted_at |> Timex.local(),
-      updated_at: item.updated_at |> Timex.local()
+      inserted_at: item.inserted_at,
+      updated_at: item.updated_at
     }
   end
 end

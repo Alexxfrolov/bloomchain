@@ -21,8 +21,8 @@ defmodule BloomchainWeb.Admin.Api.V1.TagView do
       id: tag.id,
       name: tag.name,
       slug: tag.slug,
-      inserted_at: tag.inserted_at |> Timex.local(),
-      updated_at: tag.updated_at |> Timex.local()
+      inserted_at: tag.inserted_at,
+      updated_at: tag.updated_at
     }
   end
 end

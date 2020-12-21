@@ -27,8 +27,8 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
       status: article.status,
       total_views: article.total_views,
       time: article.time,
-      inserted_at: article.inserted_at |> Timex.local(),
-      updated_at: article.updated_at |> Timex.local(),
+      inserted_at: article.inserted_at,
+      updated_at: article.updated_at,
       published_at: do_published_at(article),
       tags: Enum.map(article.tags, &tag_json/1),
       authors: Enum.map(article.authors, &author_json/1)
@@ -46,8 +46,8 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
       status: article.status,
       total_views: article.total_views,
       time: article.time,
-      inserted_at: article.inserted_at |> Timex.local(),
-      updated_at: article.updated_at |> Timex.local(),
+      inserted_at: article.inserted_at,
+      updated_at: article.updated_at,
       published_at: do_published_at(article),
       seo_settings: article.seo_settings,
       tags: Enum.map(article.tags, &tag_json/1),
@@ -63,6 +63,6 @@ defmodule BloomchainWeb.Admin.Api.V1.ArticleView do
   defp do_published_at(%{published_at: nil}), do: nil
 
   defp do_published_at(%{published_at: published_at}) do
-    published_at |> Timex.local()
+    published_at
   end
 end
