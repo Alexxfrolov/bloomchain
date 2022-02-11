@@ -128,7 +128,7 @@
     "decamelize": "~4.0.0",
     "deepmerge": "~4.2.2",
     "formik": "~2.1.4",
-    "froala-editor": "3.0.0",
+    "froala-editor": "4.0.7",
     "highcharts": "~8.1.0",
     "history": "~4.10.1",
     "humps": "~2.0.1",
