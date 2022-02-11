@@ -6108,6 +6108,11 @@ froala-editor@3.0.0:
   resolved "https://registry.yarnpkg.com/froala-editor/-/froala-editor-3.0.0.tgz#080bf0a071b0f5b6092ce9c3720188dcf6d7a1bb"
   integrity sha512-93G+GXUNPIiuHIcT/a2lxvQ9kED7pELRV/20csHB45mznBL2PqPmEwosGd/4RBN90ga4VbZQoqQi9ACls/3otg==
 
+froala-editor@4.0.7:
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/froala-editor/-/froala-editor-4.0.7.tgz#adbb773526d1b218cd7fee2f4db40bb0f40fd042"
+  integrity sha512-V4n9/IkRf0MyCgkvj4CZtaXH0heWwRD2hca/59wdbrSFv6HVIzDe0cBzE2pj6NNUSk8b3EuiCm2P/yDrf8/rTw==
+
 from2@^2.1.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/from2/-/from2-2.3.0.tgz#8bfb5502bde4a4d36cfdeea007fcca21d7e382af"
