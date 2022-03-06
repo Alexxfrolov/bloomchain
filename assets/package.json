@@ -121,7 +121,7 @@
     "@material-ui/icons": "~4.9.1",
     "@material-ui/lab": "~4.0.0-alpha.43",
     "@material-ui/pickers": "~3.2.10",
-    "axios": "~0.19.2",
+    "axios": "~0.21.2",
     "clsx": "~1.1.0",
     "confusing-browser-globals": "~1.0.9",
     "date-fns": "~2.12.0",
